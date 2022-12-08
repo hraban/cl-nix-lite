@@ -343,7 +343,8 @@ with callPackage ./utils.nix {};
           runHook preBuild
 
           eval "$setAsdfPath"
-          echo "Build CL_SOURCE_REGISTRY: $CL_SOURCE_REGISTRY"
+          echo -n "Build CL_SOURCE_REGISTRY: "
+          printenv CL_SOURCE_REGISTRY
           ${callLisp lisp (asdfOpScript lispBuildOp pname lispSystems')}
 
           runHook postBuild
@@ -359,7 +360,8 @@ with callPackage ./utils.nix {};
           runHook preCheck
 
           eval "$setAsdfPath"
-          echo "Check CL_SOURCE_REGISTRY: $CL_SOURCE_REGISTRY"
+          echo -n "Check CL_SOURCE_REGISTRY: "
+          printenv CL_SOURCE_REGISTRY
           ${callLisp lisp (asdfOpScript "test-system" pname _lispOrigSystems)}
 
           runHook postCheck
@@ -391,7 +393,6 @@ EOF
       then me.merge allDepsIncMyself.${mySrc}
       else me;
 
-    #hly-nixpkgs.url = "github:hraban/nixpkgs/feat/lisp-packages-lite";
   # If a single src derivation specifies multiple lisp systems, you can use this
   # helper to define them.
   lispMultiDerivation = args: a.mapAttrs (name: system:
@@ -414,6 +415,12 @@ EOF
     dontUnpack = true;
     dontBuild = true;
     lispDependencies = systems;
+    # This wrapper is necessary because Nix is just a build environment that
+    # delivers executables. Once the binary is built, Nix doesn’t control its
+    # environment when it is started--it’s a regular binary. Meaning: we can’t
+    # somehow set these envvars in some config, like you could do with
+    # e.g. Docker. To set envvars on a binary /at runtime/, you must create a
+    # wrapper that does this. Enter ‘makeWrapper’ et al.
     installPhase = ''
       ls -1 ${lisp}/bin | while read f; do
         makeWrapper ${lisp}/bin/$f $out/bin/$f \
