@@ -3,9 +3,9 @@
 # To build all packages:
 #
 #     nix-build
-#
-# To build only one package, e.g. alexandria:
-#
-#     nix-build -A alexandria
 
-pkgs.lispPackagesLite
+pkgs.lispPackagesLite.lispWithSystems (
+  pkgs.lib.pipe pkgs.lispPackagesLite [
+    builtins.attrValues
+    (builtins.filter pkgs.lib.isDerivation)
+  ])
