@@ -136,19 +136,16 @@ with callPackage ./utils.nix {};
       # All derivations I depend on, directly or indirectly, without me. Sort
       # deterministically to avoid rebuilding the same derivation just because
       # the order of dependencies was different (in the envvar).
-      allDepsDerivs = pipe allDeps [
+      allDepsPaths = pipe allDeps [
         attrValues
         (map (d: [ (b.toString d) ] ++ (map (x: "${d}/${x}") (d.lispAsdPath or []))))
         flatten
         l.naturalSort
       ];
 
-      # Must be :-join’ed and eval’ed before use.
-      fullAsdPath = [ "$PWD" ] ++
-                    # Must localize the path first because it depends on which
-                    # systems are being built
-                    (map (x: "$PWD/${x}") (localizedArgs.lispAsdPath or [])) ++
-                    allDepsDerivs;
+      # The local paths from my own perspective. Must localize the path first
+      # because it depends on which systems are being built.
+      localAsdPaths = localizedArgs.lispAsdPath or [];
 
       ####
       #### THE FINAL DERIVATION
@@ -315,11 +312,6 @@ with callPackage ./utils.nix {};
                         then me
                         else lispDerivation (args // { doCheck = true; });
         };
-        # Store .fasl files next to the respective .lisp file
-        ASDF_OUTPUT_TRANSLATIONS = "/:/";
-        setAsdfPath = ''
-          export CL_SOURCE_REGISTRY="''${CL_SOURCE_REGISTRY+$CL_SOURCE_REGISTRY:}${b.concatStringsSep ":" fullAsdPath}"
-        '';
         # Like lisp-modules-new, pre-build every package independently.
         #
         # Reason to do this: packages like libuv contain quite complex build
@@ -328,10 +320,13 @@ with callPackage ./utils.nix {};
         buildPhase = ''
           runHook preBuild
 
-          eval "$setAsdfPath"
-          echo -n "Build CL_SOURCE_REGISTRY: "
-          printenv CL_SOURCE_REGISTRY
-          ${callLisp lisp (asdfOpScript lispBuildOp pname lispSystems')}
+          ${callLisp lisp (asdfOpScript {
+            asdfOp = lispBuildOp;
+            name = pname;
+            systems = lispSystems';
+            dependencies = allDepsPaths;
+            localPaths = localAsdPaths;
+          })}
 
           runHook postBuild
         '';
@@ -345,10 +340,13 @@ with callPackage ./utils.nix {};
         checkPhase = ''
           runHook preCheck
 
-          eval "$setAsdfPath"
-          echo -n "Check CL_SOURCE_REGISTRY: "
-          printenv CL_SOURCE_REGISTRY
-          ${callLisp lisp (asdfOpScript "test-system" pname _lispOrigSystems)}
+          ${callLisp lisp (asdfOpScript {
+            asdfOp = "test-system";
+            name = pname;
+            systems = lispSystems';
+            dependencies = allDepsPaths;
+            localPaths = localAsdPaths;
+          })}
 
           runHook postCheck
         '';
@@ -360,7 +358,6 @@ with callPackage ./utils.nix {};
 eval "$setAsdfPath"
 >&2 cat <<EOF
 Lisp dependencies available to ASDF: ${allDepsHumanReadable}.
-(see \$CL_SOURCE_REGISTRY for full paths.)
 
 Example:
 

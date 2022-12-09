@@ -106,18 +106,37 @@ rec {
 
   lisp-asdf-op = op: sys: "(asdf:${op} :${sys})";
 
-  asdf = pkgs.fetchFromGitLab {
-    name = "asdf-src";
-    domain = "gitlab.common-lisp.net";
-    owner = "asdf";
-    repo = "asdf";
-    rev = "3.3.6";
-    sha256 = "sha256-GCmGUMLniPakjyL/D/aEI93Y6bBxjdR+zxXdSgc9NWo=";
-  };
-
-  asdfOpScript = op: name: systems: pkgs.writeText "${op}-${name}.lisp" ''
-    (require :asdf)
-    ${b.concatStringsSep "\n" (map (lisp-asdf-op op) systems)}
+  # Generate a load script for this derivation.
+  # Open question: why not use :tree instead of :directory? Just search
+  # recursively.. My only concern would be example systems in /example/ dirs
+  # becoming exported, which you might not want. Perhaps a flag on the
+  # derivation to support recursive vs. root-only searching? Does it matter,
+  # though? The explicit lispAsdPath thing seems to do the job.
+  asdfOpScript = {
+    asdfOp, name, systems, dependencies, localPaths
+  }: pkgs.writeText "${asdfOp}-${name}.lisp" ''
+(require :asdf)
+(require :uiop)
+;; Store .fasl files next to the respective .lisp file
+(asdf:initialize-output-translations
+ '(:output-translations
+   :disable-cache
+   :inherit-configuration))
+(flet ((expand-path (local)
+         (merge-pathnames (uiop:relativize-pathname-directory local)
+                          (uiop:getcwd))))
+  (asdf:initialize-source-registry
+   `(:source-registry
+     (:directory ,(uiop:getcwd))
+     ,@(mapcar (lambda (local-path)
+                 (list :directory (expand-path local-path)))
+               '(${b.toString (map b.toJSON localPaths)}))
+     ,@(mapcar (lambda (dep-path)
+                 (list :directory (uiop:ensure-directory-pathname dep-path)))
+               '(${b.toString (map b.toJSON dependencies)}))
+     :inherit-configuration
+     )))
+${b.concatStringsSep "\n" (map (lisp-asdf-op asdfOp) systems)}
   '';
 
   # Internal convention for lisp: a function which takes a file and returns a
