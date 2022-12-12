@@ -15,7 +15,8 @@ let
   # recursively.. My only concern would be example systems in /example/ dirs
   # becoming exported, which you might not want. Perhaps a flag on the
   # derivation to support recursive vs. root-only searching? Does it matter,
-  # though? The explicit lispAsdPath thing seems to do the job.
+  # though? And if somebody really doesn’t want that, they can add a
+  # .cl-source-registry.cache file. Anyway, TBD.
   setupScript = {
     name
     # Paths to ASDF system definitions
@@ -30,11 +31,13 @@ let
   }: pkgs.writeText "setup-${name}.lisp" ''
 (require :asdf)
 (require :uiop)
+
 ;; Store .fasl files next to the respective .lisp file
 (asdf:initialize-output-translations
  '(:output-translations
    :disable-cache
    :inherit-configuration))
+
 (flet ((expand-path (local)
          (merge-pathnames (uiop:relativize-pathname-directory local)
                           (uiop:getcwd))))
@@ -303,6 +306,7 @@ in
         # Standard args that are not phases
         "nativeBuildInputs"
         "buildInputs"
+        "propagatedBuildInputs"
         "patches"
         "outputs"
         "shellHook"

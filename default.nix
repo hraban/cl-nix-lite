@@ -347,8 +347,22 @@ in
         allDependencies
         , buildInputs ? []
         , nativeBuildInputs ? []
+        , propagatedBuildInputs ? []
         , ...
-      }: pkgs.writeText "setup-cffi.lisp" ''
+      }:
+        let
+          # This feels super hacky. Is this the way? Am I jaded? My concern: is
+          # this exhaustive? Shouldn’t I be iterating over that insane list of
+          # buildTargetSchmarget combinations?  I have a feeling we should reuse
+          # the existing recursive propagatedBuildInputs resolver, called
+          # findInputs
+          libs = allDependencies ++
+                 buildInputs ++
+                 nativeBuildInputs ++
+                 propagatedBuildInputs ++
+                 flatten (map (d: d.propagatedBuildInputs or []) allDependencies);
+        in
+          pkgs.writeText "setuphook-cffi.lisp" ''
 (require :uiop)
 (asdf:load-system :cffi)
 
@@ -357,13 +371,8 @@ in
    (let ((d (uiop:directory-exists-p depLib)))
      (when d
        (pushnew d cffi:*foreign-library-directories* :test #'equal))))
- '(${b.toString (map (d: b.toJSON "${(getLib d)}/lib")
-                     # This feels super hacky. Is this the way? Am I jaded? My
-                     # concern: is this exhaustive? Shouldn’t I be iterating
-                     # over that insane list of buildTargetSchmarget
-                     # combinations?
-                     (allDependencies ++ buildInputs ++ nativeBuildInputs))}))
-'';
+ '(${b.toString (map (d: b.toJSON "${(getLib d)}/lib") libs)}))
+          '';
     }
   ) {}) cffi cffi-grovel;
 
@@ -433,7 +442,7 @@ in
         ];
       };
     };
-    preBuild = let
+    preCheck = let
       testDirectories = [
         "$PWD/examples/coalton-json"
         "$PWD/examples/quil-coalton"
@@ -441,9 +450,10 @@ in
         "$PWD/examples/thih"
       ];
       testPaths = b.concatStringsSep ":" testDirectories;
-    in ''
-      export CL_SOURCE_REGISTRY="${testPaths}:$CL_SOURCE_REGISTRY"
-    '';
+    in
+      systems: s.optionalString (b.elem "coalton-examples" systems) ''
+        export CL_SOURCE_REGISTRY="${testPaths}:$CL_SOURCE_REGISTRY"
+      '';
   }) {}) coalton coalton-benchmarks coalton-doc coalton-examples;
 
   circular-streams = callPackage (self: with self; lispDerivation {
@@ -711,7 +721,7 @@ in
 
   cl-libuv = callPackage (self: with self; lispDerivation rec {
     lispDependencies = [ alexandria cffi cffi-grovel ];
-    buildInputs = [ pkgs.libuv ];
+    propagatedBuildInputs = [ pkgs.libuv ];
     lispSystem = "cl-libuv";
     version = "ebe3e166d1b6608efdc575be55579a086356b3fc";
     src = pkgs.fetchFromGitHub {
@@ -778,9 +788,10 @@ in
           (l.optional (b.elem "cl-libxslt" systems) pkgs.libxslt);
         outputs = systems:
           [ "out" ] ++
-          # To be perfectly honest this might be overkill. I guess it’s nice to have
-          # the output completely separate, but it does cause quite some confusion
-          # downstream even to myself and I wrote this damn thing.
+          # To be perfectly honest this might be overkill. I guess it’s nice to
+          # have the lib output completely separate, but it does cause quite
+          # some confusion downstream even to myself and I wrote this damn
+          # thing.
           l.optional (b.elem "cl-libxslt" systems) "lib";
         # This :force t isn’t necessary, and it breaks tests
         postUnpack = ''
