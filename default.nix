@@ -301,6 +301,26 @@ in
     lispCheckDependencies = [ cl-async fiveam ];
   }) {};
 
+  bordeaux-threads = callPackage (self: with self; lispDerivation rec {
+    lispDependencies = [
+      alexandria
+      global-vars
+      trivial-features
+      trivial-garbage
+    ];
+    lispCheckDependencies = [ fiveam ];
+    buildInputs = [ pkgs.libuv ];
+    lispSystem = "bordeaux-threads";
+    version = "v0.8.8";
+    src = pkgs.fetchFromGitHub {
+      name = "bordeaux-threads-src";
+      owner = "sionescu";
+      repo = "bordeaux-threads";
+      rev = version;
+      sha256 = "sha256-5mauBDg13zJlYkbu5C30dCOIPBE95bVu2AiR8d0gJKY=";
+    };
+  }) {};
+
   inherit (callPackage (self: with self;
     lispMultiDerivation rec {
       name = "cffi";
@@ -558,23 +578,16 @@ in
     lispCheckDependencies = [ fiveam ];
   }) {};
 
-  bordeaux-threads = callPackage (self: with self; lispDerivation rec {
-    lispDependencies = [
-      alexandria
-      global-vars
-      trivial-features
-      trivial-garbage
-    ];
-    lispCheckDependencies = [ fiveam ];
-    buildInputs = [ pkgs.libuv ];
-    lispSystem = "bordeaux-threads";
-    version = "v0.8.8";
+  cl-devil = callPackage (self: with self; lispDerivation {
+    lispSystems = [ "cl-devil" "cl-ilu" "cl-ilut" ];
+    lispDependencies = [ alexandria cffi ];
+    propagatedBuildInputs = [ pkgs.libdevil ];
     src = pkgs.fetchFromGitHub {
-      name = "bordeaux-threads-src";
-      owner = "sionescu";
-      repo = "bordeaux-threads";
-      rev = version;
-      sha256 = "sha256-5mauBDg13zJlYkbu5C30dCOIPBE95bVu2AiR8d0gJKY=";
+      owner = "zkat";
+      repo = "cl-devil";
+      name = "cl-devil-src";
+      rev = "0e326c6c911299883852ebf2e33d48f8680f995d";
+      sha256 = "bu97gvaHPPj51rjm6oUskBHcHCUDAYx0SnvKz/tZsuE=";
     };
   }) {};
 
