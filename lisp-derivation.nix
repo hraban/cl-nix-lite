@@ -7,22 +7,100 @@
 with pkgs.lib;
 with callPackage ./utils.nix {};
 
+let
+  lisp-asdf-op = op: sys: "(asdf:${op} :${sys})";
+
+  # Generate a load script for this derivation.
+  # Open question: why not use :tree instead of :directory? Just search
+  # recursively.. My only concern would be example systems in /example/ dirs
+  # becoming exported, which you might not want. Perhaps a flag on the
+  # derivation to support recursive vs. root-only searching? Does it matter,
+  # though? The explicit lispAsdPath thing seems to do the job.
+  setupScript = {
+    name
+    # Paths to ASDF system definitions
+    , dependencyAsdPaths
+    # These are assumed to be relative to the working directory
+    , myAsdPaths
+    # Lisp equivalent of setupHooks
+    , setupHooks
+    # Final main build operation derivation to load (probably a text derivation
+    # containing (asdf:make 'your-system))
+    , main
+  }: pkgs.writeText "setup-${name}.lisp" ''
+(require :asdf)
+(require :uiop)
+;; Store .fasl files next to the respective .lisp file
+(asdf:initialize-output-translations
+ '(:output-translations
+   :disable-cache
+   :inherit-configuration))
+(flet ((expand-path (local)
+         (merge-pathnames (uiop:relativize-pathname-directory local)
+                          (uiop:getcwd))))
+  (asdf:initialize-source-registry
+   `(:source-registry
+     ;; These are in the temporary Nix build directory. TODO: If this asdf op
+     ;; builds an image, remove these entries after the image was built.
+     (:directory ,(uiop:getcwd))
+     ,@(mapcar (lambda (my-path)
+                 `(:directory ,(expand-path my-path)))
+               '(${b.toString (map b.toJSON myAsdPaths)}))
+     ;; I've done the lispAsdPath-flatmap in Nix, but that's
+     ;; arbitrary. (Meaning: if a dependency has a .lispAsdPath, it should be
+     ;; somehow included in the final ASDF config, by adding multiple entries
+     ;; for that dependency: one for root, and one for each of its localAsdPath
+     ;; subdirectories. That currently happens in the calling Nix but it could
+     ;; just as well be done here.)
+     ;;
+     ;; For the record: can't use :here because it doesn't mean CWD but is
+     ;; relative to the init script, which is its own derivation in
+     ;; /nix/store/.. (I think that's the problem. Either way it doesn't work.)
+     ,@(mapcar (lambda (dep-path)
+                 (list :directory (uiop:ensure-directory-pathname dep-path)))
+               '(${b.toString (map b.toJSON dependencyAsdPaths)}))
+     :inherit-configuration)))
+
+;; Lisp implementation of setup hooks.
+(mapc #'load '(${b.toString (map b.toJSON setupHooks)}))
+
+(load #p${b.toJSON main})
+
+'';
+
+  # Internal convention for lisp: a function which takes a file and returns a
+  # shell invocation calling that file, then exiting. External API: same, but
+  # you can also just pass a derivation instead and it is converted, if
+  # recognized. E.g. lisp = pkgs.sbcl.
+  callLisp = lisp:
+    if b.isFunction lisp
+    then lisp
+    else
+      assert isDerivation lisp;
+      {
+        sbcl = file: ''"${lisp}/bin/sbcl" --script "${file}"'';
+        ecl = file: ''"${lisp}/bin/ecl" --shell "${file}"'';
+      }.${lisp.pname};
+
+
+in
+
 {
   # Build a lisp derivation from this source, for the specific given
   # systems. When two separate packages include the same src, but both for a
   # different system, it resolves to the same derivation.
   lispDerivation = {
     # The system(s) defined by this derivation
-    lispSystem ? null,
-    lispSystems ? null,
+    lispSystem ? null
+    , lispSystems ? null
     # The lisp dependencies FOR this derivation
-    lispDependencies ? [],
-    lispCheckDependencies ? [],
-    CL_SOURCE_REGISTRY ? "",
+    , lispDependencies ? []
+    , lispCheckDependencies ? []
+    , CL_SOURCE_REGISTRY ? ""
     # If you were to build this from source. Not necessarily the final src of
     # the actual derivation; that depends on the dependency chain.
-    src,
-    doCheck ? false,
+    , src
+    , doCheck ? false
 
     # Example:
     # - lispBuildOp = "make",
@@ -32,7 +110,7 @@ with callPackage ./utils.nix {};
     # - lispBuildOp = "operate 'asdf:monolithic-deliver-asd-op"
     # If you control the source, though, you are much better off configuring the
     # defsystem in the .asd to do the right thing when called as ‘make’.
-    lispBuildOp ? "make",
+    , lispBuildOp ? "make"
 
     # Extra directories to add to the ASDF search path for systems. Shouldn’t be
     # necessary—only use this to fix external packages you don’t control. For
@@ -41,18 +119,33 @@ with callPackage ./utils.nix {};
     # value, or it can be a 1-arg function accepting a list of systems for which
     # this final derivation is being built, and return any value it wants
     # depending on that list.
-    lispAsdPath ? [],
+    , lispAsdPath ? []
+
+    # Text file (derivation) which contains a loadable lisp script to execute on
+    # init.  This is like the Nix stdenv builder’s setup hook. It gets loaded
+    # /by dependents/ in the LISP init script, after setting up ASDF but before
+    # actually performing the ASDF build operation. Regular Nix example of setup
+    # hooks: when you depend on GCC, it searches all your dependencies for
+    # libraries and puts them on your compiler’s command line arg. Lisp Nix
+    # example: CFFI wants to search every dependency for published dynamic
+    # libraries, and adds them to its search path
+    # (cffi:*foreign-library-directories*). This is similar in purpose, but it
+    # highlights the difference between stdenv and lisp: stdenv works with bash
+    # and envvars, but lisp often works with a single image and global variables
+    # for configuration. Additional difference between regular Nix and this:
+    # this argument can be a callback which gets called, which /returns/ a text
+    # file. To be completely frank, I don’t understand why regular stdenv’s
+    # setuphooks don’t work that way.
+    , lispSetupHook ? null
 
     # As the name suggests:
     # - this is a private arg for internal recursion purposes -- do not use
     # - this indicates whether I want to deduplicate myself. It is used to
     #   terminate the self deduplication recursion without segfaulting.
-    _lispDeduplicateMyself ? true,
+    , _lispDeduplicateMyself ? true
 
-    ...
+    , ...
   } @ args:
-    # Mutually exclusive args but one is required. XOR.
-    assert (lispSystem == null) != (lispSystems == null);
     let
       ####
       #### DEPENDENCY GRAPH
@@ -61,7 +154,10 @@ with callPackage ./utils.nix {};
       # Normalised value of the systems argument to this derivation. All
       # internal access to that arg ("what system(s) am I loaded with?") should
       # be through this value.
-      lispSystemsArg = args.lispSystems or [ args.lispSystem ];
+      lispSystemsArg =
+        # Mutually exclusive args but one is required. XOR.
+        assert (lispSystem == null) != (lispSystems == null);
+        args.lispSystems or [ args.lispSystem ];
 
       # Create a single source map entry for this derivation. This is the core
       # datastructure around which the derivation deduplication detection
@@ -132,20 +228,45 @@ with callPackage ./utils.nix {};
       # derivation that unions the two dependencies.
       allDepsIncMyself = nestedUnion (reduce (x: x.merge)) 1 (map depsFor lispDependencies');
       allDeps = removeAttrs allDepsIncMyself [ mySrc ];
+      allDepsDerivs = attrValues allDeps;
 
-      # All derivations I depend on, directly or indirectly, without me. Sort
-      # deterministically to avoid rebuilding the same derivation just because
-      # the order of dependencies was different (in the envvar).
-      allDepsPaths = pipe allDeps [
-        attrValues
+      callSetupHook = callIfFunc ({
+        # Big open question: which args should we pass here?
+        allDependencies = allDepsDerivs;
+      } // localizedArgs);
+      # All my dependency’s setup hooks, normalised and “instantiated” as a list
+      # of text derivations.
+      depSetupHooks = pipe allDepsDerivs [
+        (map (d: d.lispSetupHook))
+        (filter (x: x != null))
+        (map callSetupHook)
+      ];
+
+      # Full .asd file paths for all derivations I depend on, directly or
+      # indirectly, without me. Sort deterministically to avoid rebuilding the
+      # same derivation just because the order of dependencies was different.
+      allDepsAsdPaths = pipe allDepsDerivs [
         (map (d: [ (b.toString d) ] ++ (map (x: "${d}/${x}") (d.lispAsdPath or []))))
         flatten
         l.naturalSort
       ];
 
-      # The local paths from my own perspective. Must localize the path first
-      # because it depends on which systems are being built.
-      localAsdPaths = localizedArgs.lispAsdPath or [];
+      # I pass these overridable handlers their own default value because it’s
+      # useful to be able to reuse them if all you want to create is a wrapper.
+      localLispBuildPhase =
+        callIfFunc {
+          lispSystems = lispSystems';
+          defaultBuildScript = pkgs.writeText "build-${pname}.lisp" (
+            b.concatStringsSep "\n" (map (lisp-asdf-op lispBuildOp) lispSystems')
+          );
+        } (args.lispBuildPhase or (args: args.defaultBuildScript));
+      localLispCheckPhase =
+        callIfFunc {
+          lispSystems = lispSystems';
+          defaultBuildScript = pkgs.writeText "check-${pname}.lisp" (
+            b.concatStringsSep "\n" (map (lisp-asdf-op "test-system") lispSystems')
+          );
+        } (args.lispCheckPhase or (args: args.defaultBuildScript));
 
       ####
       #### THE FINAL DERIVATION
@@ -157,7 +278,20 @@ with callPackage ./utils.nix {};
       lispSystems' = normaliseStrings lispSystemsArg;
       # Clean out the arguments to this function which aren’t deriv props. Leave
       # in the systems because it’s a useful and harmless prop.
-      derivArgs = removeAttrs args ["lispDependencies" "lispCheckDependencies" "lispSystem" "_lispDeduplicateMyself" "_lispOrigSrc"];
+      derivArgs = removeAttrs args [
+        # Don’t trust these two--the whole point is that this is overridden
+        "lispDependencies"
+        "lispCheckDependencies"
+        "lispBuildPhase"
+        "lispCheckPhase"
+        # This is a convenience input only. We normalize to a list of systems,
+        # not 1.
+        "lispSystem"
+        "_lispDeduplicateMyself"
+        "_lispOrigSrc"
+        # This is a function for internal use only. Expose through passthru.
+        "lispSetupHook"
+      ];
       pname = args.pname or "${b.concatStringsSep "_" lispSystems'}";
 
       # Add here all "standard" derivation args which are system
@@ -175,7 +309,7 @@ with callPackage ./utils.nix {};
         "makeFlags"
         # Am I forgetting anything?
 
-        # And a custom property which is also useful to vary per system
+        # And custom properties which are also useful to vary per system
         "lispAsdPath"
 
         # All the phases
@@ -211,12 +345,13 @@ with callPackage ./utils.nix {};
         "distPhase"
         "postDist"
       ];
+
+      # TODO: Pass an attrset with more info. ..... .... callPackage‽
       localizedArgs = a.mapAttrs (_: callIfFunc lispSystems') (optionalKeys stdArgs args);
 
       # For dev shell only: a human readable comma-separated list of all
       # dependency systems loaded by this derivation.
-      allDepsHumanReadable = pipe allDeps [
-        attrValues
+      allDepsHumanReadable = pipe allDepsDerivs [
         (flatMap (d: d.lispSystems))
         normaliseStrings
         (s.concatStringsSep ", ")
@@ -242,7 +377,8 @@ with callPackage ./utils.nix {};
             # Invariant: this never includes myself.
             allDeps
             # Give others access to the args with which I was built
-            args;
+            args
+            lispSetupHook;
           # The original, non-deduplicated src we were called with
           origSrc = _lispOrigSrc;
           # (There is probably a neater, more idiomatic way to do this
@@ -312,6 +448,7 @@ with callPackage ./utils.nix {};
                         then me
                         else lispDerivation (args // { doCheck = true; });
         };
+
         # Like lisp-modules-new, pre-build every package independently.
         #
         # Reason to do this: packages like libuv contain quite complex build
@@ -320,12 +457,12 @@ with callPackage ./utils.nix {};
         buildPhase = ''
           runHook preBuild
 
-          ${callLisp lisp (asdfOpScript {
-            asdfOp = lispBuildOp;
+          ${callLisp lisp (setupScript {
             name = pname;
-            systems = lispSystems';
-            dependencies = allDepsPaths;
-            localPaths = localAsdPaths;
+            dependencyAsdPaths = allDepsAsdPaths;
+            myAsdPaths = localizedArgs.lispAsdPath or [];
+            setupHooks = depSetupHooks;
+            main = localLispBuildPhase;
           })}
 
           runHook postBuild
@@ -340,12 +477,12 @@ with callPackage ./utils.nix {};
         checkPhase = ''
           runHook preCheck
 
-          ${callLisp lisp (asdfOpScript {
-            asdfOp = "test-system";
+          ${callLisp lisp (setupScript {
             name = pname;
-            systems = lispSystems';
-            dependencies = allDepsPaths;
-            localPaths = localAsdPaths;
+            dependencyAsdPaths = allDepsAsdPaths;
+            myAsdPaths = localizedArgs.lispAsdPath or [];
+            setupHooks = depSetupHooks;
+            main = localLispCheckPhase;
           })}
 
           runHook postCheck

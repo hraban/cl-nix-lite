@@ -102,57 +102,6 @@ rec {
     else
       a.zipAttrsWith (_: vals: nestedUnion item (n - 1) vals) sets;
 
-  getLispDeps = x: x.CL_SOURCE_REGISTRY or "";
-
-  lisp-asdf-op = op: sys: "(asdf:${op} :${sys})";
-
-  # Generate a load script for this derivation.
-  # Open question: why not use :tree instead of :directory? Just search
-  # recursively.. My only concern would be example systems in /example/ dirs
-  # becoming exported, which you might not want. Perhaps a flag on the
-  # derivation to support recursive vs. root-only searching? Does it matter,
-  # though? The explicit lispAsdPath thing seems to do the job.
-  asdfOpScript = {
-    asdfOp, name, systems, dependencies, localPaths
-  }: pkgs.writeText "${asdfOp}-${name}.lisp" ''
-(require :asdf)
-(require :uiop)
-;; Store .fasl files next to the respective .lisp file
-(asdf:initialize-output-translations
- '(:output-translations
-   :disable-cache
-   :inherit-configuration))
-(flet ((expand-path (local)
-         (merge-pathnames (uiop:relativize-pathname-directory local)
-                          (uiop:getcwd))))
-  (asdf:initialize-source-registry
-   `(:source-registry
-     (:directory ,(uiop:getcwd))
-     ,@(mapcar (lambda (local-path)
-                 (list :directory (expand-path local-path)))
-               '(${b.toString (map b.toJSON localPaths)}))
-     ,@(mapcar (lambda (dep-path)
-                 (list :directory (uiop:ensure-directory-pathname dep-path)))
-               '(${b.toString (map b.toJSON dependencies)}))
-     :inherit-configuration
-     )))
-${b.concatStringsSep "\n" (map (lisp-asdf-op asdfOp) systems)}
-  '';
-
-  # Internal convention for lisp: a function which takes a file and returns a
-  # shell invocation calling that file, then exiting. External API: same, but
-  # you can also just pass a derivation instead and it is converted, if
-  # recognized. E.g. lisp = pkgs.sbcl.
-  callLisp = lisp:
-    if b.isFunction lisp
-    then lisp
-    else
-      assert isDerivation lisp;
-      {
-        sbcl = file: ''"${lisp}/bin/sbcl" --script "${file}"'';
-        ecl = file: ''"${lisp}/bin/ecl" --shell "${file}"'';
-      }.${lisp.pname};
-
   # Get a context-less string representing this source derivation, come what
   # come may.
   derivPath = src: drvStrWithoutContext (
@@ -162,12 +111,6 @@ ${b.concatStringsSep "\n" (map (lisp-asdf-op asdfOp) systems)}
     then b.path { path = src; }
     else src);
 
+  # This should never be necessary.
   isLispDeriv = x: x ? lispSystems;
-
-
-  ## PACKAGE UTILS
-
-  # Utility function that just adds some lisp dependencies to an existing
-  # derivation.
-  trimName = s.removeSuffix "-src";
 }

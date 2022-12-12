@@ -30,6 +30,10 @@ with callPackage ./lisp-derivation.nix { inherit lisp; };
 
 # These utility functions really are for this file only
 let
+  # Utility function that just adds some lisp dependencies to an existing
+  # derivation.
+  trimName = s.removeSuffix "-src";
+
   lispify = lispDependencies: src:
     lispDerivation ({
       inherit lispDependencies src;
@@ -325,19 +329,41 @@ in
           lispCheckDependencies = [ bordeaux-threads rt ];
         };
       };
-      # lisp-modules-new doesn’t specify this and somehow it works fine. Is
-      # there an accidental transitive dependency, there? Or how is this
-      # solved? Additionally, this only seems to be used by a pretty
-      # incidental make call, because the only rule that uses GCC just happens
-      # to be at the top, making it the default make target. Not sure if this
-      # is the ideal way to “build” this package.  Note: Technically this will
-      # always be required because cffi-grovel depends on cffi bare, but it’s
-      # a good litmus test for the system.
+      # lisp-modules-new doesn’t specify GCC and somehow it works fine. Is there
+      # an accidental transitive dependency, there? Or how is this solved?
+      # Additionally, this only seems to be used by a pretty incidental make
+      # call, because the only rule that uses GCC just happens to be at the top,
+      # making it the default make target. Not sure if this is the ideal way to
+      # “build” this package.  Note: Technically this will always be required
+      # because cffi-grovel depends on cffi bare, but it’s a good litmus test
+      # for the system.
       nativeBuildInputs = [ pkgs.pkg-config ];
       buildInputs = systems: l.optionals (b.elem "cffi" systems) [ pkgs.gcc pkgs.libffi ];
       # This is broken on Darwin because libcffi rewrites the import path in a
       # way that’s incompatible with pkgconfig. It should be "if darwin AND (not
       # pkg-config)".
+
+      lispSetupHook = {
+        allDependencies
+        , buildInputs ? []
+        , nativeBuildInputs ? []
+        , ...
+      }: pkgs.writeText "setup-cffi.lisp" ''
+(require :uiop)
+(asdf:load-system :cffi)
+
+(mapcar
+ (lambda (depLib)
+   (let ((d (uiop:directory-exists-p depLib)))
+     (when d
+       (pushnew d cffi:*foreign-library-directories* :test #'equal))))
+ '(${b.toString (map (d: b.toJSON "${(getLib d)}/lib")
+                     # This feels super hacky. Is this the way? Am I jaded? My
+                     # concern: is this exhaustive? Shouldn’t I be iterating
+                     # over that insane list of buildTargetSchmarget
+                     # combinations?
+                     (allDependencies ++ buildInputs ++ nativeBuildInputs))}))
+'';
     }
   ) {}) cffi cffi-grovel;
 
@@ -697,74 +723,84 @@ in
     };
   }) {};
 
-  inherit (callPackage (self: with self; lispMultiDerivation {
-    # src = pkgs.fetchFromGitHub {
-    #   owner = "archimag";
-    #   repo = "cl-libxml2";
-    #   name = "cl-libxml2-src";
-    #   rev = "8d03110c532c1a3fe15503fdfefe82f60669e4bd";
-    #   sha256 = "PCumcbKT2J8ffvbJgt3ESZ0mhTk809QN0+U6NgJLBCQ=";
-    # };
-    # Temporarily point at my own fork while figuring out Darwin build. Could
-    # also use Nix patches but this is easier for me to manage.
-    src = pkgs.fetchFromGitHub {
-      owner = "hraban";
-      repo = "cl-libxml2";
-      rev = "6ca0386e9914f733cfcde38000e84f90ccee42cb";
-      sha256 = "T5hEn517H2DlIaqLsSb6CtcV2z+6nDxnm9QqhsblsIc=";
-    };
-    systems = {
-      cl-libxml2 = {
-        lispSystems = [ "cl-libxml2" "xfactory" "xoverlay" ];
-        lispDependencies = [
-          iterate
-          cffi
-          puri
-          flexi-streams
-          alexandria
-          garbage-pools
-          metabang-bind
+  inherit (callPackage (self: with self;
+    let
+      libname =
+        # There has to be a better way. How do you make CC automatically decide
+        # on the "correct" extension?
+        if pkgs.hostPlatform.isDarwin
+        then "cllibxml2.dylib"
+        else "cllibxml2.so"; # I’m not even going to try windows
+    in
+      lispMultiDerivation rec {
+        # src = pkgs.fetchFromGitHub {
+        #   owner = "archimag";
+        #   repo = "cl-libxml2";
+        #   name = "cl-libxml2-src";
+        #   rev = "8d03110c532c1a3fe15503fdfefe82f60669e4bd";
+        #   sha256 = "PCumcbKT2J8ffvbJgt3ESZ0mhTk809QN0+U6NgJLBCQ=";
+        # };
+        # Temporarily point at my own fork while figuring out Darwin build. Could
+        # also use Nix patches but this is easier for me to manage.
+        src = pkgs.fetchFromGitHub {
+          owner = "hraban";
+          repo = "cl-libxml2";
+          rev = "6ca0386e9914f733cfcde38000e84f90ccee42cb";
+          sha256 = "T5hEn517H2DlIaqLsSb6CtcV2z+6nDxnm9QqhsblsIc=";
+        };
+        systems = {
+          cl-libxml2 = {
+            lispSystems = [ "cl-libxml2" "xfactory" "xoverlay" ];
+            lispDependencies = [
+              iterate
+              cffi
+              puri
+              flexi-streams
+              alexandria
+              garbage-pools
+              metabang-bind
+            ];
+            lispCheckDependencies = [ lift ];
+          };
+          # Defined as a separate Nix derivation because it has complicated and
+          # fragile build steps, and as far as I can tell QL doesn’t even export
+          # this at all. Consider this derivation experimental for now. It’d be nice
+          # if it actually worked, of course.
+          cl-libxslt = {
+            lispDependencies = [ cl-libxml2 ];
+          };
+        };
+        makeFlags = [
+          "CC=cc"
         ];
-        lispCheckDependencies = [ lift ];
-      };
-      # Defined as a separate Nix derivation because it has complicated and
-      # fragile build steps, and as far as I can tell QL doesn’t even export
-      # this at all. Consider this derivation experimental for now. It’d be nice
-      # if it actually worked, of course.
-      cl-libxslt = {
-        lispDependencies = [ cl-libxml2 ];
-      };
-    };
-    makeFlags = [
-      "CC=cc"
-    ];
-    buildInputs = systems:
-      (l.optional (b.elem "cl-libxml2" systems) pkgs.libxml2) ++
-      (l.optional (b.elem "cl-libxslt" systems) pkgs.libxslt);
-    outputs = systems:
-      [ "out" ] ++
-      l.optional (b.elem "cl-libxslt" systems) "lib";
-    # This :force t isn’t necessary, and it breaks tests
-    postUnpack = ''
-      (cd "$sourceRoot"; sed -i  -e "s/ :force t//" *.asd)
-    '';
-    preBuild = systems:
-      if b.elem "cl-libxslt" systems
-      then
-        let
-          libname =
-            # There has to be a better way. How do you make CC automatically
-            # decide on the "correct" extension?
-            if pkgs.hostPlatform.isDarwin then "cllibxml2.dylib"
-            else "cllibxml2.so"; # I’m not even going to try windows
-        in ''
+        buildInputs = systems:
+          (l.optional (b.elem "cl-libxml2" systems) pkgs.libxml2) ++
+          (l.optional (b.elem "cl-libxslt" systems) pkgs.libxslt);
+        outputs = systems:
+          [ "out" ] ++
+          # To be perfectly honest this might be overkill. I guess it’s nice to have
+          # the output completely separate, but it does cause quite some confusion
+          # downstream even to myself and I wrote this damn thing.
+          l.optional (b.elem "cl-libxslt" systems) "lib";
+        # This :force t isn’t necessary, and it breaks tests
+        postUnpack = ''
+          (cd "$sourceRoot"; sed -i  -e "s/ :force t//" *.asd)
+        '';
+        preBuild = systems: s.optionalString (b.elem "cl-libxslt" systems) ''
           LIBNAME=${libname} make -C foreign
-          mkdir -p $lib
-          cp -r foreign/${libname} $lib/
-          export LD_LIBRARY_PATH=$lib
-        ''
-      else "";
-  }) {}) cl-libxml2 cl-libxslt;
+        '';
+        postInstall = systems: s.optionalString (b.elem "cl-libxslt" systems) ''
+          mkdir -p $lib/lib
+          cp -r foreign/${libname} $lib/lib
+        '';
+        lispBuildPhase = { defaultBuildScript, ... }:
+          pkgs.writeText "build-libxml.lisp" ''
+(let ((cffi:*foreign-library-directories* (cons (merge-pathnames "foreign/" (uiop:getcwd))
+                                                cffi:*foreign-library-directories*)))
+  (load #p${b.toJSON defaultBuildScript}))
+          '';
+        lispCheckPhase = lispBuildPhase;
+      }) {}) cl-libxml2 cl-libxslt;
 
   cl-locale = callPackage (self: with self; lispDerivation {
     src = pkgs.fetchFromGitHub {
@@ -2227,11 +2263,10 @@ in
       rev = "2421f0d9608aac44ac0e18b2b5e1ff23c953f190";
       sha256 = "HLxSeuRShhf5+zhpm9pofKg8jwg4/Qfq1QfO0BP8+Dw=";
     };
-    # I am ashamed to say I /still/ don’t know how dynamic linking really works
-    # in Nix. My God it’s not a learning curve it’s a fractal.
+    outputs = [ "out" "lib" ];
     postInstall = ''
-      mkdir -p $out/lib
-      ( cd $out/lib ; for f in ../posix/libosicat* ; do ln -s $f ./ ; done )
+      mkdir -p $lib/lib
+      for f in $out/posix/libosicat* ; do cp $f $lib/lib/ ; done
     '';
     lispDependencies = [ alexandria cffi trivial-features cffi-grovel ];
     lispCheckDependencies = [ rt ];
@@ -2405,7 +2440,6 @@ in
     lispCheckDependencies = [ lift ];
   }) {};
 
-  # For some reason none of these dependencies are specified in the .asd
   rove = callPackage (self: with self; lispify [
     bordeaux-threads
     dissect
@@ -2494,12 +2528,11 @@ in
   should-test = callPackage (self: with self; lispDerivation {
     lispSystem = "should-test";
     lispDependencies = [ rutils local-time osicat cl-ppcre];
-    # TODO: This should be propagated from osicat somehow, not in every client
-    # using osicat.
-    preBuild = ''
-export LD_LIBRARY_PATH=''${LD_LIBRARY_PATH+$LD_LIBRARY_PATH:}${osicat}/lib
-'';
-    buildInputs = [ osicat ];
+    buildInputs = [
+      osicat
+      # Include to pick up on osicat dynamic linking
+      cffi
+    ];
     src = pkgs.fetchFromGitHub {
       owner = "vseloved";
       repo = "should-test";
