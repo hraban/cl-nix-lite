@@ -4,8 +4,14 @@
 #
 #     nix-build
 
-pkgs.lispPackagesLite.lispWithSystems (
-  pkgs.lib.pipe pkgs.lispPackagesLite [
+with pkgs.lib;
+
+let
+  lispPackagesLite = pkgs.lispPackagesLite;
+in
+
+lispPackagesLite.lispWithSystems (
+  pipe lispPackagesLite [
     builtins.attrValues
-    (builtins.filter pkgs.lib.isDerivation)
+    (builtins.filter isDerivation)
   ])

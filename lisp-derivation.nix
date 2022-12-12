@@ -8,7 +8,7 @@ with pkgs.lib;
 with callPackage ./utils.nix {};
 
 let
-  lisp-asdf-op = op: sys: "(asdf:${op} :${sys})";
+  lisp-asdf-op = op: sys: "(asdf:${op} ${b.toJSON sys})";
 
   # Generate a load script for this derivation.
   # Open question: why not use :tree instead of :directory? Just search
@@ -258,7 +258,10 @@ in
       # useful to be able to reuse them if all you want to create is a wrapper.
       localLispBuildPhase =
         callIfFunc {
+          # The final, resolved, deduplicated values for this:
           lispSystems = lispSystems';
+          lispDependencies = allDepsDerivs;
+          # The default in case you want to wrap
           defaultBuildScript = pkgs.writeText "build-${pname}.lisp" (
             b.concatStringsSep "\n" (map (lisp-asdf-op lispBuildOp) lispSystems')
           );
@@ -292,6 +295,7 @@ in
         "lispSystem"
         "_lispDeduplicateMyself"
         "_lispOrigSrc"
+        "_lispOrigSystems"
         # This is a function for internal use only. Expose through passthru.
         "lispSetupHook"
       ];
@@ -531,26 +535,30 @@ EOF
 
   # Get a binary executable lisp which can load the given systems from ASDF
   # without any extra setup necessary.
-  lispWithSystems = systems: lispDerivation {
-    inherit (lisp) name;
-    lispSystem = "";
-    buildInputs = [ pkgs.makeWrapper ];
-    src = pkgs.writeText "mock" "source";
-    dontUnpack = true;
-    dontBuild = true;
-    lispDependencies = systems;
-    # This wrapper is necessary because Nix is just a build environment that
-    # delivers executables. Once the binary is built, Nix doesn’t control its
-    # environment when it is started--it’s a regular binary. Meaning: we can’t
-    # somehow set these envvars in some config, like you could do with
-    # e.g. Docker. To set envvars on a binary /at runtime/, you must create a
-    # wrapper that does this. Enter ‘makeWrapper’ et al.
-    installPhase = ''
-      ls -1 ${lisp}/bin | while read f; do
-        makeWrapper ${lisp}/bin/$f $out/bin/$f \
-          ''${CL_SOURCE_REGISTRY+--set CL_SOURCE_REGISTRY $CL_SOURCE_REGISTRY} \
-          --set ASDF_OUTPUT_TRANSLATIONS $ASDF_OUTPUT_TRANSLATIONS
-      done
-    '';
-  };
+  lispWithSystems = systems:
+    lispDerivation {
+      lispSystem = "all-systems";
+      nativeBuildInputs = [ pkgs.makeBinaryWrapper ];
+      src = pkgs.writeText "mock" "source";
+      dontUnpack = true;
+      lispDependencies = systems;
+      lispBuildPhase = { lispDependencies, ... }:
+        let
+          depSystems = flatten (map (d: d.lispSystems) lispDependencies);
+        in
+          pkgs.writeText "build-all.lisp" ''
+  (require :uiop)
+  ${b.concatStringsSep "\n" (map (lisp-asdf-op "load-system") depSystems)}
+  (uiop:dump-image #p"./all.core")
+        '';
+      installPhase = ''
+        mkdir -p "$out/share/"
+        cp all.core $out/share/
+      '' + {
+        sbcl = ''
+          makeBinaryWrapper ${lisp}/bin/sbcl $out/bin/sbcl \
+            --add-flags "--core $out/share/all.core"
+        '';
+      }.${lisp.pname};
+    };
 }

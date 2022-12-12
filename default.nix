@@ -442,18 +442,12 @@ in
         ];
       };
     };
-    preCheck = let
-      testDirectories = [
-        "$PWD/examples/coalton-json"
-        "$PWD/examples/quil-coalton"
-        "$PWD/examples/small-coalton-programs"
-        "$PWD/examples/thih"
-      ];
-      testPaths = b.concatStringsSep ":" testDirectories;
-    in
-      systems: s.optionalString (b.elem "coalton-examples" systems) ''
-        export CL_SOURCE_REGISTRY="${testPaths}:$CL_SOURCE_REGISTRY"
-      '';
+    lispAsdPath = systems: filter (x: x != null) (map (s: {
+      coalton-json = "examples/coalton-json";
+      quil-coalton = "examples/quil-coalton";
+      small-coalton-programs = "examples/small-coalton-programs";
+      thih-coalton = "examples/thih";
+    }.${s} or null) systems);
   }) {}) coalton coalton-benchmarks coalton-doc coalton-examples;
 
   circular-streams = callPackage (self: with self; lispDerivation {
@@ -2447,8 +2441,18 @@ in
       rev = "1b79e85aa653e1ec87e21ca745abe51547866fa9";
       sha256 = "IS+9osD50/fjph6iLEohe59BcvcgUHkvKBWiLS4b8/4=";
     };
-    lispDependencies = [ puri iterate split-sequence ];
+    # Technically cl-routes has code that is conditionally built, only if swank
+    # is already loaded, by the caller. This doesn’t play well with Nix, in
+    # particular with pre-building and read-only store, so for now just force
+    # loading swank when you load cl-routes to avoid this issue. Not ideal.
+    lispDependencies = [ puri iterate split-sequence swank ];
     lispCheckDependencies = [ lift ];
+    lispBuildPhase = { defaultBuildScript, ... }:
+      pkgs.writeText "build-routes.lisp" ''
+;; Force loading of swank to ensure it is present in *features*
+(asdf:load-system "swank")
+(load #p${b.toJSON defaultBuildScript})
+      '';
   }) {};
 
   rove = callPackage (self: with self; lispify [

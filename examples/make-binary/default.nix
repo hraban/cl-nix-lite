@@ -1,10 +1,13 @@
-{ pkgs ? import ../../../../.. {} }:
+{
+  pkgs ? import ../../../../.. {}
+  , lispPackagesLite ? pkgs.lispPackagesLite
+}:
 
-with pkgs.lispPackagesLite;
+with lispPackagesLite;
+
 lispDerivation {
-  # Added a bunch of unnecessary deps to see how this system handles
-  # deduplication
-  lispDependencies = [ alexandria arrow-macros cl-async cl-async-ssl ];
+  # cl-async is a good litmus test dependency because it uses CFFI
+  lispDependencies = [ alexandria cl-async ];
   lispSystem = "demo";
   version = "0.0.1";
   src = pkgs.lib.cleanSource ./.;
