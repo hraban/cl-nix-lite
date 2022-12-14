@@ -820,6 +820,20 @@ in
         lispCheckPhase = lispBuildPhase;
       }) {}) cl-libxml2 cl-libxslt;
 
+  cl-libyaml = callPackage (self: with self; lispDerivation {
+    lispSystem = "cl-libyaml";
+    src = pkgs.fetchFromGitHub {
+      owner = "eudoxia0";
+      repo = "cl-libyaml";
+      name = "cl-libyaml-src";
+      rev = "a7fe9f68bddfd00b7ca467b65b3b41b276336843";
+      sha256 = "JyCM81sFtc357YVSdDpHnpk6DDf9wlhlHgBDP5mq+xo=";
+    };
+    propagatedBuildInputs = [ pkgs.libyaml ];
+    lispDependencies = [ cffi ];
+    lispCheckDependencies = [ fiveam ];
+  }) {};
+
   cl-locale = callPackage (self: with self; lispDerivation {
     src = pkgs.fetchFromGitHub {
       owner = "fukamachi";
@@ -2338,6 +2352,19 @@ in
     rev = "0c3e0b57b43b6e0c5794b6a902f1cf5bee2a2927";
     sha256 = "juKAc6KlHy9JwB/MPv8JXTGkYUTDJKjC8DHkja8xy7s=";
   })) {};
+
+  postmodern = callPackage (self: with self; lispDerivation {
+    src = pkgs.fetchFromGitHub {
+      owner = "marijnh";
+      repo = "Postmodern";
+      name = "Postmodern-src";
+      rev = "04120b463079fbc227317784945490618861b2c3";
+      sha256 = "v+H70vJEx619r4yvIGgTBevAwJpupxEPKESsImAaycs=";
+    };
+    lispSystem = "postmodern";
+    lispDependencies = [ alexandria global-vars md5 split-sequence ];
+    lispCheckDependencies = [ fiveam ];
+  }) {};
 
   proc-parse = callPackage (self: with self; lispDerivation {
     lispSystem = "proc-parse";
