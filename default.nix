@@ -113,7 +113,14 @@ in
       str
       swank
     ];
-    lispCheckDependencies = [ rove ];
+    lispCheckDependencies = [
+      cl-fad
+      dexador
+      rove
+      spinneret
+      tmpdir
+      trivial-extract
+    ];
   }) {};
 
   # Something very odd is happening with the ASDF scope here. I have absolutely
@@ -170,6 +177,18 @@ in
       repo = "anaphora";
       rev = "0.9.8";
       sha256 = "sha256-CzApbUmdDmD+BWPcFGJN0rdZu991354EdTDPn8FSRbc=";
+    };
+  }) {};
+
+  archive = callPackage (self: with self; lispDerivation {
+    lispSystem = "archive";
+    lispDependencies = [ trivial-gray-streams cl-fad ];
+    src = pkgs.fetchFromGitHub {
+      owner = "sharplispers";
+      repo = "archive";
+      name = "archive-src";
+      rev = "631271c091ed02994bec3980cb288a2cf32c7cdc";
+      sha256 = "l2wLh0WuO8/l8U4H1vhtX0MToSb41wlaz6cvX11iel8=";
     };
   }) {};
 
@@ -933,7 +952,7 @@ in
       rutils
       usocket
     ];
-    lispCheckDependencies = [ bordeaux-treads should-test ];
+    lispCheckDependencies = [ bordeaux-threads should-test ];
     src = pkgs.fetchFromGitHub {
       owner = "vseloved";
       repo = "cl-redis";
@@ -1227,6 +1246,17 @@ in
       };
     };
   }) {}) dbi;
+
+  deflate = callPackage ({}: lispDerivation {
+    src = pkgs.fetchFromGitHub {
+      owner = "pmai";
+      repo = "Deflate";
+      name = "Deflate-src";
+      rev = "fb940e63b89a6c4d168153dbf046552e106eb8a5";
+      sha256 = "usXImjvntDb5zrEUtJIWRUeRbNcigzMhaoIzA7uV7co=";
+    };
+    lispSystem = "deflate";
+  }) {};
 
   dexador = callPackage (self: with self; lispDerivation {
     lispSystem = "dexador";
@@ -1526,6 +1556,18 @@ in
     rev = "v1.4.2";
     sha256 = "sha256-ktwyRdDG3Z0KOnM0C8lbq7ZAZVqozTbwkiUsWuktsBI=";
   })) {};
+
+  flexichain = callPackage ({ trivial-garbage }: lispDerivation {
+    lispSystem = "flexichain";
+    lispDependencies = [ trivial-garbage ];
+    src = pkgs.fetchFromGitHub {
+      owner = "robert-strandh";
+      repo = "Flexichain";
+      name = "Flexichain-src";
+      rev = "9af644a6323f303a936a391b956babcbfe7b0c67";
+      sha256 = "5pGEKRHjSxkobvvrSFpkssq3lvMvhxvorTgGNq1zc8c=";
+    };
+  }) {};
 
   float-features = callPackage (self: with self; lispDerivation {
     lispSystem = "float-features";
@@ -2178,6 +2220,27 @@ in
     lispDependencies = [ array-utils form-fiddle plump clss ];
   }) {};
 
+  mcclim = callPackage (self: with self; lispDerivation {
+    src = pkgs.fetchFromGitHub {
+      owner = "mcclim";
+      repo = "mcclim";
+      name = "mcclim-src";
+      rev = "edbc773336a15d368052d3d93d3e0cdb2acc4585";
+      sha256 = "Tg8Vj5nS0FOKzp/x9az9YS0K0KDGRr6+WCVDU6oHNhg=";
+    };
+    lispSystem = "mcclim";
+    lispAsdPath = [ "Core" "Libraries/Drei" ];
+    lispDependencies = [
+      bordeaux-threads
+      closer-mop
+      flexichain
+      spatial-trees
+      trivial-features
+      trivial-garbage
+      trivial-gray-streams
+    ];
+  }) {};
+
   md5 = callPackage (self: with self; lispify [ flexi-streams ] (pkgs.fetchFromGitHub {
     name = "md5-src";
     owner = "pmai";
@@ -2344,6 +2407,19 @@ in
     rev = "de944fd22c9e5db450d48cdf829abd38a375c07c";
     sha256 = "75VcTh+9ACghhHsw8dqQ1S8rh/SL4T6954UtGD6AudI=";
   })) {};
+
+  path-parse = callPackage (self: with self; lispDerivation {
+    src = pkgs.fetchFromGitHub {
+      owner = "eudoxia0";
+      repo = "path-parse";
+      name = "path-parse-src";
+      rev = "86183f3752374435f8933394b4c5d8e75a37a113";
+      sha256 = "WKkQ1vDLEko0npTPhunrQSG1kEkTccHh2NcxYbCpvYI=";
+    };
+    lispSystem = "path-parse";
+    lispCheckDependencies = [ fiveam ];
+    lispDependencies = [ split-sequence ];
+  }) {};
 
   plump = callPackage (self: with self; lispify [ array-utils documentation-utils ] (pkgs.fetchFromGitHub {
     owner = "Shinmera";
@@ -2632,6 +2708,26 @@ in
 
   inherit (callPackage (self: with self; lispMultiDerivation {
     src = pkgs.fetchFromGitHub {
+      owner = "rpav";
+      repo = "spatial-trees";
+      name = "spatial-trees-src";
+      rev = "81fdad0a0bf109c80a53cc96eca2e093823400ba";
+      sha256 = "SnsTc3zcYZEJlLfUlDIrodi0zv96vihmZLwFUKBhMIc=";
+    };
+    systems = {
+      spatial-trees = {
+        lispCheckDependencies = [ fiveam spatial-trees-nns ];
+      };
+      spatial-trees-nns = {
+        lispSystem = "spatial-trees.nns";
+        lispDependencies = [ alexandria optima iterate ];
+        lispCheckDependencies = [ fiveam spatial-trees ];
+      };
+    };
+  }) {}) spatial-trees spatial-trees-nns;
+
+  inherit (callPackage (self: with self; lispMultiDerivation {
+    src = pkgs.fetchFromGitHub {
       owner = "ruricolist";
       repo = "spinneret";
       name = "spinneret-src";
@@ -2750,6 +2846,40 @@ in
     lispDependencies = [ alexandria iterate ];
     lispCheckDependencies = [ lisp-unit2 ];
   }) {};
+
+  tmpdir =
+    # Awkward nested scope to work around the fact that tmpdir does not
+    # explicitly define the "tmpdir.tests" system as its test operation. This
+    # can be solved by defining both systems explicitly in their own recursive
+    # attrset, making one a test dependency of the other, and only exporting the
+    # final non-test derivation. It could also be solved much more easily by
+    # just exporting tmpdir-tests top-level, at the cost of slightly polluting
+    # the top-level space with a non-public system. But I wanted to demonstrate
+    # how to do this “properly.”
+    (with rec {
+        inherit (callPackage (self: with self; lispMultiDerivation {
+        src = pkgs.fetchFromGitHub {
+          owner = "moderninterpreters";
+          repo = "tmpdir";
+          name = "tmpdir-src";
+          rev = "e1981284b969e04a48a3e7f3b98a50435e853eb6";
+          sha256 = "aBJb+MCxWT2NKuNdQwRvubQwQqVzece5L6d5Ll6F2oc=";
+        };
+
+        systems = {
+          tmpdir = {
+            lispDependencies = [ cl-fad ];
+            lispCheckDependencies = [ tmpdir-tests ];
+          };
+          tmpdir-tests = {
+            lispSystem = "tmpdir.tests";
+            lispDependencies = [ tmpdir fiveam osicat ];
+          };
+        };
+      }) {}) tmpdir tmpdir-tests;
+    };
+    # Only get the non-test package top level.
+    tmpdir);
 
   inherit (callPackage (self: with self; lispMultiDerivation {
     src = pkgs.fetchFromGitHub {
@@ -2873,6 +3003,28 @@ in
     };
     lispSystem = "trivial-custom-debugger";
     lispCheckDependencies = [ parachute ];
+  }) {};
+
+  # Explicitly list zip package dependency to help callPackage pick the right
+  # value: the lisp package, not the pkgs.lib.zip helper function.
+  trivial-extract = callPackage ({ zip, ...}@self: with self; lispDerivation {
+    lispSystem = "trivial-extract";
+    src = pkgs.fetchFromGitHub {
+      owner = "eudoxia0";
+      repo = "trivial-extract";
+      name = "trivial-extract-src";
+      rev = "320a0bd7fe02a5551f311fa8f1a4df16dd7322f5";
+      sha256 = "XaeBgqGDErKZDCDsXChs9XkQcVSPe9Q4Mct04sLpAwE=";
+    };
+    lispCheckDependencies = [ fiveam ];
+    lispDependencies = [
+      alexandria
+      archive
+      cl-fad
+      deflate
+      which
+      self.zip
+    ];
   }) {};
 
   trivial-features = callPackage (self: with self; lispDerivation {
@@ -3093,6 +3245,19 @@ in
     sha256 = "sha256-nqVv41WDV5ncToM8UWchvWrp5rWCbNgzJV2ZI++dZhQ=";
   })) {};
 
+  which = callPackage (self: with self; lispDerivation {
+    lispSystem = "which";
+    src = pkgs.fetchFromGitHub {
+      owner = "eudoxia0";
+      repo = "which";
+      name = "which-src";
+      rev = "b2333e4fcacab6e5d85eecd28b5ef4944bda1448";
+      sha256 = "02H845n6zOQyCB2ymUzOYsLvbFXbF96USpzUTGCq94g=";
+    };
+    lispCheckDependencies = [ fiveam ];
+    lispDependencies = [ path-parse cl-fad ];
+  }) {};
+
   with-output-to-stream = callPackage (self: with self; lispDerivation {
     lispSystem = "with-output-to-stream";
     version = "1.0";
@@ -3146,5 +3311,18 @@ in
     repo = "yason";
     rev = "826ea4f51f148cdd3065727fcc9f84960f2e0b2c";
     sha256 = "bG2g7V4yv83hW3fTJcPUdcb1UB+JcVg3wCmHHyaUBBI=";
+  })) {};
+
+  zip = callPackage (self: with self; lispify [
+    babel
+    cl-fad
+    salza2
+    trivial-gray-streams
+  ] (pkgs.fetchFromGitHub {
+    owner = "bluelisp";
+    repo = "zip";
+    name = "zip-src";
+    rev = "688b1545dd7a4fe355556768bb03f8bd9b847a87";
+    sha256 = "xvjyYCvmc55ath3ePTnrz2BK28Iwbu+W/k6ggJ1RCGg=";
   })) {};
 })

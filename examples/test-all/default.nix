@@ -2,7 +2,11 @@
   pkgs ? import ../../../../.. {}
   , lispPackagesLite ? pkgs.lispPackagesLite
   , skip ? [
+    # https://github.com/AccelerationNet/arnesi/issues/2
     "arnesi"
+    "arnesi-cl-ppcre-extras"
+    "arnesi-slime-extras"
+
     "fare-quasiquote"
     # I’m confused as to why this one is failing
     "gettext"

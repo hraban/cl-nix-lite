@@ -508,21 +508,16 @@ To test all packages, see [examples/test-all](examples/test-all).
 
 ## TODO
 
-### Important
-
-- Don't clobber existing `buildPhase` etc.
-
 ### Nice-to-have
 
+- Dogfood locally as full lisp dev system w/o quicklisp
+- Figure out the lispWithSystems image vs envvar situation
 - Get all remaining packages’ tests passing.
 - An example showing fasl-only building, no binary
-- Don’t use `CL_SOURCE_REGISTRY` but use source map files?
-- Don’t clobber existing `CL_SOURCE_REGISTRY`
 - Document how to overwrite a package
-- Using that: in the test-all, can we "inject" a check=true version of every package into the entire chain? Instead of building every package in test mode separately, but have each of them depend on non-checking packages? Should we, even?
 - Fix binary building with ECL
 - More lisps
-- Test on Linux
+- Test on Linux (particularly: NixOS)
 - integrate with borg? First: decide if this belongs in nixpkgs at all.
 - Check if `lispDerivation` is actually the best name for this function
 

@@ -514,7 +514,6 @@ in
         # user-specified shellHook; we extend it, if it exists. So this is a
         # non-destructive operation.
         shellHook = ''
-eval "$setAsdfPath"
 >&2 cat <<EOF
 Lisp dependencies available to ASDF: ${allDepsHumanReadable}.
 
