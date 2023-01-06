@@ -405,13 +405,12 @@ in
 (require :uiop)
 (asdf:load-system :cffi)
 
-(mapcar
- (lambda (depLib)
-   (let ((d (uiop:directory-exists-p depLib)))
-     (when d
-       (pushnew d cffi:*foreign-library-directories* :test #'equal))))
- '(${b.toString (map (d: b.toJSON "${(getLib d)}/lib") libs)}))
-          '';
+(let ((lib-dirs '(${b.toString (map (d: b.toJSON "${(getLib d)}/lib") libs)})))
+  (dolist (dep-lib lib-dirs)
+    (let ((d (uiop:directory-exists-p dep-lib)))
+      (when d
+        (pushnew d cffi:*foreign-library-directories* :test #'equal)))))
+'';
     }
   ) {}) cffi cffi-grovel;
 
