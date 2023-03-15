@@ -1,3 +1,5 @@
+N.B.: I just migrated this code into this stand-alone repository, but the docs were written when it was a fork of nixpkgs. Most examples and instructions are out of date and need updating.
+
 <details>
 <summary>
 
