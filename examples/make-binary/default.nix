@@ -1,6 +1,10 @@
-{ pkgs ? import ../../../../.. {} }:
+{
+  pkgs ? import <nixpkgs> {}
+  , lispPackagesLite ? import ../.. { inherit pkgs; }
+}:
 
-with pkgs.lispPackagesLite;
+with lispPackagesLite;
+
 lispDerivation {
   # Added a bunch of unnecessary deps to see how this system handles
   # deduplication
