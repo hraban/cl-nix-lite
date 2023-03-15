@@ -1,4 +1,4 @@
-# Copyright © 2022  Hraban Luyat
+# Copyright © 2023  Hraban Luyat
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -13,14 +13,15 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 {
-  pkgs
-  , lib
-  , newScope
-
+  pkgs ? import <nixpkgs> {}
   , lisp ? pkgs.sbcl
 }:
 
-lib.makeScope newScope (self:
+with {
+  inherit (pkgs) lib;
+};
+
+lib.recurseIntoAttrs (lib.makeScope pkgs.newScope (self:
 with self;
 
 with lib;
@@ -3059,4 +3060,4 @@ export LD_LIBRARY_PATH=''${LD_LIBRARY_PATH+$LD_LIBRARY_PATH:}${osicat}/lib
     rev = "826ea4f51f148cdd3065727fcc9f84960f2e0b2c";
     sha256 = "bG2g7V4yv83hW3fTJcPUdcb1UB+JcVg3wCmHHyaUBBI=";
   })) {};
-})
+}))
