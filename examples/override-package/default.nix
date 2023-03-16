@@ -2,11 +2,12 @@
 # regression, or a bug:
 
 {
-  pkgs ? import ../../../../.. {}
+  pkgs ? import <nixpkgs> {}
+  , lispPackagesLite ? import ../.. { inherit pkgs; }
 }:
 
 let
-  myAlexandria = pkgs.lispPackagesLite.lispDerivation {
+  myAlexandria = lispPackagesLite.lispDerivation {
     lispSystem = "alexandria";
     src = pkgs.fetchFromGitLab {
       name = "alexandria-src-override";
@@ -21,6 +22,6 @@ in
 
 # Just overriding alexandria will automatically make packages that /depend/ on
 # alexandria pick up on the new definition. Like arrow-macros, for example:
-(pkgs.lispPackagesLite.overrideScope' (self: super: {
+(lispPackagesLite.overrideScope' (self: super: {
   alexandria = myAlexandria;
 })).arrow-macros
