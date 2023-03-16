@@ -1,6 +1,9 @@
-{ pkgs ? import ../../../../.. {} }:
+{
+  pkgs ? import <nixpkgs> {}
+  , lispPackagesLite ? import ../.. { inherit pkgs; }
+}:
 
-with pkgs.lispPackagesLite;
+with lispPackagesLite;
 
 lispDerivation {
   src = pkgs.lib.cleanSource ./.;
