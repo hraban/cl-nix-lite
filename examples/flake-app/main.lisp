@@ -1,4 +1,4 @@
-;; Copyright © 2022  Hraban Luyat
+;; Copyright © 2022, 2023  Hraban Luyat
 ;;
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU Affero General Public License as published
@@ -12,14 +12,14 @@
 ;; You should have received a copy of the GNU Affero General Public License
 ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-(uiop:define-package #:demo
-  (:nicknames #:demo/main)
+(uiop:define-package #:flake-app
+  (:nicknames #:flake-app/main)
   (:use #:cl #:arrow-macros)
   (:local-nicknames (#:alex #:alexandria))
   (:import-from #:alexandria)
   (:export #:main))
 
-(in-package #:demo/main)
+(in-package #:flake-app/main)
 
 (defun main (&rest args)
   (->> '(1 2 3)

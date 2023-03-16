@@ -1,12 +1,10 @@
 # `nix develop` support for lispPackagesLite (flakes)
 
-Copy this directory to another folder (including the `.envrc` file) and run:
+Run:
 
 ```
 nix develop
 ```
-
-Don’t run that inside this nixpkgs folder, unless you like waiting.
 
 If you have [direnv](https://direnv.net/) installed, just enter the directory
 and it should automatically load it for you.
