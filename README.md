@@ -600,7 +600,7 @@ But perhaps the most important reason to omit QL is “because there are already
 
 ## License
 
-Copyright © 2023  Hraban Luyat
+Copyright © 2022, 2023  Hraban Luyat
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published
