@@ -4,8 +4,7 @@
     flake-utils.url = "github:numtide/flake-utils";
     cl-nix-lite = {
       flake = false;
-      # Use "github:hraban/cl-nix-lite" here instead
-      url = "path:../..";
+      url = "github:hraban/cl-nix-lite";
     };
   };
   outputs = {

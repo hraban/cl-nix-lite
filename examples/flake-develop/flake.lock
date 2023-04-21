@@ -3,14 +3,17 @@
     "cl-nix-lite": {
       "flake": false,
       "locked": {
-        "lastModified": 0,
-        "narHash": "sha256-kcTgW8eUdOo2FQYsg/AvyKNVxazw59uVKUFGat0yfMQ=",
-        "path": "../..",
-        "type": "path"
+        "lastModified": 1678950438,
+        "narHash": "sha256-83T0hqi6jHlc2Jq1t1dLu0vAPnIrwnoyOofaNQvOOd0=",
+        "owner": "hraban",
+        "repo": "cl-nix-lite",
+        "rev": "432ad69f2bf1b5d843e981b020922af54f1eb28c",
+        "type": "github"
       },
       "original": {
-        "path": "../..",
-        "type": "path"
+        "owner": "hraban",
+        "repo": "cl-nix-lite",
+        "type": "github"
       }
     },
     "flake-utils": {
