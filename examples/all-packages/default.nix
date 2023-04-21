@@ -1,4 +1,7 @@
-{ pkgs ? import ../../../../.. {} }:
+{
+  pkgs ? import <nixpkgs> {}
+  , lispPackagesLite ? import ../.. { inherit pkgs; }
+}:
 
 # To build all packages:
 #
@@ -8,4 +11,4 @@
 #
 #     nix-build -A alexandria
 
-pkgs.lispPackagesLite
+lispPackagesLite
