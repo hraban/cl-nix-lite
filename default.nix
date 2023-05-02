@@ -326,19 +326,24 @@ in
           lispCheckDependencies = [ bordeaux-threads rt ];
         };
       };
-      # lisp-modules-new doesn’t specify this and somehow it works fine. Is
-      # there an accidental transitive dependency, there? Or how is this
-      # solved? Additionally, this only seems to be used by a pretty
-      # incidental make call, because the only rule that uses GCC just happens
-      # to be at the top, making it the default make target. Not sure if this
-      # is the ideal way to “build” this package.  Note: Technically this will
-      # always be required because cffi-grovel depends on cffi bare, but it’s
-      # a good litmus test for the system.
+      # lisp-modules-new doesn’t specify GCC and somehow it works fine. Is
+      # there an accidental transitive dependency, there? Is that because GCC is
+      # included through mkDerivation, and its setupHook is automatically
+      # triggered? Or how is this solved? Additionally, this only seems to be
+      # used by a pretty incidental make call, because the only rule that uses
+      # GCC just happens to be at the top, making it the default make
+      # target. Not sure if this is the ideal way to “build” this package.
+      # Note: Technically this will always be required because cffi-grovel
+      # depends on cffi bare, but it’s a good litmus test for the system.
       nativeBuildInputs = [ pkgs.pkg-config ];
       buildInputs = systems: l.optionals (b.elem "cffi" systems) [ pkgs.gcc pkgs.libffi ];
       # This is broken on Darwin because libcffi rewrites the import path in a
       # way that’s incompatible with pkgconfig. It should be "if darwin AND (not
       # pkg-config)".
+
+      setupHooks = systems: l.optionals (b.elem "cffi" systems) [
+        ./cffi-setup-hook.sh
+      ];
     }
   ) {}) cffi cffi-grovel;
 
@@ -408,6 +413,17 @@ in
         ];
       };
     };
+    # Technically coalton is always a dependency so any derivation will always
+    # include coalton so this could just hard-code the list, but I like to be
+    # explicit about it for the sake of clarity.
+    propagatedBuildInputs = systems: l.optionals (b.elem "coalton" systems) [
+      # Actual dependencies
+      pkgs.mpfr
+      pkgs.libuv
+      # For the dynamic loading setup hook, even though we don’t even use
+      # CFFI. Needs better UX.
+      cffi
+    ];
     preBuild = let
       testDirectories = [
         "$PWD/examples/coalton-json"
@@ -474,7 +490,6 @@ in
 
     systems = {
       cl-async = {
-        name = "cl-async";
         lispDependencies = [
           babel
           bordeaux-threads
@@ -491,12 +506,10 @@ in
       };
 
       cl-async-repl = {
-        name = "cl-async-repl";
         lispDependencies = [ bordeaux-threads cl-async ];
       };
 
       cl-async-ssl = {
-        name = "cl-async-ssl";
         lispDependencies = [ cffi cl-async vom ];
       };
     };
@@ -686,7 +699,7 @@ in
 
   cl-libuv = callPackage (self: with self; lispDerivation rec {
     lispDependencies = [ alexandria cffi cffi-grovel ];
-    buildInputs = [ pkgs.libuv ];
+    propagatedBuildInputs = [ pkgs.libuv ];
     lispSystem = "cl-libuv";
     version = "ebe3e166d1b6608efdc575be55579a086356b3fc";
     src = pkgs.fetchFromGitHub {

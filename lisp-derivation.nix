@@ -184,12 +184,26 @@ with callPackage ./utils.nix {};
       # of lisp derivations.
       stdArgs = [
         # Standard args that are not phases
-        "nativeBuildInputs"
-        "buildInputs"
+        "setupHooks"
         "patches"
         "outputs"
         "shellHook"
         "makeFlags"
+
+        # All dependencies
+        "depsBuildBuild"
+        "nativeBuildInputs"
+        "depsBuildTarget"
+        "depsHostHost"
+        "buildInputs"
+        "depsTargetTarget"
+        "depsBuildBuildPropagated"
+        "propagatedNativeBuildInputs"
+        "depsBuildTargetPropagated"
+        "depsHostHostPropagated"
+        "propagatedBuildInputs"
+        "depsTargetTargetPropagated"
+
         # Am I forgetting anything?
 
         # And a custom property which is also useful to vary per system
@@ -385,6 +399,22 @@ Example:
 The working directory's systems are also available, if any.
 EOF
 '' + (localizedArgs.shellHook or "");
+        # WIP! To use stdenv features (e.g. shell hooks) in lisp derivations,
+        # they must be registered as buildInputs, otherwise stdenv’s setup
+        # script can’t find them. This is highly WIP and POC while I learn more
+        # about how stdenv works, exactly. It’s quite tricky. Never mind cross
+        # compilation!
+        # TODO: This is a sign that we probably need to change
+        # “lispDependencies” to a more generic structure of
+        # e.g. lispBuildInputs, lispNativeBuildInputs, etc etc, and
+        # automatically map these onto their non-lisp counterparts. Or maybe go
+        # even more radical and extract any known lisp derivation from the
+        # buildInputs etc arrays, and automatically resolve their entire
+        # dependency graph? One way or another, something needs to change,
+        # because defaulting everything to buildInputs is clearly wrong. I would
+        # probably also need to figure out what cross compilation actually means
+        # in the land of lisp, and write some example derivations.
+        buildInputs = (localizedArgs.buildInputs or []) ++ (attrValues allDeps);
       });
     in
       # If I depend on myself in any way, first flatten me and all my transitive
