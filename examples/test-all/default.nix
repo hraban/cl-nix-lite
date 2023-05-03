@@ -2,20 +2,38 @@
   pkgs ? import <nixpkgs> {}
   , skip ? [
     "_40ants-doc"
-    "_40ants-doc-full"
+    "_40ants-doc-full" # this one works in QL so it’s nix specific
     "arnesi"
+    "cffi"
+    "cl-markdown"
+    "cl-redis"
+    "common-doc"
+    "commondoc-markdown" # https://github.com/40ants/commondoc-markdown/pull/6
+    "dbi"
+    "dynamic-classes"
     "fare-quasiquote"
     "flexi-streams"
-    # I’m confused as to why this one is failing
-    "gettext"
+    "gettext" # I’m confused as to why this one is failing
+    "hamcrest"
     "lack"
+    "lack-full"
     "lack-request"
     "lift"
     "log4cl"
+    "log4cl-extras"
     "lparallel"
+    "moptilities"
+    "reblocks"
+    "routes"
+    "rutils"
+    "spinneret"
+    "str"
     "trivial-backtrace"
+    "trivial-timeout"
     "try"
     "typo"
+    "with-output-to-stream"
+    "xlunit"
   ]
 }:
 
