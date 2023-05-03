@@ -1,5 +1,3 @@
-N.B.: I just migrated this code into this stand-alone repository, but the docs were written when it was a fork of nixpkgs. Most examples and instructions are out of date and need updating.
-
 <details>
 <summary>
 
@@ -89,14 +87,17 @@ Do you want to avoid flakes? Does your system not support flakes? Do you not kno
 
 Try this:
 
-1. Copy [examples/make-binary](examples/make-binary) to a fresh directory.
+1. Copy [examples/hello-binary](examples/hello-binary) to a fresh directory.
 
 2. Change the top lines in default.nix from:
 
 ```nix
-{ pkgs ? import .... }:
+{
+  pkgs ? import <nixpkgs> {}
+  , lispPackagesLite ? import ../.. { inherit pkgs; }
+}:
 
-with pkgs.lispPackagesLite;
+with lispPackagesLite;
 ```
 
 into:
@@ -105,17 +106,15 @@ into:
 { pkgs ? import <nixpkgs> {} }:
 
 with rec {
-  hPkgsSrc = pkgs.fetchFromGitHub {
+  cl-nix-lite = pkgs.fetchFromGitHub {
     owner = "hraban";
-    repo = "nixpkgs";
+    repo = "cl-nix-lite";
     # replace these two lines with the output of
-    # nix run nixpkgs#nix-prefetch-github -- --rev feat/lisp-packages-lite hraban nixpkgs --nix | grep 'rev\|sha'
+    # nix run nixpkgs#nix-prefetch-github -- hraban cl-nix-lite --nix | grep 'rev\|sha'
     rev = "0000000000000000000000000000000000000000";
     sha256 = "";
   };
-  lispPackagesLite = (import hPkgsSrc {}).lispPackagesLite.override {
-    inherit pkgs;
-  };
+  lispPackagesLite = import cl-nix-lite { inherit pkgs; };
 };
 
 with lispPackagesLite;
@@ -124,15 +123,14 @@ with lispPackagesLite;
 3. Run the following command:
 
 ```sh
-# This will take a few minutes. That is normal.
-nix run nixpkgs#nix-prefetch-github -- --nix --rev feat/lisp-packages-lite hraban nixpkgs | grep 'rev\|sha'
+nix run nixpkgs#nix-prefetch-github -- hraban cl-nix-lite --nix | grep 'rev\|sha'
 ```
 
 Grab the two lines of output, and replace their corresponding lines in the snippet you just pasted, in step 2.
 
 4. Run `nix-build`
 
-5. Done. You should have your binary in `result/bin/demo`. Feel free to mess around in the source files and rebuild.
+5. Done. You should have your binary in `result/bin/hello`. Feel free to mess around in the source files and rebuild.
 
 </details>
 
@@ -144,7 +142,7 @@ Grab the two lines of output, and replace their corresponding lines in the snipp
 
 </summary>
 
-Nix, at its core, is a *programming language* that lets you implement every step of a build system: from fetching the source, to building it, to installing it on your system. There is a huge central repository of many such packages across many programming languages, and their compilers, and tools, etc, all implemented in Nix: that’s “nixpkgs”. It contains e.g. GCC, which lets you build other apps, but it also contains useful functions like `lib.fetchFromGitHub`.
+Nix, at its core, is a *programming language* that lets you implement every step of a build system: from fetching the source, to building it, to installing it on your system. There is a huge central repository of many such packages across many programming languages, and their compilers, and tools, etc, all implemented in Nix: that’s “nixpkgs”. It contains e.g. GCC, which lets you build other apps, but it also contains useful functions like `fetchFromGitHub`.
 
 People have taken this (too) far. They’ve built an entire Operating System in Nix. It’s NixOS. It started out as an experiment but it’s here to stay. However it is completely unrelated from this entire project: whether you use Nix on your Mac, Windows, existing Linux computer, or NixOS: this project just helps you build Common Lisp projects. And their dependencies.
 
@@ -295,7 +293,17 @@ Does your project expose only one Lisp system? You want the simple `lispDerivati
 ```nix
 { pkgs ? import <nixpkgs> {} }:
 
-with pkgs.lispPackagesLite;
+with rec {
+  cl-nix-lite = pkgs.fetchFromGitHub {
+    owner = "hraban";
+    repo = "cl-nix-lite";
+    rev = "...";
+    sha256 = "";
+  };
+  lispPackagesLite = import cl-nix-lite { inherit pkgs; };
+};
+
+with lispPackagesLite;
 
 lispDerivation {
   lispSystem = "my-system";
@@ -309,7 +317,17 @@ If your package defines multiple systems that you want to export, you can define
 ```nix
 { pkgs ? import <nixpkgs> {} }:
 
-with pkgs.lispPackagesLite;
+with rec {
+  cl-nix-lite = pkgs.fetchFromGitHub {
+    owner = "hraban";
+    repo = "cl-nix-lite";
+    rev = "...";
+    sha256 = "";
+  };
+  lispPackagesLite = import cl-nix-lite { inherit pkgs; };
+};
+
+with lispPackagesLite;
 
 lispDerivation {
   lispSystems = [ "foo-a" "foo-b" ];
@@ -334,7 +352,17 @@ You have two options:
 ```nix
 { pkgs ? import <nixpkgs> {} }:
 
-with pkgs.lispPackagesLite;
+with rec {
+  cl-nix-lite = pkgs.fetchFromGitHub {
+    owner = "hraban";
+    repo = "cl-nix-lite";
+    rev = "...";
+    sha256 = "";
+  };
+  lispPackagesLite = import cl-nix-lite { inherit pkgs; };
+};
+
+with lispPackagesLite;
 
 lispMultiDerivation {
   systems = {
@@ -359,7 +387,7 @@ Note:
 - You can include other systems defined in the same block, as long as there is no circular dependency chain.
 - This is only useful if your separate systems have different lispDependencies. If they don’t, just create a regular `lispDerivation` with `lispSystems = [ "foo-a" "foo-b" ]`.
 - You don’t need this for your “internal” packages (see similar note in the previous chapter).
-- This is only worth it if the different systems have different dependencies. I use this heavily in [`packages.nix`](packages.nix), because those are libraries and they’re intended for inclusion by other projects. For them, being light-weight matters. But for a personal project, I recommend keeping it all in a single `lispDerivation` and merging all dependencies into a single `lispDependencies`. Far easier.
+- This is only worth it if the different systems have different dependencies. I use this heavily in [the pre-defined list of packages](default.nix), because those are libraries and they’re intended for inclusion by other projects. For them, being light-weight matters. But for a personal project, I recommend keeping it all in a single `lispDerivation` and merging all dependencies into a single `lispDependencies`. Far easier.
 
 If this is a dependency in your own project, you’ll want to use it as follows:
 
@@ -367,7 +395,17 @@ foo.nix:
 ```nix
 { pkgs ? import <nixpkgs> {} }:
 
-with pkgs.lispPackagesLite;
+with rec {
+  cl-nix-lite = pkgs.fetchFromGitHub {
+    owner = "hraban";
+    repo = "cl-nix-lite";
+    rev = "...";
+    sha256 = "";
+  };
+  lispPackagesLite = import cl-nix-lite { inherit pkgs; };
+};
+
+with lispPackagesLite;
 
 lispMultiDerivation {
   systems = {
@@ -392,7 +430,17 @@ bar.nix:
   foo ? import ./foo { inherit pkgs; }
 }:
 
-with pkgs.lispPackagesLite;
+with rec {
+  cl-nix-lite = pkgs.fetchFromGitHub {
+    owner = "hraban";
+    repo = "cl-nix-lite";
+    rev = "...";
+    sha256 = "";
+  };
+  lispPackagesLite = import cl-nix-lite { inherit pkgs; };
+};
+
+with lispPackagesLite;
 
 lispDerivation {
   lispSystem = "bar";
@@ -401,55 +449,26 @@ lispDerivation {
 }
 ```
 
-For real-world examples, peruse [`packages.nix`](packages.nix).
-
-### Use in your existing project
-
-The above snippets assume your entire `<nixpkgs>` is my feature branch, which isn’t realistic nor practical. Here’s a way you can *actually* start using this lisp packages module, today:
-
-```nix
-{ pkgs ? import <nixpkgs> {} }:
-
-with rec {
-  hPkgsSrc = pkgs.fetchFromGitHub {
-    owner = "hraban";
-    repo = "nixpkgs";
-    # replace these two lines with the output of
-    # nix run nixpkgs#nix-prefetch-github -- --rev feat/lisp-packages-lite hraban nixpkgs --nix | grep 'rev\|sha'
-    rev = "0000000000000000000000000000000000000000";
-    sha256 = "";
-  };
-  lispPackagesLite = (import hPkgsSrc {}).lispPackagesLite.override {
-    inherit pkgs;
-  };
-};
-
-with lispPackagesLite;
-
-lispMultiDerivation {
-  ... # same
-}
-```
-
-This fetches a specific copy of my feature branch, loads only the `lispPackagesLite` module, and makes sure it integrates with your existing `<nixpkgs>` channel.
-
-You would have to manually update both the revision and sha256 explicitly, when changes happen to this feature branch. If (God forbid) you want future proofing, please fork the repo--I could delete or garbage collect my copy.
+For real-world examples, peruse [`default.nix`](default.nix).
 
 ### Flakes
 
-See the [flake example](examples/flake) for a demo which builds a `nix run` compatible binary.
+See the [flake example](examples/flake-app) for a demo which builds a `nix run` compatible binary.
 
 ### Setting custom Lisp
+
+> N.B.: This is WIP and currently a second class citizen while I figure other things out.
 
 By default this package uses SBCL, but you can use any Lisp you want. Pass a supported Lisp derivation as the `lisp` argument to override.
 
 Example:
 
 ```nix
-{ pkgs ? import <nixpkgs> {} }:
+
+...
 
 with rec {
-  lispPackagesLite = pkgs.lispPackagesLite.override {
+  lispPackagesLite = lispPackagesLite.override {
     lisp = pkgs.ecl;
   };
 };
@@ -467,10 +486,10 @@ You can use any other lisp by passing a function which gets a filename, and retu
 Example for clisp:
 
 ```nix
-{ pkgs ? import <nixpkgs> {} }:
+...
 
 with rec {
-  lispPackagesLite = pkgs.lispPackagesLite.override {
+  lispPackagesLite = lispPackagesLite.override {
     lisp = f: "${pkgs.clisp}/bin/clisp ${f}";
   };
 };
@@ -488,8 +507,8 @@ Is your program itself intended to be used as a dependency? Then you don’t nee
 
 Do you want to output a single executable, instead? This is natively supported by ASDF, so you can leverage that. See:
 
-- The modern example, using a [`flake`](examples/flake)
-- The classic [`make-binary`](examples/make-binary) using `nix-build`
+- The modern example, using a [`flake`](examples/flake-app)
+- The classic [`make-binary`](examples/hello-binary) using `nix-build`
 - [ASDF best practices][ASDF best practices] to configure ASDF.
 
 A third way to deliver your final output is as a lisp interpreter itself, which has been configured to find a predetermined set of dependencies.
@@ -538,14 +557,16 @@ Build the following automation:
 
 1. Use Nix to build a file with all packages’ source locations (long story short: recursively descend into `.src` until it `hasAttr "gitRepoUrl"`).
 2. Create a CL program that ingests that file, fetches every package, compares to current version checked, uses heuristics to determine upgradability (raw hash vs tag, master vs main, etc)
-3. For all that need updating, automatically insert in packages.nix
+3. For all that need updating, automatically insert in default.nix
 4. Automatically nix-build just their source derivations and include the SHA256.
 
-At this point you’d have an updated packages.nix and the user would need to:
+At this point you’d have an updated default.nix and the user would need to:
 
 1. Run [`test-all.nix`](examples/test-all) to check for regressions (todo: simplify that UX)
 2. Fix any issues, e.g. changed dependencies (or worse if you’re unlucky).
 3. Commit and PR
+
+I have a little org-mode and Emacs macro automation that helps me manage things currently which does the job, for now.
 
 ### Decisions to make about future direction
 
@@ -582,7 +603,7 @@ The downside is a convoluted Nix implementation to figure out the actual depende
 
 QuickLisp and Nix solve the same problem: dependency management. The main benefit of QuickLisp for an end user is “just list your dependencies, and you're good to go”; Nix offers the same.
 
-QuickLisp faces limitations that Nix doesn't need to worry about. Notably, it must be bootstrappable from pure Common Lisp without any dependencies. It has a low bus factor (basically just the one benevolent maintainer: Zach Beane). A discussion on this topic was held in 2016 on [Hacker News](https://news.ycombinator.com/item?id=13097333), and the comments ring just as true in 2022. Notably, someone laments the lack of alternative. I believe Nix can fill that gap.
+QuickLisp faces limitations that Nix doesn't need to worry about. Notably, it must be bootstrappable from pure Common Lisp without any dependencies. It has a low bus factor (basically just the one benevolent maintainer: Zach Beane). A discussion on this topic was held in 2016 on [Hacker News](https://news.ycombinator.com/item?id=13097333), and the comments ring just as true in 2023. Notably, someone laments the lack of alternative. I believe Nix can fill that gap.
 
 The other lisp modules leverage QuickLisp which helps bootstrap the list of packages and “known good versions”, and updates. In this package, there are no special cases: every package must be included, managed and updated manually.
 
