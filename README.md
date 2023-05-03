@@ -393,17 +393,9 @@ If this is a dependency in your own project, you’ll want to use it as follows:
 
 foo.nix:
 ```nix
-{ pkgs ? import <nixpkgs> {} }:
-
-with rec {
-  cl-nix-lite = pkgs.fetchFromGitHub {
-    owner = "hraban";
-    repo = "cl-nix-lite";
-    rev = "...";
-    sha256 = "";
-  };
-  lispPackagesLite = import cl-nix-lite { inherit pkgs; };
-};
+{ pkgs
+, lispPackagesLite
+}:
 
 with lispPackagesLite;
 
@@ -427,7 +419,6 @@ bar.nix:
 ```nix
 {
   pkgs ? import <nixpkgs> {},
-  foo ? import ./foo { inherit pkgs; }
 }:
 
 with rec {
@@ -438,6 +429,7 @@ with rec {
     sha256 = "";
   };
   lispPackagesLite = import cl-nix-lite { inherit pkgs; };
+  foo = import ./foo.nix { inherit pkgs lispPackagesLite; };
 };
 
 with lispPackagesLite;
