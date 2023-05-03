@@ -1337,6 +1337,14 @@ in
     lispCheckDependencies = [ fiveam ];
   }) {};
 
+  dns-client = callPackage (self: with self; lispify [ punycode usocket documentation-utils ] (pkgs.fetchFromGitHub {
+    name = "dns-client-src";
+    owner = "Shinmera";
+    repo = "dns-client";
+    rev = "8d8d440e9454d629f7bb78491ead2237f5b54add";
+    sha256 = "F858VVGq9m9uh1ZDJw2vlX3bjVDQ7F9GpxYmlIOB6OQ=";
+  })) {};
+
   # Technically these could be two separate derivations, one per system, but it
   # doesn’t seem like people use it that way, and there’s no dependencies
   # anyway, so there’s little benefit. Just treat this as a monolith package.
