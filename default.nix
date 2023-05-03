@@ -1957,19 +1957,6 @@ in
     };
   }) {}) parser-combinators parser-combinators-cl-ppcre;
 
-  puri = callPackage (self: with self; lispDerivation {
-    lispSystem = "puri";
-    src = pkgs.fetchFromGitLab {
-      name = "puri-src";
-      domain = "gitlab.common-lisp.net";
-      owner = "clpm";
-      repo = "puri";
-      rev = "4bbab89d9ccbb26346899d1f496c97604fec567b";
-      sha256 = "sha256-rV5ViV0082r3PQlmUdYo+GtCW934kw3EBxpGBbLOAj8=";
-    };
-    lispCheckDependencies = [ ptester ];
-  }) {};
-
   jonathan = callPackage (self: with self; lispDerivation {
     lispSystem = "jonathan";
     src = pkgs.fetchFromGitHub {
@@ -2489,6 +2476,31 @@ in
       sha256 = "sha256-jjc7JP+T7jrbSsPU+RNhQrxOKYkQDfiJwyLbxg51FNA=";
       pname = "cl-ptester";
     };
+  }) {};
+
+  punycode = callPackage (self: with self; lispDerivation {
+    lispSystem = "punycode";
+    src = pkgs.fetchFromGitHub {
+      name = "punycode-src";
+      owner = "Shinmera";
+      repo = "punycode";
+      rev = "c79374a2ed1d9385f3db630887a0528e1b25abfb";
+      sha256 = "dlyAmiDrddYYY1PczdkN3QNzhgRPjKEgSHwwuiSgERU=";
+    };
+    lispCheckDependencies = [ parachute ];
+  }) {};
+
+  puri = callPackage (self: with self; lispDerivation {
+    lispSystem = "puri";
+    src = pkgs.fetchFromGitLab {
+      name = "puri-src";
+      domain = "gitlab.common-lisp.net";
+      owner = "clpm";
+      repo = "puri";
+      rev = "4bbab89d9ccbb26346899d1f496c97604fec567b";
+      sha256 = "sha256-rV5ViV0082r3PQlmUdYo+GtCW934kw3EBxpGBbLOAj8=";
+    };
+    lispCheckDependencies = [ ptester ];
   }) {};
 
   pythonic-string-reader = callPackage (self: with self; lispify [ named-readtables ] (pkgs.fetchFromGitHub {

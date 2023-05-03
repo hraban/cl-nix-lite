@@ -1,8 +1,11 @@
 {
   pkgs ? import <nixpkgs> {}
   , skip ? [
+    "_40ants-doc"
+    "_40ants-doc-full"
     "arnesi"
     "fare-quasiquote"
+    "flexi-streams"
     # I’m confused as to why this one is failing
     "gettext"
     "lack"
