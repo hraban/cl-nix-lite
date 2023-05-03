@@ -145,6 +145,14 @@ in
     lispCheckDependencies = [ lisp-unit2 ];
   }) {};
 
+  acclimation = callPackage (self: with self; lispify [] (pkgs.fetchFromGitHub {
+    owner = "robert-strandh";
+    repo = "Acclimation";
+    name = "Acclimation-src";
+    rev = "4fc59692f2a12d1038fd3978bb6e66f554672049";
+    sha256 = "Cp2bvFvCHzyWoW+pwbRGBqSKbi9Nv0JwWAmSs9VUFgk=";
+  })) {};
+
   alexandria = callPackage (self: with self; lispDerivation {
     lispSystem = "alexandria";
     src = pkgs.fetchFromGitLab {
@@ -335,8 +343,8 @@ in
       # target. Not sure if this is the ideal way to “build” this package.
       # Note: Technically this will always be required because cffi-grovel
       # depends on cffi bare, but it’s a good litmus test for the system.
-      nativeBuildInputs = [ pkgs.pkg-config ];
-      buildInputs = systems: l.optionals (b.elem "cffi" systems) [ pkgs.gcc pkgs.libffi ];
+      nativeBuildInputs = [ pkgs.pkg-config pkgs.gcc ];
+      buildInputs = systems: l.optionals (b.elem "cffi" systems) [ pkgs.libffi ];
       # This is broken on Darwin because libcffi rewrites the import path in a
       # way that’s incompatible with pkgconfig. It should be "if darwin AND (not
       # pkg-config)".
@@ -375,11 +383,14 @@ in
       coalton = {
         lispDependencies = [
           alexandria
+          concrete-syntax-tree
           eclector
-          trivia
-          fset
+          eclector-concrete-syntax-tree
           float-features
+          fset
+          named-readtables
           split-sequence
+          trivia
           trivial-garbage
         ];
         lispCheckDependencies = [
@@ -436,6 +447,10 @@ in
     in ''
       export CL_SOURCE_REGISTRY="${testPaths}:$CL_SOURCE_REGISTRY"
     '';
+    meta = {
+      # Broken since the last update and I can’t exactly figure out why.
+      broken = true;
+    };
   }) {}) coalton coalton-benchmarks coalton-doc coalton-examples;
 
   circular-streams = callPackage (self: with self; lispDerivation {
@@ -1154,6 +1169,24 @@ in
     lispCheckDependencies = [ hamcrest rove ];
   }) {};
 
+  concrete-syntax-tree = callPackage (self: with self; lispDerivation {
+    lispDependencies = [ acclimation ];
+    src = pkgs.fetchFromGitHub {
+      owner = "robert-strandh";
+      repo = "Concrete-Syntax-Tree";
+      name = "Concrete-Syntax-Tree-src";
+      rev = "37291727196a3bc88a7be67c1427c52078d4b82c";
+      sha256 = "+2XSZ/UTTB9ddqWfIOaJTEgGCGLI1xRpEOkLqLGXCZc=";
+    };
+    lispSystem = "concrete-syntax-tree";
+    lispAsdPath = [ "Lambda-list" ];
+    preBuild = ''
+      echo '(:source-registry-cache ' > .cl-source-registry.cache
+      find . -name '*.asd' -exec printf '"%s" ' {} \; >> .cl-source-registry.cache
+      echo ')' >> .cl-source-registry.cache
+    '';
+  }) {};
+
   inherit (callPackage (self: with self; lispMultiDerivation {
     src = pkgs.fetchFromGitHub {
       owner = "fukamachi";
@@ -1296,6 +1329,26 @@ in
     lispDependencies = [ metatilities-base ];
     lispCheckDependencies = [ lift ];
   }) {};
+
+  inherit (callPackage (self: with self; lispMultiDerivation {
+    src = pkgs.fetchFromGitHub {
+      owner = "robert-strandh";
+      repo = "eclector";
+      name = "eclector-src";
+      rev = "32b74ad959bd5b2773f27ecc6e62c2b167bf6626";
+      sha256 = "HpyJo06FGVk/I66w2u5wSbh3FxovDskSpTVydeJeqyE=";
+    };
+    systems = {
+      eclector = {
+        lispDependencies = [ alexandria closer-mop acclimation ];
+        lispCheckDependencies = [ alexandria fiveam ];
+      };
+      eclector-concrete-syntax-tree = {
+        lispDependencies = [ eclector concrete-syntax-tree alexandria ];
+        lispCheckDependencies = [ fiveam ];
+      };
+    };
+  }) {}) eclector eclector-concrete-syntax-tree;
 
   eos = callPackage (self: with self; lispify [ ] (pkgs.fetchFromGitHub {
     name = "eos-src";
@@ -2083,6 +2136,7 @@ in
     lispCheckDependencies = [ hamcrest ];
     lispDependencies = [
       _40ants-doc
+      _40ants-asdf-system
       alexandria
       cl-strings
       dissect
@@ -2395,6 +2449,7 @@ in
       spinneret-cl-markdown
       trivial-open-browser
       trivial-timeout
+      uuid
     ];
   }) {};
 
@@ -3011,6 +3066,14 @@ export LD_LIBRARY_PATH=''${LD_LIBRARY_PATH+$LD_LIBRARY_PATH:}${osicat}/lib
       sha256 = "sha256-anFwnv/E5WtuJO+WgdFcrvlM84EVdLcBPGu81Iirxd4=";
     };
   }) {};
+
+  uuid = callPackage (self: with self; lispify [ ironclad trivial-utf-8 ] (pkgs.fetchFromGitHub {
+    owner = "dardoria";
+    repo = "uuid";
+    name = "uuid-src";
+    rev = "f0052f34a006ec995086aa3b2e42182a178fe228";
+    sha256 = "oN+MXp7i+9r/AiyZtTsZsVGa5yXtcC3/vPy9D7iHnNk=";
+  })) {};
 
   vom = callPackage (self: with self; lispify [ ] (pkgs.fetchFromGitHub {
     name = "vom-src";
