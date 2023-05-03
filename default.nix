@@ -72,6 +72,14 @@ in
 {
   inherit lispDerivation lispMultiDerivation lispWithSystems;
 
+  _1am = callPackage (self: with self; lispify [] (pkgs.fetchFromGitHub {
+    owner = "lmj";
+    repo = "1am";
+    name = "1am-src";
+    rev = "8b1da94eca4613fd8a20bdf63f0e609e379b0ba5";
+    sha256 = "T+y6Bc/i6jF0/Eg6XZOQrHBhlkCkJGHSWTMtGb4lWhc=";
+  })) {};
+
   inherit (callPackage (self: with self; lispMultiDerivation {
     src = pkgs.fetchFromGitHub {
       name = "3bmd-src";
@@ -84,6 +92,7 @@ in
       _3bmd = {
         lispSystem = "3bmd";
         lispDependencies = [ alexandria esrap split-sequence ];
+        lispCheckDependencies = [ _3bmd-ext-code-blocks fiasco ];
       };
       _3bmd-ext-code-blocks = {
         lispSystem = "3bmd-ext-code-blocks";
@@ -92,8 +101,7 @@ in
     };
   }) {}) _3bmd _3bmd-ext-code-blocks;
 
-  _40ants-doc = callPackage (self: with self; lispDerivation {
-    lispSystem = "40ants-doc";
+  inherit (callPackage (self: with self; lispMultiDerivation {
     src = pkgs.fetchFromGitHub {
       owner = "40ants";
       repo = "doc";
@@ -101,17 +109,47 @@ in
       rev = "dbd4e7e5083e4bf06cdcb62c938c30ff66c0f35d";
       sha256 = "jcpP26KJxG6ZIXkpVzVwjiQ/dMT+GgFD2yhA7h3ntEY=";
     };
-    lispDependencies = [
-      cl-ppcre
-      commondoc-markdown
-      named-readtables
-      pythonic-string-reader
-      slynk
-      str
-      swank
-    ];
-    lispCheckDependencies = [ rove ];
-  }) {};
+    systems = {
+      _40ants-doc = {
+        lispSystem = "40ants-doc";
+        lispDependencies = [
+          cl-ppcre
+          commondoc-markdown
+          named-readtables
+          pythonic-string-reader
+          slynk
+          str
+          swank
+        ];
+        lispCheckDependencies = [
+          rove
+          _40ants-doc-full
+        ];
+      };
+      _40ants-doc-full = {
+        lispSystem = "40ants-doc-full";
+        lispDependencies = [
+          _40ants-doc
+          cl-fad
+          commondoc-markdown
+          dexador
+          docs-builder
+          fare-utils
+          jonathan
+          lass
+          pythonic-string-reader
+          slynk
+          spinneret
+          stem
+          str
+          swank
+          tmpdir
+          trivial-extract
+          xml-emitter
+        ];
+      };
+    };
+  }) {}) _40ants-doc _40ants-doc-full;
 
   # Something very odd is happening with the ASDF scope here. I have absolutely
   # no idea why and I’m almost frightened to even find out. If I use the same
@@ -177,6 +215,14 @@ in
       sha256 = "sha256-CzApbUmdDmD+BWPcFGJN0rdZu991354EdTDPn8FSRbc=";
     };
   }) {};
+
+  archive = callPackage (self: with self; lispify [ trivial-gray-streams cl-fad ] (pkgs.fetchFromGitHub {
+    owner = "sharplispers";
+    repo = "archive";
+    name = "archive-src";
+    rev = "631271c091ed02994bec3980cb288a2cf32c7cdc";
+    sha256 = "l2wLh0WuO8/l8U4H1vhtX0MToSb41wlaz6cvX11iel8=";
+  })) {};
 
   inherit (callPackage (self: with self; lispMultiDerivation {
     src = pkgs.fetchFromGitHub {
@@ -895,7 +941,7 @@ in
       rutils
       usocket
     ];
-    lispCheckDependencies = [ bordeaux-treads should-test ];
+    lispCheckDependencies = [ bordeaux-threads should-test ];
     src = pkgs.fetchFromGitHub {
       owner = "vseloved";
       repo = "cl-redis";
@@ -1208,6 +1254,14 @@ in
     };
   }) {}) dbi;
 
+  deflate = callPackage (self: with self; lispify [] (pkgs.fetchFromGitHub {
+    owner = "pmai";
+    repo = "Deflate";
+    name = "Deflate-src";
+    rev = "fb940e63b89a6c4d168153dbf046552e106eb8a5";
+    sha256 = "usXImjvntDb5zrEUtJIWRUeRbNcigzMhaoIzA7uV7co=";
+  })) {};
+
   dexador = callPackage (self: with self; lispDerivation {
     lispSystem = "dexador";
     src = pkgs.fetchFromGitHub {
@@ -1281,6 +1335,21 @@ in
       trivial-backtrace
     ];
     lispCheckDependencies = [ fiveam ];
+  }) {};
+
+  # Technically these could be two separate derivations, one per system, but it
+  # doesn’t seem like people use it that way, and there’s no dependencies
+  # anyway, so there’s little benefit. Just treat this as a monolith package.
+  docs-builder = callPackage (self: with self; lispDerivation {
+    lispSystems = [ "docs-builder" "docs-config" ];
+    src = pkgs.fetchFromGitHub {
+      owner = "40ants";
+      repo = "docs-builder";
+      name = "docs-builder-src";
+      rev = "13dcd12a2b02cc1575148968d40cfaa794c66072";
+      sha256 = "mHfgsxUws+SeUx2kCGOv3MdMlghQK7J5NsfpYaEyj4E=";
+    };
+    lispDependencies = [ log4cl _40ants-doc ];
   }) {};
 
   documentation-utils = callPackage (self: with self; lispDerivation {
@@ -1797,6 +1866,18 @@ in
     };
     lispSystem = "json-streams";
     lispCheckDependencies = [ cl-quickcheck flexi-streams ];
+  }) {};
+
+  lass = callPackage (self: with self; lispDerivation {
+    lispSystems = [ "lass" "binary-lass" ];
+    lispDependencies = [ trivial-indent trivial-mimes cl-base64 ];
+    src = pkgs.fetchFromGitHub {
+      owner = "Shinmera";
+      repo = "LASS";
+      name = "LASS-src";
+      rev = "aa6e1e426bc992ce0178f19a934359d582749d8e";
+      sha256 = "eCDkagN5V5vIeNIxxGNiC79LIt87JCG4CdCyqCxrnPc=";
+    };
   }) {};
 
   marshal = callPackage (self: with self; lispDerivation {
@@ -2347,6 +2428,19 @@ in
     sha256 = "75VcTh+9ACghhHsw8dqQ1S8rh/SL4T6954UtGD6AudI=";
   })) {};
 
+  path-parse = callPackage (self: with self; lispDerivation {
+    lispSystem = "path-parse";
+    lispCheckDependencies = [ fiveam ];
+    lispDependencies = [ split-sequence ];
+    src = pkgs.fetchFromGitHub {
+      owner = "eudoxia0";
+      repo = "path-parse";
+      name = "path-parse-src";
+      rev = "86183f3752374435f8933394b4c5d8e75a37a113";
+      sha256 = "WKkQ1vDLEko0npTPhunrQSG1kEkTccHh2NcxYbCpvYI=";
+    };
+  }) {};
+
   plump = callPackage (self: with self; lispify [ array-utils documentation-utils ] (pkgs.fetchFromGitHub {
     owner = "Shinmera";
     repo = "plump";
@@ -2682,14 +2776,22 @@ export LD_LIBRARY_PATH=''${LD_LIBRARY_PATH+$LD_LIBRARY_PATH:}${osicat}/lib
     sha256 = "sha256-kLKFBG6ZD3cRQAHoLAgxqp2fd9XaY/9DcvB/LTAxHy8=";
   })) {};
 
+  stem = callPackage (self: with self; lispify [] (pkgs.fetchFromGitHub {
+    owner = "hanshuebner";
+    repo = "stem";
+    name = "stem-src";
+    rev = "901e859bdc2b8cc5d8e91dbaca8909e6db05fa84";
+    sha256 = "t54TpV0YGoKAV1mKU8k3NN3iHy6hZmRNeJzhwRLIUyg=";
+  })) {};
+
   str = callPackage (self: with self; lispDerivation {
     lispSystem = "str";
     src = pkgs.fetchFromGitHub {
       name = "str-src";
       repo = "cl-str";
       owner = "vindarel";
-      rev = "0.19";
-      sha256 = "sha256-aSAsXx30wFbBFIHjZioiKpZ/UAX7HsQJdYYfC6VQ38s=";
+      sha256 = "sha256-s7WmfIitBoNFEwapslN1ou6uPG8PvP5isLRLkGsAS1A=";
+      rev = "b1c83802a323ebd843b82b30c8473c84cb09cea3";
     };
     lispDependencies = [
       cl-change-case
@@ -2732,6 +2834,14 @@ export LD_LIBRARY_PATH=''${LD_LIBRARY_PATH+$LD_LIBRARY_PATH:}${osicat}/lib
     lispDependencies = [ alexandria iterate ];
     lispCheckDependencies = [ lisp-unit2 ];
   }) {};
+
+  tmpdir = callPackage (self: with self; lispify [ cl-fad ] (pkgs.fetchFromGitHub {
+    owner = "moderninterpreters";
+    repo = "tmpdir";
+    name = "tmpdir-src";
+    rev = "e1981284b969e04a48a3e7f3b98a50435e853eb6";
+    sha256 = "aBJb+MCxWT2NKuNdQwRvubQwQqVzece5L6d5Ll6F2oc=";
+  })) {};
 
   inherit (callPackage (self: with self; lispMultiDerivation {
     src = pkgs.fetchFromGitHub {
@@ -2855,6 +2965,28 @@ export LD_LIBRARY_PATH=''${LD_LIBRARY_PATH+$LD_LIBRARY_PATH:}${osicat}/lib
     };
     lispSystem = "trivial-custom-debugger";
     lispCheckDependencies = [ parachute ];
+  }) {};
+
+  trivial-extract = callPackage ({ zip, ...}@self: with self; lispDerivation {
+    src = pkgs.fetchFromGitHub {
+      owner = "eudoxia0";
+      repo = "trivial-extract";
+      name = "trivial-extract-src";
+      rev = "320a0bd7fe02a5551f311fa8f1a4df16dd7322f5";
+      sha256 = "XaeBgqGDErKZDCDsXChs9XkQcVSPe9Q4Mct04sLpAwE=";
+    };
+    lispSystem = "trivial-extract";
+    lispDependencies = [
+      archive
+      zip
+      deflate
+      which
+      cl-fad
+      alexandria
+    ];
+    lispCheckDependencies = [
+      fiveam
+    ];
   }) {};
 
   trivial-features = callPackage (self: with self; lispDerivation {
@@ -3083,6 +3215,19 @@ export LD_LIBRARY_PATH=''${LD_LIBRARY_PATH+$LD_LIBRARY_PATH:}${osicat}/lib
     sha256 = "sha256-nqVv41WDV5ncToM8UWchvWrp5rWCbNgzJV2ZI++dZhQ=";
   })) {};
 
+  which = callPackage (self: with self; lispDerivation {
+    lispSystem = "which";
+    src = pkgs.fetchFromGitHub {
+      owner = "eudoxia0";
+      repo = "which";
+      name = "which-src";
+      rev = "b2333e4fcacab6e5d85eecd28b5ef4944bda1448";
+      sha256 = "02H845n6zOQyCB2ymUzOYsLvbFXbF96USpzUTGCq94g=";
+    };
+    lispCheckDependencies = [ fiveam ];
+    lispDependencies = [ path-parse cl-fad ];
+  }) {};
+
   with-output-to-stream = callPackage (self: with self; lispDerivation {
     lispSystem = "with-output-to-stream";
     version = "1.0";
@@ -3092,6 +3237,19 @@ export LD_LIBRARY_PATH=''${LD_LIBRARY_PATH+$LD_LIBRARY_PATH:}${osicat}/lib
       url = "https://tarballs.hexstreamsoft.com/libraries/latest/with-output-to-stream_latest.tar.gz";
       sha256 = "sha256-VRszRJil9IltmwkrobOwAN+k1bfXscXPZm/2JRmbaV8=";
     };
+  }) {};
+
+  xml-emitter = callPackage (self: with self; lispDerivation {
+    src = pkgs.fetchFromGitHub {
+      owner = "VitoVan";
+      repo = "xml-emitter";
+      name = "xml-emitter-src";
+      rev = "0afb8e2a90d68f63fdc4387d0e660cee8d5f4054";
+      sha256 = "POjrOBNZYBB2+eiSquYkqUObav9kT3HYUKegHdrz8eA=";
+    };
+    lispSystem = "xml-emitter";
+    lispDependencies = [ cl-utilities ];
+    lispCheckDependencies = [ _1am ];
   }) {};
 
   xlunit = callPackage (self: with self; lispDerivation rec {
@@ -3136,5 +3294,13 @@ export LD_LIBRARY_PATH=''${LD_LIBRARY_PATH+$LD_LIBRARY_PATH:}${osicat}/lib
     repo = "yason";
     rev = "f4ad893e9dc4142396a86bc518ff6bc814fd43da";
     sha256 = "zeNoFytBPZ1D8g0xDugsMBaRyG9vtWG8WZxnAna7PAI=";
+  })) {};
+
+  zip = callPackage (self: with self; lispify [ trivial-gray-streams babel cl-fad salza2 ] (pkgs.fetchFromGitHub {
+      owner = "bluelisp";
+      repo = "zip";
+      name = "zip-src";
+      rev = "688b1545dd7a4fe355556768bb03f8bd9b847a87";
+      sha256 = "xvjyYCvmc55ath3ePTnrz2BK28Iwbu+W/k6ggJ1RCGg=";
   })) {};
 }))

@@ -1,6 +1,5 @@
 {
-  pkgs ? import ../../../../.. {}
-  , lispPackagesLite ? pkgs.lispPackagesLite
+  pkgs ? import <nixpkgs> {}
   , skip ? [
     "arnesi"
     "fare-quasiquote"
@@ -17,9 +16,12 @@
   ]
 }:
 
-pkgs.lib.pipe lispPackagesLite [
-  (pkgs.lib.attrsets.filterAttrs (n: v:
-    (pkgs.lib.attrsets.isDerivation v) && !(builtins.elem n skip)
-  ))
+with pkgs.lib;
+
+pipe (import ../.. { inherit pkgs; }) [
+  (attrsets.filterAttrs (n: d:
+    (pkgs.lib.isDerivation d) &&
+    ! ((d.meta or {}).broken or false) &&
+    ! (builtins.elem n skip)))
   (builtins.mapAttrs (k: v: v.enableCheck))
 ]
