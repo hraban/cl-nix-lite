@@ -77,8 +77,8 @@ in
       name = "3bmd-src";
       owner = "3b";
       repo = "3bmd";
-      rev = "125c92389ded253a506ff394eb2c0dab3fc78acc";
-      sha256 = "sha256-mbb9dWDDp+wJYDj59QsyZv7ZTsc83cxqba34Xp9mApM=";
+      rev = "20a53fb740eac727ecabd439f2580cf483c98f4d";
+      sha256 = "sha256-sooK263J7KwiYxCGrZavLMvf3TYMQErdKUKdCdXSuqw=";
     };
     systems = {
       _3bmd = {
@@ -98,8 +98,8 @@ in
       owner = "40ants";
       repo = "doc";
       name = "doc-src";
-      rev = "6596ab8aa4eaf3b39be1d4d8e762eccb160e808e";
-      sha256 = "O/sMNLg7Q8WJyse/KGXw9whaelw94SYe2cZoD18/0ac=";
+      rev = "dbd4e7e5083e4bf06cdcb62c938c30ff66c0f35d";
+      sha256 = "jcpP26KJxG6ZIXkpVzVwjiQ/dMT+GgFD2yhA7h3ntEY=";
     };
     lispDependencies = [
       cl-ppcre
@@ -124,8 +124,8 @@ in
       owner = "40ants";
       repo = "40ants-asdf-system";
       name = "40ants-asdf-system-src";
-      rev = "d349c2104a1e62e1be40e30f0a2ed0fc7ae19a5e";
-      sha256 = "K0Xqyg3mwdb5wIhdr77qSNvNdIufymypNC3Yh9s7Yag=";
+      rev = "d9717a31eced40898b03264484489f19f0b825c2";
+      sha256 = "vrolkXLVMmf//qZx1rivCo8F9v1Bz1anw2ezTnp2Jgs=";
     };
     # Depends on a modern ASDF. SBCL’s built-in ASDF crashes this.
     lispDependencies = [ asdf ];
@@ -269,8 +269,8 @@ in
         name = "babel-src";
         owner = "cl-babel";
         repo = "babel";
-        rev = "f892d0587c7f3a1e6c0899425921b48008c29ee3";
-        sha256 = "sha256-U2E8u3ZWgH9eG4SV/t9CE1dUpcthuQMXgno/W1Ow2RE=";
+        rev = "627d6a60d0ffc82a3687b39ba8a99128031504d9";
+        sha256 = "AA0PJL0A1HsWBM8bkegxduREPH5Vp4rpz9v76dNVzeo=";
       };
 
       systems = {
@@ -351,8 +351,8 @@ in
     name = "chipz-src";
     owner = "sharplispers";
     repo = "chipz";
-    rev = "82a17d39c78d91f6ea63a03aca8f9aa6069a5e11";
-    sha256 = "sha256-MJyhF/lPrkhTnyQdmN5enr2XERk/dG+avCoimaIQjtg=";
+    rev = "6f803684415704114f213c64e13b231627e7777f";
+    sha256 = "sFTNTrIE8u4bxLex3cmhkCDn7zzD1MXCRa0d8mmg2hM=";
   })) {};
 
   chunga = callPackage (self: with self; lispify [ trivial-gray-streams ] (pkgs.fetchFromGitHub {
@@ -368,13 +368,14 @@ in
       name = "coalton-src";
       repo = "coalton";
       owner = "coalton-lang";
-      rev = "a0d39d22f64f4662f0b358dbe255e67aac1dc775";
-      sha256 = "ZkKl2WjozSkL+IUm9M8Da/QDKIZaVT/5w4lB+ICcoN4=";
+      rev = "dc46c0ad48e2af8ed9afe7766d2a290555a3195d";
+      sha256 = "v/7HUWznFYtqimsoE4V0w7gc5PX9I5TlEtlHV7hZOxE=";
     };
     systems = {
       coalton = {
         lispDependencies = [
           alexandria
+          eclector
           trivia
           fset
           float-features
@@ -820,8 +821,8 @@ in
       name = "cl+ssl-src";
       repo = "cl-plus-ssl";
       owner = "cl-plus-ssl";
-      rev = "1e2ffc9511df4b1c25c23e0313a642a610dae352";
-      sha256 = "3p2BEsD7pjvkYZcYwtOohwfhHc87gmheFPq/ZwKBjUc=";
+      rev = "581dec69d32dfaac57215016a3f5167a40834517";
+      sha256 = "EYZi1CPiBYGQLOd7haqJkyyUFSYYgX4c7NaXutLLopI=";
     };
     lispDependencies = [
       alexandria
@@ -975,8 +976,8 @@ in
       src = pkgs.fetchFromGitHub {
         name = "clack-src";
         owner = "fukamachi";
-        rev = "39b4d1381e48c4e06236259e51f6fc742950d20d";
-        sha256 = "EFSKGDAhRoQn09jKvEU/Ei/9bthcBDeSG1njHB/kY8w=";
+        rev = "488cfb36381a4f4c56ad7f1184ea64b6ebcc2cee";
+        sha256 = "ERAzpClsqO0xJ4MREnYpsmiodVeeYA7Fi2BL1P5/ffc=";
         repo = "clack";
       };
 
@@ -1041,8 +1042,8 @@ in
     name = "closer-mop-src";
     repo = "closer-mop";
     owner = "pcostanza";
-    rev = "1d287c4ee9fafa049c0cf99d9c55e294fd3f934b";
-    sha256 = "AqjirlFAiBncoltF9yNzwMbrc+FRl59eP1pu6FPqrfo=";
+    rev = "477423a9020a4c848e31a62967ea8762b3aa7be7";
+    sha256 = "Ph7v6DmFv64JG71fEDPR0vExWuh6NnvBJK2spBLTFgQ=";
   })) {};
 
   clss = callPackage (self: with self; lispify [ array-utils plump ] (pkgs.fetchFromGitHub {
@@ -1158,8 +1159,8 @@ in
       owner = "fukamachi";
       repo = "cl-dbi";
       name = "cl-dbi-src";
-      rev = "325c76dad69a48e9fe2ac68b50f195b00a00c805";
-      sha256 = "vPoECC7hey8ESuR1gk6cSPxFnsv591NxbHnmk6hnGcM=";
+      rev = "3d4b48c7b6736a4257043cde60687614775714d6";
+      sha256 = "oDSwNPljs0PUGlftI24yALzdbMZhepLG1VmdVX7scE4=";
     };
 
     systems = {
@@ -1180,8 +1181,8 @@ in
       name = "dexador-src";
       repo = "dexador";
       owner = "fukamachi";
-      rev = "6469dff495a92be6927d7a2424d0f1a40de54c2b";
-      sha256 = "3GarLSeXfIBN+dFAnItPihQQvhrpdOJG/v75pTJFS5w=";
+      rev = "138b08abcfef3c5723f810617c2a1da6b99123b7";
+      sha256 = "hOtIVP1U+a4etCcdIrGC7cAVoBSaryaF7CthmszOcFI=";
     };
     lispDependencies = [
       alexandria
@@ -1228,8 +1229,8 @@ in
       owner = "mmontone";
       repo = "djula";
       name = "djula-src";
-      rev = "6f142594e0372437e64f610b796350ad89ba0be1";
-      sha256 = "A8nQgAE7oYXt9n0rAFvMSDgXW9xDNE8pzztQnGEwz3s=";
+      rev = "cd2c9e33d4ee265597f4cc9eab2f23bc0640f2b5";
+      sha256 = "ZKoCEZ9nVrzJKnQii1e6hK/dlTqgzxIwQeYMZH9e+ZI=";
     };
     lispDependencies = [
       access
@@ -1310,8 +1311,8 @@ in
       name = "esrap-src";
       owner = "scymtym";
       repo = "esrap";
-      rev = "7588b430ad7c52f91a119b4b1c9a549d584b7064";
-      sha256 = "sha256-C0GiTyRna9BMIMy1/XdMZAkhjpLaoAEF1+ps97xQyMY=";
+      rev = "d806138342a6b27327649fd5f36e0fe2e0966867";
+      sha256 = "dPo43lWITpe0TC42ZHBVC9FFsHgdg0ktjAo2WpWrQD8=";
     };
     lispDependencies = [ alexandria trivial-with-current-source-form ];
     lispCheckDependencies = [ fiveam ];
@@ -1479,8 +1480,8 @@ in
       name = "float-features-src";
       repo = "float-features";
       owner = "Shinmera";
-      rev = "46371c28982c227b04ceb8662956aef4a35e6c88";
-      sha256 = "xHF0caDyLmUFC0kUJGz8XPPWpEsf+CY6Lfh+YLSCkmA=";
+      rev = "09684979127856ea3ad8acc8a1e53143e6557d27";
+      sha256 = "IDqMj91A48LRjCOeH//4ybpo8PIo64Fp6i68KEHPjho=";
     };
     lispDependencies = [ documentation-utils ];
     lispCheckDependencies = [ parachute ];
@@ -1877,8 +1878,8 @@ in
         repo = "lack";
         owner = "fukamachi";
         name = "lack-src";
-        rev = "22b37656799f534286f5c645602358bdcc7c1803";
-        sha256 = "sha256-XCbaAqZhyBd9h6clFbQPV2QdlfdQBmfGE43dkDv5pXs=";
+        rev = "c2edb842247ced0071dc21987f97629575667fe8";
+        sha256 = "vxeGBjOrbL/BmPEU4m99odUukJ7B6j44zCOqndYzTTU=";
       };
       systems = {
         lack = {
@@ -2070,8 +2071,8 @@ in
       name = "log4cl-src";
       owner = "sharplispers";
       repo = "log4cl";
-      rev = "75c4184fe3dbd7dec2ca590e5f0176de8ead7911";
-      sha256 = "sha256-JUL1C029kOrlOO6RW3n82kDhMY3KNiwPsrvrOTjhU1Y=";
+      rev = "fe3da517147d023029782ced7cd989ba24f1e62d";
+      sha256 = "8/jWyw1+FTDWMIiQPaAsSumjEtfhKxQsoT7NMrxOIVg=";
     };
     lispDependencies = [ bordeaux-threads ];
     lispCheckDependencies = [ stefil ];
@@ -2096,8 +2097,8 @@ in
       owner = "40ants";
       repo = "log4cl-extras";
       name = "log4cl-extras-src";
-      rev = "960d4a8fc214e1fe1cbac09f9d90dc80f07048a9";
-      sha256 = "z8+Q0YHS0nZHFA8EkC+uZNq2JRs4YClwuXLWRiKa1QI=";
+      rev = "920e5e551b116419aa82de46e4a8a0f787db7d82";
+      sha256 = "Xl5Jj4BAyz1Fxh+MOLqbVl43M5JkIsutaTOFqhPUH1o=";
     };
   }) {};
 
@@ -2117,8 +2118,8 @@ in
       owner = "Shinmera";
       repo = "lquery";
       name = "lquery-src";
-      rev = "3e3a3c6b36183b63a3f473cb1fb30da9f775a078";
-      sha256 = "sha256-X9ZNS8QNSlED2Fe/AX8A4yW4g4imrqwijgOItQYx164=";
+      rev = "c4f5568ee40498f0ee54fe52a4d28bb2c0c08a84";
+      sha256 = "cW2HtTZ/DjWCnbZuBx0Pf2TO6Y6mrNz4nAC6PFrQMWo=";
     };
     lispCheckDependencies = [ fiveam ];
     lispDependencies = [ array-utils form-fiddle plump clss ];
@@ -2161,8 +2162,8 @@ in
     lispSystem = "mgl-pax";
     src = pkgs.fetchFromGitHub {
       name = "mgl-pax-src";
-      rev = "37775bff24810f39892e28777028dc01c620d4f2";
-      sha256 = "dVK+wiSQz4hnDeAwRu1KDxoYinD+MyAmqvnj65le8Nc=";
+      rev = "5d56e4ca22b595c1ac92b53518ca4b01f8ad8fc4";
+      sha256 = "z0M2Gugv7Mow0xyUpqZRj8o0FIoeYZ+HYyIK8Za3gDA=";
       owner = "melisgl";
       repo = "mgl-pax";
     };
@@ -2206,8 +2207,8 @@ in
       name = "named-readtables-src";
       repo = "named-readtables";
       owner = "melisgl";
-      rev = "d5ff162ce02035ec7de1acc9721385f325e928c0";
-      sha256 = "sha256-25eO3gnvP52mUvjdzHn/DoPwdwhbdXsn8FvV9bnvzz0=";
+      rev = "a2cb9db06e11277693e26ac104bbc2d6eb19e433";
+      sha256 = "l6cIepApJn4ZmeY9GqgplD8B5pEHUJ8SO+dpGKhjL9Q=";
     };
     lispCheckDependencies = [ try ];
   }) {};
@@ -2255,8 +2256,8 @@ in
     owner = "Shinmera";
     repo = "parachute";
     name = "parachute-src";
-    rev = "7b75c4e63d878229cfedd81abcd3b98e26598b69";
-    sha256 = "w6ujdiBhc5OCcqgE7xV7QUMfUQ9pe87ie41VKdDhU50=";
+    rev = "db0c3fa2160ab740abdab45e833a87ebc8a5b762";
+    sha256 = "ldrp6Jm6v6f2hJcoV0/291yV+muaYdgDnxjOBwCjdGs=";
   })) {};
 
   parenscript = callPackage (self: with self; lispDerivation {
@@ -2296,8 +2297,8 @@ in
     owner = "Shinmera";
     repo = "plump";
     name = "plump-src";
-    rev = "0c3e0b57b43b6e0c5794b6a902f1cf5bee2a2927";
-    sha256 = "juKAc6KlHy9JwB/MPv8JXTGkYUTDJKjC8DHkja8xy7s=";
+    rev = "a59d822b73167d90a00bb438bef250c536e0bdfc";
+    sha256 = "KMj4lTRJ6IHS0zN6C63cDgqc5GMBE1CaXVXAmot81pU=";
   })) {};
 
   proc-parse = callPackage (self: with self; lispDerivation {
@@ -2369,8 +2370,8 @@ in
       owner = "40ants";
       repo = "reblocks";
       name = "reblocks-src";
-      rev = "1a61b74ed6d93dbfac2baa26b21b717d04b46f4b";
-      sha256 = "17K1ikesE8XjbSrJcTA/6GCMDBoiXw42gq4FXqZmC1w=";
+      rev = "efa61a8972bc3c34838291376ccb0ee841f22aea";
+      sha256 = "M4UIrR7qQGmrOenF52Ul4fMbutZSEdwZH/sbYqbXS+4=";
     };
     lispCheckDependencies = [ hamcrest ];
     lispDependencies = [
@@ -2478,8 +2479,8 @@ in
       owner = "ruricolist";
       repo = "serapeum";
       name = "serapeum-src";
-      rev = "db4185593f66641c6f5f9851a84417a5f81c30b2";
-      sha256 = "v2V7A/+K02hs/fnAl95uhfQi8/Y7f2TLMaLVIruJoHc=";
+      rev = "9b2458e1d238638072216e465f4f43a2837f8880";
+      sha256 = "ljjgYixEASYuhUxE+vjfPX1okx/1Q3LUza43tfPaBIw=";
     };
     lispSystem = "serapeum";
     lispDependencies = [
@@ -2537,8 +2538,8 @@ export LD_LIBRARY_PATH=''${LD_LIBRARY_PATH+$LD_LIBRARY_PATH:}${osicat}/lib
       owner = "joaotavora";
       repo = "sly";
       name = "sly-src";
-      rev = "992e3f3c1a599a8a10af12323d547b35ce70362c";
-      sha256 = "EeZVY9Wmkn5YbzhM0Xvi8bSyFjA+TqHv2GERMFZ2K08=";
+      rev = "fa3bcf0237b420d1a3b1670eb35d7c5f96f94c62";
+      sha256 = "7UUZbYRqd5cIdAlp9FxlSExYwcAdKKpSM3gIQ0sEShc=";
     };
     lispAsdPath = [ "slynk" ];
   }) {};
@@ -2561,8 +2562,8 @@ export LD_LIBRARY_PATH=''${LD_LIBRARY_PATH+$LD_LIBRARY_PATH:}${osicat}/lib
       owner = "ruricolist";
       repo = "spinneret";
       name = "spinneret-src";
-      rev = "e96809eab20fe47a3ab466ddf575cd0de7791176";
-      sha256 = "2U1vMIDagTT6W+2m7Jji4qMkWakkwMVnJW8ZIh0tJ8o=";
+      rev = "6a53009714ca641e86e1f9010400256bfc81b8c1";
+      sha256 = "h+kEf090aAJMOhqkk624O1YjfLuJKtpyMH2Lo11jiSA=";
     };
     lispCheckDependencies = [ fiveam parenscript ];
 
@@ -2682,8 +2683,8 @@ export LD_LIBRARY_PATH=''${LD_LIBRARY_PATH+$LD_LIBRARY_PATH:}${osicat}/lib
       name = "trivia-src";
       owner = "guicho271828";
       repo = "trivia";
-      rev = "6ead14c6140d3bc9dbddcbec80195358a68c518e";
-      sha256 = "sha256-G6o0ZUAAhpTFMVQL1382LQ8kOrX9kOpIAWsMJA+1GHA=";
+      rev = "9e38bf25c46f44c31fde689cfee09cc0aaf36176";
+      sha256 = "NbyC1XMcXW7Oi310dhoB78pTvHBBO66/CW94wmYwAo8=";
     };
 
     systems = {
@@ -2757,8 +2758,8 @@ export LD_LIBRARY_PATH=''${LD_LIBRARY_PATH+$LD_LIBRARY_PATH:}${osicat}/lib
     owner = "Shinmera";
     name = "trivial-arguments-src";
     repo = "trivial-arguments";
-    rev = "ecd84ed9cf9ef8f1e873d7409e6bd04979372aa7";
-    sha256 = "CDkM43FGqUa23zRV49lbElWo//7WIpNtxxJJuJXDags=";
+    rev = "d3e376d0f47622c7b93810b8a49b0b5e565a5edc";
+    sha256 = "xCne5/RM5Lj/PeK3LW5UXWqwGpppXC+aHNeGKG9aM30=";
   })) {};
 
   trivial-backtrace = callPackage (self: with self; lispify [ lift ] (pkgs.fetchFromGitLab {
@@ -2849,8 +2850,8 @@ export LD_LIBRARY_PATH=''${LD_LIBRARY_PATH+$LD_LIBRARY_PATH:}${osicat}/lib
     name = "trivial-indent-src";
     repo = "trivial-indent";
     owner = "Shinmera";
-    rev = "8d92e94756475d67fa1db2a9b5be77bc9c64d96c";
-    sha256 = "sha256-G+YCIB3bKN4RotJUjT/6bnivSBalseFRhIlwsEm5EUk=";
+    rev = "f25275094b80df8aa158af46db980bbc3ce2f88b";
+    sha256 = "3bfhjJpZLFrAwFtcsufXjMMee1m/fNx7luziHrxn6P0=";
   })) {};
 
   trivial-macroexpand-all = callPackage ({}: lispify [ ] (pkgs.fetchFromGitHub {
@@ -2946,8 +2947,8 @@ export LD_LIBRARY_PATH=''${LD_LIBRARY_PATH+$LD_LIBRARY_PATH:}${osicat}/lib
     owner = "melisgl";
     repo = "try";
     name = "try-src";
-    rev = "a1fffad2ca328b3855f629b633ab1daaeec929c2";
-    sha256 = "sha256-CUidhONmXu4yuNSDSBXflr72TO3tF9HS/z5y4kUUtQ0=";
+    rev = "55844c4b2e6ced7cfc919f57519e29103f5de6f2";
+    sha256 = "hEbmFKD2JnkN1pqTS1ByvQFwdFj++jXTd6YN3j5oPGY=";
   })) {};
 
   type-i = callPackage (self: with self; lispDerivation {
@@ -2956,8 +2957,8 @@ export LD_LIBRARY_PATH=''${LD_LIBRARY_PATH+$LD_LIBRARY_PATH:}${osicat}/lib
       name = "type-i-src";
       owner = "guicho271828";
       repo = "type-i";
-      rev = "cab50bd996139674e13ec69a73c994cec969699f";
-      sha256 = "sha256-oGD2/a2i4WsISC7NDZeSEGHH6TRMpaLmCMNImC0bpJk=";
+      rev = "4407a6852e76e795f697180dfb01749b49cc7b0c";
+      sha256 = "Go6X/9gNN/MrAYqyFV2LEjcoeVVAU1/c5W/s+GOALfk=";
     };
     lispDependencies = [
       alexandria
@@ -2981,8 +2982,8 @@ export LD_LIBRARY_PATH=''${LD_LIBRARY_PATH+$LD_LIBRARY_PATH:}${osicat}/lib
     src = pkgs.fetchFromGitHub {
       owner = "marcoheisig";
       repo = "Typo";
-      rev = "303e21c38b1773f7d6f87eeb7f03617c286c4a44";
-      sha256 = "P3C4az3Pl6Xea+RW8C7e4qc/kw3yUCouexpGbv8nFCg=";
+      rev = "b16e40099e44e9de464f3a69b4f38bb29c9eff8c";
+      sha256 = "Ki08/b2wYPWFQupw+oJvOQfSkSDXnmlANhpRsi+LnKE=";
     };
     lispAsdPath = [ "code" ];
     preCheck = ''
@@ -3070,7 +3071,7 @@ export LD_LIBRARY_PATH=''${LD_LIBRARY_PATH+$LD_LIBRARY_PATH:}${osicat}/lib
     name = "yason-src";
     owner = "phmarek";
     repo = "yason";
-    rev = "826ea4f51f148cdd3065727fcc9f84960f2e0b2c";
-    sha256 = "bG2g7V4yv83hW3fTJcPUdcb1UB+JcVg3wCmHHyaUBBI=";
+    rev = "f4ad893e9dc4142396a86bc518ff6bc814fd43da";
+    sha256 = "zeNoFytBPZ1D8g0xDugsMBaRyG9vtWG8WZxnAna7PAI=";
   })) {};
 }))
