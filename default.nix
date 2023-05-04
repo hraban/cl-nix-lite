@@ -911,6 +911,7 @@ in
       trivial-sockets
       usocket
     ];
+    propagatedBuildInputs = [ pkgs.openssl ];
   }) {};
 
   inherit (callPackage (self: with self; lispMultiDerivation rec {
