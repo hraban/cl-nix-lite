@@ -8,7 +8,6 @@
     "cl-markdown"
     "cl-redis"
     "common-doc"
-    "commondoc-markdown" # https://github.com/40ants/commondoc-markdown/pull/6
     "dbi"
     "dynamic-classes"
     "fare-quasiquote"

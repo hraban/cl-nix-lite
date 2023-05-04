@@ -1200,8 +1200,8 @@ in
       owner = "40ants";
       repo = "commondoc-markdown";
       name = "commondoc-markdown-src";
-      rev = "cb070f615d2e5e706ad448b469ec9d2196f70e9f";
-      sha256 = "D5EKw+QRNJJ503UzPrHOxVo+AsI/Dw/rbfeFLgHKs4I=";
+      rev = "f428652528441d1133a3b5928c161c07fd740e7a";
+      sha256 = "p5dKYXRaIHTHBkuIndrCgd9TfnTBg9P2LN36VJ94Exw=";
     };
     lispDependencies = [
       _3bmd
