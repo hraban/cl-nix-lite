@@ -11,7 +11,6 @@
     "dbi"
     "dynamic-classes"
     "fare-quasiquote"
-    "flexi-streams"
     "gettext" # I’m confused as to why this one is failing
     "hamcrest"
     "lack"
@@ -20,7 +19,6 @@
     "lift"
     "log4cl"
     "log4cl-extras"
-    "lparallel"
     "moptilities"
     "reblocks"
     "routes"
@@ -33,7 +31,14 @@
     "typo"
     "with-output-to-stream"
     "xlunit"
+  ] ++ pkgs.lib.optionals pkgs.hostPlatform.isDarwin [
+    "flexi-streams"
+    "lparallel"
+  ] ++ pkgs.lib.optionals pkgs.hostPlatform.isLinux [
+    "hunchentoot"
+    "usocket"
   ]
+  # ?? Windows ??
 }:
 
 with pkgs.lib;
