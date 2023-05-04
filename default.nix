@@ -832,8 +832,7 @@ in
       (cd "$sourceRoot"; sed -i  -e "s/ :force t//" *.asd)
     '';
     preBuild = systems:
-      if b.elem "cl-libxslt" systems
-      then
+      s.optionalString (b.elem "cl-libxslt" systems) (
         let
           libname =
             # There has to be a better way. How do you make CC automatically
@@ -844,9 +843,12 @@ in
           LIBNAME=${libname} make -C foreign
           mkdir -p $lib
           cp -r foreign/${libname} $lib/
-          export LD_LIBRARY_PATH=$lib
+          # No need to special case this for Darwin (DYLD_..) because
+          # we're using cffi which picks up LD_ on both Linux and
+          # Darwin.
+          addToSearchPath "LD_LIBRARY_PATH" "$lib"
         ''
-      else "";
+      );
   }) {}) cl-libxml2 cl-libxslt;
 
   cl-locale = callPackage (self: with self; lispDerivation {
