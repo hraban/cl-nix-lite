@@ -1425,6 +1425,9 @@ in
         lispCheckDependencies = [ fiveam ];
       };
     };
+    # This directory is unneeded and it messes up some shebang filtering
+    # autodetectiong stuff on linux builds.
+    preBuild = "rm -rf tools-for-build";
   }) {}) eclector eclector-concrete-syntax-tree;
 
   eos = callPackage (self: with self; lispify [ ] (pkgs.fetchFromGitHub {
