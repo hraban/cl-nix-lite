@@ -527,10 +527,6 @@ To test all packages, see [examples/test-all](examples/test-all).
 
 ## TODO
 
-### Important
-
-- Don't clobber existing `buildPhase` etc.
-
 ### Nice-to-have
 
 - Get all remaining packages’ tests passing.

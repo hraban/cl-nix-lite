@@ -345,20 +345,24 @@ with callPackage ./utils.nix {};
         };
         # Store .fasl files next to the respective .lisp file
         ASDF_OUTPUT_TRANSLATIONS = "/:/";
-        setAsdfPath = ''
+        # Set this as a separate phase because I’m scared of shell escaping and
+        # spaces in hooks. Technically this works if I just add it as a raw
+        # preConfigure or preBuild hook, but I’d rather take an extra step and
+        # expose a single identifier as a function to execute.
+        setAsdfPathPhase = ''
           export CL_SOURCE_REGISTRY="''${CL_SOURCE_REGISTRY+$CL_SOURCE_REGISTRY:}${b.concatStringsSep ":" fullAsdPath}"
         '';
+        preConfigurePhases = [ "setAsdfPathPhase" ];
         # Like lisp-modules-new, pre-build every package independently.
         #
         # Reason to do this: packages like libuv contain quite complex build
         # steps, and letting the final derivation do all the work becomes
         # untenable.
+        #
+        # Client is free to override this if they know better.
         buildPhase = ''
           runHook preBuild
 
-          eval "$setAsdfPath"
-          echo -n "Build CL_SOURCE_REGISTRY: "
-          printenv CL_SOURCE_REGISTRY
           ${callLisp lisp (asdfOpScript lispBuildOp pname lispSystems')}
 
           runHook postBuild
@@ -373,9 +377,6 @@ with callPackage ./utils.nix {};
         checkPhase = ''
           runHook preCheck
 
-          eval "$setAsdfPath"
-          echo -n "Check CL_SOURCE_REGISTRY: "
-          printenv CL_SOURCE_REGISTRY
           ${callLisp lisp (asdfOpScript "test-system" pname _lispOrigSystems)}
 
           runHook postCheck
