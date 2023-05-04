@@ -101,6 +101,19 @@ in
     };
   }) {}) _3bmd _3bmd-ext-code-blocks;
 
+  _3d-vectors = callPackage (self: with self; lispDerivation {
+    lispDependencies = [ documentation-utils ];
+    lispCheckDependencies = [ parachute ];
+    src = pkgs.fetchFromGitHub {
+      owner = "Shinmera";
+      repo = "3d-vectors";
+      name = "3d-vectors-src";
+      rev = "03e6a376c43da6ccb9e3949be12edde51c695edb";
+      sha256 = "1oeykwz0rabW6CpZKEQ2LP0CPjpzx3gLDzaecCPZOQk=";
+    };
+    lispSystem = "3d-vectors";
+  }) {};
+
   inherit (callPackage (self: with self; lispMultiDerivation {
     src = pkgs.fetchFromGitHub {
       owner = "40ants";
@@ -2534,6 +2547,14 @@ in
     owner = "smithzvk";
     sha256 = "sha256-cuBcaLKD1lv8c2NELdJMg9Vnc0a/Tsa1GVB3xLHPsaw=";
     rev = "47a70ba1e32362e03dad6ef8e6f36180b560f86a";
+  })) {};
+
+  quickhull = callPackage (self: with self; lispify [ _3d-vectors documentation-utils ] (pkgs.fetchFromGitHub {
+    name = "quickhull-src";
+    owner = "Shirakumo";
+    repo = "quickhull";
+    rev = "a67173317f078f28320f9a0da74b8856e33da9e4";
+    sha256 = "bp6vdnuqMwplU3RpvM4WHKgntnWZQ6AtB255qYFixSk=";
   })) {};
 
   quri = callPackage (self: with self; lispDerivation {
