@@ -1,0 +1,28 @@
+name: "Test"
+on:
+  pull_request:
+  push:
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: cachix/install-nix-action@v20
+      with:
+        nix_path: nixpkgs=channel:nixos-unstable
+    - uses: cachix/cachix-action@v12
+      with:
+        name: cl-nix-lite
+        authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+    - run: cd examples/all-packages && nix-build --no-out-link
+      name: examples/all-packages
+    - run: cd examples/test-all && nix-build --no-out-link
+      name: examples/test-packages
+    - run: cd examples/hello-binary && nix-build --no-out-link
+      name: examples/hello-binary
+    - run: cd examples/override-package && nix-build --no-out-link
+      name: examples/override-package
+    - run: cd examples/with-cffi && nix-build --no-out-link
+      name: examples/with-cffi
+    - run: cd examples/flake-app && nix build --no-link --override-input cl-nix-lite ../../
+      name: examples/flake-app
