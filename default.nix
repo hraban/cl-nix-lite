@@ -582,6 +582,10 @@ in
         lispDependencies = [ cffi cl-async vom ];
       };
     };
+
+    propagatedBuildInputs = systems: l.optionals (builtins.elem "cl-async-ssl" systems) [
+      pkgs.openssl
+    ];
   }) {}) cl-async cl-async-repl cl-async-ssl;
 
   cl-base64 = callPackage (self: with self; lispDerivation rec {
