@@ -395,9 +395,16 @@ in
       # way that’s incompatible with pkgconfig. It should be "if darwin AND (not
       # pkg-config)".
 
-      setupHooks = systems: l.optionals (b.elem "cffi" systems) [
-        ./cffi-setup-hook.sh
-      ];
+      setupHooks = systems: l.optionals (b.elem "cffi" systems) [(
+        if pkgs.hostPlatform.isDarwin
+        # LD_.. only works with CFFI on Mac, but not with
+        # sb-alien:load-shared-object. DYLD_.. works with both.
+        then pkgs.writeText "cffi-setup-hook-darwin.sh" (builtins.replaceStrings
+          [ "LD_LIBRARY_PATH" ]
+          [ "DYLD_LIBRARY_PATH" ]
+          (builtins.readFile ./cffi-setup-hook.sh ))
+        else ./cffi-setup-hook.sh
+      )];
     }
   ) {}) cffi cffi-grovel;
 

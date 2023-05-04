@@ -12,8 +12,7 @@
 # Add any dependency with a lib dir to LD_LIBRARY_PATH, because it’s the only
 # way to get cl-cffi to find it.
 clCffi_addToLdLibraryPath () {
-	# This works with sb-alien:load-shared-object on Darwin.
-	addToSearchPath "DYLD_LIBRARY_PATH" "$1/lib"
+	addToSearchPath "LD_LIBRARY_PATH" "$1/lib"
 }
 
 # I /think/ this needs to be registered on both host /and/ target offsets,
