@@ -447,6 +447,12 @@ For real-world examples, peruse [`default.nix`](default.nix).
 
 See the [flake example](examples/flake-app) for a demo which builds a `nix run` compatible binary.
 
+### Binary Cache
+
+Pre-compiled versions of all standard lisp packages are published to Cachix, so you don’t have to rebuild tools like Alexandria.
+
+The cache is located at [cl-nix-lite.cachix.org](https://cl-nix-lite.cachix.org), where you can also find instructions on how to set it up on your local machine.
+
 ### Setting custom Lisp
 
 > N.B.: This is WIP and currently a second class citizen while I figure other things out.
@@ -536,7 +542,6 @@ To test all packages, see [examples/test-all](examples/test-all).
 - Fix binary building with ECL
 - More lisps
 - Test on Linux
-- integrate with borg? First: decide if this belongs in nixpkgs at all.
 - Check if `lispDerivation` is actually the best name for this function
 
 ### TODO: Fetching updates from source packages
