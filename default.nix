@@ -3286,6 +3286,18 @@ export LD_LIBRARY_PATH=''${LD_LIBRARY_PATH+$LD_LIBRARY_PATH:}${osicat}/lib
     lispDependencies = [ path-parse cl-fad ];
   }) {};
 
+  wild-package-inferred-system = callPackage (self: with self; lispDerivation {
+    lispCheckDependencies = [ fiveam ];
+    lispSystem = "wild-package-inferred-system";
+    src = pkgs.fetchFromGitHub {
+      owner = "privet-kitty";
+      repo = "wild-package-inferred-system";
+      name = "wild-package-inferred-system-src";
+      rev = "800b5f89b61cc4a0a9cf14706fd3f7e7fcd3e539";
+      sha256 = "AH23HE+NpJ8aZkvyAHWKPtNoQSJatkFXwh6rgeKQ42o=";
+    };
+  }) {};
+
   with-output-to-stream = callPackage (self: with self; lispDerivation {
     lispSystem = "with-output-to-stream";
     version = "1.0";
