@@ -21,10 +21,21 @@ jobs:
       with:
         name: cl-nix-lite
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - run: cd examples/all-packages && nix-build --no-out-link
-      name: examples/all-packages
-    - run: cd examples/test-all && nix-build --no-out-link
-      name: examples/test-packages
+    # Only bother actually building derivations that are not yet in the
+    # store. This prevents nix-build from downloading all built binaries from
+    # the store only to discard them immediately afterwards.
+    - name: examples/all-packages
+      run: |
+        cd examples/all-packages && \
+          nix-build --no-out-link --dry-run 2>&1 | \
+          sed -e '0,/will be built:$/d' -e '/^[^ ]/,$d' | \
+          xargs -r nix-build --no-out-link
+    - name: examples/test-packages
+      run: |
+        cd examples/test-all && \
+          nix-build --no-out-link --dry-run 2>&1 | \
+          sed -e '0,/will be built:$/d' -e '/^[^ ]/,$d' | \
+          xargs -r nix-build --no-out-link
     - run: cd examples/hello-binary && nix-build --no-out-link
       name: examples/hello-binary
     - run: cd examples/override-package && nix-build --no-out-link
