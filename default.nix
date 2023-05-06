@@ -3309,6 +3309,14 @@ export LD_LIBRARY_PATH=''${LD_LIBRARY_PATH+$LD_LIBRARY_PATH:}${osicat}/lib
     };
   }) {};
 
+  wu-decimal = callPackage (self: with self; lispify [] (pkgs.fetchFromGitHub {
+    owner = "Wukix";
+    repo = "wu-decimal";
+    name = "wu-decimal-src";
+    rev = "5b348bdb32a0f83e80e17aa68cd51787ae8c8a45";
+    sha256 = "taH7Odn1nqGyZ1brxpC3xJjuJ3ctksqrOkkcFiFR9tw=";
+  })) {};
+
   xml-emitter = callPackage (self: with self; lispDerivation {
     src = pkgs.fetchFromGitHub {
       owner = "VitoVan";
