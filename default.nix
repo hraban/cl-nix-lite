@@ -1894,107 +1894,6 @@ in
     lispCheckDependencies = l.optional ((lisp.pname or "") != "sbcl") rt;
   }) {};
 
-  json-streams = callPackage (self: with self; lispDerivation {
-    src = pkgs.fetchFromGitHub {
-      owner = "rotatef";
-      repo = "json-streams";
-      name = "json-streams-src";
-      rev = "5da012e8133affbf75024e7500feb37394690752";
-      sha256 = "gtI+OMlqppGHRpAoPMC/j16NGkKmTdfGwQTUGMQZKjI=";
-    };
-    lispSystem = "json-streams";
-    lispCheckDependencies = [ cl-quickcheck flexi-streams ];
-  }) {};
-
-  lass = callPackage (self: with self; lispDerivation {
-    lispSystems = [ "lass" "binary-lass" ];
-    lispDependencies = [ trivial-indent trivial-mimes cl-base64 ];
-    src = pkgs.fetchFromGitHub {
-      owner = "Shinmera";
-      repo = "LASS";
-      name = "LASS-src";
-      rev = "aa6e1e426bc992ce0178f19a934359d582749d8e";
-      sha256 = "eCDkagN5V5vIeNIxxGNiC79LIt87JCG4CdCyqCxrnPc=";
-    };
-  }) {};
-
-  marshal = callPackage (self: with self; lispDerivation {
-    lispSystem = "marshal";
-    lispCheckDependencies = [ xlunit ];
-    src = pkgs.fetchFromGitHub {
-      owner = "wlbr";
-      repo = "cl-marshal";
-      name = "cl-marshal-src";
-      rev = "0e48cd4ef4ba1896d38ea0a87f376c1ff25eec71";
-      sha256 = "2ptzXESvKeHgsAqdT7EYflbtQYinpGvFona4QTDAlF0=";
-    };
-  }) {};
-
-  metatilities = callPackage (self: with self; lispDerivation {
-    lispSystem = "metatilities";
-    src = pkgs.fetchFromGitHub {
-      owner = "gwkkwg";
-      repo = "metatilities";
-      name = "metatilities-src";
-      rev = "82e13df0545d0e47ae535ea35c5c99dd3a44e69e";
-      sha256 = "bZuWup9boM8+Xo+D+BIw6XgnIMhU0yJnj4DsDG2zEG8=";
-    };
-    lispDependencies = [ moptilities cl-containers metabang-bind ];
-    lispCheckDependencies = [ lift ];
-  }) {};
-
-  metatilities-base = callPackage (self: with self; lispDerivation {
-    lispSystem = "metatilities-base";
-    src = pkgs.fetchFromGitHub {
-      owner = "gwkkwg";
-      repo = "metatilities-base";
-      name = "metatilities-base-src";
-      rev = "ef04337759972fd622c9b27b53149f3d594a841f";
-      sha256 = "M38SlEVrOJm4NPTbK/f34lDrY47d+Ln3t1ZuzmyZORk=";
-    };
-    lispCheckDependencies = [ lift ];
-  }) {};
-
-  moptilities = callPackage (self: with self; lispDerivation {
-    lispSystem = "moptilities";
-    lispDependencies = [ closer-mop ];
-    lispCheckDependencies = [ lift ];
-    src = pkgs.fetchFromGitHub {
-      owner = "gwkkwg";
-      repo = "moptilities";
-      name = "moptilities-src";
-      rev = "a436f16b357c96b82397ec018ea469574c10dd41";
-      sha256 = "zJVnrgOv43bTfdMJEACiE7oHrXUz1OhR6vQQuSReIuA=";
-    };
-  }) {};
-
-  parse-js = callPackage (self: with self; lispify [ ] (pkgs.fetchFromGitHub {
-    owner = "marijnh";
-    repo = "parse-js";
-    name = "parse-js-src";
-    rev = "fbadc6029bec7039602abfc06c73bb52970998f6";
-    sha256 = "aey215BagBLQJSS78xl2ybuVmcGNkfuGLsrHWbLNrfE=";
-  })) {};
-
-  inherit (callPackage (self: with self; lispMultiDerivation {
-    src = pkgs.fetchFromGitHub {
-      owner = "Ramarren";
-      repo = "cl-parser-combinators";
-      name = "cl-parser-combinators-src";
-      rev = "9c7569a4f6af5e60c0d3a51d9c15c16d1714c845";
-      sha256 = "SMMWbY1xzivIMDYWvTTvI21ix3kc3+8VnUzUXhTcicw=";
-    };
-    systems = {
-      parser-combinators = {
-        lispDependencies = [ iterate alexandria ];
-        lispCheckDependencies = [ stefil infix ];
-      };
-      parser-combinators-cl-ppcre = {
-        lispDependencies = [ parser-combinators cl-ppcre ];
-      };
-    };
-  }) {}) parser-combinators parser-combinators-cl-ppcre;
-
   jonathan = callPackage (self: with self; lispDerivation {
     lispSystem = "jonathan";
     src = pkgs.fetchFromGitHub {
@@ -2018,6 +1917,18 @@ in
       prove
       legion
     ];
+  }) {};
+
+  json-streams = callPackage (self: with self; lispDerivation {
+    src = pkgs.fetchFromGitHub {
+      owner = "rotatef";
+      repo = "json-streams";
+      name = "json-streams-src";
+      rev = "5da012e8133affbf75024e7500feb37394690752";
+      sha256 = "gtI+OMlqppGHRpAoPMC/j16NGkKmTdfGwQTUGMQZKjI=";
+    };
+    lispSystem = "json-streams";
+    lispCheckDependencies = [ cl-quickcheck flexi-streams ];
   }) {};
 
   kmrcl = callPackage (self: with self; lispDerivation rec {
@@ -2146,6 +2057,18 @@ in
            lack-response
            lack-test
            lack-util;
+
+  lass = callPackage (self: with self; lispDerivation {
+    lispSystems = [ "lass" "binary-lass" ];
+    lispDependencies = [ trivial-indent trivial-mimes cl-base64 ];
+    src = pkgs.fetchFromGitHub {
+      owner = "Shinmera";
+      repo = "LASS";
+      name = "LASS-src";
+      rev = "aa6e1e426bc992ce0178f19a934359d582749d8e";
+      sha256 = "eCDkagN5V5vIeNIxxGNiC79LIt87JCG4CdCyqCxrnPc=";
+    };
+  }) {};
 
   legion = callPackage (self: with self; lispDerivation {
     lispSystem = "legion";
@@ -2285,6 +2208,18 @@ in
     lispDependencies = [ array-utils form-fiddle plump clss ];
   }) {};
 
+  marshal = callPackage (self: with self; lispDerivation {
+    lispSystem = "marshal";
+    lispCheckDependencies = [ xlunit ];
+    src = pkgs.fetchFromGitHub {
+      owner = "wlbr";
+      repo = "cl-marshal";
+      name = "cl-marshal-src";
+      rev = "0e48cd4ef4ba1896d38ea0a87f376c1ff25eec71";
+      sha256 = "2ptzXESvKeHgsAqdT7EYflbtQYinpGvFona4QTDAlF0=";
+    };
+  }) {};
+
   md5 = callPackage (self: with self; lispify [ flexi-streams ] (pkgs.fetchFromGitHub {
     name = "md5-src";
     owner = "pmai";
@@ -2315,6 +2250,31 @@ in
     };
     lispSystem = "metacopy";
     lispDependencies = [ moptilities ];
+    lispCheckDependencies = [ lift ];
+  }) {};
+
+  metatilities = callPackage (self: with self; lispDerivation {
+    lispSystem = "metatilities";
+    src = pkgs.fetchFromGitHub {
+      owner = "gwkkwg";
+      repo = "metatilities";
+      name = "metatilities-src";
+      rev = "82e13df0545d0e47ae535ea35c5c99dd3a44e69e";
+      sha256 = "bZuWup9boM8+Xo+D+BIw6XgnIMhU0yJnj4DsDG2zEG8=";
+    };
+    lispDependencies = [ moptilities cl-containers metabang-bind ];
+    lispCheckDependencies = [ lift ];
+  }) {};
+
+  metatilities-base = callPackage (self: with self; lispDerivation {
+    lispSystem = "metatilities-base";
+    src = pkgs.fetchFromGitHub {
+      owner = "gwkkwg";
+      repo = "metatilities-base";
+      name = "metatilities-base-src";
+      rev = "ef04337759972fd622c9b27b53149f3d594a841f";
+      sha256 = "M38SlEVrOJm4NPTbK/f34lDrY47d+Ln3t1ZuzmyZORk=";
+    };
     lispCheckDependencies = [ lift ];
   }) {};
 
@@ -2351,6 +2311,19 @@ in
     rev = "101c05112bf2f1e1bbf527396822d2f50ca6327a";
     sha256 = "sha256-YHt/r4deJnsr4oRTiDiTnNRkBYy0OKu7pfFjcC5x5T8=";
   })) {};
+
+  moptilities = callPackage (self: with self; lispDerivation {
+    lispSystem = "moptilities";
+    lispDependencies = [ closer-mop ];
+    lispCheckDependencies = [ lift ];
+    src = pkgs.fetchFromGitHub {
+      owner = "gwkkwg";
+      repo = "moptilities";
+      name = "moptilities-src";
+      rev = "a436f16b357c96b82397ec018ea469574c10dd41";
+      sha256 = "zJVnrgOv43bTfdMJEACiE7oHrXUz1OhR6vQQuSReIuA=";
+    };
+  }) {};
 
   mt19937 = callPackage (self: with self; lispify [ ] (pkgs.fetchFromGitLab {
     name = "mt19937-src";
@@ -2445,6 +2418,14 @@ in
     };
   }) {};
 
+  parse-js = callPackage (self: with self; lispify [ ] (pkgs.fetchFromGitHub {
+    owner = "marijnh";
+    repo = "parse-js";
+    name = "parse-js-src";
+    rev = "fbadc6029bec7039602abfc06c73bb52970998f6";
+    sha256 = "aey215BagBLQJSS78xl2ybuVmcGNkfuGLsrHWbLNrfE=";
+  })) {};
+
   parse-number = callPackage (self: with self; lispify [ ] (pkgs.fetchFromGitHub {
     owner = "sharplispers";
     repo = "parse-number";
@@ -2452,6 +2433,25 @@ in
     rev = "de944fd22c9e5db450d48cdf829abd38a375c07c";
     sha256 = "75VcTh+9ACghhHsw8dqQ1S8rh/SL4T6954UtGD6AudI=";
   })) {};
+
+  inherit (callPackage (self: with self; lispMultiDerivation {
+    src = pkgs.fetchFromGitHub {
+      owner = "Ramarren";
+      repo = "cl-parser-combinators";
+      name = "cl-parser-combinators-src";
+      rev = "9c7569a4f6af5e60c0d3a51d9c15c16d1714c845";
+      sha256 = "SMMWbY1xzivIMDYWvTTvI21ix3kc3+8VnUzUXhTcicw=";
+    };
+    systems = {
+      parser-combinators = {
+        lispDependencies = [ iterate alexandria ];
+        lispCheckDependencies = [ stefil infix ];
+      };
+      parser-combinators-cl-ppcre = {
+        lispDependencies = [ parser-combinators cl-ppcre ];
+      };
+    };
+  }) {}) parser-combinators parser-combinators-cl-ppcre;
 
   path-parse = callPackage (self: with self; lispDerivation {
     lispSystem = "path-parse";
