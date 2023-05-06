@@ -441,7 +441,7 @@ EOF
   lispWithSystems = systems: lispDerivation {
     inherit (lisp) name;
     lispSystem = "";
-    buildInputs = [ pkgs.makeWrapper ];
+    nativeBuildInputs = [ pkgs.makeWrapper ];
     src = pkgs.writeText "mock" "source";
     dontUnpack = true;
     dontBuild = true;
@@ -452,10 +452,16 @@ EOF
     # somehow set these envvars in some config, like you could do with
     # e.g. Docker. To set envvars on a binary /at runtime/, you must create a
     # wrapper that does this. Enter ‘makeWrapper’ et al.
+    # N.B.: The final wrapper is a bash script which isn’t ideal for startup
+    # speed. This is a good argument for using asdf registry configuration files
+    # rather than a big baked envvar.
     installPhase = ''
-      ls -1 ${lisp}/bin | while read f; do
-        makeWrapper ${lisp}/bin/$f $out/bin/$f \
-          ''${CL_SOURCE_REGISTRY+--set CL_SOURCE_REGISTRY $CL_SOURCE_REGISTRY} \
+      mkdir -p $out/bin
+      for f in ${lisp}/bin/*; do
+        # ASDF_.. is set, not suffixed, because it is an opaque string, not a
+        # search path.
+        makeWrapper $f $out/bin/$(basename $f) \
+          ''${CL_SOURCE_REGISTRY+--suffix CL_SOURCE_REGISTRY : $CL_SOURCE_REGISTRY} \
           --set ASDF_OUTPUT_TRANSLATIONS $ASDF_OUTPUT_TRANSLATIONS
       done
     '';
