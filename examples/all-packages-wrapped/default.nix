@@ -2,8 +2,6 @@
   pkgs ? import <nixpkgs> {}
 }:
 
-# TODO: This doesn’t work, committing this for future reference only
-
 with rec {
   lispPackagesLite = import ../.. { inherit pkgs; };
 };
