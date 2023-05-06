@@ -1856,6 +1856,14 @@ in
     };
   }) {};
 
+  infix-math = callPackage (self: with self; lispify [ alexandria serapeum wu-decimal parse-number ] (pkgs.fetchFromGitHub {
+    owner = "ruricolist";
+    repo = "infix-math";
+    name = "infix-math-src";
+    rev = "f5155ae9709e518061ace79887d78f8e79c61cac";
+    sha256 = "bzW/xsvDqmw6XXkhdw7xNX4zS/JFUTyw4yMd2kkR18A=";
+  })) {};
+
   introspect-environment = callPackage (self: with self; lispDerivation {
     lispSystem = "introspect-environment";
     lispCheckDependencies = [ fiveam ];
