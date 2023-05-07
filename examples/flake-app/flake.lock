@@ -1,21 +1,5 @@
 {
   "nodes": {
-    "asdf-src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1668734764,
-        "narHash": "sha256-9pYtv8aUurqrjL9IA0YpBGdWaZO7xKKXppe43nj+ays=",
-        "ref": "refs/heads/master",
-        "rev": "fe6e3ab741c71ecebc8503e20637d4c940326421",
-        "revCount": 4040,
-        "type": "git",
-        "url": "https://gitlab.common-lisp.net/asdf/asdf"
-      },
-      "original": {
-        "type": "git",
-        "url": "https://gitlab.common-lisp.net/asdf/asdf"
-      }
-    },
     "cl-nix-lite": {
       "flake": false,
       "locked": {
@@ -63,7 +47,6 @@
     },
     "root": {
       "inputs": {
-        "asdf-src": "asdf-src",
         "cl-nix-lite": "cl-nix-lite",
         "flake-utils": "flake-utils",
         "nixpkgs": "nixpkgs"
