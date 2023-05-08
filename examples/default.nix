@@ -4,14 +4,26 @@
 
 {
   pkgs ? import <nixpkgs> {}
-, lisp ? pkgs.sbcl
 }:
 
 let
   inherit (pkgs.lib) isDerivation;
   allInputs = input:
     if builtins.isPath input
-    then allInputs (pkgs.callPackage input { })
+    then
+      allInputs (pkgs.callPackage input { }) ++
+      # if CLISP is available on this system, and if the example allows
+      # overriding lispPackagesLite, import the example again but offer it an
+      # argument of lispPackagesLite with its lisp set to CLISP.
+      (pkgs.lib.optionals (!pkgs.clisp.meta.broken) [(
+        let
+          callPackage = pkgs.newScope (pkgs // {
+            lispPackagesLite = pkgs.callPackage ./.. {
+              lisp = pkgs.clisp;
+            };
+          });
+        in
+          allInputs (callPackage input { }))])
     else if isDerivation input
     then [ input ]
     else

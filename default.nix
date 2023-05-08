@@ -2826,6 +2826,7 @@ export LD_LIBRARY_PATH=''${LD_LIBRARY_PATH+$LD_LIBRARY_PATH:}${osicat}/lib
     };
     lispDependencies = [ alexandria cffi cffi-grovel ];
     lispCheckDependencies = [ fiveam ];
+    meta.broken = lisp.pname == "clisp";
   }) {};
 
   stefil = callPackage (self: with self; lispify [

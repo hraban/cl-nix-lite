@@ -3,7 +3,7 @@
 
 {
   pkgs ? import <nixpkgs> {}
-  , lispPackagesLite ? import ../.. { inherit pkgs; }
+, lispPackagesLite ? import ../.. { inherit pkgs; }
 }:
 
 let

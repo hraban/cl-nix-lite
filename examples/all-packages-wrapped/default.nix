@@ -1,10 +1,7 @@
 {
   pkgs ? import <nixpkgs> {}
+, lispPackagesLite ? import ../.. { inherit pkgs; }
 }:
-
-with rec {
-  lispPackagesLite = import ../.. { inherit pkgs; };
-};
 
 lispPackagesLite.lispWithSystems (
   pkgs.lib.pipe lispPackagesLite [

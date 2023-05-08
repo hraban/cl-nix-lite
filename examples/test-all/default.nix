@@ -1,5 +1,6 @@
 {
   pkgs ? import <nixpkgs> {}
+  , lispPackagesLite ? import ../.. { inherit pkgs; }
   , skip ? [
     "_40ants-doc"
     "_40ants-doc-full" # this one works in QL so it’s nix specific
