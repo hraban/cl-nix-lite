@@ -106,13 +106,23 @@ rec {
 
   lisp-asdf-op = op: sys: "(asdf:${op} :${sys})";
 
-  asdf = pkgs.fetchFromGitLab {
-    name = "asdf-src";
-    domain = "gitlab.common-lisp.net";
-    owner = "asdf";
-    repo = "asdf";
-    rev = "3.3.6";
-    sha256 = "sha256-GCmGUMLniPakjyL/D/aEI93Y6bBxjdR+zxXdSgc9NWo=";
+  # Bootstrap version for clisp, whose last release was in 2010 and which
+  # doesn’t ship with ASDF. Fine, I’ll do it the hard way, but this goes away as
+  # soon as clisp releases a new stable version with ASDF bundled.
+  asdf = pkgs.stdenv.mkDerivation rec {
+    pname = "asdf";
+    version = "3.3.6";
+    nativeBuildInputs = [ pkgs.git ];
+    src = pkgs.fetchFromGitLab {
+      name = "asdf-src";
+      domain = "gitlab.common-lisp.net";
+      owner = "asdf";
+      repo = "asdf";
+      rev = version;
+      sha256 = "sha256-GCmGUMLniPakjyL/D/aEI93Y6bBxjdR+zxXdSgc9NWo=";
+    };
+    buildPhase = "make";
+    installPhase = "mkdir -p $out; cp -R . $out";
   };
 
   asdfOpScript = op: name: systems: pkgs.writeText "${op}-${name}.lisp" ''
@@ -130,8 +140,16 @@ rec {
     else
       assert isDerivation lisp;
       {
-        sbcl = file: ''"${lisp}/bin/sbcl" --script "${file}"'';
-        ecl = file: ''"${lisp}/bin/ecl" --shell "${file}"'';
+        sbcl = file: ''${lisp}/bin/sbcl --script "${file}"'';
+        ecl = file: ''${lisp}/bin/ecl --shell "${file}"'';
+        clisp = inner:
+          let
+            wrapped = pkgs.writeText "clisp-wrap.lisp" ''
+(load "${asdf}/build/asdf.lisp")
+(load "${inner}")
+            '';
+          in
+            ''${lisp}/bin/clisp -E UTF-8 -norc "${wrapped}"'';
       }.${lisp.pname};
 
   # Get a context-less string representing this source derivation, come what

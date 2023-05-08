@@ -1,8 +1,25 @@
-(defpackage :hello-binary
-  (:use :cl)
-  (:export main))
+;; Copyright © 2023  Hraban Luyat
+;;
+;; This program is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU Affero General Public License as published
+;; by the Free Software Foundation, version 3 of the License.
+;;
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU Affero General Public License for more details.
+;;
+;; You should have received a copy of the GNU Affero General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-(in-package :hello-binary)
+(uiop:define-package #:hello-binary
+  (:nicknames #:hello-binary/main)
+  (:use #:cl #:arrow-macros)
+  (:import-from #:uiop)
+  (:export #:main))
+
+(in-package #:hello-binary/main)
 
 (defun main (&rest args)
-  (format T "Hello, world~%"))
+  (->> "Hello, world~%" (format T))
+  (uiop:quit 0))
