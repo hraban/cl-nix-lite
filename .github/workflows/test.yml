@@ -26,38 +26,12 @@ jobs:
     # Only bother actually building derivations that are not yet in the
     # store. This prevents nix-build from downloading all built binaries from
     # the store only to discard them immediately afterwards.
-    - name: examples/all-packages
+    - name: All examples
       run: |
-        cd examples/all-packages && \
+        cd examples && \
           nix-build --no-out-link --dry-run 2>&1 | \
           sed -e '0,/will be built:$/d' -e '/^[^ ]/,$d' | \
           xargs -r nix-build --no-out-link
-    - name: examples/test-packages
-      run: |
-        cd examples/test-all && \
-          nix-build --no-out-link --dry-run 2>&1 | \
-          sed -e '0,/will be built:$/d' -e '/^[^ ]/,$d' | \
-          xargs -r nix-build --no-out-link
-    - name: examples/all-packages-wrapped
-      # This is havoc on CI. I should wrap it all in a derivation whose result
-      # is pushed to the cache so I don’t need to download the entire cache for
-      # every CI run.
-      run: |
-        cd examples/all-packages-wrapped
-        nix-build
-        >test-output result/bin/sbcl --script <<EOF
-          (require :asdf)
-          (asdf:load-system :arrow-macros)
-          (use-package :arrow-macros)
-          (use-package :alexandria)
-          (->> 10 iota caddr (format T "~A~%"))
-        EOF
-        diff -u <(echo 2) test-output
-    - run: cd examples/hello-binary && nix-build --no-out-link
-      name: examples/hello-binary
-    - run: cd examples/override-package && nix-build --no-out-link
-      name: examples/override-package
-    - run: cd examples/with-cffi && nix-build --no-out-link
-      name: examples/with-cffi
+    # TODO: Move to the main top-level CI nix build.
     - run: cd examples/flake-app && nix build --no-link --override-input cl-nix-lite ../../
       name: examples/flake-app
