@@ -44,10 +44,12 @@ let
         in
           allDerivations (callPackage input { }))])
     else if isDerivation input
-    then [ input ]
+    then pkgs.lib.optionals (! input.meta.broken) [ input ]
     else
       assert pkgs.lib.isAttrs input;
-      builtins.filter isDerivation (builtins.attrValues input);
+      builtins.filter
+        (drv: isDerivation drv && !drv.meta.broken)
+        (builtins.attrValues input);
 in
 # Outputting a list of all derivations (instead of e.g. a mock wrapper
 # derivation) allows me to later filter this down to only derivations that need
@@ -64,5 +66,5 @@ pkgs.lib.pipe [
 ] [
   (builtins.map allDerivations)
   pkgs.lib.lists.flatten
-  (builtins.filter isNotBroken)
+  #(builtins.filter isNotBroken)
 ]
