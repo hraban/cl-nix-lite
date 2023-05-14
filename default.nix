@@ -217,6 +217,14 @@ in
     lispCheckDependencies = l.optional ((lisp.pname or "") != "sbcl") rt;
   }) {};
 
+  alien-ring = callPackage (self: with self; lispify [ cffi trivial-gray-streams ] (pkgs.fetchFromGitHub {
+    owner = "mateuszb";
+    name = "alien-ring-src";
+    repo = "alien-ring";
+    rev = "9bad594df4dc1b700ed319e95c81b38c61120241";
+    sha256 = "2t8qcvTIy+SUreAOI9OR1F0F8oOd/ePempApEVgJGVQ=";
+  })) {};
+
   anaphora = callPackage (self: with self; lispDerivation {
     lispSystem = "anaphora";
     lispCheckDependencies = [ rt ];
@@ -1035,6 +1043,14 @@ in
 
   cl-test-more = prove;
 
+  cl-tls = callPackage (self: with self; lispify [ ironclad alexandria fast-io cl-base64 ] (pkgs.fetchFromGitHub {
+    owner = "shrdlu68";
+    repo = "cl-tls";
+    name = "cl-tls-src";
+    rev = "2ab4fc3ae7e79e451126a9bb6bc38ca2cd2cb4ba";
+    sha256 = "Ry1Q+UPY3h2hOB8tYB7+LYHLHyel9h5aN3OuGMTmz8g=";
+  })) {};
+
   cl-unicode = callPackage (self: with self; lispDerivation {
     lispSystem = "cl-unicode";
     src = pkgs.fetchFromGitHub {
@@ -1045,6 +1061,20 @@ in
       sha256 = "sha256-6kPg5c5k9KKRUZms0GRiLrQfBR0zgn7DJYc6TJMWfXo=";
     };
     lispDependencies = [ cl-ppcre flexi-streams ];
+  }) {};
+
+  # The official location for this source is
+  # "https://www.common-lisp.net/project/cl-utilities/cl-utilities-latest.tar.gz"
+  # but I’m not a huge fan of including a "latest.tar.gz" in a Nix
+  # derivation. That being said: it hasn’t been changed since 2006, so maybe
+  # that is a better resource.
+  cl-utilities = callPackage (self: with self; lispDerivation {
+    lispSystem = "cl-utilities";
+    src = fetchDebianPkg {
+      pname = "cl-utilities";
+      version = "1.2.4";
+      sha256 = "sha256-/CAF/qaLjd3t9P+0eSGoC18f3MJT1dB94VLUjnKbq7Y";
+    };
   }) {};
 
   cl-who = callPackage (self: with self; lispDerivation {
@@ -1111,20 +1141,6 @@ in
         };
       };
     }) {}) clack clack-handler-hunchentoot clack-socket clack-test;
-
-  # The official location for this source is
-  # "https://www.common-lisp.net/project/cl-utilities/cl-utilities-latest.tar.gz"
-  # but I’m not a huge fan of including a "latest.tar.gz" in a Nix
-  # derivation. That being said: it hasn’t been changed since 2006, so maybe
-  # that is a better resource.
-  cl-utilities = callPackage (self: with self; lispDerivation {
-    lispSystem = "cl-utilities";
-    src = fetchDebianPkg {
-      pname = "cl-utilities";
-      version = "1.2.4";
-      sha256 = "sha256-/CAF/qaLjd3t9P+0eSGoC18f3MJT1dB94VLUjnKbq7Y";
-    };
-  }) {};
 
   closer-mop = callPackage (self: with self; lispify [ ] (pkgs.fetchFromGitHub {
     name = "closer-mop-src";
