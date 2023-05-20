@@ -2,19 +2,29 @@ name: "Test"
 on:
   pull_request:
   push:
+  # Run periodically, to build with latest -unstable releases. Caching makes
+  # this a cheap operation when nothing changed, so no need for further logic.
+  schedule:
+    - cron: '*/6 * * * *'
 jobs:
   tests:
     strategy:
       matrix:
-        os:
-          - ubuntu-latest
-          - macos-latest
-    runs-on: ${{ matrix.os }}
+        config:
+          - os: ubuntu-latest
+            channel: nixpkgs-unstable
+          - os: ubuntu-latest
+            channel: nixpkgs-22.11
+          - os: macos-latest
+            channel: nixpkgs-unstable
+          - os: macos-latest
+            channel: nixpkgs-22.11-darwin
+    runs-on: ${{ matrix.config.os }}
     steps:
     - uses: actions/checkout@v3
     - uses: cachix/install-nix-action@v20
       with:
-        nix_path: nixpkgs=channel:nixpkgs-unstable
+        nix_path: nixpkgs=channel:${{ matrix.config.channel }}
     - uses: cachix/cachix-action@v12
       with:
         name: cl-nix-lite
