@@ -61,7 +61,7 @@ To actually build a binary executable you can run later, read on.
 
 This is the easiest way to start building a binary, in number of actual steps.
 
-Go to the [flake example](examples/flake) and follow the instructions. It’s easy.
+See the [flake example](examples/flake-app).
 
 But, a word of caution: flakes are a layer *on top of Nix*. This is fine as long as it works, but if you really don’t know any Nix at all, it’s yet another thing to learn before you get it.
 
