@@ -9,25 +9,33 @@
 
 let
   inherit (pkgs.lib) isDerivation;
-  allInputs = input:
+  # Massage a test input into a list of derivations (for later flattening)
+  all-inputs = input:
     if builtins.isPath input
-    then allInputs (pkgs.callPackage input { })
+    then all-inputs (pkgs.callPackage input { })
     else if isDerivation input
     then [ input ]
     else
       assert pkgs.lib.isAttrs input;
       builtins.filter isDerivation (builtins.attrValues input);
+  # Simple paths which can just be imported directly
+  channel-based-tests = builtins.map all-inputs [
+    ./all-packages
+    ./all-packages-wrapped
+    ./hello-binary
+    ./override-package
+    ./test-all
+    ./with-cffi
+  ];
+  # These need some more work
+  flake-tests = [
+    ./flake-app
+  ];
+  flake-to-deriv = f: (builtins.getFlake (builtins.toString f)).packages.${builtins.currentSystem}.default;
 in
 # Outputting a list of all derivations (instead of e.g. a mock wrapper
 # derivation) allows me to later filter this down to only derivations that need
 # to be /built/, on CI. That allows you to exclude anything that already exists
 # on cache. This is useful because otherwise it will redownload everything, just
 # to throw it away immediately again.
-pkgs.lib.lists.flatten (builtins.map allInputs [
-  ./all-packages
-  ./all-packages-wrapped
-  ./hello-binary
-  ./override-package
-  ./test-all
-  ./with-cffi
-])
+pkgs.lib.lists.flatten (channel-based-tests ++ (map flake-to-deriv flake-tests))

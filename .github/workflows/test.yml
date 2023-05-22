@@ -33,6 +33,8 @@ jobs:
       name: Install GNU sed
       # BSD sed has a weird interpretation of -e 0,/.../
       run: "nix-env -f '<nixpkgs>' -iA gnused"
+    - name: Update flake locks to use this cl-nix-lite
+      run: "cd examples/flake-app && nix flake lock --override-input cl-nix-lite ../.."
     # Only bother actually building derivations that are not yet in the
     # store. This prevents nix-build from downloading all built binaries from
     # the store only to discard them immediately afterwards.
@@ -42,6 +44,3 @@ jobs:
           nix-build --no-out-link --dry-run 2>&1 | \
           sed -e '0,/will be built:$/d' -e '/^[^ ]/,$d' | \
           xargs -r nix-build --no-out-link
-    # TODO: Move to the main top-level CI nix build.
-    - run: cd examples/flake-app && nix build --no-link --override-input cl-nix-lite ../../
-      name: examples/flake-app
