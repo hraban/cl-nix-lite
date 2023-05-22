@@ -20,6 +20,11 @@ jobs:
           - os: macos-latest
             channel: nixpkgs-22.11-darwin
     runs-on: ${{ matrix.config.os }}
+    concurrency:
+      # Different runs of the same job are very likely candidates for (partial)
+      # caching, which is defeated in parallel runs. Be nice to GitHub.
+      group: ${{ matrix.config.os }}-${{ matrix.config.channel }}
+      cancel-in-progress: true
     steps:
     - uses: actions/checkout@v3
     - uses: cachix/install-nix-action@v20
