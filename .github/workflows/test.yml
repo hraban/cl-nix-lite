@@ -5,7 +5,9 @@ on:
   # Run periodically, to build with latest -unstable releases. Caching makes
   # this a cheap operation when nothing changed, so no need for further logic.
   schedule:
-    - cron: '*/6 * * * *'
+    # 13 is a random non-0 minute to be nice to GitHub because most jobs
+    # probably run on the hour
+    - cron: '13 */6 * * *'
 jobs:
   tests:
     strategy:
