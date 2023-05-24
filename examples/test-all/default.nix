@@ -34,16 +34,13 @@
   ] ++ pkgs.lib.optionals pkgs.hostPlatform.isDarwin [
     "flexi-streams"
     "lparallel"
-  ] ++ pkgs.lib.optionals pkgs.hostPlatform.isLinux (
-    [
-      "hunchentoot"
-      "usocket"
-    ] ++ pkgs.lib.optionals pkgs.hostPlatform.isx86 [
-      # There’s a deadlock bug in tests on x86 linux
-      "bordeaux-threads"
-    ]
-  )
-  # ?? Windows ??
+  ] ++ pkgs.lib.optionals pkgs.hostPlatform.isLinux [
+    "hunchentoot"
+    "usocket"
+  ] ++ pkgs.lib.optionals pkgs.hostPlatform.isx86 [
+    # There’s a deadlock heisenbug in tests on x86 both Linux and Darwin
+    "bordeaux-threads"
+  ]
 }:
 
 with pkgs.lib;
