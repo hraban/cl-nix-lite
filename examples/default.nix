@@ -8,16 +8,23 @@
 }:
 
 let
-  inherit (pkgs.lib) isDerivation;
+  inherit (pkgs) lib;
+  callPackageClisp = pkgs.newScope (pkgs // {
+    lispPackagesLite = pkgs.callPackage ./.. {
+      lisp = pkgs.clisp;
+    };
+  });
   # Massage a test input into a list of derivations (for later flattening)
-  all-inputs = input:
-    if builtins.isPath input
-    then all-inputs (pkgs.callPackage input { })
-    else if isDerivation input
+  all-inputs' = input:
+    if lib.isDerivation input
     then [ input ]
-    else
-      assert pkgs.lib.isAttrs input;
-      builtins.filter isDerivation (builtins.attrValues input);
+    else if lib.isAttrs input
+    then builtins.attrValues input
+    # Ignore non-derivation inputs
+    else [];
+  all-inputs = input:
+    (all-inputs' (pkgs.callPackage input { })) ++
+    (all-inputs' (callPackageClisp input { }));
   # Simple paths which can just be imported directly
   channel-based-tests = builtins.map all-inputs [
     ./all-packages
