@@ -16,11 +16,11 @@ jobs:
           - os: ubuntu-latest
             channel: nixpkgs-unstable
           - os: ubuntu-latest
-            channel: nixpkgs-22.11
+            channel: nixpkgs-23.05
           - os: macos-latest
             channel: nixpkgs-unstable
           - os: macos-latest
-            channel: nixpkgs-22.11-darwin
+            channel: nixpkgs-23.05-darwin
     runs-on: ${{ matrix.config.os }}
     concurrency:
       # Different runs of the same job are very likely candidates for (partial)
