@@ -6,6 +6,7 @@
     "arnesi"
     "bordeaux-threads" # There’s a deadlock heisenbug in these tests
     "cffi"
+    "cl-difflib" # see https://github.com/wiseman/cl-difflib/pull/1
     "cl-markdown"
     "cl-redis"
     "common-doc"

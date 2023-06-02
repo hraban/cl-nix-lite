@@ -373,6 +373,26 @@ in
     lispCheckDependencies = [ cl-async fiveam ];
   }) {};
 
+  bordeaux-threads = callPackage (self: with self; lispDerivation rec {
+    lispDependencies = [
+      alexandria
+      global-vars
+      trivial-features
+      trivial-garbage
+    ];
+    lispCheckDependencies = [ fiveam ];
+    buildInputs = [ pkgs.libuv ];
+    lispSystem = "bordeaux-threads";
+    version = "v0.8.8";
+    src = pkgs.fetchFromGitHub {
+      name = "bordeaux-threads-src";
+      owner = "sionescu";
+      repo = "bordeaux-threads";
+      rev = version;
+      sha256 = "sha256-5mauBDg13zJlYkbu5C30dCOIPBE95bVu2AiR8d0gJKY=";
+    };
+  }) {};
+
   inherit (callPackage (self: with self;
     lispMultiDerivation rec {
       name = "cffi";
@@ -428,6 +448,19 @@ in
       )];
     }
   ) {}) cffi cffi-grovel;
+
+  calispel = callPackage (self: with self; lispDerivation {
+    lispSystem = "calispel";
+    src = pkgs.fetchFromGitHub {
+      owner = "hawkir";
+      repo = "calispel";
+      name = "calispel-src";
+      rev = "e9f2f9c1af97f4d7bb4c8ac25fb2a8f3e8fada7a";
+      sha256 = "6KeWzrKB1lFc0IyflOpe00jWWTFvYlxvU7DYE+9wdSE=";
+    };
+    lispDependencies = [ jpl-queues bordeaux-threads ];
+    lispCheckDependencies = [ eager-future2 ];
+  }) {};
 
   chipz = callPackage (self: with self; lispify [ ] (pkgs.fetchFromGitHub {
     name = "chipz-src";
@@ -636,26 +669,6 @@ in
     lispCheckDependencies = [ fiveam ];
   }) {};
 
-  bordeaux-threads = callPackage (self: with self; lispDerivation rec {
-    lispDependencies = [
-      alexandria
-      global-vars
-      trivial-features
-      trivial-garbage
-    ];
-    lispCheckDependencies = [ fiveam ];
-    buildInputs = [ pkgs.libuv ];
-    lispSystem = "bordeaux-threads";
-    version = "v0.8.8";
-    src = pkgs.fetchFromGitHub {
-      name = "bordeaux-threads-src";
-      owner = "sionescu";
-      repo = "bordeaux-threads";
-      rev = version;
-      sha256 = "sha256-5mauBDg13zJlYkbu5C30dCOIPBE95bVu2AiR8d0gJKY=";
-    };
-  }) {};
-
   cl-colors = callPackage (self: with self; lispDerivation {
     lispSystem = "cl-colors";
     lispCheckDependencies = [ lift ];
@@ -729,6 +742,26 @@ in
     };
   }) {};
 
+  cl-custom-hash-table = callPackage (self: with self; lispDerivation {
+    src = pkgs.fetchFromGitHub {
+      owner = "metawilm";
+      repo = "cl-custom-hash-table";
+      name = "cl-custom-hash-table-src";
+      rev = "7bd02a529d39065ca8190966403b984552e0212a";
+      sha256 = "Y0LZvhSUucHhJdibuL9pe0QFyi5ZqacIsOIOjCEd19M=";
+    };
+    lispSystem = "cl-custom-hash-table";
+    lispCheckDependencies = [ hu_dwim_stefil ];
+  }) {};
+
+  cl-difflib = callPackage (self: with self; lispify [ ] (pkgs.fetchFromGitHub {
+    owner = "wiseman";
+    repo = "cl-difflib";
+    name = "cl-difflib-src";
+    rev = "98eb335c693f1881584b83ca7be4a0fe05355c4e";
+    sha256 = "iOB6ichf4umGIByi+7m2oWCsHNr96PRZDyk8DJcCLiI=";
+  })) {};
+
   cl-fad = callPackage (self: with self; lispDerivation {
     lispSystem = "cl-fad";
     src = pkgs.fetchFromGitHub {
@@ -741,6 +774,28 @@ in
     lispDependencies = [ alexandria bordeaux-threads ];
     lispCheckDependencies = [ cl-ppcre unit-test ];
   }) {};
+
+  cl-gopher = callPackage (self: with self; lispify [
+    usocket
+    flexi-streams
+    drakma
+    bordeaux-threads
+    quri
+  ] (pkgs.fetchFromGitHub {
+    owner = "knusbaum";
+    repo = "cl-gopher";
+    name = "cl-gopher-src";
+    rev = "0899e7fa2134206f9d9778c7d53c49b7a59ff070";
+    sha256 = "TnA/NAeyLRhJHVd+YXqhDuORcr8iRIlV2xy0UsfQxM8=";
+  })) {};
+
+  cl-html-diff = callPackage (self: with self; lispify [ cl-difflib ] (pkgs.fetchFromGitHub {
+    owner = "wiseman";
+    repo = "cl-html-diff";
+    name = "cl-html-diff-src";
+    rev = "5a0b39d1c524278d6f60851d7786bb2585614310";
+    sha256 = "6/OtMlQod7DqJvSxouD/Ixw9y0WfBVvjlaT9HWW0We0=";
+  })) {};
 
   cl-interpol = callPackage (self: with self; lispDerivation {
     lispSystem = "cl-interpol";
@@ -959,6 +1014,36 @@ in
     };
   }) {}) cl-ppcre cl-ppcre-unicode;
 
+  cl-prevalence = callPackage (self: with self; lispDerivation {
+    lispSystem = "cl-prevalence";
+    src = pkgs.fetchFromGitHub {
+      owner = "40ants";
+      repo = "cl-prevalence";
+      name = "cl-prevalence-src";
+      rev = "e6b27640ce89ae5f8af38beb740e319bb6cd2368";
+      sha256 = "4F6NNyRVd2GVvnXEDXXppWTCbNVwQwyvKfdBveMpadE=";
+    };
+    lispDependencies = [
+      moptilities
+      s-xml
+      s-sysdeps
+    ];
+    lispCheckDependencies = [ fiveam find-port ];
+  }) {};
+
+  cl-qrencode = callPackage (self: with self; lispDerivation {
+    lispSystem = "cl-qrencode";
+    src = pkgs.fetchFromGitHub {
+      owner = "jnjcc";
+      repo = "cl-qrencode";
+      name = "cl-qrencode-src";
+      rev = "0de2d8a3877b499a9a0bbb0a9e1247056ae4311e";
+      sha256 = "uc/qh+eqJcWFbzMoPG4AF6QTxlG4I4UkM25B1sIIs9A=";
+    };
+    lispDependencies = [ zpng ];
+    lispCheckDependencies = [ lisp-unit ];
+  }) {};
+
   cl-quickcheck = callPackage (self: with self; lispify [ ] (pkgs.fetchFromGitHub {
     owner = "mcandre";
     repo = "cl-quickcheck";
@@ -1042,6 +1127,14 @@ in
   }) {}) cl-syntax cl-syntax-annot cl-syntax-interpol;
 
   cl-test-more = prove;
+
+  cl-tld = callPackage (self: with self; lispify [ ] (pkgs.fetchFromGitHub {
+    owner = "1u4nx";
+    repo = "cl-tld";
+    name = "cl-tld-src";
+    rev = "b6b24d9c63da77052775992463f0bfac63383234";
+    sha256 = "5jbUt+yTUz0OkWbLw+UZ6TSRH4cav84cecVGkW44pPY=";
+  })) {};
 
   cl-tls = callPackage (self: with self; lispify [ ironclad alexandria fast-io cl-base64 ] (pkgs.fetchFromGitHub {
     owner = "shrdlu68";
@@ -1450,6 +1543,15 @@ in
     lispCheckDependencies = [ lift ];
   }) {};
 
+  eager-future2 = callPackage (self: with self; lispify [ bordeaux-threads trivial-garbage ] (pkgs.fetchFromGitLab {
+    name = "eager-future2-src";
+    domain = "gitlab.common-lisp.net";
+    owner = "vsedach";
+    repo = "eager-future2";
+    rev = "54df8effd9d9eccac917509590286b5ac5f9cb30";
+    sha256 = "sha256-jeaCSUn0gszAGmqo9FJLWQjoM+vUafhZoShOUMdeQeM";
+  })) {};
+
   inherit (callPackage (self: with self; lispMultiDerivation {
     src = pkgs.fetchFromGitHub {
       owner = "robert-strandh";
@@ -1472,6 +1574,18 @@ in
     # autodetectiong stuff on linux builds.
     preBuild = "rm -rf tools-for-build";
   }) {}) eclector eclector-concrete-syntax-tree;
+
+  enchant = callPackage (self: with self; lispDerivation {
+    lispDependencies = [ cffi ];
+    lispSystem = "enchant";
+    src = pkgs.fetchFromGitHub {
+      owner = "tlikonen";
+      repo = "cl-enchant";
+      name = "cl-enchant-src";
+      rev = "b26850625b73c4b6f0edceb60b8d81cf130c525e";
+      sha256 = "6UBJW+o6G3CF3m52yp1wqijNUC0H52SoLMeTN8hBC7Q=";
+    };
+  }) {};
 
   eos = callPackage (self: with self; lispify [ ] (pkgs.fetchFromGitHub {
     name = "eos-src";
@@ -1746,6 +1860,26 @@ in
     };
   }) {};
 
+  history-tree = callPackage (self: with self; lispDerivation {
+    lispDependencies = [
+      alexandria
+      cl-custom-hash-table
+      local-time
+      nasdf
+      nclasses
+      trivial-package-local-nicknames
+    ];
+    src = pkgs.fetchFromGitHub {
+      owner = "atlas-engineer";
+      repo = "history-tree";
+      name = "history-tree-src";
+      rev = "c1ae76ff4b162e003b4a314666976d9133e6804a";
+      sha256 = "lOORalyTybdut/If+dBXS4PlZt2AnZrEI/qjQWS03pk=";
+    };
+    lispCheckDependencies = [ lisp-unit2 ];
+    lispSystem = "history-tree";
+  }) {};
+
   http-body = callPackage (self: with self; lispDerivation {
     lispSystem = "http-body";
     src = pkgs.fetchFromGitHub {
@@ -1839,6 +1973,14 @@ in
       drakma
     ];
   }) {};
+
+  idna = callPackage (self: with self; lispify [ split-sequence ] (pkgs.fetchFromGitHub {
+    owner = "antifuchs";
+    repo = "idna";
+    name = "idna-src";
+    rev = "bf789e6029b695ecba635964deac38130f55c7b4";
+    sha256 = "QpUK5znagLTN4d7GMiAmOiRj1DWhpfdIwBR25+rIywI=";
+  })) {};
 
   ieee-floats = callPackage (self: with self; lispDerivation {
     lispSystem = "ieee-floats";
@@ -1941,6 +2083,30 @@ in
       prove
       legion
     ];
+  }) {};
+
+  jpl-queues = callPackage (self: with self; lispDerivation rec {
+    lispSystem = "jpl-queues";
+    lispDependencies = [ bordeaux-threads jpl-util ];
+    pname = "jpl-queues";
+    version = "0.1";
+    src = pkgs.fetchzip {
+      inherit version;
+      pname = "jpl-queues-src";
+      url = "https://www.thoughtcrime.us/software/jpl-queues/jpl-queues-${version}.tar.gz";
+      sha256 = "sha256-CMl5j4uzTlP6SSSm6Z3gKHZdhyRgMNqqZCC/oJxu7fU=";
+    };
+  }) {};
+
+  jpl-util = callPackage (self: with self; lispDerivation {
+    src = pkgs.fetchFromGitHub {
+      owner = "hawkir";
+      repo = "cl-jpl-util";
+      name = "cl-jpl-util-src";
+      rev = "0311ed374e19a49d43318064d729fe3abd9a3b62";
+      sha256 = "34sG/rvzPGQEibNnp4VtrbIKORlc90LAeDM/ZNPMgFk=";
+    };
+    lispSystem = "jpl-util";
   }) {};
 
   json-streams = callPackage (self: with self; lispDerivation {
@@ -2145,6 +2311,14 @@ in
       sha256 = "sha256-1/Sl03Kid+KgrQVYYwRvOU9XuFRo0Bv8VZCTpWpardw=";
     };
   }) {};
+
+  lisp-unit = callPackage (self: with self; lispify [ ] (pkgs.fetchFromGitHub {
+    owner = "OdonataResearchLLC";
+    repo = "lisp-unit";
+    name = "lisp-unit-src";
+    rev = "89653a232626b67400bf9a941f9b367da38d3815";
+    sha256 = "Pqd7k08ZDvISuEVdGrokUy5xXfKJGdO2HWjck19tz1w=";
+  })) {};
 
   lisp-unit2 = callPackage (self: with self; lispify [
     alexandria
@@ -2369,6 +2543,52 @@ in
     };
     lispCheckDependencies = [ try ];
   }) {};
+
+  nclasses = callPackage (self: with self; lispDerivation {
+    lispDependencies = [ moptilities nasdf ];
+    src = pkgs.fetchFromGitHub {
+      owner = "atlas-engineer";
+      repo = "nclasses";
+      name = "nclasses-src";
+      rev = "12c183e8e53d243ea250f190d9d1cac6f1c6de56";
+      sha256 = "CTRLaJ0t65Y8rgSDzZMyWEQK8QBTQc7k5MzTklqwaNk=";
+    };
+    lispCheckDependencies = [ lisp-unit2 ];
+    lispSystem = "nclasses";
+  }) {};
+
+  inherit (callPackage (self: with self; lispMultiDerivation {
+    src =  pkgs.fetchFromGitHub {
+      owner = "atlas-engineer";
+      repo = "nfiles";
+      rev = "56d19dd64ecc6763a53cd7faf1206f19670c642a";
+      sha256 = "mDAkhZtpwby7flQBNcPQsA8TKl4PvflLXI6bsHDPzeY=";
+    };
+    systems = {
+      nfiles = {
+        lispDependencies = [
+          alexandria
+          nasdf
+          nclasses
+          quri
+          serapeum
+          trivial-garbage
+          trivial-package-local-nicknames
+          trivial-types
+        ];
+        lispCheckDependencies = [
+          lisp-unit2
+        ];
+      };
+      nasdf = {
+        lispCheckDependencies = [
+          lisp-unit2
+        ];
+      };
+    };
+    lispAsdPath = systems:
+      l.optional (builtins.elem "nasdf" systems) "nasdf";
+  }) {}) nfiles nasdf;
 
   inherit (callPackage (self: with self; lispMultiDerivation {
     src = pkgs.fetchFromGitHub {
@@ -2688,6 +2908,23 @@ in
     lispDependencies = [ named-readtables closer-mop ];
     lispCheckDependencies = [ should-test ];
   }) {};
+
+  s-sysdeps = callPackage (self: with self; lispify [ usocket usocket-server bordeaux-threads ] (pkgs.fetchFromGitHub {
+    owner = "svenvc";
+    repo = "s-sysdeps";
+    name = "s-sysdeps-src";
+    rev = "7f8de283b7fbd8b038fdf08493063a736db36ce7";
+    sha256 = "liyR8vIFlrxkU+hS4XOFAalHX0Le1cUbRoS+DHAM6GY=";
+  })) {};
+
+  s-xml = callPackage (self: with self; lispify [ ] (pkgs.fetchFromGitLab {
+    domain = "gitlab.common-lisp.net";
+    name = "s-xml-src";
+    owner = "s-xml";
+    repo = "s-xml";
+    rev = "194cceaf90fb1a268d63f25f9b36e570af07cfb1";
+    sha256 = "sha256-wcXT9OGaCdEbkwWPYV4JA6FNGlppTXAuK+8QR/MvTv8=";
+  })) {};
 
   salza2 = callPackage (self: with self; lispDerivation {
     lispSystem = "salza2";
@@ -3147,6 +3384,14 @@ export LD_LIBRARY_PATH=''${LD_LIBRARY_PATH+$LD_LIBRARY_PATH:}${osicat}/lib
     sha256 = "q2nskSt9tyO+p6LMt/OZ0dBCOMSCmN6UiUAQHG/wqkc=";
   })) {};
 
+  trivial-package-local-nicknames = callPackage (self: with self; lispify [ ] (pkgs.fetchFromGitHub {
+    owner = "phoe";
+    repo = "trivial-package-local-nicknames";
+    name = "trivial-package-local-nicknames-src";
+    rev = "8a4d09c1c5cb2b5349aecbd796164433df7a6cc5";
+    sha256 = "+YweT2sPT4pNvMjWvoEJAiPPpC8Ykwbvgdh9Rg7RAF0=";
+  })) {};
+
   trivial-rfc-1123 = callPackage (self: with self; lispify [ cl-ppcre ] (pkgs.fetchFromGitHub {
     owner = "stacksmith";
     repo = "trivial-rfc-1123";
@@ -3268,10 +3513,7 @@ export LD_LIBRARY_PATH=''${LD_LIBRARY_PATH+$LD_LIBRARY_PATH:}${osicat}/lib
     sha256 = "sha256-SU7doHkJFZSaCTYr74RIsiU7MlLiFsHl2RNHU76eF4Y=";
   })) {};
 
-  usocket = callPackage (self: with self; lispDerivation {
-    lispSystem = "usocket";
-    lispDependencies = [ split-sequence ];
-    lispCheckDependencies = [ bordeaux-threads rt ];
+  inherit (callPackage (self: with self; lispMultiDerivation {
     src = pkgs.fetchFromGitHub {
       name = "usocket-src";
       repo = "usocket";
@@ -3279,7 +3521,16 @@ export LD_LIBRARY_PATH=''${LD_LIBRARY_PATH+$LD_LIBRARY_PATH:}${osicat}/lib
       rev = "v0.8.5";
       sha256 = "sha256-anFwnv/E5WtuJO+WgdFcrvlM84EVdLcBPGu81Iirxd4=";
     };
-  }) {};
+    systems = {
+      usocket = {
+        lispDependencies = [ split-sequence ];
+        lispCheckDependencies = [ bordeaux-threads rt ];
+      };
+      usocket-server = {
+        lispDependencies = [ usocket bordeaux-threads ];
+      };
+    };
+  }) {}) usocket usocket-server;
 
   uuid = callPackage (self: with self; lispify [ ironclad trivial-utf-8 ] (pkgs.fetchFromGitHub {
     owner = "dardoria";
@@ -3404,5 +3655,12 @@ export LD_LIBRARY_PATH=''${LD_LIBRARY_PATH+$LD_LIBRARY_PATH:}${osicat}/lib
       name = "zip-src";
       rev = "688b1545dd7a4fe355556768bb03f8bd9b847a87";
       sha256 = "xvjyYCvmc55ath3ePTnrz2BK28Iwbu+W/k6ggJ1RCGg=";
+  })) {};
+
+  zpng = callPackage (self: with self; lispify [ salza2 ] (pkgs.fetchzip {
+    version = "1.2.2";
+    pname = "zpng-src";
+    url = "https://www.xach.com/lisp/zpng.tgz";
+    sha256 = "sha256-leVkFuyTE0dQSubMHzMuHEKne9MNqqFpm+cPCuV4aiw=";
   })) {};
 }))
