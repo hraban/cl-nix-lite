@@ -4,6 +4,7 @@
     "_40ants-doc"
     "_40ants-doc-full" # this one works in QL so it’s nix specific
     "arnesi"
+    "bordeaux-threads" # There’s a deadlock heisenbug in these tests
     "cffi"
     "cl-markdown"
     "cl-redis"
@@ -37,9 +38,6 @@
   ] ++ pkgs.lib.optionals pkgs.hostPlatform.isLinux [
     "hunchentoot"
     "usocket"
-  ] ++ pkgs.lib.optionals pkgs.hostPlatform.isx86 [
-    # There’s a deadlock heisenbug in tests on x86 both Linux and Darwin
-    "bordeaux-threads"
   ]
 }:
 
