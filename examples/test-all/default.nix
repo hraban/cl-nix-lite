@@ -16,13 +16,16 @@
     "gettext" # I’m confused as to why this one is failing
     "hamcrest"
     "hunchentoot" # Unreliable tests which use global host state (sockets)
+    "iolib" # deadlock in test SOCKOPT.1
     "lack"
     "lack-full"
     "lack-request"
     "lift"
     "log4cl"
     "log4cl-extras"
+    "montezuma" # uses ASDFv2 notation, same problem as https://github.com/wiseman/cl-difflib/pull/1
     "moptilities"
+    "ndebug" # https://github.com/atlas-engineer/ndebug/issues/8
     "reblocks"
     "routes"
     "rutils"

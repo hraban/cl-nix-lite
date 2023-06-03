@@ -1994,6 +1994,29 @@ in
     lispCheckDependencies = [ fiveam ];
   }) {};
 
+  iolib = callPackage (self: with self; lispDerivation {
+    lispSystem = "iolib";
+    lispCheckDependencies = [ fiveam ];
+    lispDependencies = [
+      alexandria
+      bordeaux-threads
+      cffi
+      cffi-grovel
+      idna
+      split-sequence
+      swap-bytes
+    ];
+    nativeBuildInputs = [ pkgs.pkg-config ];
+    propagatedBuildInputs = [ pkgs.libfixposix ];
+    src = pkgs.fetchFromGitHub {
+      owner = "sionescu";
+      repo = "iolib";
+      name = "iolib-src";
+      rev = "010b7a6bdd2e918ebf2ec85edd3853179f01cb30";
+      sha256 = "6oVbquTAKVOI2UwxtF9KdmAUkJsqmVi3sK3OfKEXHuM=";
+    };
+  }) {};
+
   inferior-shell = callPackage (self: with self; lispDerivation {
     lispSystem = "inferior-shell";
     lispDependencies = [
@@ -2510,6 +2533,19 @@ in
     sha256 = "sha256-YHt/r4deJnsr4oRTiDiTnNRkBYy0OKu7pfFjcC5x5T8=";
   })) {};
 
+  montezuma = callPackage (self: with self; lispDerivation {
+    lispSystem = "montezuma";
+    lispDependencies = [ cl-ppcre cl-fad babel ];
+    lispCheckDependencies = [ trivial-timeout ];
+    src = pkgs.fetchFromGitHub {
+      owner = "sharplispers";
+      repo = "montezuma";
+      name = "montezuma-src";
+      rev = "ee2129eece7065760de4ebbaeffaadcb27644738";
+      sha256 = "TPSzuDBxEBTmdteqZGLS7M+KkdzuXx3YmM3nqJfedWs=";
+    };
+  }) {};
+
   moptilities = callPackage (self: with self; lispDerivation {
     lispSystem = "moptilities";
     lispDependencies = [ closer-mop ];
@@ -2544,6 +2580,32 @@ in
     lispCheckDependencies = [ try ];
   }) {};
 
+  # The nyxt team has this nasdf library that they copy paste into their repos.
+  # When e.g. you are bar, you depend on foo, which includes nasdf, and you
+  # yourself provide nasdf, if you now add your own nasdf to the ASDF include
+  # path (the source registry), it will consider that the authoritatve nasdf lib
+  # across your entire image. This will lead to foo being recompiled, because
+  # its dependency (nasdf) is being recompiled (as per ASDF semantics). Which
+  # breaks. The only solution is to have only one authoritative nasdf copy which
+  # is compiled once, and included by all other projects. There is no need to
+  # strip the vendored nasdf copies from each repo because they are not in the
+  # root of the project, and therefore not found by ASDF anyway.
+  nasdf = callPackage (self: with self; lispDerivation {
+    lispSystem = "nasdf";
+    src = pkgs.stdenvNoCC.mkDerivation {
+      src = pkgs.fetchFromGitHub {
+        owner = "atlas-engineer";
+        repo = "ntemplate";
+        name = "ntemplate-src";
+        rev = "51a884f388ec526c32914093fcad6bb2434e3c14";
+        sha256 = "bjQPkiHAxhjsHCnWpCGMsmQlGDJFGtQEdevnhK2k+kY=";
+      };
+      name = "nasdf-src";
+      phases = [ "unpackPhase" "installPhase" ];
+      installPhase = "cp -r ./nasdf $out";
+    };
+  }) {};
+
   nclasses = callPackage (self: with self; lispDerivation {
     lispDependencies = [ moptilities nasdf ];
     src = pkgs.fetchFromGitHub {
@@ -2557,38 +2619,98 @@ in
     lispSystem = "nclasses";
   }) {};
 
-  inherit (callPackage (self: with self; lispMultiDerivation {
-    src =  pkgs.fetchFromGitHub {
+  ndebug = callPackage (self: with self; lispDerivation {
+    lispDependencies = [
+      dissect
+      bordeaux-threads
+      trivial-custom-debugger
+      trivial-gray-streams
+    ];
+    src = pkgs.fetchFromGitHub {
+      owner = "atlas-engineer";
+      repo = "ndebug";
+      name = "ndebug-src";
+      rev = "cb3e9af61a5a7755d879db7ddd95cee78470c2a9";
+      sha256 = "uq7S7ArFI4dR3w/l+VG/xzGFf6OZT0ozAuswz7AM8OY=";
+    };
+    lispCheckDependencies = [ lisp-unit2 ];
+    lispSystem = "ndebug";
+  }) {};
+
+  nfiles = callPackage (self: with self; lispDerivation {
+    src = pkgs.fetchFromGitHub {
       owner = "atlas-engineer";
       repo = "nfiles";
+      name = "nfiles-src";
       rev = "56d19dd64ecc6763a53cd7faf1206f19670c642a";
       sha256 = "mDAkhZtpwby7flQBNcPQsA8TKl4PvflLXI6bsHDPzeY=";
     };
-    systems = {
-      nfiles = {
-        lispDependencies = [
-          alexandria
-          nasdf
-          nclasses
-          quri
-          serapeum
-          trivial-garbage
-          trivial-package-local-nicknames
-          trivial-types
-        ];
-        lispCheckDependencies = [
-          lisp-unit2
-        ];
-      };
-      nasdf = {
-        lispCheckDependencies = [
-          lisp-unit2
-        ];
-      };
+    lispSystem = "nfiles";
+    lispDependencies = [
+      alexandria
+      nasdf
+      nclasses
+      quri
+      serapeum
+      trivial-garbage
+      trivial-package-local-nicknames
+      trivial-types
+    ];
+    lispCheckDependencies = [
+      lisp-unit2
+    ];
+  }) {};
+
+  nhooks = callPackage (self: with self; lispDerivation {
+    lispSystem = "nhooks";
+    lispDependencies = [ nasdf bordeaux-threads serapeum ];
+    lispCheckDependencies = [ lisp-unit2 ];
+    src = pkgs.fetchFromGitHub {
+      owner = "atlas-engineer";
+      name = "nhooks-src";
+      repo = "nhooks";
+      rev = "8579085542546a482ec0807cd8acf3819e383218";
+      sha256 = "TKS7se5qVKVI9STFKsBlTxGUsaE/YarzVSFc1OEQINY=";
     };
-    lispAsdPath = systems:
-      l.optional (builtins.elem "nasdf" systems) "nasdf";
-  }) {}) nfiles nasdf;
+  }) {};
+
+  njson = callPackage (self: with self; lispDerivation {
+    lispSystem = "njson";
+    lispDependencies = [ nasdf ];
+    src = pkgs.fetchFromGitHub {
+      owner = "atlas-engineer";
+      name = "njson-src";
+      repo = "njson";
+      rev = "1946f7080a2c7ce9f6cc1bce1cfdfeb001b2416b";
+      sha256 = "oE04VRqCPmMqz7P1G60/e8RBngAUxH/apBAIkDrQ5p4=";
+    };
+  }) {};
+
+  nkeymaps = callPackage (self: with self; lispDerivation {
+    src = pkgs.fetchFromGitHub {
+      name = "nkeymaps-src";
+      owner = "atlas-engineer";
+      repo = "nkeymaps";
+      rev = "02b68bc9d8951f6fd63043b20b50fb34d16ee886";
+      sha256 = "DcxITMV4Vtn5R0UUQPB/m15QDE4p/TuAJ/X5faQ+k+A=";
+    };
+    lispSystem = "nkeymaps";
+    lispDependencies = [ alexandria fset nasdf trivial-package-local-nicknames ];
+    lispCheckDependencies = [ lisp-unit2 ];
+  }) {};
+
+  nsymbols = callPackage (self: with self; lispDerivation {
+    src = pkgs.fetchFromGitHub {
+      owner = "atlas-engineer";
+      repo = "nsymbols";
+      name = "nsymbols-src";
+      rev = "b82f19bcf133b1fbff91661c53a17a64fe8be3ba";
+      sha256 = "5AC2QH2/Fobmm3Za9cCswxKw3VpuCgDJl/f1P4u5EyM=";
+    };
+    lispDependencies = [ closer-mop nasdf ];
+    lispCheckDependencies = [ lisp-unit2 ];
+    lispSystem = "nsymbols";
+  }) {};
 
   inherit (callPackage (self: with self; lispMultiDerivation {
     src = pkgs.fetchFromGitHub {
@@ -2710,6 +2832,19 @@ in
     };
   }) {};
 
+  phos = callPackage (self: with self; lispDerivation {
+    src = pkgs.fetchFromGitHub {
+      owner = "omar-polo";
+      repo = "phos";
+      name = "phos-src";
+      rev = "6620b82b091cdfed655e1093ef045dbe518d5474";
+      sha256 = "I3cHSfs+AiIkuHzPW0jaW2yUrcGlPcFBj1GtmQ2KjP8=";
+    };
+    lispDependencies = [ quri cl-ppcre trivia usocket cl-plus-ssl ];
+    lispCheckDependencies = [ clunit2 ];
+    lispSystem = "phos";
+  }) {};
+
   plump = callPackage (self: with self; lispify [ array-utils documentation-utils ] (pkgs.fetchFromGitHub {
     owner = "Shinmera";
     repo = "plump";
@@ -2729,6 +2864,31 @@ in
       rev = "3afe2b76f42f481f44a0a495256f7abeb69cef27";
       sha256 = "sha256-gpNY32YrKMp86FhWRZHSTeckmPJYV1UZ5Z5gt4yQax8=";
     };
+  }) {};
+
+  prompter = callPackage (self: with self; lispDerivation {
+    src = pkgs.fetchFromGitHub {
+      owner = "atlas-engineer";
+      repo = "prompter";
+      name = "prompter-src";
+      rev = "8ce3504d8aa6b23d0f03014d58f6d6dcfe9e9e68";
+      sha256 = "L0fokQhj8C+qWK0io6m1z3VUEd/Yb7PJag8HJcvlNAE=";
+    };
+    lispDependencies = [
+      alexandria
+      moptilities
+      nclasses
+      serapeum
+      str
+      trivial-package-local-nicknames
+      calispel
+      cl-containers
+      closer-mop
+      lparallel
+      nasdf
+    ];
+    lispCheckDependencies = [ lisp-unit2 ];
+    lispSystem = "prompter";
   }) {};
 
   prove = callPackage (self: with self; lispDerivation {
@@ -2784,6 +2944,13 @@ in
     };
     lispCheckDependencies = [ ptester ];
   }) {};
+
+  py-configparser = callPackage (self: with self; lispify [ parse-number ] (pkgs.fetchsvn {
+    url = "https://svn.common-lisp.net/py-configparser/trunk";
+    rev = "48";
+    sha256 = "sha256-fOdIdF3E2URWjO2HxZjD7gWwDfV5d3FnuDWsoH2G/9Y=";
+    name = "py-configparser-src";
+  })) {};
 
   pythonic-string-reader = callPackage (self: with self; lispify [ named-readtables ] (pkgs.fetchFromGitHub {
     name = "pythonic-string-reader-src";
@@ -3141,6 +3308,19 @@ export LD_LIBRARY_PATH=''${LD_LIBRARY_PATH+$LD_LIBRARY_PATH:}${osicat}/lib
     patches = ./patches/slime-fix-swank-loader-fasl-cache-pwd.diff;
   }) {};
 
+  swap-bytes = callPackage (self: with self; lispDerivation {
+    src = pkgs.fetchFromGitHub {
+      owner = "sionescu";
+      repo = "swap-bytes";
+      name = "swap-bytes-src";
+      rev = "43ab1410a080d8abfe39078c1b3cecc32cf458f6";
+      sha256 = "pRY9G693H1yAAOVCoVHcwXa93pDBrDoiDtGhgDDCzd4=";
+    };
+    lispSystem = "swap-bytes";
+    lispDependencies = [ trivial-features ];
+    lispCheckDependencies = [ fiveam ];
+  }) {};
+
   symbol-munger = callPackage (self: with self; lispDerivation {
     src = pkgs.fetchFromGitHub {
       owner = "AccelerationNet";
@@ -3271,6 +3451,18 @@ export LD_LIBRARY_PATH=''${LD_LIBRARY_PATH+$LD_LIBRARY_PATH:}${osicat}/lib
       repo = "trivial-cltl2";
       rev = "2ada8722dc1d7bae1f49832a2ca26b25b90055d3";
       sha256 = "sha256-Q43ISShYRiNXVtFczzlpTxJ6upnNrR9CqEOY20DepXc=";
+    };
+  }) {};
+
+  trivial-clipboard = callPackage (self: with self; lispDerivation {
+    lispSystem = "trivial-clipboard";
+    lispCheckDependencies = [ fiveam ];
+    src = pkgs.fetchFromGitHub {
+      owner = "snmsts";
+      repo = "trivial-clipboard";
+      name = "trivial-clipboard-src";
+      rev = "19262e0cd3d493bf641668f09d1995fd0e954100";
+      sha256 = "Uijk0Mf3Szw3CLn7eDHWd3F0Dr9HGNZfh5eo8Kqv53w=";
     };
   }) {};
 
@@ -3511,6 +3703,14 @@ export LD_LIBRARY_PATH=''${LD_LIBRARY_PATH+$LD_LIBRARY_PATH:}${osicat}/lib
     repo = "unit-test";
     rev = "266afaf4ac091fe0e8803bac2ae72d238144e735";
     sha256 = "sha256-SU7doHkJFZSaCTYr74RIsiU7MlLiFsHl2RNHU76eF4Y=";
+  })) {};
+
+  unix-opts = callPackage ({}: lispify [ ] (pkgs.fetchFromGitHub {
+    owner = "libre-man";
+    repo = "unix-opts";
+    name = "unix-opts-src";
+    rev = "0e61f34b2ecf62288437810d4abb31e572048b04";
+    sha256 = "WKu5GlUisUNJDB4BDqM/D443WUqU82HTRQD9zP/FrJo=";
   })) {};
 
   inherit (callPackage (self: with self; lispMultiDerivation {
