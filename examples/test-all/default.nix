@@ -15,6 +15,7 @@
     "fare-quasiquote"
     "gettext" # I’m confused as to why this one is failing
     "hamcrest"
+    "hunchentoot" # Unreliable tests which use global host state (sockets)
     "lack"
     "lack-full"
     "lack-request"
@@ -37,7 +38,6 @@
     "flexi-streams"
     "lparallel"
   ] ++ pkgs.lib.optionals pkgs.hostPlatform.isLinux [
-    "hunchentoot"
     "usocket"
   ]
 }:
