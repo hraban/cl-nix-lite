@@ -15,8 +15,6 @@
 {
   pkgs
   , lib
-
-  , lispDerivation
 }:
 
 with lib;
@@ -145,10 +143,97 @@ rec {
 
   isLispDeriv = x: x ? lispSystems;
 
-
-  ## PACKAGE UTILS
-
   # Utility function that just adds some lisp dependencies to an existing
   # derivation.
   trimName = s.removeSuffix "-src";
+
+  # Manage a { key => drv } attrset, describing all dependencies, recursively,
+  # as a flattened set. Worst edge case:
+  #
+  #                -> foo-b -> zim
+  #              /               \
+  # foo-a -> bar                  \
+  #              \                 v
+  #                ------------> foo-c
+  #
+  # Assuming foo-* are all systems in the same source derivation. This edge case
+  # is the most complicated, and it’s the reason for this entire
+  # pre-parsing-dependency-tracking quagmire. It’s not unusual with -test
+  # derivations. This graph is solved by incrementally including the dependent
+  # systems in the parent derivations, and rebuilding them all. So, with an
+  # arrow indicating the lispDependencies:
+  #
+  # [foo-a & foo-b & foo-c] -> bar -> [foo-b & foo-c] -> zim -> foo-c
+  #
+  # Complications:
+  # - The derivation doing the deduplication of foo-b and foo-c is not, itself,
+  #   a foo, so it doesn’t have easy access to an authoritative definition of
+  #   foo. It must recognize from the two separate derivations that they are
+  #   equal, and construct an entirely new foo that encapsulates them both.
+  # - If any of the systems is defined with doCheck = true, this affects the
+  #   build, and the final combined derivation must also be built with checks.
+  # - If you rebuild fully from source every time, e.g. foo-{a,b,c}, foo-c will
+  #   only be built because it is a dependency of zim. ASDF’s cache tracking
+  #   mechanism causes any system /whose dependencies must be rebuilt/ itself
+  #   also stale. This means a rebuild of foo-c would cause a rebuild of
+  #   zim--that will fail, because zim is in the store. The only solution to
+  #   this is to fetch the prebuilt cache of foo-c by making foo-c the src of
+  #   foo-b, and foo-b the src of foo-a.
+  #
+  # Note that bar only depends on a single "foo" derivation, which is built with
+  # foo-b and foo-c; not on two copies of foo, one with b & c, one with just c.
+  ancestryWalker = {
+    # Function to convert a derivation to a string identifying it
+    # uniquely. Think src path.
+    key
+    # This derivation, if it were built as-is, no deduplication applied. Think
+    # stdenv.mkDerivation ...
+    , me
+    # How to merge this derivation with another one.
+    , merge
+    # My directly defined top-level dependencies.
+    , dependencies
+  }: let
+    # Create a single source map entry for this derivation. This is the core
+    # datastructure around which the derivation deduplication detection
+    # mechanism is built.
+    entryFor = drv: { ${key drv} = drv; };
+    # Given a lispDerivation, get all its dependencies in the { src-drv =>
+    # lisp-drv } format. The invariant for ancestry._depsMap is that it
+    # can’t contain itself, so this is a non-destructive operation.
+    depsFor = drv: drv.ancestry._depsMap // (entryFor drv);
+    # Always order dependencies deterministically.  If either of the two is not
+    # a lisp deriv, we’re basically in the foo-b situation. This situation only
+    # happens when we are in a derivation that has itself as a dependency. It
+    # never occurs from an unrelated dependency, because those will never have
+    # an entry for this src anyway.
+    #
+    # We are in the “bar” situation, above. Or perhaps in this situation:
+    #
+    #          -- blub-a
+    #        /
+    # bim --
+    #        \
+    #          -- blub-b
+    #
+    # Either way, the solution is the same: create an entirely new derivation
+    # that unions the two dependencies.
+    allDepsIncMyself = nestedUnion (reduce (x: x.ancestry.merge)) 1 (map depsFor dependencies);
+    depsMap = removeAttrs allDepsIncMyself [ (key me) ];
+  in
+  # The resulting ancestry object. This must be assigned to the output
+  # derivation’s passthru object, in a key called ‘ancestry’.
+  {
+    inherit merge;
+    # If I depend on myself in any way, first flatten me and all my transitive
+    # dependent copies of me into one big union derivation.
+    me =
+      if allDepsIncMyself ? ${key me}
+      then merge allDepsIncMyself.${key me}
+      else me;
+    # Internal only. Invariant: never includes myself.
+    _depsMap = depsMap;
+    # A flat list of all my dependencies.
+    deps = builtins.attrValues depsMap;
+  };
 }
