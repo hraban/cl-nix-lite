@@ -237,11 +237,11 @@ Now, back to this project, lisp-packages-lite...
 
 </details>
 
-# Lisp Packages Lite
+# Nix Packages Lite
 
 Nix-only implementation of a lispDerivation builder, and registry of popular Common Lisp packages.
 
-This is a grounds-up implementation of a Lisp-in-Nix module, without using QuickLisp. I started with a `stdenv.mkDerivation` and worked my up from there.
+This is an experiment to discover what a Lisp-in-Nix system would look like, if QuickLisp didn’t exist. I started with a `stdenv.mkDerivation` and worked my up from there.
 
 ## Features / Anti-features
 
@@ -499,6 +499,12 @@ with rec {
 
 Are you unhappy with your bundled ASDF? Just include `asdf` as any other lisp dependency to get the latest one. It will automatically be picked up.
 
+### Emacs & SLIME (or: Working in the REPL)
+
+See the [Emacs & SLIME example](examples/emacs-slime) for a trick to use this during interactive development.
+
+It includes a cl-nix-lite alternative to `ql:quickload` for working in the REPL.
+
 ## Output: binary, .fasl files, or a lisp binary?
 
 Is your program itself intended to be used as a dependency? Then you don’t need to do anything special: pre-compiled .fasls will be left next to each .lisp file, and you can include your derivation itself as a `lispDependencies` entry for another lisp derivation. This is appropriate for libraries, e.g. alexandria.
@@ -510,12 +516,6 @@ Do you want to output a single executable, instead? This is natively supported b
 - [ASDF best practices][ASDF best practices] to configure ASDF.
 
 A third way to deliver your final output is as a lisp interpreter itself, which has been configured to find a predetermined set of dependencies.
-
-## Emacs & SLIME (or: Working in the REPL)
-
-See the [Emacs & SLIME example](examples/emacs-slime) for a trick to use this during interactive development.
-
-It includes a cl-nix-lite alternative to `ql:quickload` for working in the REPL.
 
 ## Testing
 
