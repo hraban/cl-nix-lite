@@ -43,7 +43,7 @@ T
 
 Add any other packages to `default.nix` as you need them.
 
-If you have flake support (probably you do?), you can also try the [flake develop example](examples/flake-develop).
+If you have flakes enabled (see [nixos.wiki/wiki/Flakes](https://nixos.wiki/wiki/Flakes)), you can also try the [flake develop example](examples/flake-develop).
 
 Either way see their respective READMEs for more info.
 
@@ -237,11 +237,11 @@ Now, back to this project, lisp-packages-lite...
 
 </details>
 
-# Nix Packages Lite
+# Lisp Packages Lite
 
 Nix-only implementation of a lispDerivation builder, and registry of popular Common Lisp packages.
 
-This is an experiment to discover what a Lisp-in-Nix system would look like, if QuickLisp didn’t exist. I started with a `stdenv.mkDerivation` and worked my up from there.
+This is a grounds-up implementation of a Lisp-in-Nix module, without using QuickLisp. I started with a `stdenv.mkDerivation` and worked my up from there.
 
 ## Features / Anti-features
 
@@ -510,6 +510,12 @@ Do you want to output a single executable, instead? This is natively supported b
 - [ASDF best practices][ASDF best practices] to configure ASDF.
 
 A third way to deliver your final output is as a lisp interpreter itself, which has been configured to find a predetermined set of dependencies.
+
+## Emacs & SLIME (or: Working in the REPL)
+
+See the [Emacs & SLIME example](examples/emacs-slime) for a trick to use this during interactive development.
+
+It includes a cl-nix-lite alternative to `ql:quickload` for working in the REPL.
 
 ## Testing
 

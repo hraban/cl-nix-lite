@@ -8,3 +8,11 @@ $ ./result/bin/sbcl --no-userinit
 > (require :asdf)
 > (asdf:load-system "alexandria")
 ```
+
+You can also use this with Emacs:
+
+```
+$ nix-build && emacs --eval  "(setq inferior-lisp-program \"${PWD}/result/bin/sbcl --no-userinit\")"
+```
+
+In Emacs you can use `M-x slime`, and (e.g.) `(asdf:load-system "arrow-macros")`. Adding the `--no-userinit` avoids loading Quicklisp, ensuring any system you load comes from Nix.
