@@ -39,6 +39,8 @@ jobs:
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
     - name: Run the Magic Nix Cache
       uses: DeterminateSystems/magic-nix-cache-action@v2
+      with:
+        upstream-cache: "https://cl-nix-lite.cachix.org"
 
     - name: Pin nixpkgs to ${{ matrix.config.channel }}
       run: "nix registry pin nixpkgs github:NixOS/nixpkgs/${{ matrix.config.channel }}"
