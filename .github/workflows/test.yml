@@ -28,39 +28,21 @@ jobs:
       group: ${{ matrix.config.os }}-${{ matrix.config.channel }}-${{ github.ref }}
       cancel-in-progress: true
     steps:
-    - uses: actions/checkout@v3
-    - uses: cachix/install-nix-action@v22
-      with:
-        nix_path: nixpkgs=channel:${{ matrix.config.channel }}
-    - uses: cachix/cachix-action@v12
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Install Nix
+      uses: DeterminateSystems/nix-installer-action@v4
+    - name: Configure Cachix
+      uses: cachix/cachix-action@v12
       with:
         name: cl-nix-lite
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+    - name: Run the Magic Nix Cache
+      uses: DeterminateSystems/magic-nix-cache-action@v2
+
+    - name: Pin nixpkgs to ${{ matrix.config.channel }}
+      run: "nix registry pin nixpkgs github:NixOS/nixpkgs/${{ matrix.config.channel }}"
     - name: Update flake locks to use this cl-nix-lite
       run: "cd examples/flake-app && nix flake lock --override-input cl-nix-lite ../.."
-    # Only bother actually building derivations that are not yet in the
-    # store. This prevents nix-build from downloading all built binaries from
-    # the store only to discard them immediately afterwards.
     - name: All examples
-      # Inspired by
-      # https://github.com/divnix/std-action/blob/5ead0a37047d44137f950247ee4d3e26fda291d7/run/build-uncached-extractor.sed
-      # Works on both BSD (Darwin) and GNU sed. Prints every store path
-      # following “.. will be built:”.
-      run: |
-        set -euo pipefail
-        cd examples && \
-          nix-build --no-out-link --dry-run 2>&1 | \
-          sed -ne '/will be built:$/ {
-            # label
-            :b
-            # next line
-            n
-            # If the line is indented, it’s a store path
-            /^ /{
-              # Print it
-              p
-              # goto label b
-              bb
-            }
-          }' | \
-          xargs -r nix-build --no-out-link
+      run: "cd examples && nix-build --no-out-link"
