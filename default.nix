@@ -762,6 +762,14 @@ in
     sha256 = "iOB6ichf4umGIByi+7m2oWCsHNr96PRZDyk8DJcCLiI=";
   })) {};
 
+  cl-dot = callPackage ({}: lispify [] (pkgs.fetchFromGitHub {
+    owner = "michaelw";
+    repo = "cl-dot";
+    name = "cl-dot-src";
+    rev = "73dfbb6e015a28ebed873266e4e8190e509b43de";
+    sha256 = "ql/MVIQLhiM/AvpuPRV1Lg4qRfZCKfQzyj+Xxxz+m1U=";
+  })) {};
+
   cl-fad = callPackage (self: with self; lispDerivation {
     lispSystem = "cl-fad";
     src = pkgs.fetchFromGitHub {
@@ -1367,6 +1375,19 @@ in
       find . -name '*.asd' -exec printf '"%s" ' {} \; >> .cl-source-registry.cache
       echo ')' >> .cl-source-registry.cache
     '';
+  }) {};
+
+  data-lens = callPackage (self: with self; lispDerivation {
+    lispDependencies = [ cl-ppcre alexandria serapeum ];
+    lispSystems = [ "data-lens" "data-lens/beta/transducers" ];
+    lispCheckDependencies = [ fiveam string-case ];
+    src = pkgs.fetchFromGitHub {
+      owner = "fiddlerwoaroof";
+      repo = "data-lens";
+      name = "data-lens-src";
+      rev = "903c0aaceddb4012e76324bfba0245f387f09922";
+      sha256 = "DY7wRGggVRjAJON8L+eX2nVcM4PVibPRHiX8jD/7eBM=";
+    };
   }) {};
 
   inherit (callPackage (self: with self; lispMultiDerivation {
