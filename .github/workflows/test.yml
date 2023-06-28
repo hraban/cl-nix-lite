@@ -36,18 +36,30 @@ jobs:
       with:
         name: cl-nix-lite
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - if: runner.os == 'macOS'
-      name: Install GNU sed
-      # BSD sed has a weird interpretation of -e 0,/.../
-      run: "nix-env -f '<nixpkgs>' -iA gnused"
     - name: Update flake locks to use this cl-nix-lite
       run: "cd examples/flake-app && nix flake lock --override-input cl-nix-lite ../.."
     # Only bother actually building derivations that are not yet in the
     # store. This prevents nix-build from downloading all built binaries from
     # the store only to discard them immediately afterwards.
     - name: All examples
+      # Inspired by
+      # https://github.com/divnix/std-action/blob/5ead0a37047d44137f950247ee4d3e26fda291d7/run/build-uncached-extractor.sed
+      # Works on both BSD (Darwin) and GNU sed. Prints every store path
+      # following “.. will be built:”.
       run: |
         cd examples && \
           nix-build --no-out-link --dry-run 2>&1 | \
-          sed -e '0,/will be built:$/d' -e '/^[^ ]/,$d' | \
+          sed -ne '/will be built:$/ {
+            # label
+            :b
+            # next line
+            n
+            # If the line is indented, it’s a store path
+            /^ /{
+              # Print it
+              p
+              # goto label b
+              bb
+            }
+          }' | \
           xargs -r nix-build --no-out-link
