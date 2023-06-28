@@ -237,11 +237,11 @@ Now, back to this project, lisp-packages-lite...
 
 </details>
 
-# Nix Packages Lite
+# Lisp Packages Lite
 
 Nix-only implementation of a lispDerivation builder, and registry of popular Common Lisp packages.
 
-This is an experiment to discover what a Lisp-in-Nix system would look like, if QuickLisp didn’t exist. I started with a `stdenv.mkDerivation` and worked my up from there.
+This is a grounds-up implementation of a Lisp-in-Nix module, without using QuickLisp. I started with a `stdenv.mkDerivation` and worked my up from there.
 
 ## Features / Anti-features
 
