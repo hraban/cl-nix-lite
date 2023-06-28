@@ -25,7 +25,7 @@ jobs:
     concurrency:
       # Different runs of the same job are very likely candidates for (partial)
       # caching, which is defeated in parallel runs. Be nice to GitHub.
-      group: ${{ matrix.config.os }}-${{ matrix.config.channel }}
+      group: ${{ matrix.config.os }}-${{ matrix.config.channel }}-${{ github.ref }}
       cancel-in-progress: true
     steps:
     - uses: actions/checkout@v3
