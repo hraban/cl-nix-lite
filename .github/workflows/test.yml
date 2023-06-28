@@ -16,7 +16,7 @@ jobs:
           - os: ubuntu-latest
             channel: nixpkgs-unstable
           - os: ubuntu-latest
-            channel: nixpkgs-23.05
+            channel: nixos-23.05
           - os: macos-latest
             channel: nixpkgs-unstable
           - os: macos-latest
