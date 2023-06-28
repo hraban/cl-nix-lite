@@ -47,6 +47,7 @@ jobs:
       # Works on both BSD (Darwin) and GNU sed. Prints every store path
       # following “.. will be built:”.
       run: |
+        set -euo pipefail
         cd examples && \
           nix-build --no-out-link --dry-run 2>&1 | \
           sed -ne '/will be built:$/ {
