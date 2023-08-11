@@ -12,10 +12,14 @@
 ;; You should have received a copy of the GNU Affero General Public License
 ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-;; The cl-nix-lite equivalent of ql:quickload. A dependency-free package to
-;; manage loading cl-nix-lite managed systems into the ASDF search path. Load
-;; this file from your Lisp’s init file, e.g. ~/.sbclrc, using this snippet I
-;; stole from Quicklisp setup:
+;; The cl-nix-lite parallel to ql:quickload.
+;;
+;; Note this doesn’t actually load the system into lisp, like ql:quickload does:
+;; this just downloads it and puts it in your /nix/store, and on your ASDF load
+;; path. You still have to load the actual package with asdf:load-system.
+;;
+;; Load this file from your Lisp’s init file, e.g. ~/.sbclrc, using this snippet
+;; I stole from Quicklisp setup:
 ;;
 ;;   (let ((nix-lite-init (merge-pathnames "dir/to/nix-lite.lisp"
 ;;                                         (user-homedir-pathname))))
@@ -45,13 +49,15 @@
                     :output '(:string :stripped t)
                     :error-output :interactive))
 
-(defun nix-eval (nix)
-  "Evaluate Nix code and return the result as a string"
-  (run `("nix-instantiate" "--read-write-mode" "--strict" "--eval" "-E" ,nix)))
+(defun nix-build (nix)
+  "Build this nix expression.
 
-(defun nix-list (nix)
-  "Parse a Nix list as a Lisp list"
-  (read-from-string (format NIL "(~A)" (subseq nix 1 (1- (length nix))))))
+Returns a list of the built paths, as output to stdout by Nix.
+"
+  (let ((out (run `("nix-build" "--no-out-link" "-E" ,nix))))
+    (remove ""
+            (uiop:split-string out :separator '(#\Newline))
+            :test #'string=)))
 
 (defun nix-store-p (p)
   (string= "/nix/store/" (subseq (namestring p) 0 11)))
@@ -64,15 +70,16 @@
   (let ((nix (format NIL "
 with (import (~A) {});
 map
-(x: x.src.outPath)
+(x: x.src)
 (lispWithSystems [ ~(~{~A~^ ~}~) ]).ancestry.deps
 " src packages)))
     ;; Assume that any nix store path is managed by this package. Safe
     ;; assumption.
     (delete-nix-paths)
-    (nconc asdf:*central-registry*
-           (mapcar (lambda (p) (pathname (concatenate 'string p "/")))
-                   (nix-list (nix-eval nix))))))
+    (setf asdf:*central-registry*
+          (nconc asdf:*central-registry*
+                 (mapcar (lambda (p) (pathname (concatenate 'string p "/")))
+                         (nix-build nix))))))
 
 ;; TODO: Normalize package names. Not doing that now because nobody cares.
 
