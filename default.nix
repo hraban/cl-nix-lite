@@ -1377,6 +1377,18 @@ in
     '';
   }) {};
 
+  contextl = callPackage (self: with self; lispDerivation {
+    lispDependencies = [ closer-mop lw-compat ];
+    src = pkgs.fetchFromGitHub {
+      owner = "pcostanza";
+      repo = "contextl";
+      name = "contextl-src";
+      rev = "f4fb3f59b0844788613fc4d1cc0d2b08df9488bb";
+      hash = "sha256-APLkYVN9pGgkuOfFgWaO9knXWgf8YGpQq5eaR7797yo=";
+    };
+    lispSystems = ["contextl" "dynamic-wind"];
+  }) {};
+
   data-lens = callPackage (self: with self; lispDerivation {
     lispDependencies = [ cl-ppcre alexandria serapeum ];
     lispSystems = [ "data-lens" "data-lens/beta/transducers" ];
@@ -2427,6 +2439,14 @@ in
     lispDependencies = [ array-utils form-fiddle plump clss ];
   }) {};
 
+  lw-compat = callPackage ({}: lispify [] (pkgs.fetchFromGitHub {
+    owner = "pcostanza";
+    repo = "lw-compat";
+    name = "lw-compat-src";
+    rev = "aabfe28c6c1a4949f9d7b3cb30319367c9fd1c0d";
+    hash = "sha256-WykCJ7M4y7INyDy1EXpnhO6onTU7OlWhW2nTKmbBOYw=";
+  })) {};
+
   marshal = callPackage (self: with self; lispDerivation {
     lispSystem = "marshal";
     lispCheckDependencies = [ xlunit ];
@@ -2459,7 +2479,7 @@ in
     lispCheckDependencies = [ lift ];
   }) {};
 
-  metacopy = callPackage (self: with self; lispDerivation {
+  inherit (callPackage (self: with self; lispMultiDerivation {
     src = pkgs.fetchFromGitHub {
       name = "metacopy-src";
       owner = "gwkkwg";
@@ -2467,10 +2487,17 @@ in
       rev = "03a9cd58938b7aa6de7c9f2527614a1403cbb205";
       sha256 = "L3I3fbQO8St9exILm5PxNXSTuDajzJ93h0wYg2M/bWY=";
     };
-    lispSystem = "metacopy";
-    lispDependencies = [ moptilities ];
-    lispCheckDependencies = [ lift ];
-  }) {};
+    systems = {
+      metacopy = {
+        lispDependencies = [ moptilities ];
+        lispCheckDependencies = [ lift ];
+      };
+      metacopy-with-contextl = {
+        lispDependencies = [ moptilities contextl ];
+        lispCheckDependencies = [ lift ];
+      };
+    };
+  }) {}) metacopy metacopy-with-contextl;
 
   metatilities = callPackage (self: with self; lispDerivation {
     lispSystem = "metatilities";
