@@ -2482,10 +2482,10 @@ in
   inherit (callPackage (self: with self; lispMultiDerivation {
     src = pkgs.fetchFromGitHub {
       name = "metacopy-src";
-      owner = "gwkkwg";
+      owner = "hraban";
       repo = "metacopy";
-      rev = "03a9cd58938b7aa6de7c9f2527614a1403cbb205";
-      sha256 = "L3I3fbQO8St9exILm5PxNXSTuDajzJ93h0wYg2M/bWY=";
+      rev = "560e3ad2bc7e687e875ac5ef156a2659011f57e9";
+      hash = "sha256-5iJ5qHQZWgFAGjne65CrhIaSNB5qZnMjwZ2bFCTlLBc=";
     };
     systems = {
       metacopy = {
