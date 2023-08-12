@@ -1386,7 +1386,16 @@ in
       rev = "f4fb3f59b0844788613fc4d1cc0d2b08df9488bb";
       hash = "sha256-APLkYVN9pGgkuOfFgWaO9knXWgf8YGpQq5eaR7797yo=";
     };
-    lispSystems = ["contextl" "dynamic-wind"];
+    lispSystems = [
+      "contextl"
+
+      # These two packages have clashing symbol exports, they can’t be loaded in
+      # the same image. That’s fair, but lispDerivation doesn’t currently
+      # support that, so I need to figure out whether I want to support that,
+      # or, if not, how to allow packages like this to work around it. I guess
+      # using overrides?
+      # "dynamic-wind"
+    ];
   }) {};
 
   data-lens = callPackage (self: with self; lispDerivation {
