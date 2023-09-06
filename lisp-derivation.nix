@@ -390,32 +390,47 @@ EOF
 
   # Get a binary executable lisp which can load the given systems from ASDF
   # without any extra setup necessary.
-  lispWithSystems = systems: lispDerivation {
-    inherit (lisp) name;
-    lispSystem = "";
-    nativeBuildInputs = [ pkgs.makeBinaryWrapper ];
-    src = pkgs.writeText "mock" "source";
-    dontUnpack = true;
-    dontBuild = true;
-    lispDependencies = systems;
-    # This wrapper is necessary because Nix is just a build environment that
-    # delivers executables. Once the binary is built, Nix doesn’t control its
-    # environment when it is started--it’s a regular binary. Meaning: we can’t
-    # somehow set these envvars in some config, like you could do with
-    # e.g. Docker. To set envvars on a binary /at runtime/, you must create a
-    # wrapper that does this. Enter ‘makeWrapper’ et al.
-    # N.B.: The final wrapper is a bash script which isn’t ideal for startup
-    # speed. This is a good argument for using asdf registry configuration files
-    # rather than a big baked envvar.
-    installPhase = ''
-      mkdir -p $out/bin
-      for f in ${lisp}/bin/*; do
-        # ASDF_.. is set, not suffixed, because it is an opaque string, not a
-        # search path.
-        makeBinaryWrapper $f $out/bin/$(basename $f) \
-          ''${CL_SOURCE_REGISTRY+--suffix CL_SOURCE_REGISTRY : $CL_SOURCE_REGISTRY} \
-          --set ASDF_OUTPUT_TRANSLATIONS $ASDF_OUTPUT_TRANSLATIONS
-      done
-    '';
-  };
+  lispWithSystems = systems:
+    let
+      libs-path = pipe systems [
+        (map (d: [ d ] ++ (d.buildInputs or []) ++ (d.propagatedBuildInputs or [])))
+        l.flatten
+        s.makeLibraryPath
+      ];
+      ldpathname = if pkgs.stdenv.isDarwin then "DYLD_LIBRARY_PATH" else "LD_LIBRARY_PATH";
+    in
+      lispDerivation {
+        inherit (lisp) name;
+        lispSystem = "";
+        nativeBuildInputs = [ pkgs.makeBinaryWrapper ];
+        src = pkgs.writeText "mock" "source";
+        dontUnpack = true;
+        dontBuild = true;
+        lispDependencies = systems;
+        # This wrapper is necessary because Nix is just a build environment that
+        # delivers executables. Once the binary is built, Nix doesn’t control its
+        # environment when it is started--it’s a regular binary. Meaning: we can’t
+        # somehow set these envvars in some config, like you could do with
+        # e.g. Docker. To set envvars on a binary /at runtime/, you must create a
+        # wrapper that does this. Enter ‘makeWrapper’ et al.
+        #
+        # N.B.: The final wrapper is a bash script which isn’t ideal for startup
+        # speed. This is a good argument for using asdf registry configuration files
+        # rather than a big baked envvar.
+        #
+        # For the same reason, bake the library search path into the binaries as
+        # well. TODO: On Linux we could use patchelf? But that isn’t available
+        # on darwin, so we still need this solution.
+        installPhase = ''
+          mkdir -p $out/bin
+          for f in ${lisp}/bin/*; do
+            # ASDF_.. is set, not suffixed, because it is an opaque string, not a
+            # search path.
+            makeBinaryWrapper $f $out/bin/$(basename $f) \
+              ''${CL_SOURCE_REGISTRY+--suffix CL_SOURCE_REGISTRY : $CL_SOURCE_REGISTRY} \
+              --set ASDF_OUTPUT_TRANSLATIONS $ASDF_OUTPUT_TRANSLATIONS \
+              --suffix ${ldpathname} : ${libs-path}
+          done
+        '';
+      };
 }
