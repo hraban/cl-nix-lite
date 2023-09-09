@@ -387,26 +387,24 @@ in
     lispCheckDependencies = [ fiveam ];
     buildInputs = [ pkgs.libuv ];
     lispSystem = "bordeaux-threads";
-    version = "v0.8.8";
     src = pkgs.fetchFromGitHub {
       name = "bordeaux-threads-src";
       owner = "sionescu";
       repo = "bordeaux-threads";
-      rev = version;
-      sha256 = "sha256-5mauBDg13zJlYkbu5C30dCOIPBE95bVu2AiR8d0gJKY=";
+      rev = "5155cae9ea849e2a04b557acfdfc3f4d6668aff9";
+      hash = "sha256-AYzzcxSZzfFPZ9DlZB+Zj7LzhCLO6zzC8NYZAPVI6YA=";
     };
   }) {};
 
   inherit (callPackage (self: with self;
     lispMultiDerivation rec {
       name = "cffi";
-      version = "v0.24.1";
       src = pkgs.fetchFromGitHub {
         name = "cffi-src";
         owner = "cffi";
         repo = "cffi";
-        rev = version;
-        sha256 = "sha256-QzISoQ4JpLhnxnPlSgWYE0PbSionu+b7z2HR2EmNPp8=";
+        rev = "c42b42e93a784c9396047078eff9caed257d7c28";
+        hash = "sha256-3zOthveRn7FgvmCY29ioZQ0XyF0sDxGzXRiHIe90TE4=";
       };
       patches = ./patches/clffi-libffi-no-darwin-carevout.patch;
       systems = {
@@ -605,13 +603,12 @@ in
 
   inherit (callPackage (self: with self; lispMultiDerivation rec {
     name = "cl-async";
-    version = "909c691ec7a3bfe98bbec536ab55d7eac8990a81";
 
     src = pkgs.fetchFromGitHub {
       name = "cl-async-src";
       owner = "orthecreedence";
       repo = "cl-async";
-      rev = version;
+      rev = "909c691ec7a3bfe98bbec536ab55d7eac8990a81";
       sha256 = "sha256-lonRpqW51lrf0zpOstYq261m2UR1YMrgKR23kLBrhfY=";
     };
 
@@ -648,9 +645,8 @@ in
 
   cl-base64 = callPackage (self: with self; lispDerivation rec {
     lispSystem = "cl-base64";
-    version = "577683b18fd880b82274d99fc96a18a710e3987a";
     src = fetchKpePkg {
-      inherit version;
+      version = "577683b18fd880b82274d99fc96a18a710e3987a";
       name = "cl-base64";
       sha256 = "sha256-cuVDuPj8gXiN9kLgWpWerkZgodno2s3OENZoByApUoo=";
     };
@@ -862,12 +858,11 @@ in
     lispDependencies = [ alexandria cffi cffi-grovel ];
     propagatedBuildInputs = [ pkgs.libuv ];
     lispSystem = "cl-libuv";
-    version = "ebe3e166d1b6608efdc575be55579a086356b3fc";
     src = pkgs.fetchFromGitHub {
       name = "cl-libuv-src";
       owner = "orthecreedence";
       repo = "cl-libuv";
-      rev = version;
+      rev = "ebe3e166d1b6608efdc575be55579a086356b3fc";
       sha256 = "sha256-sGN4sIM+yy7VXudzrU6jV/+DLEY12EOK69TXnh94rGU=";
     };
   }) {};
@@ -1020,13 +1015,12 @@ in
   }) {};
 
   inherit (callPackage (self: with self; lispMultiDerivation rec {
-    version = "v2.1.1";
     src = pkgs.fetchFromGitHub {
       name = "cl-ppcre-src";
       owner = "edicl";
       repo = "cl-ppcre";
-      rev = version;
-      sha256 = "sha256-UffzJ2i4wpkShxAJZA8tIILUbBZzbWlseezj2JLImzc=";
+      rev = "93bd7cfbac231cea55e6f9b72c454176fd1c0dbe";
+      hash = "sha256-WfLuZW3lqnbchPKTPZePxAKfzFFFOslcIMKimP4qONE=";
     };
     systems = {
       cl-ppcre = {
