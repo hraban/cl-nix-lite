@@ -12,6 +12,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+# UNSUPPORTED -- DO NOT USE. I currently provide this for easier dependency
+# management ONLY. At least until I figure out how to let people include a flake
+# without transitively fetching every single one of its dependencies unless
+# they’re being used.
+
 {
 
   inputs = {
@@ -1014,7 +1019,7 @@
     in
     {
       overlays.default = final: prev: {
-        lisp-packages-lite = final.callPackage ./lisp-packages-lite.nix {
+        lisp-packages-lite = final.callPackage ../lisp-packages-lite.nix {
           inherit inputs;
         };
       };
