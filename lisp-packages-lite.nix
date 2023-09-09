@@ -37,6 +37,8 @@ let
     };
 in
 {
+  inherit lispDerivation lispMultiDerivation lispWithSystems;
+
   _1am = callPackage (self: with self; lispify "1am" []) {};
 
   inherit (callPackage (self: with self; lispMultiDerivation {

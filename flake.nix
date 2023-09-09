@@ -1013,21 +1013,9 @@
       systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin" ];
     in
     {
-      packages = builtins.listToAttrs (builtins.map (system:
-        let
-          pkgs = nixpkgs.legacyPackages.${system};
-        in
-          {
-            name = system;
-            value = pkgs.callPackage ./lisp-packages-lite.nix {
-              inherit inputs;
-            };
-          }) systems);
       overlays.default = final: prev: {
-        # Ignore me
-        lisp-packages-lite = {
-          inherit (final.callPackage ./lisp-derivation { lisp = final.sbcl; })
-            lispDerivation lispMultiDerivation lispWithSystems;
+        lisp-packages-lite = final.callPackage ./lisp-packages-lite.nix {
+          inherit inputs;
         };
       };
     };
