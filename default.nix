@@ -973,6 +973,19 @@ in
     lispCheckDependencies = [ lift trivial-shell ];
   }) {};
 
+  cl-mimeparse = callPackage (self: with self; lispDerivation {
+    lispDependencies = [ cl-ppcre parse-number ];
+    lispCheckDependencies = [ rt ];
+    src = pkgs.fetchFromGitHub {
+      owner = "mmontone";
+      repo = "cl-mimeparse";
+      name = "cl-mimeparse-src";
+      rev = "93cbdf6f6fe8a2eb5f652f8adec453eb98ea0547";
+      hash = "sha256-c/LoWrbSodeopWB06PAFvLiEg2Vbm4KHAmoDYUa8sz0=";
+    };
+    lispSystem = "cl-mimeparse";
+  }) {};
+
   cl-plus-ssl = callPackage (self: with self; lispDerivation {
     lispSystem = "cl+ssl";
     src = pkgs.fetchFromGitHub {
@@ -1596,6 +1609,29 @@ in
 
   inherit (callPackage (self: with self; lispMultiDerivation {
     src = pkgs.fetchFromGitHub {
+      owner = "mmontone";
+      repo = "easy-routes";
+      name = "easy-routes-src";
+      rev = "7832f8bf3d07825b5eb967a2ef04da7c40c18248";
+      hash = "sha256-/fvZ8xmIA6+vBZVZfCoigybmJjuk6gLT+pSKP0nhVq0=";
+    };
+    systems = {
+      easy-routes = {
+        lispDependencies = [ hunchentoot routes ];
+      };
+      "easy-routes+errors" = {
+        lispDependencies = [ easy-routes hunchentoot-errors ];
+      };
+      "easy-routes+djula" = {
+        lispDependencies = [ easy-routes djula ];
+      };
+    };
+  }) {}) easy-routes
+         "easy-routes+djula"
+         "easy-routes+errors";
+
+  inherit (callPackage (self: with self; lispMultiDerivation {
+    src = pkgs.fetchFromGitHub {
       owner = "robert-strandh";
       repo = "eclector";
       name = "eclector-src";
@@ -2015,6 +2051,14 @@ in
       drakma
     ];
   }) {};
+
+  hunchentoot-errors = callPackage (self: with self; lispify [ hunchentoot string-case parse-number cl-mimeparse ] (pkgs.fetchFromGitHub {
+    owner = "mmontone";
+    repo = "hunchentoot-errors";
+    name = "hunchentoot-errors-src";
+    rev = "171abe289632b002136b0f9a0083c997907e6947";
+    hash = "sha256-v9TIBBecd5i5xWpDGwf+6GyKO5l+qUZ+mhOQ73m4ZPM=";
+  })) {};
 
   idna = callPackage (self: with self; lispify [ split-sequence ] (pkgs.fetchFromGitHub {
     owner = "antifuchs";
