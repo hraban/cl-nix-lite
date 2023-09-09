@@ -50,6 +50,7 @@ jobs:
         set -euo pipefail
         cd examples && \
           nix-build --no-out-link --dry-run 2>&1 | \
+          tee nix-build.out | \
           sed -ne '/will be built:$/ {
             # label
             :b
@@ -64,3 +65,6 @@ jobs:
             }
           }' | \
           xargs -r nix-build --no-out-link
+    - name: nix-build error output
+      if: failure()
+      run: "cat examples/nix-build.out"
