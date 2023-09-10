@@ -556,7 +556,7 @@ with {
     cl-isaac = callPackage (self: with self; lispDerivation {
       lispSystem = "cl-isaac";
       src = inputs.cl-isaac;
-      lispCheckDependencies = [ prove ];
+      lispCheckDependencies = [ parachute trivial-features ];
     }) {};
 
     cl-js = callPackage (self: with self; lispDerivation {
@@ -1523,10 +1523,7 @@ with {
           };
 
           lack-util = {
-            lispDependencies =
-              if pkgs.hostPlatform.isWindows
-              then [ ironclad ]
-              else [ cl-isaac ];
+            lispDependencies = [ ironclad ];
             lispCheckDependencies = [ lack-test prove ];
           };
         };
@@ -1693,24 +1690,57 @@ with {
       lispCheckDependencies = [ lift ];
     }) {};
 
-    mgl-pax = callPackage (self: with self; lispDerivation {
-      lispSystem = "mgl-pax";
+    inherit (callPackage (self': with self'; lispMultiDerivation {
       src = inputs.mgl-pax;
-      lispDependencies = [ named-readtables pythonic-string-reader ];
-      # This package is more complicated than this suggests
-      lispCheckDependencies = [
-        # mgl-pax/document
-        _3bmd
-        _3bmd-ext-code-blocks
-        colorize
-        md5
-        try
-        # mgl-pax/navigate
-        swank
-        # mgl-pax/transcribe
-        alexandria
-      ];
-    }) {};
+      systems = {
+        dref = {
+          lispDependencies = [
+            mgl-pax-bootstrap
+            named-readtables
+            pythonic-string-reader
+          ];
+          lispCheckDependencies = [
+            alexandria
+            swank
+            try
+          ];
+        };
+        mgl-pax = {
+          lispDependencies = [
+            dref
+            named-readtables
+            pythonic-string-reader
+            mgl-pax-bootstrap
+          ];
+          lispCheckDependencies = [
+            self."mgl-pax/full"
+          ];
+        };
+        "mgl-pax/full" = {
+          # I don’t use the individual packages so I’ve just lumped them all
+          # together.
+          lispDependencies = [
+            mgl-pax
+            # mgl-pax/document
+            _3bmd
+            _3bmd-ext-code-blocks
+            colorize
+            md5
+            # mgl-pax/navigate
+            swank
+            # mgl-pax/transcribe
+            alexandria
+          ];
+        };
+        mgl-pax-bootstrap = {
+        };
+      };
+      lispAsdPath = systems:
+        l.optionals (builtins.elem "dref" systems) [ "dref" ];
+    }) {}) dref
+           mgl-pax
+           "mgl-pax/full"
+           mgl-pax-bootstrap;
 
     misc-extensions = callPackage (self: with self; lispify "misc-extensions" [ ]) {};
 
@@ -1726,6 +1756,7 @@ with {
     named-readtables = callPackage (self: with self; lispDerivation {
       lispSystem = "named-readtables";
       src = inputs.named-readtables;
+      lispDependencies = [ mgl-pax-bootstrap ];
       lispCheckDependencies = [ try ];
     }) {};
 
@@ -1987,8 +2018,8 @@ with {
       # TODO: This should be propagated from osicat somehow, not in every client
       # using osicat.
       preBuild = ''
-  export LD_LIBRARY_PATH=''${LD_LIBRARY_PATH+$LD_LIBRARY_PATH:}${osicat}/lib
-  '';
+        export LD_LIBRARY_PATH=''${LD_LIBRARY_PATH+$LD_LIBRARY_PATH:}${osicat}/lib
+      '';
       buildInputs = [ osicat ];
       src = inputs.should-test;
     }) {};
