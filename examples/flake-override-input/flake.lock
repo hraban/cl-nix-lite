@@ -1084,11 +1084,11 @@
       },
       "locked": {
         "dir": "flake/",
-        "lastModified": 1694277608,
-        "narHash": "sha256-IOR5J44idZLDtmlWaOntIGQaLunpf6gSMBDzckBr7gI=",
+        "lastModified": 1694366508,
+        "narHash": "sha256-mbkGFKup9eZBjGjoqqRwUxyYrF8QEajiRoWKSKnccUI=",
         "owner": "hraban",
         "repo": "cl-nix-lite",
-        "rev": "6011313af0cffb7889ab60b93a756b4390978622",
+        "rev": "c44c1d1866acd9a2b7f8c39de0c501190f68f90d",
         "type": "github"
       },
       "original": {
