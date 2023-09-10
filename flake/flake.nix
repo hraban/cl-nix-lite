@@ -1018,10 +1018,6 @@
       systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin" ];
     in
     {
-      overlays.default = final: prev: {
-        lisp-packages-lite = final.callPackage ../lisp-packages-lite.nix {
-          inherit inputs;
-        };
-      };
+      overlays.default = import ../lisp-packages-lite.nix { inherit inputs; };
     };
 }

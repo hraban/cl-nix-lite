@@ -1,4 +1,4 @@
-;; Copyright © 2022, 2023  Hraban Luyat
+;; Copyright © 2023  Hraban Luyat
 ;;
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU Affero General Public License as published
@@ -12,16 +12,16 @@
 ;; You should have received a copy of the GNU Affero General Public License
 ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-(uiop:define-package #:flake-app
-  (:nicknames #:flake-app/main)
+(uiop:define-package #:flake-override-input
+  (:nicknames #:flake-override-input/main)
   (:use #:cl #:arrow-macros)
   (:local-nicknames (#:alex #:alexandria))
   (:import-from #:alexandria)
   (:export #:main))
 
-(in-package #:flake-app/main)
+(in-package #:flake-override-input/main)
 
 (defun main (&rest args)
-  (->> '(1 2 3)
-       alex:proper-list-p
-       (format T "Hello from flakes: ~A~%")))
+  (->> 5
+       alex:fauxiota
+       (format T "This should count to 9: ~A~%")))

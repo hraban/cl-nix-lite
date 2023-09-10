@@ -115,13 +115,12 @@
     "alexandria": {
       "flake": false,
       "locked": {
-        "host": "gitlab.common-lisp.net",
-        "lastModified": 1683282187,
-        "narHash": "sha256-trZFFoLV9dSyik8Thwii2N4LxlRQwRKKdf/JN9bM/xw",
-        "owner": "alexandria",
-        "repo": "alexandria",
-        "rev": "db1288fb93a278b751acc2b736af162ad1bdde53",
-        "type": "gitlab"
+        "lastModified": 1694322241,
+        "narHash": "sha256-sTz9MI5vVORG8olmoUtYNreAkqW34yQZ0cu78AhAevM=",
+        "owner": "hraban",
+        "repo": "fauxlexandria",
+        "rev": "aa0dc79717b4284cdcf1b5900bc6dbf2047b67bc",
+        "type": "github"
       },
       "original": {
         "host": "gitlab.common-lisp.net",
@@ -1084,7 +1083,7 @@
         "zpng": "zpng"
       },
       "locked": {
-        "dir": "flake",
+        "dir": "flake/",
         "lastModified": 1694277608,
         "narHash": "sha256-IOR5J44idZLDtmlWaOntIGQaLunpf6gSMBDzckBr7gI=",
         "owner": "hraban",
@@ -1093,7 +1092,7 @@
         "type": "github"
       },
       "original": {
-        "dir": "flake",
+        "dir": "flake/",
         "owner": "hraban",
         "ref": "flake",
         "repo": "cl-nix-lite",
