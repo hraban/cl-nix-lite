@@ -333,7 +333,7 @@ with callPackage ./utils.nix {};
         # user-specified shellHook; we extend it, if it exists. So this is a
         # non-destructive operation.
         shellHook = ''
-eval "$setAsdfPath"
+eval "$setAsdfPathPhase"
 >&2 cat <<EOF
 Lisp dependencies available to ASDF: ${allDepsHumanReadable}.
 (see \$CL_SOURCE_REGISTRY for full paths.)
