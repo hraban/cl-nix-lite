@@ -12,7 +12,7 @@
       in
       {
         devShells = {
-          default = with pkgs.lisp-packages-lite; lispDerivation {
+          default = with pkgs.lispPackagesLite; lispDerivation {
             src = pkgs.lib.cleanSource ./.;
             lispSystem = "dev";
             lispDependencies = [ arrow-macros ];

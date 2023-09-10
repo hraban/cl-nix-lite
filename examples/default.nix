@@ -30,6 +30,7 @@ let
   # These need some more work
   flake-tests = [
     ./flake-app
+    ./flake-override-input
   ];
   flake-to-deriv = f: (builtins.getFlake (builtins.toString f)).packages.${builtins.currentSystem}.default;
 in

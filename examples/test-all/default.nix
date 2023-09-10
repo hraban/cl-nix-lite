@@ -1,5 +1,6 @@
 {
   pkgs ? import <nixpkgs> {}
+, cl-nix-lite ? import ../..
 , skip ? [
   "_40ants-doc"
   "_40ants-doc-full" # this one works in QL so it’s nix specific
@@ -42,11 +43,14 @@
 ]
 }:
 
-with pkgs.lib;
+with rec {
+  pkgs' = pkgs.extend cl-nix-lite;
+};
+with pkgs'.lib;
 
-pipe (import ../.. { inherit pkgs; }) [
+pipe pkgs'.lispPackagesLite [
   (attrsets.filterAttrs (n: d:
-    (pkgs.lib.isDerivation d) &&
+    (isDerivation d) &&
     ! ((d.meta or {}).broken or false) &&
     ! (builtins.elem n skip)))
   (builtins.mapAttrs (k: v: v.enableCheck))

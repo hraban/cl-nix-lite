@@ -24,7 +24,7 @@ with {
 };
 
 let
-  lisp-packages-lite = lib.recurseIntoAttrs (lib.makeScope pkgs.newScope (self:
+  lispPackagesLite = lib.recurseIntoAttrs (lib.makeScope pkgs.newScope (self:
     with self;
     with callPackage ./utils.nix {};
     with callPackage ./lisp-derivation.nix { lisp = lisp pkgs; };
@@ -2275,4 +2275,4 @@ let
     zpng = callPackage (self: with self; lispify "zpng" [ salza2 ]) {};
   }));
 in
-{ inherit lisp-packages-lite; }
+{ inherit lispPackagesLite; }

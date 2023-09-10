@@ -12,7 +12,7 @@
       in
         {
           packages = {
-            default = with pkgs.lisp-packages-lite; lispDerivation {
+            default = with pkgs.lispPackagesLite; lispDerivation {
               name = "flake-app";
               lispSystem = "flake-app";
               lispDependencies = [

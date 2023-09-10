@@ -1,13 +1,12 @@
 {
   pkgs ? import <nixpkgs> {}
+, cl-nix-lite ? import ../..
 }:
 
-with rec {
-  lispPackagesLite = import ../.. { inherit pkgs; };
-};
+with pkgs.extend cl-nix-lite;
 
 lispPackagesLite.lispWithSystems (
-  pkgs.lib.pipe lispPackagesLite [
+  lib.pipe lispPackagesLite [
     builtins.attrValues
-    (builtins.filter (d: (pkgs.lib.isDerivation d) && ! ((d.meta or {}).broken or false)))
+    (builtins.filter (d: (lib.isDerivation d) && ! ((d.meta or {}).broken or false)))
   ])

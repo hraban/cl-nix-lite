@@ -1,13 +1,15 @@
 {
   pkgs ? import <nixpkgs> {}
-  , lispPackagesLite ? import ../.. { inherit pkgs; }
+, cl-nix-lite ? import ../..
 }:
 
-with lispPackagesLite;
+let
+  pkgs' = pkgs.extend cl-nix-lite;
+in
 
-lispDerivation {
+pkgs'.lispPackagesLite.lispDerivation {
   lispSystem = "hello-binary";
   version = "0.0.1";
   dontStrip = true;
-  src = pkgs.lib.cleanSource ./.;
+  src = pkgs'.lib.cleanSource ./.;
 }

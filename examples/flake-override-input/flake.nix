@@ -1,5 +1,5 @@
 {
-  description = "Demo lisp-packages-lite app using flakes input overriding";
+  description = "Demo cl-nix-lite app using flakes input overriding";
   inputs = {
     cl-nix-lite = {
       url = "github:hraban/cl-nix-lite/flake?dir=flake/";
@@ -19,7 +19,7 @@
       in
         {
           packages = {
-            default = with pkgs.lisp-packages-lite; lispDerivation {
+            default = with pkgs.lispPackagesLite; lispDerivation {
               name = "flake-override-input";
               lispSystem = "flake-override-input";
               lispDependencies = [

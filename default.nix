@@ -1,5 +1,3 @@
-{ pkgs ? import <nixpkgs> {} }:
-
 let flake = (import
   (
     let lock = builtins.fromJSON (builtins.readFile ./flake/flake.lock); in
@@ -13,4 +11,4 @@ let flake = (import
 
 in
 
-(pkgs.extend flake.overlays.default).lisp-packages-lite
+flake.overlays.default

@@ -1,11 +1,9 @@
 {
   pkgs ? import <nixpkgs> {}
-  , lispPackagesLite ? import ../.. { inherit pkgs; }
+, cl-nix-lite ? import ../..
 }:
 
-with lispPackagesLite;
-
-lispDerivation {
+with (pkgs.extend cl-nix-lite).lispPackagesLite; lispDerivation {
   src = pkgs.lib.cleanSource ./.;
   lispSystem = "dev";
   lispDependencies = [ arrow-macros ];
