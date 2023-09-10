@@ -27,6 +27,7 @@
                 arrow-macros
               ];
               src = pkgs.lib.cleanSource ./.;
+              dontStrip = true;
               meta = {
                 license = pkgs.lib.licenses.agpl3Only;
               };
