@@ -787,15 +787,16 @@
     "cl-libxml2": {
       "flake": false,
       "locked": {
-        "lastModified": 1371138921,
-        "narHash": "sha256-PCumcbKT2J8ffvbJgt3ESZ0mhTk809QN0+U6NgJLBCQ=",
+        "lastModified": 1670185710,
+        "narHash": "sha256-T5hEn517H2DlIaqLsSb6CtcV2z+6nDxnm9QqhsblsIc=",
         "owner": "hraban",
         "repo": "cl-libxml2",
-        "rev": "8d03110c532c1a3fe15503fdfefe82f60669e4bd",
+        "rev": "6ca0386e9914f733cfcde38000e84f90ccee42cb",
         "type": "github"
       },
       "original": {
         "owner": "hraban",
+        "ref": "build/darwin",
         "repo": "cl-libxml2",
         "type": "github"
       }

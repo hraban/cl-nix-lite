@@ -261,7 +261,7 @@
       # url = "github:archimag/cl-libxml2";
       # Temporarily point at my own fork while figuring out Darwin build. Could
       # also use Nix patches but this is easier for me to manage.
-      url = "github:hraban/cl-libxml2";
+      url = "github:hraban/cl-libxml2/build/darwin";
       flake = false;
     };
     cl-locale = {
