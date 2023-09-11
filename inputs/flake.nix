@@ -153,6 +153,15 @@
       url = "github:sionescu/bordeaux-threads";
       flake = false;
     };
+    # bordeaux-threads has a new API, and its master branch has introduced
+    # deprecation warnings for the old API. This breaks compilation (as per the
+    # CL standard apparently?), so provide this package for older downstream
+    # systems which haven’t updated yet. Obviously dangerous if any other system
+    # depends on bordeaux-threads v2 in your entire dependency graph.
+    bordeaux-threads-v1 = {
+      url = "github:sionescu/bordeaux-threads/042e3b05f614e33328ac73db79d744443fb5a86f";
+      flake = false;
+    };
     calispel = {
       url = "github:hawkir/calispel";
       flake = false;
@@ -655,7 +664,7 @@
       flake = false;
     };
     lparallel = {
-      url = "github:lmj/lparallel";
+      url = "github:sharplispers/lparallel";
       flake = false;
     };
     lquery = {

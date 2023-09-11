@@ -1619,7 +1619,17 @@ with {
 
     # Technically this package also contains a benchmark system with different
     # dependencies but I’m not going to bother exposing that to this scope.
-    lparallel = callPackage (self: with self; lispify "lparallel" [ alexandria bordeaux-threads ]) {};
+    lparallel = (
+      let
+        # Please don’t use this anywhere else
+        bordeaux-threads-v1 = bordeaux-threads.overrideAttrs (_: { src = inputs.bordeaux-threads-v1; });
+      in
+        callPackage (self: with self; lispify "lparallel" [
+          alexandria
+          # If anyone else in your entire family includes
+          # bordeaux-threads-master, you’re dead.
+          bordeaux-threads-v1
+        ]) {});
 
     lquery = callPackage (self: with self; lispDerivation {
       lispSystem = "lquery";

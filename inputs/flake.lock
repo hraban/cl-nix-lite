@@ -356,6 +356,23 @@
         "type": "github"
       }
     },
+    "bordeaux-threads-v1": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1694295107,
+        "narHash": "sha256-/n9vfu9wipZM5S/zZq/uMLThgW6ACaUvdvV9ZHCN02k=",
+        "owner": "sionescu",
+        "repo": "bordeaux-threads",
+        "rev": "042e3b05f614e33328ac73db79d744443fb5a86f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "sionescu",
+        "repo": "bordeaux-threads",
+        "rev": "042e3b05f614e33328ac73db79d744443fb5a86f",
+        "type": "github"
+      }
+    },
     "calispel": {
       "flake": false,
       "locked": {
@@ -2386,15 +2403,15 @@
     "lparallel": {
       "flake": false,
       "locked": {
-        "lastModified": 1469026378,
-        "narHash": "sha256-CfN9GsaW56v/c+wuSl0YSbDKyLQb8goV+BrntTL1Cjw=",
-        "owner": "lmj",
+        "lastModified": 1683839802,
+        "narHash": "sha256-yZsHzA3KhkKxjL9+yahB9flasi+JQ8wiMq8IylBvYls=",
+        "owner": "sharplispers",
         "repo": "lparallel",
-        "rev": "9c11f40018155a472c540b63684049acc9b36e15",
+        "rev": "80fc2952a074776abd343d6b5d3ab157f0e1df7a",
         "type": "github"
       },
       "original": {
-        "owner": "lmj",
+        "owner": "sharplispers",
         "repo": "lparallel",
         "type": "github"
       }
@@ -3002,6 +3019,7 @@
         "babel": "babel",
         "blackbird": "blackbird",
         "bordeaux-threads": "bordeaux-threads",
+        "bordeaux-threads-v1": "bordeaux-threads-v1",
         "calispel": "calispel",
         "cffi": "cffi",
         "chipz": "chipz",
