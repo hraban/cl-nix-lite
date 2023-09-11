@@ -65,6 +65,10 @@
       url = "github:3b/3bmd";
       flake = false;
     };
+    "3d-math" = {
+      url = "github:Shinmera/3d-math";
+      flake = false;
+    };
     "3d-vectors" = {
       url = "github:Shinmera/3d-vectors";
       flake = false;
@@ -75,14 +79,6 @@
     };
     "40ants-doc" = {
       url = "github:40ants/doc";
-      flake = false;
-    };
-    "hu.dwim.asdf" = {
-      url = "github:hu-dwim/hu.dwim.asdf";
-      flake = false;
-    };
-    "hu.dwim.stefil" = {
-      url = "github:hu-dwim/hu.dwim.stefil";
       flake = false;
     };
     access = {
@@ -555,6 +551,14 @@
       url = "github:fukamachi/http-body";
       flake = false;
     };
+    "hu.dwim.asdf" = {
+      url = "github:hu-dwim/hu.dwim.asdf";
+      flake = false;
+    };
+    "hu.dwim.stefil" = {
+      url = "github:hu-dwim/hu.dwim.stefil";
+      flake = false;
+    };
     hunchentoot = {
       url = "github:edicl/hunchentoot";
       flake = false;
@@ -995,6 +999,10 @@
     };
     type-i = {
       url = "github:guicho271828/type-i";
+      flake = false;
+    };
+    type-templates = {
+      url = "github:Shinmera/type-templates";
       flake = false;
     };
     typo = {

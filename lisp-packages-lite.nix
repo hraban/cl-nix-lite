@@ -55,6 +55,13 @@ with {
       };
     }) {}) _3bmd _3bmd-ext-code-blocks;
 
+    _3d-math = callPackage (self: with self; lispDerivation {
+      lispDependencies = [ documentation-utils type-templates ];
+      lispCheckDependencies = [ parachute ];
+      src = inputs."3d-math";
+      lispSystem = "3d-math";
+    }) {};
+
     _3d-vectors = callPackage (self: with self; lispDerivation {
       lispDependencies = [ documentation-utils ];
       lispCheckDependencies = [ parachute ];
@@ -1912,7 +1919,7 @@ with {
 
     pythonic-string-reader = callPackage (self: with self; lispify "pythonic-string-reader" [ named-readtables ]) {};
 
-    quickhull = callPackage (self: with self; lispify "quickhull" [ _3d-vectors documentation-utils ]) {};
+    quickhull = callPackage (self: with self; lispify "quickhull" [ _3d-math documentation-utils ]) {};
 
     quri = callPackage (self: with self; lispDerivation {
       lispSystem = "quri";
@@ -2292,6 +2299,12 @@ with {
         lisp-namespace
       ];
       lispCheckDependencies = [ fiveam ];
+    }) {};
+
+    type-templates = callPackage (self: with self; lispDerivation {
+      lispDependencies = [ alexandria form-fiddle documentation-utils ];
+      lispSystem = "type-templates";
+      src = inputs.type-templates;
     }) {};
 
     typo = callPackage (self: with self; lispDerivation {

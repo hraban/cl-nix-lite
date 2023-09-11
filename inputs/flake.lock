@@ -32,6 +32,22 @@
         "type": "github"
       }
     },
+    "3d-math": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1693146771,
+        "narHash": "sha256-w4Yuyzj8k1fHmdCfXI9ZLD9Jn2c+5wUXc8WArW4FOCs=",
+        "owner": "Shinmera",
+        "repo": "3d-math",
+        "rev": "e573f178d0ece43f65c7be01ff63bdb209b0aec0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Shinmera",
+        "repo": "3d-math",
+        "type": "github"
+      }
+    },
     "3d-vectors": {
       "flake": false,
       "locked": {
@@ -2999,6 +3015,7 @@
       "inputs": {
         "1am": "1am",
         "3bmd": "3bmd",
+        "3d-math": "3d-math",
         "3d-vectors": "3d-vectors",
         "40ants-asdf-system": "40ants-asdf-system",
         "40ants-doc": "40ants-doc",
@@ -3231,6 +3248,7 @@
         "trivial-with-current-source-form": "trivial-with-current-source-form",
         "try": "try",
         "type-i": "type-i",
+        "type-templates": "type-templates",
         "typo": "typo",
         "unit-test": "unit-test",
         "usocket": "usocket",
@@ -4002,6 +4020,22 @@
       "original": {
         "owner": "guicho271828",
         "repo": "type-i",
+        "type": "github"
+      }
+    },
+    "type-templates": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1692703609,
+        "narHash": "sha256-GZiVAK+N6pUhEcH7fcTOD7GlbLKXf1vPOrW0McXNpG8=",
+        "owner": "Shinmera",
+        "repo": "type-templates",
+        "rev": "ddcd80f8e852da48d3d10054d602f2466d10601b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Shinmera",
+        "repo": "type-templates",
         "type": "github"
       }
     },
