@@ -2283,11 +2283,18 @@ with {
 
     trivial-types = callPackage (self: with self; lispify "trivial-types" [ ]) {};
 
-    trivial-utf-8 = callPackage (self: with self; lispify "trivial-utf-8" [ ]) {};
+    trivial-utf-8 = callPackage (self: with self; lispify "trivial-utf-8" [ mgl-pax-bootstrap ]) {};
 
     trivial-with-current-source-form = callPackage (self: with self; lispify "trivial-with-current-source-form" [ alexandria ]) {};
 
-    try = callPackage (self: with self; lispify "try" [ alexandria closer-mop ieee-floats mgl-pax trivial-gray-streams ]) {};
+    try = callPackage (self: with self; lispify "try" [
+      alexandria
+      cl-ppcre
+      closer-mop
+      ieee-floats
+      mgl-pax
+      trivial-gray-streams
+    ]) {};
 
     type-i = callPackage (self: with self; lispDerivation {
       lispSystem = "type-i";
