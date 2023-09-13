@@ -1348,15 +1348,16 @@
     "deflate": {
       "flake": false,
       "locked": {
-        "lastModified": 1684989677,
-        "narHash": "sha256-cbc32jqD5MsdoKj0dqa19JER1LM/zM0YZ2YHPBd0Wf0=",
+        "lastModified": 1694461869,
+        "narHash": "sha256-7pWvy1rqn3kNCqs6AZAEBJrFoaxhhz/pCilZ9zNbd34=",
         "owner": "pmai",
         "repo": "Deflate",
-        "rev": "7eb828095bd1c7e989b71a22b28246d27a44bc25",
+        "rev": "76dd87129dab5feda2795f942b4ea8851436d47d",
         "type": "github"
       },
       "original": {
         "owner": "pmai",
+        "ref": "pull/4/head",
         "repo": "Deflate",
         "type": "github"
       }

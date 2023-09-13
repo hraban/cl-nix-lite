@@ -404,7 +404,7 @@
       flake = false;
     };
     deflate = {
-      url = "github:pmai/Deflate";
+      url = "github:pmai/Deflate/pull/4/head"; # https://github.com/pmai/Deflate/issues/3
       flake = false;
     };
     dexador = {

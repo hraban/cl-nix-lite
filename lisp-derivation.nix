@@ -20,6 +20,27 @@
 with pkgs.lib;
 with callPackage ./utils.nix {};
 
+let
+  asdfOpScript = op: name: systems: pkgs.writeText "${op}-${name}.lisp" ''
+    (require :asdf)
+    ${b.concatStringsSep "\n" (map (lisp-asdf-op op) systems)}
+  '';
+
+  # Internal convention for lisp: a function which takes a file and returns a
+  # shell invocation calling that file, then exiting. External API: same, but
+  # you can also just pass a derivation instead and it is converted, if
+  # recognized. E.g. lisp = pkgs.sbcl.
+  callLisp = lisp:
+    if b.isFunction lisp
+    then lisp
+    else
+      assert isDerivation lisp;
+      {
+        sbcl = file: ''"${lisp}/bin/sbcl" --script "${file}"'';
+        ecl = file: ''"${lisp}/bin/ecl" --shell "${file}"'';
+      }.${lisp.pname};
+in
+
 rec {
   # Build a lisp derivation from this source, for the specific given
   # systems. When two separate packages include the same src, but both for a

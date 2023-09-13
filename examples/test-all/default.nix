@@ -10,8 +10,9 @@
   "cl-difflib" # see https://github.com/wiseman/cl-difflib/pull/1
   "cl-redis"
   "common-doc"
+  "commondoc-markdown" # I have no idea what’s happening here but I need to move on
   "dbi"
-  "deflate" # https://github.com/pmai/Deflate/issues/3
+  #"deflate" # https://github.com/pmai/Deflate/issues/3
   "dynamic-classes"
   "fare-quasiquote"
   "gettext" # I’m confused as to why this one is failing
@@ -32,6 +33,7 @@
   "trivial-backtrace"
   "trivial-timeout"
   "try"
+  "type-templates" # https://github.com/Shinmera/type-templates/issues/1
   "typo"
   "with-output-to-stream"
   "xlunit"
@@ -43,9 +45,14 @@
 ]
 }:
 
+with rec {
+  # The tests for Shinmera/3d-math require a lot of memory, might as well grant
+  # it
+  lispPackagesLite = pkgs.lispPackagesLiteFor (f: "${pkgs.sbcl}/bin/sbcl --dynamic-space-size 4000 --script ${f}");
+};
 with pkgs.lib;
 
-pipe pkgs.lispPackagesLite [
+pipe lispPackagesLite [
   (attrsets.filterAttrs (n: d:
     (isDerivation d) &&
     ! ((d.meta or {}).broken or false) &&

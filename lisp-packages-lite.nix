@@ -15,18 +15,18 @@
 {
   inputs
 , pkgs
-, lisp ? pkgs: pkgs.sbcl
 }:
 
 with {
   inherit (pkgs) lib;
 };
 
-{
-  lispPackagesLite = lib.recurseIntoAttrs (lib.makeScope pkgs.newScope (self:
+rec {
+  lispPackagesLite = lispPackagesLiteFor pkgs.sbcl; # The King ❤️
+  lispPackagesLiteFor = lisp: lib.recurseIntoAttrs (lib.makeScope pkgs.newScope (self:
     with self;
     with callPackage ./utils.nix {};
-    with callPackage ./lisp-derivation.nix { lisp = lisp pkgs; };
+    with callPackage ./lisp-derivation.nix { inherit lisp; };
 
     let
       lispify = name: lispDependencies:
@@ -1743,6 +1743,7 @@ with {
             _3bmd-ext-code-blocks
             colorize
             md5
+            trivial-utf-8
             # mgl-pax/navigate
             swank
             # mgl-pax/transcribe
