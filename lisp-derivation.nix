@@ -354,7 +354,19 @@ rec {
         # of a devshell. This is definitely what you want, particularly for
         # flakes which are likely to be running a few SBCL versions behind, or
         # users without global SBCL installed in the first place.
-        nativeBuildInputs = (localizedArgs.nativeBuildInputs or []) ++ [ lisp ];
+        nativeBuildInputs = let
+          lispDrv =
+            if isDerivation lisp
+            then [ lisp ]
+            # Extremely hacky but it works
+            else pipe "sentinel" [
+              lisp
+              builtins.getContext
+              builtins.attrNames
+              (map (d: import d))
+            ];
+        in
+          (localizedArgs.nativeBuildInputs or []) ++ lispDrv;
         # Put this one at the very end because we don’t override the
         # user-specified shellHook; we extend it, if it exists. So this is a
         # non-destructive operation.
