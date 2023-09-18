@@ -2,7 +2,7 @@
 # regression, or a bug:
 
 {
-  cl-nix-lite ? ../..
+  cl-nix-lite ? ../../..
 , pkgs ? import <nixpkgs> {}
 }:
 

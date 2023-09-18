@@ -1,5 +1,5 @@
 {
-  cl-nix-lite ? ../..
+  cl-nix-lite ? ../../..
 , pkgs ? import <nixpkgs> { overlays = [ (import cl-nix-lite) ]; }
 , skip ? [
   "_40ants-doc"

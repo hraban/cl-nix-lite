@@ -21,17 +21,17 @@ let
       builtins.filter isDerivation (builtins.attrValues input);
   # Simple paths which can just be imported directly
   channel-based-tests = builtins.map all-inputs [
-    ./all-packages
-    ./all-packages-wrapped
-    ./hello-binary
-    ./override-package
-    ./test-all
-    ./with-cffi
+    ./channels/all-packages
+    ./channels/all-packages-wrapped
+    ./channels/hello-binary
+    ./channels/override-package
+    ./channels/test-all
+    ./channels/with-cffi
   ];
   # These need some more work
   flake-tests = [
-    ./flake-app
-    ./flake-override-input
+    ./flakes/make-binary
+    ./flakes/override-input
   ];
   flake-to-deriv = f: (builtins.getFlake (builtins.toString f)).packages.${builtins.currentSystem}.default;
 in
