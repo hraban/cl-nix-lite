@@ -1951,10 +1951,12 @@ rec {
         parenscript
         routes
         salza2
+        serapeum
         spinneret-cl-markdown
         trivial-open-browser
         trivial-timeout
         uuid
+        yason
       ];
     }) {};
 
