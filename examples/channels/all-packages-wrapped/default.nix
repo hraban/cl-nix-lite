@@ -3,10 +3,13 @@
 , pkgs ? import <nixpkgs> { overlays = [ (import cl-nix-lite) ]; }
 }:
 
-with pkgs;
+with rec {
+  lispPackagesLite = pkgs.lispPackagesLiteFor (f: "${pkgs.sbcl}/bin/sbcl --dynamic-space-size 4000 --script ${f}");
+};
+with pkgs.lib;
 
 lispPackagesLite.lispWithSystems (
-  lib.pipe lispPackagesLite [
+  pipe lispPackagesLite [
     builtins.attrValues
-    (builtins.filter (d: (lib.isDerivation d) && ! ((d.meta or {}).broken or false)))
+    (builtins.filter (d: (isDerivation d) && ! ((d.meta or {}).broken or false)))
   ])

@@ -358,7 +358,13 @@ rec {
           lispDrv =
             if isDerivation lisp
             then [ lisp ]
-            # Extremely hacky but it works
+            # Extremely hacky but it works. Assume that any derivation we’re
+            # interested in lives in the string context. This is painful because
+            # we’re doing runtime imports for every single derivation, only
+            # really for nix-shell purposes which is a tiny fraction of actual
+            # use. But it’s just such a nice feature to have the correct lisp
+            # right there in your shell that I’m loath to remove this until it’s
+            # absolutely necessary.
             else pipe "sentinel" [
               lisp
               builtins.getContext

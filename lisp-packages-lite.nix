@@ -1707,58 +1707,60 @@ rec {
       lispCheckDependencies = [ lift ];
     }) {};
 
-    inherit (callPackage (self': with self'; lispMultiDerivation {
-      src = inputs.mgl-pax;
-      systems = {
-        dref = {
-          lispDependencies = [
-            mgl-pax-bootstrap
-            named-readtables
-            pythonic-string-reader
-          ];
-          lispCheckDependencies = [
-            alexandria
-            swank
-            try
-          ];
-        };
-        mgl-pax = {
-          lispDependencies = [
-            dref
-            named-readtables
-            pythonic-string-reader
-            mgl-pax-bootstrap
-          ];
-          lispCheckDependencies = [
-            self."mgl-pax/full"
-          ];
-        };
-        "mgl-pax/full" = {
-          # I don’t use the individual packages so I’ve just lumped them all
-          # together.
-          lispDependencies = [
-            mgl-pax
-            # mgl-pax/document
-            _3bmd
-            _3bmd-ext-code-blocks
-            colorize
-            md5
-            trivial-utf-8
-            # mgl-pax/navigate
-            swank
-            # mgl-pax/transcribe
-            alexandria
-          ];
-        };
-        mgl-pax-bootstrap = {
-        };
-      };
-      lispAsdPath = systems:
-        l.optionals (builtins.elem "dref" systems) [ "dref" ];
-    }) {}) dref
-           mgl-pax
-           "mgl-pax/full"
-           mgl-pax-bootstrap;
+    inherit (callPackage (self': with self';
+      let
+        lispCheckDependencies = [ self."mgl-pax/full" dref try ];
+      in
+        lispMultiDerivation {
+          src = inputs.mgl-pax;
+          systems = {
+            dref = {
+              lispDependencies = [
+                mgl-pax-bootstrap
+                named-readtables
+                pythonic-string-reader
+              ];
+              lispCheckDependencies = lispCheckDependencies ++ [
+                alexandria
+                swank
+              ];
+            };
+            mgl-pax = {
+              lispDependencies = [
+                dref
+                named-readtables
+                pythonic-string-reader
+                mgl-pax-bootstrap
+              ];
+              inherit lispCheckDependencies;
+            };
+            "mgl-pax/full" = {
+              # I don’t use the individual packages so I’ve just lumped them all
+              # together.
+              lispDependencies = [
+                mgl-pax
+                # mgl-pax/document
+                _3bmd
+                _3bmd-ext-code-blocks
+                colorize
+                md5
+                trivial-utf-8
+                # mgl-pax/navigate
+                swank
+                # mgl-pax/transcribe
+                alexandria
+              ];
+              inherit lispCheckDependencies;
+            };
+            mgl-pax-bootstrap = {
+            };
+          };
+          lispAsdPath = systems:
+            l.optionals (builtins.elem "dref" systems) [ "dref" ];
+        }) {}) dref
+               mgl-pax
+               "mgl-pax/full"
+               mgl-pax-bootstrap;
 
     misc-extensions = callPackage (self: with self; lispify "misc-extensions" [ ]) {};
 
