@@ -3,7 +3,9 @@
 , pkgs ? import <nixpkgs> { overlays = [ (import cl-nix-lite) ]; }
 }:
 
-pkgs.lispPackagesLite.lispDerivation {
+with pkgs.lispPackagesLite;
+
+lispDerivation {
   lispSystem = "hello-binary";
   version = "0.0.1";
   dontStrip = true;
