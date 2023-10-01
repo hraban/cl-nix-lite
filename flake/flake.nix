@@ -22,7 +22,10 @@
   inputs = {
 
     flake-compat = {
-      url = "github:edolstra/flake-compat";
+      # Use my own fixed-output-derivation branch because I don’t want to
+      # eval-time download any dependencies. Only when actually used. And I want
+      # to be able to upload the source to cachix.
+      url = "github:hraban/flake-compat/fixed-output";
       flake = false;
     };
 

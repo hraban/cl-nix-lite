@@ -1,6 +1,6 @@
 {
   pkgs ? import <nixpkgs> {}
-, cl-nix-lite ? import ../..
+, cl-nix-lite ? pkgs.callPackage ../.. {}
 }:
 
 with (pkgs.extend cl-nix-lite).lispPackagesLite; lispDerivation {
