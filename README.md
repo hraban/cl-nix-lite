@@ -303,7 +303,7 @@ A project using cl-nix-lite in the wild is [git-hly](https://github.com/hraban/g
 
 Still on channels? Not moving to flakes yet? Here’s the old school way:
 
-```
+```nix
 { pkgs ? import <nixpkgs> {} }:
 
 let
