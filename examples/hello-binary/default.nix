@@ -1,15 +1,11 @@
 {
-  pkgs ? import <nixpkgs> {}
-, cl-nix-lite ? pkgs.callPackage ../.. {}
+  cl-nix-lite ? ../..
+, pkgs ? import <nixpkgs> { overlays = [ (import cl-nix-lite) ]; }
 }:
 
-let
-  pkgs' = pkgs.extend cl-nix-lite;
-in
-
-pkgs'.lispPackagesLite.lispDerivation {
+pkgs.lispPackagesLite.lispDerivation {
   lispSystem = "hello-binary";
   version = "0.0.1";
   dontStrip = true;
-  src = pkgs'.lib.cleanSource ./.;
+  src = pkgs.lib.cleanSource ./.;
 }

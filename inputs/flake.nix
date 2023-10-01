@@ -12,10 +12,36 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# UNSUPPORTED -- DO NOT USE. I currently provide this for easier dependency
-# management ONLY. At least until I figure out how to let people include a flake
-# without transitively fetching every single one of its dependencies unless
-# they’re being used.
+
+
+
+
+
+
+
+
+# !!!! THIS IS NOT AN ACTUAL FLAKE -- DO NOT USE !!!!!
+
+
+
+
+
+# This is an internal trick I use for dependency management ONLY. The flake UI
+# neatly solves some problems I had as a maintainer of this scope, but you can’t
+# actually directly include this flake or you’ll end up downloading all inputs
+# before doing anything useful. The lock file must first be passed through a
+# fixed-output-derivation shim before you can do anything with it. Anyway long
+# story short:
+
+
+
+#  DO  NOT  USE  !!!!
+
+
+
+
+
+
 
 {
 
@@ -1016,11 +1042,11 @@
     };
   };
 
+  # DO NOT USE!!!
   outputs = inputs@{ nixpkgs, ... }:
-    let
-      systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin" ];
-    in
     {
-      overlays.default = import ../lisp-packages-lite.nix { inherit inputs; };
+      inherit inputs;
     };
 }
+
+#  DO NOT USE!!!

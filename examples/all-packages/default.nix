@@ -1,13 +1,10 @@
 {
-  pkgs ? import <nixpkgs> {}
-, cl-nix-lite ? pkgs.callPackage ../.. {}
+  cl-nix-lite ? ../..
+, pkgs ? import <nixpkgs> { overlays = [ (import cl-nix-lite) ]; }
 }:
 
-with rec {
-  pkgs' = pkgs.extend cl-nix-lite;
-};
-with pkgs'.lib;
+with pkgs.lib;
 
-pipe pkgs'.lispPackagesLite [
+pipe pkgs.lispPackagesLite [
   (attrsets.filterAttrs (_: d: (isDerivation d) && ! ((d.meta or {}).broken or false)))
 ]

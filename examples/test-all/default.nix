@@ -1,6 +1,6 @@
 {
-  pkgs ? import <nixpkgs> {}
-, cl-nix-lite ? pkgs.callPackage ../.. {}
+  cl-nix-lite ? ../..
+, pkgs ? import <nixpkgs> { overlays = [ (import cl-nix-lite) ]; }
 , skip ? [
   "_40ants-doc"
   "_40ants-doc-full" # this one works in QL so it’s nix specific
@@ -44,7 +44,7 @@
 }:
 
 with rec {
-  pkgs' = pkgs.extend cl-nix-lite;
+  pkgs' = pkgs.extend (import cl-nix-lite);
 };
 with pkgs'.lib;
 

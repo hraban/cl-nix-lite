@@ -39,7 +39,7 @@ jobs:
     - name: Update flake locks to use this cl-nix-lite
       run: |
         for example in examples/flake-* ; do
-          ( cd "$example" && nix flake lock --override-input cl-nix-lite ../../flake )
+          ( cd "$example" && nix flake lock --override-input cl-nix-lite ../.. )
         done
     # Only bother actually building derivations that are not yet in the
     # store. This prevents nix-build from downloading all built binaries from

@@ -1,7 +1,7 @@
 {
   description = "Demo lispPackagesLite app using flakes";
   inputs = {
-    cl-nix-lite.url = "github:hraban/cl-nix-lite/flake?dir=flake";
+    cl-nix-lite.url = "github:hraban/cl-nix-lite";
   };
   outputs = {
     self, nixpkgs, cl-nix-lite, flake-utils

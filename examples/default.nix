@@ -3,7 +3,8 @@
 # to a binary cache.
 
 {
-  pkgs ? import <nixpkgs> {}
+  cl-nix-lite ? ../.
+, pkgs ? import <nixpkgs> { overlays = [ (import cl-nix-lite) ]; }
 , lisp ? pkgs.sbcl
 }:
 

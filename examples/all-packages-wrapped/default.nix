@@ -1,9 +1,9 @@
 {
-  pkgs ? import <nixpkgs> {}
-, cl-nix-lite ? pkgs.callPackage ../.. {}
+  cl-nix-lite ? ../..
+, pkgs ? import <nixpkgs> { overlays = [ (import cl-nix-lite) ]; }
 }:
 
-with pkgs.extend cl-nix-lite;
+with pkgs;
 
 lispPackagesLite.lispWithSystems (
   lib.pipe lispPackagesLite [
