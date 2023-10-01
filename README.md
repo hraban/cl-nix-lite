@@ -295,6 +295,10 @@ A crucial, defining feature of this implementation is that there is only ever *o
 
 See the [flake example](examples/flake-app) for a demo which builds a `nix run` compatible binary.
 
+### Full Example: git-hly
+
+A project using cl-nix-lite in the wild is [git-hly](https://github.com/hraban/git-hly).
+
 ### Full Example: Channels
 
 Still on channels? Not moving to flakes yet? Here’s the old school way:
