@@ -1,7 +1,7 @@
 <details>
 <summary>
 
-## Total beginner’s guide
+## Total Beginner’s Guide
 
 </summary>
 
@@ -13,7 +13,7 @@ The worlds of Lisp and Nix are both independently confusing and idiosynratic. It
 
 <summary>
 
-### Practical example: easy mode: `nix-shell`
+### Practical Example: Easy Mode: `nix-shell`
 
 </summary>
 
@@ -55,7 +55,7 @@ To actually build a binary executable you can run later, read on.
 
 <summary>
 
-### Practical example: flakes
+### Practical Example: Flakes
 
 </summary>
 
@@ -79,7 +79,7 @@ But it really depends on you. Give them a spin, see what sticks.
 
 <summary>
 
-### Practical example: “regular Nix”
+### Practical Example: “Channels”
 
 </summary>
 
@@ -93,31 +93,36 @@ Try this:
 
 ```nix
 {
-  pkgs ? import <nixpkgs> {}
-  , lispPackagesLite ? import ../.. { inherit pkgs; }
+  ...
 }:
 
-with lispPackagesLite;
+with pkgs.lispPackagesLite;
 ```
 
 into:
 
 ```nix
-{ pkgs ? import <nixpkgs> {} }:
+# Get an "original" nixpkgs copy
+{
+  pkgs ? import <nixpkgs> {}
+}:
 
-with rec {
+let
+  # This is just the cl-nix-lite source code
   cl-nix-lite = pkgs.fetchFromGitHub {
     owner = "hraban";
     repo = "cl-nix-lite";
     # replace these two lines with the output of
     # nix run nixpkgs#nix-prefetch-github -- hraban cl-nix-lite --nix | grep 'rev\|sha'
-    rev = "0000000000000000000000000000000000000000";
+    rev = "";
     sha256 = "";
   };
-  lispPackagesLite = import cl-nix-lite { inherit pkgs; };
-};
+  # Create a copy of nixpkgs with the cl-nix-lite overlay applied
+  pkgs' = pkgs.extend (import cl-nix-lite);
+in
 
-with lispPackagesLite;
+# Now replace every occurrence of pkgs in this file by pkgs'
+with pkgs'.lispPackagesLite;
 ```
 
 3. Run the following command:
@@ -239,7 +244,7 @@ Now, back to this project, lisp-packages-lite...
 
 # Lisp Packages Lite
 
-Nix-only implementation of a lispDerivation builder, and registry of popular Common Lisp packages.
+Nix-only implementation of a lisp derivation, and registry of popular Common Lisp packages.
 
 This is a grounds-up implementation of a Lisp-in-Nix module, without using QuickLisp. I started with a `stdenv.mkDerivation` and worked my up from there.
 
@@ -255,7 +260,7 @@ Together, they offer a "batteries included" build environment for your Lisp proj
 The implementation details:
 
 - Tight integration with ASDFv3:
-  - tests defined using `test-op`
+  - tests using `test-op`
   - binary output using `:build-operation program-op`
   - regular .asd output (for libraries) by default
   This convention is used by almost every existing major package (literally >99%)
@@ -286,25 +291,41 @@ A crucial, defining feature of this implementation is that there is only ever *o
 
 ## Usage
 
-### Single derivation
+### Full Example: Flakes (Recommended)
 
-Does your project expose only one Lisp system? You want the simple `lispDerivation` helper function:
+See the [flake example](examples/flake-app) for a demo which builds a `nix run` compatible binary.
 
-```nix
+### Full Example: Channels
+
+Still on channels? Not moving to flakes yet? Here’s the old school way:
+
+```
 { pkgs ? import <nixpkgs> {} }:
 
-with rec {
+let
   cl-nix-lite = pkgs.fetchFromGitHub {
     owner = "hraban";
     repo = "cl-nix-lite";
     rev = "...";
     sha256 = "";
   };
-  lispPackagesLite = import cl-nix-lite { inherit pkgs; };
-};
+  pkgs' = pkgs.extend (import cl-nix-lite);
+in
 
-with lispPackagesLite;
+with pkgs'.lispPackagesLite; lispDerivation {
+  ...;
+}
+```
 
+Have a look at the “Practical Example” chapters in the [Total Beginner’s Guide](#total-beginners-guide) for details.
+
+### Single derivation
+
+Once you have the lisp-packages-lite overlay installed, here’s how to use it.
+
+Does your project expose only one Lisp system? You want the simple `lispDerivation` helper function:
+
+```nix
 lispDerivation {
   lispSystem = "my-system";
   lispDependencies = [ alexandria arrow-macros ];
@@ -315,20 +336,6 @@ lispDerivation {
 If your package defines multiple systems that you want to export, you can define them all:
 
 ```nix
-{ pkgs ? import <nixpkgs> {} }:
-
-with rec {
-  cl-nix-lite = pkgs.fetchFromGitHub {
-    owner = "hraban";
-    repo = "cl-nix-lite";
-    rev = "...";
-    sha256 = "";
-  };
-  lispPackagesLite = import cl-nix-lite { inherit pkgs; };
-};
-
-with lispPackagesLite;
-
 lispDerivation {
   lispSystems = [ "foo-a" "foo-b" ];
   lispDependencies = [ alexandria arrow-macros ];
@@ -340,7 +347,9 @@ Example for when that makes sense: the `prove` package (a testing framework) use
 
 Example for when you *don’t* need this: if your main system includes various "private" systems from the same repo explicitly, e.g. via `:depends-on`, you don’t need to tell ASDF about it. It will automatically start looking for them in the current directory. Again, this feature is only useful for “public” systems which are not referenced by the main system. You don’t need it for your `foo-utils.asd` or `foo-test.asd`: just reference them in your `foo.asd` as usual and they will be found.
 
-### Multi-derivation
+### Multi-derivation (WIP)
+
+> This is only supported in the big package scope as of now. It’s an advanced API which doesn’t work and has very limited benefits. Concrete advice: do not use this, unless you are stubborn and don’t need my advice.
 
 Does your Lisp project expose multiple separate, different systems, each with different functionality and (in particular) different dependencies?
 
@@ -350,20 +359,6 @@ You have two options:
 - specify separate systems entirely:
 
 ```nix
-{ pkgs ? import <nixpkgs> {} }:
-
-with rec {
-  cl-nix-lite = pkgs.fetchFromGitHub {
-    owner = "hraban";
-    repo = "cl-nix-lite";
-    rev = "...";
-    sha256 = "";
-  };
-  lispPackagesLite = import cl-nix-lite { inherit pkgs; };
-};
-
-with lispPackagesLite;
-
 lispMultiDerivation {
   systems = {
     foo = {};
@@ -422,12 +417,7 @@ bar.nix:
 }:
 
 with rec {
-  cl-nix-lite = pkgs.fetchFromGitHub {
-    owner = "hraban";
-    repo = "cl-nix-lite";
-    rev = "...";
-    sha256 = "";
-  };
+  cl-nix-lite = pkgs.fetchFromGitHub { ... };
   lispPackagesLite = import cl-nix-lite { inherit pkgs; };
   foo = import ./foo.nix { inherit pkgs lispPackagesLite; };
 };
@@ -443,17 +433,13 @@ lispDerivation {
 
 For real-world examples, peruse [`default.nix`](default.nix).
 
-### Flakes
-
-See the [flake example](examples/flake-app) for a demo which builds a `nix run` compatible binary.
-
 ### Binary Cache
 
 Pre-compiled versions of all standard lisp packages are published to Cachix, so you don’t have to rebuild tools like Alexandria.
 
 The cache is located at [cl-nix-lite.cachix.org](https://cl-nix-lite.cachix.org), where you can also find instructions on how to set it up on your local machine.
 
-### Setting custom Lisp
+### Setting custom Lisp (WIP)
 
 > N.B.: This is WIP and currently a second class citizen while I figure other things out.
 
@@ -499,6 +485,8 @@ with rec {
 
 Are you unhappy with your bundled ASDF? Just include `asdf` as any other lisp dependency to get the latest one. It will automatically be picked up.
 
+Note: Nixpkgs also provide a package called ‘asdf’ which is unrelated to lisp’s ASDF, but the names might clash if you have a `with pkgs;` somewhere in your code. Be careful with scoping.
+
 ### Emacs & SLIME (or: Working in the REPL)
 
 See the [Emacs & SLIME example](examples/emacs-slime) for a trick to use this during interactive development.
@@ -533,6 +521,8 @@ To test all packages, see [examples/test-all](examples/test-all).
 
 ## TODO
 
+This is just my unofficial issue tracker.
+
 ### Nice-to-have
 
 - Get all remaining packages’ tests passing.
@@ -546,38 +536,11 @@ To test all packages, see [examples/test-all](examples/test-all).
 - Test on Linux
 - Check if `lispDerivation` is actually the best name for this function
 
-### TODO: Fetching updates from source packages
-
-The most important next step is a tool to assist in keeping the repositories up-to-date.
-
-My plan:
-
-Build the following automation:
-
-1. Use Nix to build a file with all packages’ source locations (long story short: recursively descend into `.src` until it `hasAttr "gitRepoUrl"`).
-2. Create a CL program that ingests that file, fetches every package, compares to current version checked, uses heuristics to determine upgradability (raw hash vs tag, master vs main, etc)
-3. For all that need updating, automatically insert in default.nix
-4. Automatically nix-build just their source derivations and include the SHA256.
-
-At this point you’d have an updated default.nix and the user would need to:
-
-1. Run [`test-all.nix`](examples/test-all) to check for regressions (todo: simplify that UX)
-2. Fix any issues, e.g. changed dependencies (or worse if you’re unlucky).
-3. Commit and PR
-
-I have a little org-mode and Emacs macro automation that helps me manage things currently which does the job, for now.
-
-### Decisions to make about future direction
-
-- Should this be part of nixpkgs or stand-alone? I think nixpkgs: this is, itself, a collection of packages, and the point is to democratize Common Lisp’s package management. I have a feeling that’s the point of projects that do belong in nixpkgs, but I’m not certain--I also heard something about a departure from the nixpkgs channel in the brave new world of flakes, so TBD. I certainly don’t want this to end up under another BDFL’s auspice.
-
 ## Comparison to `lisp-modules` and `lisp-modules-new`
 
 The crucial difference with both: No QuickLisp. This is an ideological difference rather than a material one, to an end user.
 
-Concretely, the other two module systems are far more mature and ready for use. This project only supports two lisps (barely) and is in dire need of reliable testing on non-darwin platforms.
-
-I have very little knowledge of `lisp-modules`, tbh I should have spent more time reading it, first, but I got drawn into building this thing and before I realised I had reimplemented it, it was too late. Sorry.
+For a more detailed comparison than that: this project somewhere late 2022, and both the official `nixpkgs.lispPackages` and this `cl-nix-lite` have diverged considerably, since. I haven’t kept up to date with the main lispPackages development, so I’m not fully equipped to give a proper comparison anymore.
 
 ## Motivation
 

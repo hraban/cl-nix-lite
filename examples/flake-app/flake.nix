@@ -1,24 +1,18 @@
 {
   description = "Demo lispPackagesLite app using flakes";
   inputs = {
-    flake-utils.url = "github:numtide/flake-utils";
-    cl-nix-lite = {
-      flake = false;
-      url = "github:hraban/cl-nix-lite";
-    };
+    cl-nix-lite.url = "github:hraban/cl-nix-lite";
   };
   outputs = {
     self, nixpkgs, cl-nix-lite, flake-utils
   }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = nixpkgs.legacyPackages.${system};
-        lispPackagesLite = import cl-nix-lite { inherit pkgs; };
+        pkgs = nixpkgs.legacyPackages.${system}.extend cl-nix-lite.overlays.default;
       in
-        with lispPackagesLite;
         {
           packages = {
-            default = lispDerivation {
+            default = with pkgs.lispPackagesLite; lispDerivation {
               name = "flake-app";
               lispSystem = "flake-app";
               lispDependencies = [

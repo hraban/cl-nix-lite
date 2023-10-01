@@ -1,4 +1,4 @@
-# Flake demonstration of lispPackagesLite
+# Demonstration of overriding input in cl-nix-lite using flakes
 
 Usage:
 

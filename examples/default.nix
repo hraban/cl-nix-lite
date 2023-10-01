@@ -3,7 +3,8 @@
 # to a binary cache.
 
 {
-  pkgs ? import <nixpkgs> {}
+  cl-nix-lite ? ../.
+, pkgs ? import <nixpkgs> { overlays = [ (import cl-nix-lite) ]; }
 , lisp ? pkgs.sbcl
 }:
 
@@ -30,6 +31,7 @@ let
   # These need some more work
   flake-tests = [
     ./flake-app
+    ./flake-override-input
   ];
   flake-to-deriv = f: (builtins.getFlake (builtins.toString f)).packages.${builtins.currentSystem}.default;
 in

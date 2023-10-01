@@ -1,11 +1,9 @@
 {
-  pkgs ? import <nixpkgs> {}
-  , lispPackagesLite ? import ../.. { inherit pkgs; }
+  cl-nix-lite ? ../..
+, pkgs ? import <nixpkgs> { overlays = [ (import cl-nix-lite) ]; }
 }:
 
-with lispPackagesLite;
-
-lispDerivation {
+with pkgs.lispPackagesLite; lispDerivation {
   src = pkgs.lib.cleanSource ./.;
   lispSystem = "dev";
   lispDependencies = [ arrow-macros ];

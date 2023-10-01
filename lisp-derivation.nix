@@ -14,14 +14,13 @@
 
 { pkgs
 , callPackage
-, lispDerivation
 , lisp
 }:
 
 with pkgs.lib;
 with callPackage ./utils.nix {};
 
-{
+rec {
   # Build a lisp derivation from this source, for the specific given
   # systems. When two separate packages include the same src, but both for a
   # different system, it resolves to the same derivation.

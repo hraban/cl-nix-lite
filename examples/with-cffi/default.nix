@@ -1,9 +1,9 @@
 {
-  pkgs ? import <nixpkgs> {}
-  , lispPackagesLite ? import ../.. { inherit pkgs; }
+  cl-nix-lite ? ../..
+, pkgs ? import <nixpkgs> { overlays = [ (import cl-nix-lite) ]; }
 }:
 
-with lispPackagesLite;
+with pkgs.lispPackagesLite;
 
 lispDerivation {
   lispDependencies = [ alexandria arrow-macros cl-async cl-async-ssl ];
