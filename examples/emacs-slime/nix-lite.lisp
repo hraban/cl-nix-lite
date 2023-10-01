@@ -68,7 +68,10 @@ Returns a list of the built paths, as output to stdout by Nix.
 
 (defun refresh-packages ()
   (let ((nix (format NIL "
-with (import (~A) {});
+let
+  pkgs = (import <nixpkgs> {}).extend(import (~A));
+in
+with pkgs.lispPackagesLite;
 map
 (x: x.src)
 (lispWithSystems [ ~(~{~A~^ ~}~) ]).ancestry.deps
