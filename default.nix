@@ -8,6 +8,5 @@ let
     sha256 = sourceInfo.narHash;
   };
   flake = (prev.callPackage flake-compat { src = ./inputs; }).defaultNix;
-  lisp-overlay = import ./lisp-packages-lite.nix { inherit (flake) inputs; };
 in
-lisp-overlay final prev
+import ./lisp-packages-lite.nix { inherit (flake) inputs; pkgs = prev; }

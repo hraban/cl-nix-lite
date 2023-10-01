@@ -14,16 +14,15 @@
 
 {
   inputs
+, pkgs
 , lisp ? pkgs: pkgs.sbcl
 }:
 
-# Return an overlay
-_: pkgs:
 with {
   inherit (pkgs) lib;
 };
 
-let
+{
   lispPackagesLite = lib.recurseIntoAttrs (lib.makeScope pkgs.newScope (self:
     with self;
     with callPackage ./utils.nix {};
@@ -2274,5 +2273,4 @@ let
 
     zpng = callPackage (self: with self; lispify "zpng" [ salza2 ]) {};
   }));
-in
-{ inherit lispPackagesLite; }
+}
