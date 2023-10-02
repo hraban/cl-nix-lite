@@ -260,6 +260,22 @@
         "type": "github"
       }
     },
+    "asdf-system-connections": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1482519646,
+        "narHash": "sha256-fqyiys2WbWCSnMdiATjr31zzIXKgk5EHxgONvVAFbxo=",
+        "owner": "gwkkwg",
+        "repo": "asdf-system-connections",
+        "rev": "9f085240febccccff99d9d3bb687fcaafffd3f5e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "gwkkwg",
+        "repo": "asdf-system-connections",
+        "type": "github"
+      }
+    },
     "assoc-utils": {
       "flake": false,
       "locked": {
@@ -2948,6 +2964,7 @@
         "arrow-macros": "arrow-macros",
         "asdf": "asdf",
         "asdf-flv": "asdf-flv",
+        "asdf-system-connections": "asdf-system-connections",
         "assoc-utils": "assoc-utils",
         "atomics": "atomics",
         "babel": "babel",

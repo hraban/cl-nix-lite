@@ -190,6 +190,8 @@ with {
       src = inputs.asdf-flv;
     }) {};
 
+    asdf-system-connections = callPackage ({}: lispify "asdf-system-connections" []) {};
+
     assoc-utils = callPackage (self: with self; lispDerivation {
       lispSystem = "assoc-utils";
       src = inputs.assoc-utils;

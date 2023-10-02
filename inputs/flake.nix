@@ -129,6 +129,10 @@
       url = "github:didierverna/asdf-flv";
       flake = false;
     };
+    asdf-system-connections = {
+      url = "github:gwkkwg/asdf-system-connections";
+      flake = false;
+    };
     assoc-utils = {
       url = "github:fukamachi/assoc-utils";
       flake = false;
