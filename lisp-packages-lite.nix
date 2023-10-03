@@ -1661,12 +1661,31 @@ with {
       };
     }) {}) metacopy metacopy-with-contextl;
 
-    metatilities = callPackage (self: with self; lispDerivation {
-      lispSystem = "metatilities";
+    inherit (callPackage (self': with self'; lispMultiDerivation {
       src = inputs.metatilities;
-      lispDependencies = [ moptilities cl-containers metabang-bind ];
-      lispCheckDependencies = [ lift ];
-    }) {};
+      systems = {
+        metatilities = {
+          lispDependencies = [
+            moptilities
+            cl-containers
+            metabang-bind
+            metatilities-base
+          ];
+          lispCheckDependencies = [
+            lift
+          ];
+        };
+        "metatilities/with-lift" = {
+          lispDependencies = [
+            metatilities
+            asdf-system-connections
+            self."cl-containers/with-asdf-system-connections"
+            lift
+          ];
+        };
+      };
+    }) {}) metatilities
+           "metatilities/with-lift";
 
     metatilities-base = callPackage (self: with self; lispDerivation {
       lispSystem = "metatilities-base";
