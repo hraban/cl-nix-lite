@@ -819,11 +819,11 @@
     "cl-markdown": {
       "flake": false,
       "locked": {
-        "lastModified": 1696437844,
-        "narHash": "sha256-my/CXCYzk1zyj52sVR86LYamdQwIWBmRj5F/jQYey1M=",
+        "lastModified": 1696438410,
+        "narHash": "sha256-Oyjq9WJeeVRvuIQQbfq9obcLHnQ8dUZScP5GpyrHj6o=",
         "owner": "hraban",
         "repo": "cl-markdown",
-        "rev": "2dc742a9c48c73188eb5f045aaee14952a3f0105",
+        "rev": "3788802199228b49d0e06c3feb80c1c22af05cfc",
         "type": "github"
       },
       "original": {
