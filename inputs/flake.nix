@@ -202,7 +202,7 @@
       flake = false;
     };
     cl-containers = {
-      url = "github:gwkkwg/cl-containers";
+      url = "github:hraban/cl-containers";
       flake = false;
     };
     cl-cookie = {
@@ -269,7 +269,7 @@
       flake = false;
     };
     cl-markdown = {
-      url = "gitlab:cl-markdown/cl-markdown?host=gitlab.common-lisp.net";
+      url = "github:hraban/cl-markdown";
       flake = false;
     };
     cl-mimeparse = {

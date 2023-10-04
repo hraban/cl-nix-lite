@@ -563,15 +563,15 @@
     "cl-containers": {
       "flake": false,
       "locked": {
-        "lastModified": 1692030365,
-        "narHash": "sha256-irffYp8F4rCKM4Ln8bNf8HIy0N1fBlP9qghO3HYA5j8=",
-        "owner": "gwkkwg",
+        "lastModified": 1696297407,
+        "narHash": "sha256-FCQHUVGO07HB4CT19KKM4H4Kd6cpeaZf2UMEGTSiONs=",
+        "owner": "hraban",
         "repo": "cl-containers",
-        "rev": "cc491c299ebeb607a875e119a826b3acd4e2b3bf",
+        "rev": "781ebfe0888bae46f07c018f7d473898b1bd4f5f",
         "type": "github"
       },
       "original": {
-        "owner": "gwkkwg",
+        "owner": "hraban",
         "repo": "cl-containers",
         "type": "github"
       }
@@ -819,19 +819,17 @@
     "cl-markdown": {
       "flake": false,
       "locked": {
-        "host": "gitlab.common-lisp.net",
-        "lastModified": 1576778975,
-        "narHash": "sha256-b2NMT7o8Fp9W+w2BwPYUpkxjWTsQMlFxcRNNW8yJevI=",
-        "owner": "cl-markdown",
+        "lastModified": 1696437844,
+        "narHash": "sha256-my/CXCYzk1zyj52sVR86LYamdQwIWBmRj5F/jQYey1M=",
+        "owner": "hraban",
         "repo": "cl-markdown",
-        "rev": "4808ef7657e58e52733f528fd9812dc2df9f4e90",
-        "type": "gitlab"
+        "rev": "2dc742a9c48c73188eb5f045aaee14952a3f0105",
+        "type": "github"
       },
       "original": {
-        "host": "gitlab.common-lisp.net",
-        "owner": "cl-markdown",
+        "owner": "hraban",
         "repo": "cl-markdown",
-        "type": "gitlab"
+        "type": "github"
       }
     },
     "cl-mimeparse": {

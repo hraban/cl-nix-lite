@@ -465,12 +465,36 @@ with {
       lispCheckDependencies = [ clunit2 ];
     }) {};
 
-    cl-containers = callPackage (self: with self; lispDerivation {
+    inherit (callPackage (self: with self; lispMultiDerivation {
       src = inputs.cl-containers;
-      lispDependencies = [ metatilities-base ];
-      lispCheckDependencies = [ lift ];
-      lispSystem = "cl-containers";
-    }) {};
+      systems = {
+        cl-containers = {
+          lispDependencies = [ metatilities-base ];
+          lispCheckDependencies = [ lift ];
+        };
+        # This is an infections dependency which, if available on the search
+        # path at all, will cause cl-containers to start compiling some extra of
+        # its files. This must of course happen at build time of cl-containers,
+        # otherwise it happens in the nix store which will fail. So if if you
+        # are a dependent of cl-containers and you, or any of your dependencies,
+        # depend on asdf-system-connections, you must include this version of
+        # cl-containers lest you get a build error.
+        "cl-containers/with-asdf-system-connections" = {
+          lispSystems = [
+            "cl-containers/with-moptilities"
+            "cl-containers/with-utilities"
+            "cl-containers/with-variates"
+          ];
+          lispDependencies = [
+            cl-containers
+            asdf-system-connections
+            moptilities
+            metatilities-base
+            cl-variates
+          ];
+        };
+      };
+    }) {}) cl-containers "cl-containers/with-asdf-system-connections";
 
     cl-cookie = callPackage (self: with self; lispDerivation {
       lispSystem = "cl-cookie";
@@ -618,12 +642,13 @@ with {
       lispSystem = "cl-locale";
     }) {};
 
-    cl-markdown = callPackage (self: with self; lispDerivation {
+    cl-markdown = callPackage (self': with self'; lispDerivation {
       lispSystem = "cl-markdown";
       src = inputs.cl-markdown;
       lispDependencies = [
+        asdf-system-connections
         anaphora
-        cl-containers
+        self."cl-containers/with-asdf-system-connections"
         cl-ppcre
         dynamic-classes
         metabang-bind
