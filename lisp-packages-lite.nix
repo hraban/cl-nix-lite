@@ -761,6 +761,23 @@ with {
       src = inputs.cl-utilities;
     }) {};
 
+    inherit (callPackage (self: with self; lispMultiDerivation {
+      src = inputs.cl-variates;
+      systems = {
+        cl-variates = {
+          lispCheckDependencies = [ lift ];
+        };
+        "cl-variates/with-metacopy" = {
+          lispDependencies = [
+            cl-variates
+            asdf-system-connections
+            metacopy
+          ];
+        };
+      };
+    }) {}) cl-variates
+           "cl-variates/with-metacopy";
+
     cl-who = callPackage (self: with self; lispDerivation {
       lispSystem = "cl-who";
       src = inputs.cl-who;

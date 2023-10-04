@@ -332,6 +332,12 @@
       url = "gitlab:cl-utilities/cl-utilities?host=gitlab.common-lisp.net";
       flake = false;
     };
+    cl-variates = {
+      # Temporarily point at personal fork with some fixes
+      # url = "gitlab:cl-variates/cl-variates?host=gitlab.common-lisp.net";
+      url = "github:hraban/cl-variates/build";
+      flake = false;
+    };
     cl-who = {
       url = "github:edicl/cl-who";
       flake = false;

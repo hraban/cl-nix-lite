@@ -1060,6 +1060,23 @@
         "type": "gitlab"
       }
     },
+    "cl-variates": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1696294983,
+        "narHash": "sha256-qHVJlFhmGxkrFnb+tMFGtmn9vByHoOE5cSewaftEZWM=",
+        "owner": "hraban",
+        "repo": "cl-variates",
+        "rev": "67766803725d64e29fde312235fb9a07cf5212b0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hraban",
+        "ref": "build",
+        "repo": "cl-variates",
+        "type": "github"
+      }
+    },
     "cl-who": {
       "flake": false,
       "locked": {
@@ -3014,6 +3031,7 @@
         "cl-tls": "cl-tls",
         "cl-unicode": "cl-unicode",
         "cl-utilities": "cl-utilities",
+        "cl-variates": "cl-variates",
         "cl-who": "cl-who",
         "clack": "clack",
         "closer-mop": "closer-mop",
