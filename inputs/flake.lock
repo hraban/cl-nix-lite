@@ -2318,6 +2318,22 @@
         "type": "github"
       }
     },
+    "lml2": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1440828970,
+        "narHash": "sha256-Rp3ilUs2uMyLOtpKkOkN9Yp5Jf3ZhpTJ1SrgXzoYjWw=",
+        "ref": "refs/heads/master",
+        "rev": "f6fab048b73e0b2d1deb2c3c93703fdacf4b5e22",
+        "revCount": 88,
+        "type": "git",
+        "url": "git://git.kpe.io/lml2.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "git://git.kpe.io/lml2.git"
+      }
+    },
     "local-time": {
       "flake": false,
       "locked": {
@@ -3108,6 +3124,7 @@
         "lisp-namespace": "lisp-namespace",
         "lisp-unit": "lisp-unit",
         "lisp-unit2": "lisp-unit2",
+        "lml2": "lml2",
         "local-time": "local-time",
         "log4cl": "log4cl",
         "log4cl-extras": "log4cl-extras",

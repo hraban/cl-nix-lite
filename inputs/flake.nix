@@ -638,6 +638,10 @@
       url = "github:AccelerationNet/lisp-unit2";
       flake = false;
     };
+    lml2 = {
+      url = "git://git.kpe.io/lml2.git";
+      flake = false;
+    };
     local-time = {
       url = "github:dlowe-net/local-time";
       flake = false;

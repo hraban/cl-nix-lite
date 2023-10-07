@@ -1581,6 +1581,13 @@ with {
       symbol-munger
     ]) {};
 
+    lml2 = callPackage (self: with self; lispDerivation {
+      lispDependencies = [ kmrcl ];
+      lispCheckDependencies = [ rt ];
+      lispSystem = "lml2";
+      src = inputs.lml2;
+    }) {};
+
     local-time = callPackage (self: with self; lispDerivation {
       lispSystem = "local-time";
       src = inputs.local-time;
