@@ -42,12 +42,9 @@
 ]
 }:
 
-with rec {
-  pkgs' = pkgs.extend (import cl-nix-lite);
-};
-with pkgs'.lib;
+with pkgs.lib;
 
-pipe pkgs'.lispPackagesLite [
+pipe pkgs.lispPackagesLite [
   (attrsets.filterAttrs (n: d:
     (isDerivation d) &&
     ! ((d.meta or {}).broken or false) &&
