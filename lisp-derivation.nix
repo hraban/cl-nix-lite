@@ -39,6 +39,26 @@ let
         sbcl = file: ''"${lisp}/bin/sbcl" --script "${file}"'';
         ecl = file: ''"${lisp}/bin/ecl" --shell "${file}"'';
       }.${lisp.pname};
+
+  # For a “lisp”, get an array of all its derivations. If it’s a simple
+  # derivation, like pkgs.sbcl, just return [ pkgs.sbcl ]. If it’s a callack
+  # function like (f: "${pkgs...}  etc"), extract all its derivations.
+  lispDerivations = lisp:
+    if isDerivation lisp
+    then [ lisp ]
+      # Extremely hacky but it works. Assume that any derivation we’re
+      # interested in lives in the string context. This is painful because
+      # we’re doing runtime imports for every single derivation, only
+      # really for nix-shell purposes which is a tiny fraction of actual
+      # use. But it’s just such a nice feature to have the correct lisp
+      # right there in your shell that I’m loath to remove this until it’s
+      # absolutely necessary.
+    else pipe "sentinel" [
+      lisp
+      builtins.getContext
+      builtins.attrNames
+      (map (d: import d))
+    ];
 in
 
 rec {
@@ -354,25 +374,7 @@ rec {
         # of a devshell. This is definitely what you want, particularly for
         # flakes which are likely to be running a few SBCL versions behind, or
         # users without global SBCL installed in the first place.
-        nativeBuildInputs = let
-          lispDrv =
-            if isDerivation lisp
-            then [ lisp ]
-            # Extremely hacky but it works. Assume that any derivation we’re
-            # interested in lives in the string context. This is painful because
-            # we’re doing runtime imports for every single derivation, only
-            # really for nix-shell purposes which is a tiny fraction of actual
-            # use. But it’s just such a nice feature to have the correct lisp
-            # right there in your shell that I’m loath to remove this until it’s
-            # absolutely necessary.
-            else pipe "sentinel" [
-              lisp
-              builtins.getContext
-              builtins.attrNames
-              (map (d: import d))
-            ];
-        in
-          (localizedArgs.nativeBuildInputs or []) ++ lispDrv;
+        nativeBuildInputs = (localizedArgs.nativeBuildInputs or []) ++ (lispDerivations lisp);
         # Put this one at the very end because we don’t override the
         # user-specified shellHook; we extend it, if it exists. So this is a
         # non-destructive operation.
@@ -428,32 +430,46 @@ EOF
 
   # Get a binary executable lisp which can load the given systems from ASDF
   # without any extra setup necessary.
-  lispWithSystems = systems: lispDerivation {
-    inherit (lisp) name;
-    lispSystem = "";
-    nativeBuildInputs = [ pkgs.makeBinaryWrapper ];
-    src = pkgs.writeText "mock" "source";
-    dontUnpack = true;
-    dontBuild = true;
-    lispDependencies = systems;
-    # This wrapper is necessary because Nix is just a build environment that
-    # delivers executables. Once the binary is built, Nix doesn’t control its
-    # environment when it is started--it’s a regular binary. Meaning: we can’t
-    # somehow set these envvars in some config, like you could do with
-    # e.g. Docker. To set envvars on a binary /at runtime/, you must create a
-    # wrapper that does this. Enter ‘makeWrapper’ et al.
-    # N.B.: The final wrapper is a bash script which isn’t ideal for startup
-    # speed. This is a good argument for using asdf registry configuration files
-    # rather than a big baked envvar.
-    installPhase = ''
-      mkdir -p $out/bin
-      for f in ${lisp}/bin/*; do
-        # ASDF_.. is set, not suffixed, because it is an opaque string, not a
-        # search path.
-        makeBinaryWrapper $f $out/bin/$(basename $f) \
-          ''${CL_SOURCE_REGISTRY+--suffix CL_SOURCE_REGISTRY : $CL_SOURCE_REGISTRY} \
-          --set ASDF_OUTPUT_TRANSLATIONS $ASDF_OUTPUT_TRANSLATIONS
-      done
-    '';
-  };
+  lispWithSystems = systems: let
+    # This is getting insane, and I’m sure I will come to regret this as it’s
+    # _way_ too much magic, but here goes: this is a heuristic, do-what-I-mean
+    # extraction of a sensible "derivation" from a "lisp" argument. Of course,
+    # if the passed lisp is an actual derivation like pkgs.sbcl: easy, that’s
+    # what it is.  But what if it’s a callback function, like (f:
+    # "${pkgs.sbcl}/bin/sbcl --some-options ... ${f}")? Well... there’s still
+    # the real sbcl hidden in there. Extract it through the string context
+    # (which could have multiple derivations but that’s crazy talk, so just
+    # choose the "first" one which is basically a random one).  Holy guacamole,
+    # this has to be a sign that my function callback API for passing lisps is
+    # just not a good API. But how else? 🥲 It’s so clean...
+    lispDrv = builtins.elemAt (lispDerivations lisp) 0;
+  in
+    lispDerivation {
+      inherit (lispDrv) name;
+      lispSystem = "";
+      nativeBuildInputs = [ pkgs.makeBinaryWrapper ];
+      src = pkgs.writeText "mock" "source";
+      dontUnpack = true;
+      dontBuild = true;
+      lispDependencies = systems;
+      # This wrapper is necessary because Nix is just a build environment that
+      # delivers executables. Once the binary is built, Nix doesn’t control its
+      # environment when it is started--it’s a regular binary. Meaning: we can’t
+      # somehow set these envvars in some config, like you could do with
+      # e.g. Docker. To set envvars on a binary /at runtime/, you must create a
+      # wrapper that does this. Enter ‘makeWrapper’ et al.
+      # N.B.: The final wrapper is a bash script which isn’t ideal for startup
+      # speed. This is a good argument for using asdf registry configuration files
+      # rather than a big baked envvar.
+      installPhase = ''
+        mkdir -p $out/bin
+        for f in ${lispDrv}/bin/*; do
+          # ASDF_.. is set, not suffixed, because it is an opaque string, not a
+          # search path.
+          makeBinaryWrapper $f $out/bin/$(basename $f) \
+            ''${CL_SOURCE_REGISTRY+--suffix CL_SOURCE_REGISTRY : $CL_SOURCE_REGISTRY} \
+            --set ASDF_OUTPUT_TRANSLATIONS $ASDF_OUTPUT_TRANSLATIONS
+        done
+      '';
+    };
 }
