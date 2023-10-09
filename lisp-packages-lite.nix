@@ -38,42 +38,39 @@ rec {
     in {
     inherit lispDerivation lispMultiDerivation lispWithSystems;
 
-    _1am = callPackage (self: with self; lispify "1am" []) {};
+    "1am" = callPackage (self: with self; lispify "1am" []) {};
 
-    inherit (callPackage (self: with self; lispMultiDerivation {
+    inherit (callPackage ({}: lispMultiDerivation {
       src = inputs."3bmd";
       systems = {
-        _3bmd = {
-          lispSystem = "3bmd";
+        "3bmd" = {
           lispDependencies = [ alexandria esrap split-sequence ];
-          lispCheckDependencies = [ _3bmd-ext-code-blocks fiasco ];
+          lispCheckDependencies = [ self."3bmd-ext-code-blocks" fiasco ];
         };
-        _3bmd-ext-code-blocks = {
-          lispSystem = "3bmd-ext-code-blocks";
-          lispDependencies = [ _3bmd alexandria colorize split-sequence ];
+        "3bmd-ext-code-blocks" = {
+          lispDependencies = [ self."3bmd" alexandria colorize split-sequence ];
         };
       };
-    }) {}) _3bmd _3bmd-ext-code-blocks;
+    }) {}) "3bmd" "3bmd-ext-code-blocks";
 
-    _3d-math = callPackage (self: with self; lispDerivation {
+    "3d-math" = callPackage (self: with self; lispDerivation {
       lispDependencies = [ documentation-utils type-templates ];
       lispCheckDependencies = [ parachute ];
       src = inputs."3d-math";
       lispSystem = "3d-math";
     }) {};
 
-    _3d-vectors = callPackage (self: with self; lispDerivation {
+    "3d-vectors" = callPackage (self: with self; lispDerivation {
       lispDependencies = [ documentation-utils ];
       lispCheckDependencies = [ parachute ];
       src = inputs."3d-vectors";
       lispSystem = "3d-vectors";
     }) {};
 
-    inherit (callPackage (self: with self; lispMultiDerivation {
+    inherit (callPackage ({}: lispMultiDerivation {
       src = inputs."40ants-doc";
       systems = {
-        _40ants-doc = {
-          lispSystem = "40ants-doc";
+        "40ants-doc" = {
           lispDependencies = [
             cl-ppcre
             commondoc-markdown
@@ -85,13 +82,12 @@ rec {
           ];
           lispCheckDependencies = [
             rove
-            _40ants-doc-full
+            self."40ants-doc-full"
           ];
         };
-        _40ants-doc-full = {
-          lispSystem = "40ants-doc-full";
+        "40ants-doc-full" = {
           lispDependencies = [
-            _40ants-doc
+            self."40ants-doc"
             cl-fad
             commondoc-markdown
             dexador
@@ -111,7 +107,7 @@ rec {
           ];
         };
       };
-    }) {}) _40ants-doc _40ants-doc-full;
+    }) {}) "40ants-doc" "40ants-doc-full";
 
     # Something very odd is happening with the ASDF scope here. I have absolutely
     # no idea why and I’m almost frightened to even find out. If I use the same
@@ -120,7 +116,7 @@ rec {
     # this fixes it. Wat?????????????????-- update: pretty sure this is because of
     # a conflicting package called asdf in pkgs. Still doesn’t explain why
     # explicitly listing the argument suddenly chooses the right asdf...
-    _40ants-asdf-system = callPackage ({ asdf, ... }@self: with self; (lispDerivation {
+    "40ants-asdf-system" = callPackage ({ asdf, ... }@self: with self; (lispDerivation {
       lispSystem = "40ants-asdf-system";
       src = inputs."40ants-asdf-system";
       # Depends on a modern ASDF. SBCL’s built-in ASDF crashes this.
@@ -671,7 +667,7 @@ rec {
       lispSystem = "cl-mimeparse";
     }) {};
 
-    cl-plus-ssl = callPackage (self: with self; lispDerivation {
+    "cl+ssl" = callPackage (self: with self; lispDerivation {
       lispSystem = "cl+ssl";
       src = inputs."cl+ssl";
       lispDependencies = [
@@ -911,12 +907,12 @@ rec {
       lispCheckDependencies = [ fiveam ];
     }) {};
 
-    commondoc-markdown = callPackage (self: with self; lispDerivation {
+    commondoc-markdown = callPackage ({}: lispDerivation {
       lispSystem = "commondoc-markdown";
       src = inputs.commondoc-markdown;
       lispDependencies = [
-        _3bmd
-        _3bmd-ext-code-blocks
+        self."3bmd"
+        self."3bmd-ext-code-blocks"
         common-doc
         common-html
         str
@@ -977,7 +973,7 @@ rec {
 
     deflate = callPackage (self: with self; lispify "deflate" []) {};
 
-    dexador = callPackage (self: with self; lispDerivation {
+    dexador = callPackage (self': with self'; lispDerivation {
       lispSystem = "dexador";
       src = inputs.dexador;
       lispDependencies = [
@@ -988,7 +984,7 @@ rec {
         chunga
         cl-base64
         cl-cookie
-        cl-plus-ssl
+        self."cl+ssl"
         cl-ppcre
         fast-http
         fast-io
@@ -1039,10 +1035,10 @@ rec {
     # Technically these could be two separate derivations, one per system, but it
     # doesn’t seem like people use it that way, and there’s no dependencies
     # anyway, so there’s little benefit. Just treat this as a monolith package.
-    docs-builder = callPackage (self: with self; lispDerivation {
+    docs-builder = callPackage (self': with self'; lispDerivation {
       lispSystems = [ "docs-builder" "docs-config" ];
       src = inputs.docs-builder;
-      lispDependencies = [ log4cl _40ants-doc ];
+      lispDependencies = [ log4cl self."40ants-doc" ];
     }) {};
 
     documentation-utils = callPackage (self: with self; lispDerivation {
@@ -1051,14 +1047,14 @@ rec {
       lispDependencies = [ trivial-indent ];
     }) {};
 
-    drakma = callPackage (self: with self; lispDerivation {
+    drakma = callPackage (self': with self'; lispDerivation {
       lispSystem = "drakma";
       src = inputs.drakma;
       lispDependencies = [
         chipz
         chunga
         cl-base64
-        cl-plus-ssl
+        self."cl+ssl"
         cl-ppcre
         flexi-streams
         puri
@@ -1253,11 +1249,11 @@ rec {
 
     global-vars = callPackage (self: with self; lispify "global-vars" [ ]) {};
 
-    hamcrest = callPackage (self: with self; lispDerivation {
+    hamcrest = callPackage ({}: lispDerivation {
       lispSystem = "hamcrest";
       lispCheckDependencies = [ prove rove ];
       lispDependencies = [
-        _40ants-asdf-system
+        self."40ants-asdf-system"
         alexandria
         iterate
         cl-ppcre
@@ -1315,7 +1311,7 @@ rec {
 
     hu_dwim_stefil = callPackage (self: with self; lispify "hu.dwim.stefil" [ alexandria hu_dwim_asdf ]) {};
 
-    hunchentoot = callPackage (self: with self; lispDerivation {
+    hunchentoot = callPackage (self': with self'; lispDerivation {
       lispSystem = "hunchentoot";
       src = inputs.hunchentoot;
       lispDependencies = [
@@ -1329,7 +1325,7 @@ rec {
         rfc2388
         trivial-backtrace
         # TODO: Per-lisp selection (these are not necessary on lispworks)
-        cl-plus-ssl
+        self."cl+ssl"
         usocket
         bordeaux-threads
       ];
@@ -1605,12 +1601,12 @@ rec {
       lispCheckDependencies = [ stefil ];
     }) {};
 
-    log4cl-extras = callPackage (self: with self; lispDerivation {
+    log4cl-extras = callPackage ({}: lispDerivation {
       lispSystem = "log4cl-extras";
       lispCheckDependencies = [ hamcrest ];
       lispDependencies = [
-        _40ants-doc
-        _40ants-asdf-system
+        self."40ants-doc"
+        self."40ants-asdf-system"
         alexandria
         cl-strings
         dissect
@@ -1740,8 +1736,8 @@ rec {
               lispDependencies = [
                 mgl-pax
                 # mgl-pax/document
-                _3bmd
-                _3bmd-ext-code-blocks
+                self."3bmd"
+                self."3bmd-ext-code-blocks"
                 colorize
                 md5
                 trivial-utf-8
@@ -1922,7 +1918,7 @@ rec {
 
     pythonic-string-reader = callPackage (self: with self; lispify "pythonic-string-reader" [ named-readtables ]) {};
 
-    quickhull = callPackage (self: with self; lispify "quickhull" [ _3d-math documentation-utils ]) {};
+    quickhull = callPackage ({}: lispify "quickhull" [ self."3d-math" documentation-utils ]) {};
 
     quri = callPackage (self: with self; lispDerivation {
       lispSystem = "quri";
@@ -1931,12 +1927,12 @@ rec {
       src = inputs.quri;
     }) {};
 
-    reblocks  = callPackage (self: with self; lispDerivation {
+    reblocks  = callPackage (self': with self'; lispDerivation {
       lispSystem = "reblocks";
       src = inputs.reblocks;
       lispCheckDependencies = [ hamcrest ];
       lispDependencies = [
-        _40ants-doc
+        self."40ants-doc"
         circular-streams
         cl-cookie
         cl-fad
@@ -2376,11 +2372,11 @@ rec {
 
     wu-decimal = callPackage (self: with self; lispify "wu-decimal" []) {};
 
-    xml-emitter = callPackage (self: with self; lispDerivation {
+    xml-emitter = callPackage ({}: lispDerivation {
       src = inputs.xml-emitter;
       lispSystem = "xml-emitter";
       lispDependencies = [ cl-utilities ];
-      lispCheckDependencies = [ _1am ];
+      lispCheckDependencies = [ self."1am" ];
     }) {};
 
     xlunit = callPackage (self: with self; lispDerivation rec {
