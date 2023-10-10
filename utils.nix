@@ -124,10 +124,6 @@ rec {
 
   isLispDeriv = x: x ? lispSystems;
 
-  # Utility function that just adds some lisp dependencies to an existing
-  # derivation.
-  trimName = s.removeSuffix "-src";
-
   # Manage a { key => drv } attrset, describing all dependencies, recursively,
   # as a flattened set. Worst edge case:
   #
