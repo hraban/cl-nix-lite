@@ -51,17 +51,19 @@
 ]
 }:
 
+with pkgs.lib;
 with rec {
   # The tests for Shinmera/3d-math require a lot of memory, might as well grant
   # it
   lispPackagesLite = pkgs.lispPackagesLiteFor (f: "${pkgs.sbcl}/bin/sbcl --dynamic-space-size 4000 --script ${f}");
+  isSafeLisp = d: let
+    ev = builtins.tryEval d;
+    d' = ev.value;
+  in ev.success && (isDerivation d') && !(d'.meta.broken or false);
+  shouldTest = name: ! builtins.elem name skip;
 };
-with pkgs.lib;
 
 pipe lispPackagesLite [
-  (attrsets.filterAttrs (n: d:
-    (isDerivation d) &&
-    ! ((d.meta or {}).broken or false) &&
-    ! (builtins.elem n skip)))
+  (attrsets.filterAttrs (n: d: (isSafeLisp d) && (shouldTest n)))
   (builtins.mapAttrs (k: v: v.enableCheck))
 ]
