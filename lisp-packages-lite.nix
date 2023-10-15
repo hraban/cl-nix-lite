@@ -981,7 +981,9 @@ rec {
         trivial-gray-streams
         trivial-mimes
         usocket
-      ] ++ lib.optional pkgs.hostPlatform.isWindows flexi-streams;
+      ] ++ lib.optionals pkgs.hostPlatform.isWindows [
+        flexi-streams
+      ];
       lispCheckDependencies = [
         babel
         cl-cookie
@@ -1513,7 +1515,9 @@ rec {
         };
 
         lack-util = {
-          lispDependencies = [ ironclad ];
+          lispDependencies = if pkgs.hostPlatform.isWindows
+                             then [ ironclad ]
+                             else [ cl-isaac ];
           lispCheckDependencies = [ lack-test prove ];
         };
       };
