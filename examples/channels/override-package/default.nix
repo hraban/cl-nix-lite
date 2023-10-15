@@ -27,9 +27,9 @@ let
         # instructions, I’m just overriding the existing derivation. But here of
         # course you could also set this to an entirely custom lispDerivation
         # you create yourself.
-        alexandria = lprev.alexandria.overrideAttrs (_: {
+        alexandria = lprev.alexandria.overrideAttrs {
           src = fauxlexandria;
-        });
+        };
       });
     })
   ];
