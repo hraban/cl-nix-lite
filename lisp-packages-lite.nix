@@ -40,7 +40,7 @@ rec {
 
     "1am" = callPackage ({}: lispify "1am" []) {};
 
-    inherit (callPackage ({}: lispMultiDerivation {
+    inherit (lispMultiDerivation {
       src = inputs."3bmd";
       systems = {
         "3bmd" = {
@@ -51,7 +51,7 @@ rec {
           lispDependencies = [ self."3bmd" alexandria colorize split-sequence ];
         };
       };
-    }) {}) "3bmd" "3bmd-ext-code-blocks";
+    }) "3bmd" "3bmd-ext-code-blocks";
 
     "3d-math" = callPackage ({}: lispDerivation {
       lispDependencies = [ documentation-utils type-templates ];
@@ -67,7 +67,7 @@ rec {
       lispSystem = "3d-vectors";
     }) {};
 
-    inherit (callPackage ({}: lispMultiDerivation {
+    inherit (lispMultiDerivation {
       src = inputs."40ants-doc";
       systems = {
         "40ants-doc" = {
@@ -107,7 +107,7 @@ rec {
           ];
         };
       };
-    }) {}) "40ants-doc" "40ants-doc-full";
+    }) "40ants-doc" "40ants-doc-full";
 
     "40ants-asdf-system" = callPackage ({}: lispDerivation {
       lispSystem = "40ants-asdf-system";
@@ -147,7 +147,7 @@ rec {
 
     archive = callPackage ({}: lispify "archive" [ trivial-gray-streams cl-fad ]) {};
 
-    inherit (callPackage ({}: lispMultiDerivation {
+    inherit (lispMultiDerivation {
       src = inputs.arnesi;
       systems = {
         arnesi = {
@@ -163,7 +163,7 @@ rec {
           lispDependencies = [ arnesi swank ];
         };
       };
-    }) {}) arnesi arnesi-cl-ppcre-extras arnesi-slime-extras;
+    }) arnesi arnesi-cl-ppcre-extras arnesi-slime-extras;
 
     array-utils = callPackage ({}: lispDerivation {
       lispSystem = "array-utils";
@@ -202,21 +202,20 @@ rec {
       lispCheckDependencies = [ parachute ];
     }) {};
 
-    inherit (callPackage ({}:
-      lispMultiDerivation {
-        src = inputs.babel;
+    inherit (lispMultiDerivation {
+      src = inputs.babel;
 
-        systems = {
-          babel = {
-            lispDependencies = [ alexandria trivial-features ];
-            lispCheckDependencies = [ hu_dwim_stefil ];
-          };
-          babel-streams = {
-            lispDependencies = [ alexandria babel trivial-gray-streams ];
-            lispCheckDependencies = [ hu_dwim_stefil ];
-          };
+      systems = {
+        babel = {
+          lispDependencies = [ alexandria trivial-features ];
+          lispCheckDependencies = [ hu_dwim_stefil ];
         };
-      }) {}) babel babel-streams;
+        babel-streams = {
+          lispDependencies = [ alexandria babel trivial-gray-streams ];
+          lispCheckDependencies = [ hu_dwim_stefil ];
+        };
+      };
+    }) babel babel-streams;
 
     blackbird = callPackage ({}: lispDerivation {
       lispSystem = "blackbird";
@@ -238,54 +237,51 @@ rec {
       src = inputs.bordeaux-threads;
     }) {};
 
-    inherit (callPackage ({}:
-      lispMultiDerivation rec {
-        name = "cffi";
-        src = inputs.cffi;
-        patches = ./patches/clffi-libffi-no-darwin-carevout.patch;
-        systems = {
-          cffi = {
-            lispDependencies = [ alexandria babel trivial-features ];
-            lispCheckDependencies = [ cffi-grovel bordeaux-threads rt ];
-            # I don’t know if cffi-libffi is external but it doesn’t seem to be
-            # so just leave it for now.
-          };
-          cffi-grovel = {
-            # cffi-grovel depends on cffi-toolchain. Just specifying it as an
-            # exported system works because cffi-toolchain is specified in this
-            # same source derivation.
-            lispSystems = [ "cffi-grovel" "cffi-toolchain" ];
-            lispDependencies = [ alexandria cffi trivial-features ];
-            lispCheckDependencies = [ bordeaux-threads rt ];
-          };
+    inherit (lispMultiDerivation rec {
+      src = inputs.cffi;
+      patches = ./patches/clffi-libffi-no-darwin-carevout.patch;
+      systems = {
+        cffi = {
+          lispDependencies = [ alexandria babel trivial-features ];
+          lispCheckDependencies = [ cffi-grovel bordeaux-threads rt ];
+          # I don’t know if cffi-libffi is external but it doesn’t seem to be
+          # so just leave it for now.
         };
-        # lisp-modules-new doesn’t specify GCC and somehow it works fine. Is
-        # there an accidental transitive dependency, there? Is that because GCC is
-        # included through mkDerivation, and its setupHook is automatically
-        # triggered? Or how is this solved? Additionally, this only seems to be
-        # used by a pretty incidental make call, because the only rule that uses
-        # GCC just happens to be at the top, making it the default make
-        # target. Not sure if this is the ideal way to “build” this package.
-        # Note: Technically this will always be required because cffi-grovel
-        # depends on cffi bare, but it’s a good litmus test for the system.
-        nativeBuildInputs = [ pkgs.pkg-config pkgs.gcc ];
-        buildInputs = systems: l.optionals (b.elem "cffi" systems) [ pkgs.libffi ];
-        # This is broken on Darwin because libcffi rewrites the import path in a
-        # way that’s incompatible with pkgconfig. It should be "if darwin AND (not
-        # pkg-config)".
+        cffi-grovel = {
+          # cffi-grovel depends on cffi-toolchain. Just specifying it as an
+          # exported system works because cffi-toolchain is specified in this
+          # same source derivation.
+          lispSystems = [ "cffi-grovel" "cffi-toolchain" ];
+          lispDependencies = [ alexandria cffi trivial-features ];
+          lispCheckDependencies = [ bordeaux-threads rt ];
+        };
+      };
+      # lisp-modules-new doesn’t specify GCC and somehow it works fine. Is
+      # there an accidental transitive dependency, there? Is that because GCC is
+      # included through mkDerivation, and its setupHook is automatically
+      # triggered? Or how is this solved? Additionally, this only seems to be
+      # used by a pretty incidental make call, because the only rule that uses
+      # GCC just happens to be at the top, making it the default make
+      # target. Not sure if this is the ideal way to “build” this package.
+      # Note: Technically this will always be required because cffi-grovel
+      # depends on cffi bare, but it’s a good litmus test for the system.
+      nativeBuildInputs = [ pkgs.pkg-config pkgs.gcc ];
+      buildInputs = systems: l.optionals (b.elem "cffi" systems) [ pkgs.libffi ];
+      # This is broken on Darwin because libcffi rewrites the import path in a
+      # way that’s incompatible with pkgconfig. It should be "if darwin AND (not
+      # pkg-config)".
 
-        setupHooks = systems: l.optionals (b.elem "cffi" systems) [(
-          if pkgs.hostPlatform.isDarwin
-          # LD_.. only works with CFFI on Mac, but not with
-          # sb-alien:load-shared-object. DYLD_.. works with both.
-          then pkgs.writeText "cffi-setup-hook-darwin.sh" (builtins.replaceStrings
-            [ "LD_LIBRARY_PATH" ]
-            [ "DYLD_LIBRARY_PATH" ]
-            (builtins.readFile ./cffi-setup-hook.sh ))
-          else ./cffi-setup-hook.sh
-        )];
-      }
-    ) {}) cffi cffi-grovel;
+      setupHooks = systems: l.optionals (b.elem "cffi" systems) [(
+        if pkgs.hostPlatform.isDarwin
+        # LD_.. only works with CFFI on Mac, but not with
+        # sb-alien:load-shared-object. DYLD_.. works with both.
+        then pkgs.writeText "cffi-setup-hook-darwin.sh" (builtins.replaceStrings
+          [ "LD_LIBRARY_PATH" ]
+          [ "DYLD_LIBRARY_PATH" ]
+          (builtins.readFile ./cffi-setup-hook.sh ))
+        else ./cffi-setup-hook.sh
+      )];
+    }) cffi cffi-grovel;
 
     calispel = callPackage ({}: lispDerivation {
       lispSystem = "calispel";
@@ -298,7 +294,7 @@ rec {
 
     chunga = callPackage ({}: lispify "chunga" [ trivial-gray-streams ]) {};
 
-    inherit (callPackage ({}: lispMultiDerivation {
+    inherit (lispMultiDerivation {
       src = inputs.coalton;
       systems = {
         coalton = {
@@ -372,7 +368,7 @@ rec {
         # Broken since the last update and I can’t exactly figure out why.
         broken = true;
       };
-    }) {}) coalton coalton-benchmarks coalton-doc coalton-examples;
+    }) coalton coalton-benchmarks coalton-doc coalton-examples;
 
     circular-streams = callPackage ({}: lispDerivation {
       lispSystem = "circular-streams";
@@ -395,7 +391,7 @@ rec {
       lispCheckDependencies = [ fiveam ];
     }) {};
 
-    inherit (callPackage ({}: lispMultiDerivation rec {
+    inherit (lispMultiDerivation rec {
       name = "cl-async";
 
       src = inputs.cl-async;
@@ -429,7 +425,7 @@ rec {
       propagatedBuildInputs = systems: l.optionals (builtins.elem "cl-async-ssl" systems) [
         pkgs.openssl
       ];
-    }) {}) cl-async cl-async-repl cl-async-ssl;
+    }) cl-async cl-async-repl cl-async-ssl;
 
     cl-base64 = callPackage ({}: lispDerivation rec {
       lispSystem = "cl-base64";
@@ -462,7 +458,7 @@ rec {
       lispCheckDependencies = [ clunit2 ];
     }) {};
 
-    inherit (callPackage ({}: lispMultiDerivation {
+    inherit (lispMultiDerivation {
       src = inputs.cl-containers;
       systems = {
         cl-containers = {
@@ -491,7 +487,7 @@ rec {
           ];
         };
       };
-    }) {}) cl-containers "cl-containers/with-asdf-system-connections";
+    }) cl-containers "cl-containers/with-asdf-system-connections";
 
     cl-cookie = callPackage ({}: lispDerivation {
       lispSystem = "cl-cookie";
@@ -575,7 +571,7 @@ rec {
       src = inputs.cl-libuv;
     }) {};
 
-    inherit (callPackage ({}: lispMultiDerivation {
+    inherit (lispMultiDerivation {
       src = inputs.cl-libxml2;
       systems = {
         cl-libxml2 = {
@@ -630,7 +626,7 @@ rec {
             addToSearchPath "LD_LIBRARY_PATH" "$lib"
           ''
         );
-    }) {}) cl-libxml2 cl-libxslt;
+    }) cl-libxml2 cl-libxslt;
 
     cl-locale = callPackage ({}: lispDerivation {
       src = inputs.cl-locale;
@@ -684,7 +680,7 @@ rec {
       propagatedBuildInputs = [ pkgs.openssl ];
     }) {};
 
-    inherit (callPackage ({}: lispMultiDerivation rec {
+    inherit (lispMultiDerivation rec {
       src = inputs.cl-ppcre;
       systems = {
         cl-ppcre = {
@@ -695,7 +691,7 @@ rec {
           lispCheckDependencies = [ flexi-streams ];
         };
       };
-    }) {}) cl-ppcre cl-ppcre-unicode;
+    }) cl-ppcre cl-ppcre-unicode;
 
     cl-prevalence = callPackage ({}: lispDerivation {
       lispSystem = "cl-prevalence";
@@ -745,7 +741,7 @@ rec {
       lispCheckDependencies = [ prove ];
     }) {};
 
-    inherit (callPackage ({}: lispMultiDerivation {
+    inherit (lispMultiDerivation {
       src = inputs.cl-syntax;
 
       systems = {
@@ -759,7 +755,7 @@ rec {
           lispDependencies = [ cl-syntax cl-interpol ];
         };
       };
-    }) {}) cl-syntax cl-syntax-annot cl-syntax-interpol;
+    }) cl-syntax cl-syntax-annot cl-syntax-interpol;
 
     cl-test-more = prove;
 
@@ -783,7 +779,7 @@ rec {
       src = inputs.cl-utilities;
     }) {};
 
-    inherit (callPackage ({}: lispMultiDerivation {
+    inherit (lispMultiDerivation {
       src = inputs.cl-variates;
       systems = {
         cl-variates = {
@@ -797,8 +793,7 @@ rec {
           ];
         };
       };
-    }) {}) cl-variates
-           "cl-variates/with-metacopy";
+    }) cl-variates "cl-variates/with-metacopy";
 
     cl-who = callPackage ({}: lispDerivation {
       lispSystem = "cl-who";
@@ -806,52 +801,51 @@ rec {
       lispCheckDependencies = [ flexi-streams ];
     }) {};
 
-    inherit (callPackage ({}:
-      lispMultiDerivation {
-        src = inputs.clack;
+    inherit (lispMultiDerivation {
+      src = inputs.clack;
 
-        systems = {
-          # TODO: This is a complex package with lots of derivations and check
-          # dependencies. Fill in as necessary. I’ve only filled in what I need
-          # right now.
-          clack = {
-            lispDependencies = [
-              alexandria
-              bordeaux-threads
-              lack
-              lack-middleware-backtrace
-              lack-util
-              swank
-              usocket
-            ];
-          };
-          clack-handler-hunchentoot = {
-            lispDependencies = [
-              alexandria
-              bordeaux-threads
-              clack-socket
-              flexi-streams
-              hunchentoot
-              split-sequence
-            ];
-            lispCheckDependencies = [ clack-test ];
-          };
-          clack-socket = {};
-          clack-test = {
-            lispDependencies = [
-              bordeaux-threads
-              clack
-              clack-handler-hunchentoot
-              dexador
-              flexi-streams
-              http-body
-              ironclad
-              rove
-              usocket
-            ];
-          };
+      systems = {
+        # TODO: This is a complex package with lots of derivations and check
+        # dependencies. Fill in as necessary. I’ve only filled in what I need
+        # right now.
+        clack = {
+          lispDependencies = [
+            alexandria
+            bordeaux-threads
+            lack
+            lack-middleware-backtrace
+            lack-util
+            swank
+            usocket
+          ];
         };
-      }) {}) clack clack-handler-hunchentoot clack-socket clack-test;
+        clack-handler-hunchentoot = {
+          lispDependencies = [
+            alexandria
+            bordeaux-threads
+            clack-socket
+            flexi-streams
+            hunchentoot
+            split-sequence
+          ];
+          lispCheckDependencies = [ clack-test ];
+        };
+        clack-socket = {};
+        clack-test = {
+          lispDependencies = [
+            bordeaux-threads
+            clack
+            clack-handler-hunchentoot
+            dexador
+            flexi-streams
+            http-body
+            ironclad
+            rove
+            usocket
+          ];
+        };
+      };
+    }) clack clack-handler-hunchentoot clack-socket clack-test;
 
     closer-mop = callPackage ({}: lispify "closer-mop" [ ]) {};
 
@@ -950,7 +944,7 @@ rec {
       src = inputs.data-lens;
     }) {};
 
-    inherit (callPackage ({}: lispMultiDerivation {
+    inherit (lispMultiDerivation {
       src = inputs.cl-dbi;
 
       systems = {
@@ -963,7 +957,7 @@ rec {
           ];
         };
       };
-    }) {}) dbi;
+    }) dbi;
 
     deflate = callPackage ({}: lispify "deflate" []) {};
 
@@ -1066,7 +1060,7 @@ rec {
 
     eager-future2 = callPackage ({}: lispify "eager-future2" [ bordeaux-threads trivial-garbage ]) {};
 
-    inherit (callPackage ({}: lispMultiDerivation {
+    inherit (lispMultiDerivation {
       src = inputs.easy-routes;
       systems = {
         easy-routes = {
@@ -1079,11 +1073,11 @@ rec {
           lispDependencies = [ easy-routes djula ];
         };
       };
-    }) {}) easy-routes
-           "easy-routes+djula"
-           "easy-routes+errors";
+    }) easy-routes
+       "easy-routes+djula"
+       "easy-routes+errors";
 
-    inherit (callPackage ({}: lispMultiDerivation {
+    inherit (lispMultiDerivation {
       src = inputs.eclector;
       systems = {
         eclector = {
@@ -1098,7 +1092,7 @@ rec {
       # This directory is unneeded and it messes up some shebang filtering
       # autodetectiong stuff on linux builds.
       preBuild = "rm -rf tools-for-build";
-    }) {}) eclector eclector-concrete-syntax-tree;
+    }) eclector eclector-concrete-syntax-tree;
 
     enchant = callPackage ({}: lispDerivation {
       lispDependencies = [ cffi ];
@@ -1148,7 +1142,7 @@ rec {
       fare-utils
     ]) {};
 
-    inherit (callPackage ({}: lispMultiDerivation {
+    inherit (lispMultiDerivation {
       src = inputs.fare-quasiquote;
       systems = {
         fare-quasiquote = {
@@ -1174,10 +1168,10 @@ rec {
           lispDependencies = [ fare-quasiquote named-readtables ];
         };
       };
-    }) {}) fare-quasiquote
-           fare-quasiquote-extras
-           fare-quasiquote-optima
-           fare-quasiquote-readtable;
+    }) fare-quasiquote
+       fare-quasiquote-extras
+       fare-quasiquote-optima
+       fare-quasiquote-readtable;
 
     fare-utils = callPackage ({}: lispDerivation {
       lispSystem = "fare-utils";
@@ -1187,7 +1181,7 @@ rec {
 
     # I’m defining this as a multideriv because it exposes lots of derivs. Even
     # though I only use one at the moment, it’s likely to change in the future.
-    inherit (callPackage ({}: lispMultiDerivation {
+    inherit (lispMultiDerivation {
       src = inputs.femlisp;
       systems = {
         infix = {};
@@ -1195,7 +1189,7 @@ rec {
       dontConfigure = true;
       lispAsdPath = systems:
         l.optional (builtins.elem "infix" systems) "external/infix";
-    }) {}) infix;
+    }) infix;
 
     fiasco = callPackage ({}: lispify "fiasco" [ alexandria trivial-gray-streams ]) {};
 
@@ -1425,112 +1419,111 @@ rec {
       lispCheckDependencies = [ rt ];
     }) {};
 
-    inherit (callPackage ({}:
-      lispMultiDerivation {
-        src = inputs.lack;
-        systems = {
-          lack = {
-            lispDependencies = [ lack-util ];
-            lispCheckDependencies = [ clack prove ];
-          };
-
-          # meta nix-only derivation for packages that just want all of lack
-          lack-full = {
-            lispSystems = [
-              "lack-app-directory"
-              "lack-app-file"
-              "lack-component"
-              "lack-middleware-accesslog"
-              "lack-middleware-auth-basic"
-              "lack-middleware-backtrace"
-              "lack-middleware-csrf"
-              "lack-middleware-mount"
-              "lack-middleware-session"
-              "lack-middleware-static"
-              "lack-request"
-              "lack-response"
-              "lack-session-store-dbi"
-              "lack-session-store-redis"
-              "lack-util-writer-stream"
-              "lack-util"
-              "lack"
-            ];
-            lispDependencies = [
-              lack
-              lack-middleware-backtrace
-              lack-request
-              lack-response
-              lack-util
-              # Kitchen sink dependencies
-              # In an ideal world this would be unnecessary: every individual lack
-              # system would be listed explicitly in Nix, with its dependencies. I
-              # just can’t be bothered to do that right now.
-              cl-base64
-              cl-redis
-              dbi
-              marshal
-              trivial-mimes
-              trivial-rfc-1123
-              trivial-utf-8
-            ];
-            lispCheckDependencies = [ lack-test ];
-          };
-
-          lack-middleware-backtrace = {
-            lispCheckDependencies = [ alexandria lack prove ];
-          };
-
-          lack-request = {
-            lispDependencies = [
-              circular-streams
-              cl-ppcre
-              http-body
-              quri
-            ];
-            lispCheckDependencies = [
-              alexandria
-              clack-test
-              dexador
-              flexi-streams
-              hunchentoot
-              prove
-            ];
-          };
-
-          lack-response = {
-            lispDependencies = [
-              local-time
-              quri
-            ];
-          };
-
-          # stand-alone project used as a dependency of help systems
-          lack-test = {
-            lispDependencies = [
-              bordeaux-threads
-              clack
-              clack-handler-hunchentoot
-              dexador
-              flexi-streams
-              http-body
-              ironclad
-              rove
-              usocket
-            ];
-          };
-
-          lack-util = {
-            lispDependencies = [ ironclad ];
-            lispCheckDependencies = [ lack-test prove ];
-          };
+    inherit (lispMultiDerivation {
+      src = inputs.lack;
+      systems = {
+        lack = {
+          lispDependencies = [ lack-util ];
+          lispCheckDependencies = [ clack prove ];
         };
-      }) {}) lack
-             lack-full
-             lack-middleware-backtrace
-             lack-request
-             lack-response
-             lack-test
-             lack-util;
+
+        # meta nix-only derivation for packages that just want all of lack
+        lack-full = {
+          lispSystems = [
+            "lack-app-directory"
+            "lack-app-file"
+            "lack-component"
+            "lack-middleware-accesslog"
+            "lack-middleware-auth-basic"
+            "lack-middleware-backtrace"
+            "lack-middleware-csrf"
+            "lack-middleware-mount"
+            "lack-middleware-session"
+            "lack-middleware-static"
+            "lack-request"
+            "lack-response"
+            "lack-session-store-dbi"
+            "lack-session-store-redis"
+            "lack-util-writer-stream"
+            "lack-util"
+            "lack"
+          ];
+          lispDependencies = [
+            lack
+            lack-middleware-backtrace
+            lack-request
+            lack-response
+            lack-util
+            # Kitchen sink dependencies
+            # In an ideal world this would be unnecessary: every individual lack
+            # system would be listed explicitly in Nix, with its dependencies. I
+            # just can’t be bothered to do that right now.
+            cl-base64
+            cl-redis
+            dbi
+            marshal
+            trivial-mimes
+            trivial-rfc-1123
+            trivial-utf-8
+          ];
+          lispCheckDependencies = [ lack-test ];
+        };
+
+        lack-middleware-backtrace = {
+          lispCheckDependencies = [ alexandria lack prove ];
+        };
+
+        lack-request = {
+          lispDependencies = [
+            circular-streams
+            cl-ppcre
+            http-body
+            quri
+          ];
+          lispCheckDependencies = [
+            alexandria
+            clack-test
+            dexador
+            flexi-streams
+            hunchentoot
+            prove
+          ];
+        };
+
+        lack-response = {
+          lispDependencies = [
+            local-time
+            quri
+          ];
+        };
+
+        # stand-alone project used as a dependency of help systems
+        lack-test = {
+          lispDependencies = [
+            bordeaux-threads
+            clack
+            clack-handler-hunchentoot
+            dexador
+            flexi-streams
+            http-body
+            ironclad
+            rove
+            usocket
+          ];
+        };
+
+        lack-util = {
+          lispDependencies = [ ironclad ];
+          lispCheckDependencies = [ lack-test prove ];
+        };
+      };
+    }) lack
+       lack-full
+       lack-middleware-backtrace
+       lack-request
+       lack-response
+       lack-test
+       lack-util;
 
     lass = callPackage ({}: lispDerivation {
       lispSystems = [ "lass" "binary-lass" ];
@@ -1651,7 +1644,7 @@ rec {
       lispCheckDependencies = [ lift ];
     }) {};
 
-    inherit (callPackage ({}: lispMultiDerivation {
+    inherit (lispMultiDerivation {
       src = inputs.metacopy;
       systems = {
         metacopy = {
@@ -1663,9 +1656,9 @@ rec {
           lispCheckDependencies = [ lift ];
         };
       };
-    }) {}) metacopy metacopy-with-contextl;
+    }) metacopy metacopy-with-contextl;
 
-    inherit (callPackage ({}: lispMultiDerivation {
+    inherit (lispMultiDerivation {
       src = inputs.metatilities;
       systems = {
         metatilities = {
@@ -1688,8 +1681,8 @@ rec {
           ];
         };
       };
-    }) {}) metatilities
-           "metatilities/with-lift";
+    }) metatilities
+       "metatilities/with-lift";
 
     metatilities-base = callPackage ({}: lispDerivation {
       lispSystem = "metatilities-base";
@@ -1697,7 +1690,7 @@ rec {
       lispCheckDependencies = [ lift ];
     }) {};
 
-    inherit (callPackage ({}:
+    inherit (
       let
         lispCheckDependencies = [ self."mgl-pax/full" dref try ];
       in
@@ -1747,10 +1740,10 @@ rec {
           };
           lispAsdPath = systems:
             l.optionals (builtins.elem "dref" systems) [ "dref" ];
-        }) {}) dref
-               mgl-pax
-               "mgl-pax/full"
-               mgl-pax-bootstrap;
+        }) dref
+           mgl-pax
+           "mgl-pax/full"
+           mgl-pax-bootstrap;
 
     misc-extensions = callPackage ({}: lispify "misc-extensions" [ ]) {};
 
@@ -1777,7 +1770,7 @@ rec {
       lispSystem = "nclasses";
     }) {};
 
-    inherit (callPackage ({}: lispMultiDerivation {
+    inherit (lispMultiDerivation {
       src =  inputs.nfiles;
       systems = {
         nfiles = {
@@ -1803,9 +1796,9 @@ rec {
       };
       lispAsdPath = systems:
         l.optional (builtins.elem "nasdf" systems) "nasdf";
-    }) {}) nfiles nasdf;
+    }) nfiles nasdf;
 
-    inherit (callPackage ({}: lispMultiDerivation {
+    inherit (lispMultiDerivation {
       src = inputs.optima;
       systems = {
         optima = {
@@ -1817,7 +1810,7 @@ rec {
           lispDependencies = [ optima alexandria cl-ppcre ];
         };
       };
-    }) {}) optima optima-ppcre;
+    }) optima optima-ppcre;
 
     osicat = callPackage ({}: lispDerivation {
       lispSystem = "osicat";
@@ -1851,7 +1844,7 @@ rec {
 
     parse-number = callPackage ({}: lispify "parse-number" [ ]) {};
 
-    inherit (callPackage ({}: lispMultiDerivation {
+    inherit (lispMultiDerivation {
       src = inputs.parser-combinators;
       systems = {
         parser-combinators = {
@@ -1862,7 +1855,7 @@ rec {
           lispDependencies = [ parser-combinators cl-ppcre ];
         };
       };
-    }) {}) parser-combinators parser-combinators-cl-ppcre;
+    }) parser-combinators parser-combinators-cl-ppcre;
 
     path-parse = callPackage ({}: lispDerivation {
       lispSystem = "path-parse";
@@ -2051,7 +2044,7 @@ rec {
       lispDependencies = [ flexi-streams xsubseq ];
     }) {};
 
-    inherit (callPackage ({}: lispMultiDerivation {
+    inherit (lispMultiDerivation {
       src = inputs.spinneret;
       lispCheckDependencies = [ fiveam parenscript ];
 
@@ -2072,8 +2065,7 @@ rec {
           lispDependencies = [ spinneret cl-markdown ];
         };
       };
-    }) {}) spinneret
-           spinneret-cl-markdown;
+    }) spinneret spinneret-cl-markdown;
 
     split-sequence = callPackage ({}: lispDerivation {
       lispSystem = "split-sequence";
@@ -2127,7 +2119,7 @@ rec {
 
     tmpdir = callPackage ({}: lispify "tmpdir" [ cl-fad ]) {};
 
-    inherit (callPackage ({}: lispMultiDerivation {
+    inherit (lispMultiDerivation {
       src = inputs.trivia;
 
       systems = {
@@ -2190,12 +2182,12 @@ rec {
           ];
         };
       };
-    }) {}) trivia
-           trivia-cffi
-           trivia-fset
-           trivia-ppcre
-           trivia-quasiquote
-           trivia-trivial;
+    }) trivia
+       trivia-cffi
+       trivia-fset
+       trivia-ppcre
+       trivia-quasiquote
+       trivia-trivial;
 
     trivial-arguments = callPackage ({}: lispify "trivial-arguments" [ ]) {};
 
@@ -2328,7 +2320,7 @@ rec {
 
     unit-test = callPackage ({}: lispify "unit-test" [ ]) {};
 
-    inherit (callPackage ({}: lispMultiDerivation {
+    inherit (lispMultiDerivation {
       src = inputs.usocket;
       systems = {
         usocket = {
@@ -2339,7 +2331,7 @@ rec {
           lispDependencies = [ usocket bordeaux-threads ];
         };
       };
-    }) {}) usocket usocket-server;
+    }) usocket usocket-server;
 
     uuid = callPackage ({}: lispify "uuid" [ ironclad trivial-utf-8 ]) {};
 
