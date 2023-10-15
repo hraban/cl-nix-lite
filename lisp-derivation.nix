@@ -233,6 +233,7 @@ rec {
         "outputs"
         "shellHook"
         "makeFlags"
+        "meta"
 
         # All dependencies
         "depsBuildBuild"
@@ -374,6 +375,16 @@ rec {
           runHook postCheck
         '';
       } // localizedArgs // {
+        meta = (localizedArgs.meta or {}) // {
+          # Being aggressive about finding a broken flag in my dependencies
+          # helps surfacing it early enough for a wrapping tryEval to catch
+          # it. See the implementation of the “test-all” example and try
+          # e.g. to mark alexandria as broken; that should “work”, meaning you
+          # shouldn’t get eval errors, just fewer packages is all. This fixes
+          # that. I don’t know /exactly/ why, but it can’t hurt.
+          broken = (localizedArgs.meta.broken or false) ||
+                   (builtins.any (d: d.meta.broken or false) ancestry.deps);
+        };
         # Always include the lisp we used in the nativeBuildInputs, mostly for
         # shellHook purposes: having it here puts it automatically on the PATH
         # of a devshell. This is definitely what you want, particularly for
