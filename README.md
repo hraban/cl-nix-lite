@@ -435,7 +435,7 @@ lispDerivation {
 }
 ```
 
-For real-world examples, peruse [`default.nix`](default.nix).
+For real-world examples, peruse [`lisp-packages-lite.nix`](lisp-packages-lite.nix).
 
 ### Binary Cache
 
