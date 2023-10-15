@@ -1941,7 +1941,7 @@ rec {
         routes
         salza2
         serapeum
-        spinneret-cl-markdown
+        self."spinneret/cl-markdown"
         trivial-open-browser
         trivial-timeout
         uuid
@@ -2064,12 +2064,12 @@ rec {
             trivial-gray-streams
           ];
         };
-        spinneret-cl-markdown = {
+        "spinneret/cl-markdown" = {
           lispSystem = "spinneret/cl-markdown";
           lispDependencies = [ spinneret cl-markdown ];
         };
       };
-    }) spinneret spinneret-cl-markdown;
+    }) spinneret "spinneret/cl-markdown";
 
     split-sequence = lispDerivation {
       lispSystem = "split-sequence";
