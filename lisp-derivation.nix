@@ -140,24 +140,26 @@ rec {
             newLispSystems = normaliseStrings (lispSystems' ++ other.lispSystems);
             newDoCheck = doCheck || other.args.doCheck or false;
           in
-            # N.B.: Only propagate ME if I have equal doCheck to other. This
-            # is subtly different from newDoCheck == doCheck. It solves the
-            # problem where a doCheck = true depends (transitively) on itself
-            # with doCheck false: that should /not/ be deduplicated, because
-            # some dependency in the middle clearly depends on me (with
-            # doCheck = false), so if I deduplicate I will end up re-building
-            # my non-test files here, which will cause a rebuild in that
-            # already-built-dependency.
-            if doCheck == other.doCheck && newLispSystems == lispSystems'
-            then me
             # Only build a new one if it improves on both existing derivations.
-            else if newDoCheck == other.doCheck && newLispSystems == other.lispSystems
+            if newDoCheck == other.doCheck && newLispSystems == other.lispSystems
             then other.overrideAttrs (_: { inherit _lispOrigSystems; })
-            # There is no improvement to be had here: I already contain all the
-            # final lisp systems, and other is already my src, ergo this would
-            # just be a pointless (and eventually infinite) recursion. This
-            # happens when a test depends on itself (without test).
-            else if newLispSystems == lispSystems' && src == other
+            else if newLispSystems == lispSystems' && (
+              # There is no improvement to be had here: I already contain all
+              # the final lisp systems, and other is already my src, ergo this
+              # would just be a pointless (and eventually infinite)
+              # recursion. This happens when a test depends on itself (without
+              # test).
+              src == other ||
+              # N.B.: Only propagate ME if I have equal doCheck to other. This
+              # is subtly different from newDoCheck == doCheck. It solves the
+              # problem where a doCheck = true depends (transitively) on itself
+              # with doCheck false: that should /not/ be deduplicated, because
+              # some dependency in the middle clearly depends on me (with
+              # doCheck = false), so if I deduplicate I will end up re-building
+              # my non-test files here, which will cause a rebuild in that
+              # already-built-dependency.
+              doCheck == other.doCheck
+            )
             then me
             else
               # Patches are removed because I assume the source to already have
