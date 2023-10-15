@@ -2,13 +2,12 @@
 # regression, or a bug:
 
 {
-  cl-nix-lite ? ../..
+  cl-nix-lite ? ../../..
 , pkgs ? import <nixpkgs> {}
 }:
 
 let
   fauxlexandria = pkgs.fetchFromGitHub {
-    name = "fauxlexandria-src";
     owner = "hraban";
     repo = "fauxlexandria";
     rev = "aa0dc79717b4284cdcf1b5900bc6dbf2047b67bc";
@@ -28,9 +27,9 @@ let
         # instructions, I’m just overriding the existing derivation. But here of
         # course you could also set this to an entirely custom lispDerivation
         # you create yourself.
-        alexandria = lprev.alexandria.overrideAttrs (_: {
+        alexandria = lprev.alexandria.overrideAttrs {
           src = fauxlexandria;
-        });
+        };
       });
     })
   ];

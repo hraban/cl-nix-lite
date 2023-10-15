@@ -19,10 +19,10 @@ The worlds of Lisp and Nix are both independently confusing and idiosynratic. It
 
 If you’re really, utterly confused by how to install anything, but for some magical reason you do have Nix available (wat), this is by far the easiest way to get something working.
 
-Enter the [`nix-shell` example](examples/nix-shell) and run `nix-shell`. Tada: you have `sbcl` available on the command line, and one lisp package preloaded: `alexandria`:
+Enter the [`nix-shell` example](examples/channels/nix-shell) and run `nix-shell`. Tada: you have `sbcl` available on the command line, and one lisp package preloaded: `alexandria`:
 
 ```
-$ cd examples/nix-shell
+$ cd examples/channels/nix-shell
 $ nix-shell
 [nix-shell:…/nix-shell]$ sbcl
 This is SBCL 2.2.9.nixos, an implementation of ANSI Common Lisp.
@@ -43,7 +43,7 @@ T
 
 Add any other packages to `default.nix` as you need them.
 
-If you have flakes enabled (see [nixos.wiki/wiki/Flakes](https://nixos.wiki/wiki/Flakes)), you can also try the [flake develop example](examples/flake-develop).
+If you have flakes enabled (see [nixos.wiki/wiki/Flakes](https://nixos.wiki/wiki/Flakes)), you can also try the [flake develop example](examples/flakes/flake-develop).
 
 Either way see their respective READMEs for more info.
 
@@ -87,7 +87,7 @@ Do you want to avoid flakes? Does your system not support flakes? Do you not kno
 
 Try this:
 
-1. Copy [examples/hello-binary](examples/hello-binary) to a fresh directory.
+1. Copy [examples/channels/hello-binary](examples/channels/hello-binary) to a fresh directory.
 
 2. Change the top lines in default.nix from:
 
@@ -293,7 +293,7 @@ A crucial, defining feature of this implementation is that there is only ever *o
 
 ### Full Example: Flakes (Recommended)
 
-See the [flake example](examples/flake-app) for a demo which builds a `nix run` compatible binary.
+See the [flake example](examples/flakes/make-binary) for a demo which builds a `nix run` compatible binary.
 
 ### Full Example: git-hly
 
@@ -503,8 +503,8 @@ Is your program itself intended to be used as a dependency? Then you don’t nee
 
 Do you want to output a single executable, instead? This is natively supported by ASDF, so you can leverage that. See:
 
-- The modern example, using a [`flake`](examples/flake-app)
-- The classic [`make-binary`](examples/hello-binary) using `nix-build`
+- The modern example, using a [`flake`](examples/flakes/make-binary)
+- The classic [`make-binary`](examples/channels/hello-binary) using `nix-build`
 - [ASDF best practices][ASDF best practices] to configure ASDF.
 
 A third way to deliver your final output is as a lisp interpreter itself, which has been configured to find a predetermined set of dependencies.
@@ -521,7 +521,7 @@ $ nix-build -A alexandria.enableCheck
 
 This isn’t quite as elegant as `overrideAttrs (_: { doCheck = true; } )`, mostly because my Nix-fu isn’t at that level yet. WIP.
 
-To test all packages, see [examples/test-all](examples/test-all).
+To test all packages, see [examples/channels/test-all](examples/channels/test-all).
 
 ## TODO
 

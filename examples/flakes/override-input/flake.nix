@@ -17,9 +17,9 @@
           cl-nix-lite.overlays.default
           (final: prev: {
             lispPackagesLite = prev.lispPackagesLite.overrideScope' (lfinal: lprev: {
-              alexandria = lprev.alexandria.overrideAttrs (_: {
+              alexandria = lprev.alexandria.overrideAttrs {
                 src = fauxlexandria;
-              });
+              };
             });
           })
         ];

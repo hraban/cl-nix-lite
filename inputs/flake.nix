@@ -65,6 +65,10 @@
       url = "github:3b/3bmd";
       flake = false;
     };
+    "3d-math" = {
+      url = "github:Shinmera/3d-math";
+      flake = false;
+    };
     "3d-vectors" = {
       url = "github:Shinmera/3d-vectors";
       flake = false;
@@ -75,14 +79,6 @@
     };
     "40ants-doc" = {
       url = "github:40ants/doc";
-      flake = false;
-    };
-    "hu.dwim.asdf" = {
-      url = "github:hu-dwim/hu.dwim.asdf";
-      flake = false;
-    };
-    "hu.dwim.stefil" = {
-      url = "github:hu-dwim/hu.dwim.stefil";
       flake = false;
     };
     access = {
@@ -151,6 +147,15 @@
     };
     bordeaux-threads = {
       url = "github:sionescu/bordeaux-threads";
+      flake = false;
+    };
+    # bordeaux-threads has a new API, and its master branch has introduced
+    # deprecation warnings for the old API. This breaks compilation (as per the
+    # CL standard apparently?), so provide this package for older downstream
+    # systems which haven’t updated yet. Obviously dangerous if any other system
+    # depends on bordeaux-threads v2 in your entire dependency graph.
+    bordeaux-threads-v1 = {
+      url = "github:sionescu/bordeaux-threads/042e3b05f614e33328ac73db79d744443fb5a86f";
       flake = false;
     };
     calispel = {
@@ -261,7 +266,7 @@
       # url = "github:archimag/cl-libxml2";
       # Temporarily point at my own fork while figuring out Darwin build. Could
       # also use Nix patches but this is easier for me to manage.
-      url = "github:hraban/cl-libxml2";
+      url = "github:hraban/cl-libxml2/build/darwin";
       flake = false;
     };
     cl-locale = {
@@ -399,7 +404,7 @@
       flake = false;
     };
     deflate = {
-      url = "github:pmai/Deflate";
+      url = "github:pmai/Deflate/pull/4/head"; # https://github.com/pmai/Deflate/issues/3
       flake = false;
     };
     dexador = {
@@ -546,6 +551,14 @@
       url = "github:fukamachi/http-body";
       flake = false;
     };
+    "hu.dwim.asdf" = {
+      url = "github:hu-dwim/hu.dwim.asdf";
+      flake = false;
+    };
+    "hu.dwim.stefil" = {
+      url = "github:hu-dwim/hu.dwim.stefil";
+      flake = false;
+    };
     hunchentoot = {
       url = "github:edicl/hunchentoot";
       flake = false;
@@ -655,7 +668,7 @@
       flake = false;
     };
     lparallel = {
-      url = "github:lmj/lparallel";
+      url = "github:sharplispers/lparallel";
       flake = false;
     };
     lquery = {
@@ -986,6 +999,10 @@
     };
     type-i = {
       url = "github:guicho271828/type-i";
+      flake = false;
+    };
+    type-templates = {
+      url = "github:Shinmera/type-templates";
       flake = false;
     };
     typo = {
