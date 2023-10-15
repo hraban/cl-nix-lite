@@ -8,7 +8,6 @@
 
 let
   fauxlexandria = pkgs.fetchFromGitHub {
-    name = "fauxlexandria-src";
     owner = "hraban";
     repo = "fauxlexandria";
     rev = "aa0dc79717b4284cdcf1b5900bc6dbf2047b67bc";
