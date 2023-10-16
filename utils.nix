@@ -102,8 +102,6 @@ rec {
 
   getLispDeps = x: x.CL_SOURCE_REGISTRY or "";
 
-  lisp-asdf-op = op: sys: "(asdf:${op} :${sys})";
-
   asdf = pkgs.fetchFromGitLab {
     name = "asdf-src";
     domain = "gitlab.common-lisp.net";

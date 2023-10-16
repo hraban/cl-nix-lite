@@ -21,8 +21,16 @@ with pkgs.lib;
 with callPackage ./utils.nix {};
 
 let
+  # Use strings to avoid interning keyword symbols and polluting the namespace
+  lisp-asdf-op = op: sys: ''(asdf:${op} "${sys}")'';
+
+  # CLISP directly translates require calls to a filename, without case
+  # conversion, and of course with CL being uppercase by default i.e. (require
+  # :asdf) being (require :ASDF), whether that works or not depends on the case
+  # sensitivity of your filesystem. Not ideal. So use a string here to ensure we
+  # can find the (lowercase) asdf.lisp.
   asdfOpScript = op: name: systems: pkgs.writeText "${op}-${name}.lisp" ''
-    (require :asdf)
+    (require "asdf")
     ${b.concatStringsSep "\n" (map (lisp-asdf-op op) systems)}
   '';
 
