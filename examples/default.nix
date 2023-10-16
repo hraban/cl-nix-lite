@@ -27,6 +27,7 @@ let
     ./channels/hello-binary
     ./channels/override-package
     ./channels/test-all
+  ] ++ optionals (lisp.pname or "" != "clisp") [
     ./channels/with-cffi
   ];
   channelTestsFor = lisp:

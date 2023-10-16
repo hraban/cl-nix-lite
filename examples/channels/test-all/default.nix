@@ -49,6 +49,13 @@
   "lparallel"
 ] ++ pkgs.lib.optionals pkgs.hostPlatform.isLinux [
   "usocket"
+] ++ pkgs.lib.optionals (lisp.pname or "" == "clisp") [
+  "float-features" # *** - APPLY: too few arguments given to FIND
+  "fset" # https://github.com/slburson/fset/issues/42
+  "kmrcl" # odd floating point error on clisp
+  "trivial-custom-debugger" # *** - Condition of type TRIVIAL-CUSTOM-DEBUGGER/TEST::MY-ERROR.
+] ++ pkgs.lib.optionals (lisp.pname or "" == "clisp" && pkgs.hostPlatform.isLinux) [
+  "3bmd-ext-code-blocks"
 ]
 }:
 
