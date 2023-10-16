@@ -67,7 +67,7 @@ jobs:
               bb
             }
           }' | \
-          xargs -r nix-build --no-out-link
+          xargs -r nix-build --keep-going --no-out-link
     - name: nix-build error output
       if: failure()
       run: "cat examples/nix-build.out"
