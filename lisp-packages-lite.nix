@@ -130,8 +130,6 @@ rec {
     alexandria = lispDerivation {
       lispSystem = "alexandria";
       src = inputs.alexandria;
-      # See https://gitlab.common-lisp.net/alexandria/alexandria/-/issues/38
-      patches = ./patches/alexandria-tests.patch;
       # Contrary to what its .asd file suggests, Alexandria now requires rt even
       # on SBCL. This is recent (introduced after v1.4).
       lispCheckDependencies = [ rt ];

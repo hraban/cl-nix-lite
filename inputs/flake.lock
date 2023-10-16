@@ -132,11 +132,11 @@
       "flake": false,
       "locked": {
         "host": "gitlab.common-lisp.net",
-        "lastModified": 1683282187,
-        "narHash": "sha256-trZFFoLV9dSyik8Thwii2N4LxlRQwRKKdf/JN9bM/xw=",
+        "lastModified": 1697419910,
+        "narHash": "sha256-cZJi21xx+H7rjkbQ2W9y2/fdShRDUmNjAh8VQILP5+U=",
         "owner": "alexandria",
         "repo": "alexandria",
-        "rev": "db1288fb93a278b751acc2b736af162ad1bdde53",
+        "rev": "a39308bb281287b98e9b7aab326054535f4f5425",
         "type": "gitlab"
       },
       "original": {
