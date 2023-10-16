@@ -4,6 +4,7 @@
 {
   cl-nix-lite ? ../../..
 , pkgs ? import <nixpkgs> {}
+, lisp ? (f: "${pkgs.sbcl}/bin/sbcl --dynamic-space-size 4000 --script ${f}")
 }:
 
 let
@@ -22,7 +23,7 @@ let
     (import cl-nix-lite)
     # Now override alexandria in it
     (final: prev: {
-      lispPackagesLite = prev.lispPackagesLite.overrideScope' (lfinal: lprev: {
+      lispPackagesLite = (prev.lispPackagesLiteFor lisp).overrideScope' (lfinal: lprev: {
         # And because I’m only overriding the source, not any build
         # instructions, I’m just overriding the existing derivation. But here of
         # course you could also set this to an entirely custom lispDerivation

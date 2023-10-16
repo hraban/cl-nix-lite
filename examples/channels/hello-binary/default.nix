@@ -1,9 +1,10 @@
 {
   cl-nix-lite ? ../../..
 , pkgs ? import <nixpkgs> { overlays = [ (import cl-nix-lite) ]; }
+, lisp ? pkgs.sbcl
 }:
 
-with pkgs.lispPackagesLite;
+with pkgs.lispPackagesLiteFor lisp;
 
 lispDerivation {
   lispSystem = "hello-binary";

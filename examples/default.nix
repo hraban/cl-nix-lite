@@ -4,23 +4,24 @@
 
 {
   cl-nix-lite ? ../.
-, pkgs ? import <nixpkgs> { overlays = [ (import cl-nix-lite) ]; }
-, lisp ? pkgs.sbcl
+, pkgs ? import <nixpkgs> { }
 }:
 
+with pkgs.lib;
+
 let
-  inherit (pkgs.lib) isDerivation;
+  pkgs' = pkgs.extend (import cl-nix-lite);
+  sbcl = f: "${pkgs'.sbcl}/bin/sbcl --dynamic-space-size 4000 --script ${f}";
+  lisps = [ sbcl pkgs'.clisp ];
   # Massage a test input into a list of derivations (for later flattening)
-  all-inputs = input:
-    if builtins.isPath input
-    then all-inputs (pkgs.callPackage input { })
-    else if isDerivation input
+  allInputs = input:
+    if isDerivation input
     then [ input ]
     else
-      assert pkgs.lib.isAttrs input;
+      assert isAttrs input;
       builtins.filter isDerivation (builtins.attrValues input);
   # Simple paths which can just be imported directly
-  channel-based-tests = builtins.map all-inputs [
+  channelTestPaths = lisp: [
     ./channels/all-packages
     ./channels/all-packages-wrapped
     ./channels/hello-binary
@@ -28,16 +29,22 @@ let
     ./channels/test-all
     ./channels/with-cffi
   ];
+  channelTestsFor = lisp:
+    map
+      (p: allInputs (pkgs'.callPackage p { inherit lisp; }))
+      (channelTestPaths lisp);
+  channelTests = map channelTestsFor lisps;
+
   # These need some more work
-  flake-tests = [
+  flakeTests = [
     ./flakes/make-binary
     ./flakes/override-input
   ];
-  flake-to-deriv = f: (builtins.getFlake (builtins.toString f)).packages.${builtins.currentSystem}.default;
+  flakeToDeriv = f: (builtins.getFlake (builtins.toString f)).packages.${builtins.currentSystem}.default;
 in
 # Outputting a list of all derivations (instead of e.g. a mock wrapper
 # derivation) allows me to later filter this down to only derivations that need
 # to be /built/, on CI. That allows you to exclude anything that already exists
 # on cache. This is useful because otherwise it will redownload everything, just
 # to throw it away immediately again.
-pkgs.lib.lists.flatten (channel-based-tests ++ (map flake-to-deriv flake-tests))
+flatten channelTests ++ (map flakeToDeriv flakeTests)
