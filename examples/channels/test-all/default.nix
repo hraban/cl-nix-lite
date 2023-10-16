@@ -57,13 +57,22 @@ with rec {
   # it
   lispPackagesLite = pkgs.lispPackagesLiteFor (f: "${pkgs.sbcl}/bin/sbcl --dynamic-space-size 4000 --script ${f}");
   isSafeLisp = d: let
-    ev = builtins.tryEval d;
-    d' = ev.value;
-  in ev.success && (isDerivation d') && !(d'.meta.broken or false);
+    ev = builtins.tryEval (isDerivation d && !(d.meta.broken or false));
+  in ev.success && ev.value;
   shouldTest = name: ! builtins.elem name skip;
 };
 
 pipe lispPackagesLite [
-  (attrsets.filterAttrs (n: d: (isSafeLisp d) && (shouldTest n)))
-  (builtins.mapAttrs (k: v: v.enableCheck))
+  (builtins.mapAttrs (name: value: let
+    ev = builtins.tryEval (let
+      d = value.enableCheck;
+    in
+      if shouldTest name && isDerivation value && !(d.meta.broken or false)
+      then d
+      else null);
+    in
+      if ev.success && ev.value != null
+      then ev.value
+      else null))
+  (attrsets.filterAttrs (n: d: d != null))
 ]
