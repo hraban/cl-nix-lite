@@ -443,9 +443,7 @@ Pre-compiled versions of all standard lisp packages are published to Cachix, so 
 
 The cache is located at [cl-nix-lite.cachix.org](https://cl-nix-lite.cachix.org), where you can also find instructions on how to set it up on your local machine.
 
-### Setting custom Lisp (WIP)
-
-> N.B.: This is WIP and currently a second class citizen while I figure other things out.
+### Setting custom Lisp
 
 By default this package uses SBCL, but you can use any Lisp you want. Pass a supported Lisp derivation as the `lisp` argument to override.
 
@@ -455,11 +453,9 @@ Example:
 
 ...
 
-with rec {
-  lispPackagesLite = lispPackagesLite.override {
-    lisp = pkgs.ecl;
-  };
-};
+let
+  lispPackagesLite = pkgs.lispPackagesLiteFor pkgs.clisp;
+in
 
 ...
 ```
@@ -467,20 +463,19 @@ with rec {
 The supported lisps are:
 
 - SBCL (default)
-- ECL
+- CLISP
 
 You can use any other lisp by passing a function which gets a filename, and returns a shell invocation that executes that file and then quits.
 
-Example for clisp:
+Example for CLISP:
 
 ```nix
 ...
 
-with rec {
-  lispPackagesLite = lispPackagesLite.override {
-    lisp = f: "${pkgs.clisp}/bin/clisp ${f}";
-  };
-};
+let
+  lisp = f: "${pkgs.clisp}/bin/clisp ${f}";
+  lispPackagesLite = pkgs.lispPackagesLiteFor lisp;
+in
 
 ...
 ```
