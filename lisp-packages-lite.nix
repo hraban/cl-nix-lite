@@ -1811,6 +1811,10 @@ rec {
       src = inputs.nclasses;
       lispCheckDependencies = [ lisp-unit2 ];
       lispSystem = "nclasses";
+      # Requires a new version of ASDF that I’m not sure how to load before
+      # building the code. See
+      # "https://gitlab.common-lisp.net/asdf/asdf/-/issues/145".
+      meta.broken = lispName == "ecl";
     };
 
     inherit (lispMultiDerivation {
