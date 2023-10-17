@@ -248,46 +248,27 @@ Nix-only implementation of a lisp derivation, and registry of popular Common Lis
 
 This is a grounds-up implementation of a Lisp-in-Nix module, without using QuickLisp. I started with a `stdenv.mkDerivation` and worked my up from there.
 
-## Features / Anti-features
+This contains:
 
-This project has two parts:
+1. A lisp derivation builder for your own project
+2. Derivations for the commonly used Lisp packages
 
-1. A lisp derivation builder in Nix (`lispDerivation`)
-2. A registry of the most commonly used Lisp packages
+Together, they offer a "batteries included" build environment for your Lisp project in Nix.
 
-Together, they offer a "batteries included" build environment for your Lisp project in Nix. This is the same functionality offered by other modules in `nixpkgs`, namely `lispPackages` and `lispPackagesNew`.
-
-The implementation details:
+## Features
 
 - Tight integration with ASDFv3:
-  - tests using `test-op`
-  - binary output using `:build-operation program-op`
-  - regular .asd output (for libraries) by default
-  This convention is used by almost every existing major package (literally >99%)
-- No QuickLisp (Controversial! I know. See the chapter at the end for more info.)
-- All dependency info is manually entered in Nix. No inspection of .asd files, no QuickLisp metadata loaded, etc.
-- This project doesn’t touch the Lisp source code at all. No .asd file manging of any kind.
-- Supports multi-system source repositories (e.g. `cl-async` exports `cl-async`, `cl-async-ssl`, `cl-async-repl`) with different dependencies
-- Fully relies on ASDFv3 for finding systems: no path or system name rewriting in code
-- Automatic dependency resolution of all lisp modules
-- Automatic “deduplication” of lisp modules in dependency graph (i.e. any source derivation is only ever included once, and all systems for which it’s being loaded are passed in that one single call)
-- Flake support
+  - Testing
+  - Native binary output
+  - `.fasl` output
+- No QuickLisp
+- Explicitly managed dependencies
+- Doesn’t touch the Lisp source code at all. No .asd file mangling.
+- Multi-system projects (e.g. `cl-async`, `cl-async-ssl`, `cl-async-repl`)
+- ... each with different dependencies
+- Flakes
 
 The trade-off is in favour of robustness, at the cost of more human work in managing the Nix derivation definitions.
-
-## Glossary
-
-This package (lisp-modules-lite) makes a distinction between Nix *derivations* and Lisp *systems*:
-
-- **derivation**: A Nix concept. It is a single atomic "block" of "code": it can be just the source code, or a pre-built package ready to use.
-- **system**: A Common Lisp (actually an ASDF) concept. It is CL’s closest relative to e.g. a Python "package". Confusingly: Nix also has a concept of system, e.g. `x86_64-darwin`. It’s an OS+Architecture description. Because of that confusion, I try to call a Lisp system `lispSystem` in the code, instead of `system`.
-- **package**: Very confusing word which I avoid. It can mean “Lisp package” which is sort-of-but-not-really close to “namespaces” in other languages, or it can mean a Nix derivation. Don’t use this word.
-
-See the [`examples`](examples) directory for demonstrations on how to use this builder.
-
-### 1 Nix derivation, many Lisp systems
-
-A crucial, defining feature of this implementation is that there is only ever *one single Nix derivation per Lisp source code project*. This means *there is **no** 1 ⭤ 1 relationship between Lisp systems and Nix derivations*: if a single piece of code defines multiple systems (as many do; `trivia`, `cl-async`, `babel`, ...) they all still result in a single Nix derivation that exports all of them.
 
 ## Usage
 
@@ -351,7 +332,7 @@ Example for when that makes sense: the `prove` package (a testing framework) use
 
 Example for when you *don’t* need this: if your main system includes various "private" systems from the same repo explicitly, e.g. via `:depends-on`, you don’t need to tell ASDF about it. It will automatically start looking for them in the current directory. Again, this feature is only useful for “public” systems which are not referenced by the main system. You don’t need it for your `foo-utils.asd` or `foo-test.asd`: just reference them in your `foo.asd` as usual and they will be found.
 
-### Multi-derivation (WIP)
+### Multi-derivation
 
 > This is only supported in the big package scope as of now. It’s an advanced API which doesn’t work and has very limited benefits. Concrete advice: do not use this, unless you are stubborn and don’t need my advice.
 
@@ -386,7 +367,7 @@ Note:
 - You can include other systems defined in the same block, as long as there is no circular dependency chain.
 - This is only useful if your separate systems have different lispDependencies. If they don’t, just create a regular `lispDerivation` with `lispSystems = [ "foo-a" "foo-b" ]`.
 - You don’t need this for your “internal” packages (see similar note in the previous chapter).
-- This is only worth it if the different systems have different dependencies. I use this heavily in [the pre-defined list of packages](default.nix), because those are libraries and they’re intended for inclusion by other projects. For them, being light-weight matters. But for a personal project, I recommend keeping it all in a single `lispDerivation` and merging all dependencies into a single `lispDependencies`. Far easier.
+- This is only worth it if the different systems have different dependencies. I use this heavily in [the pre-defined list of packages](lisp-packages-lite.nix), because those are libraries and they’re intended for inclusion by other projects. For them, being light-weight matters. But for a personal project, I recommend keeping it all in a single `lispDerivation` and merging all dependencies into a single `lispDependencies`. Far easier.
 
 If this is a dependency in your own project, you’ll want to use it as follows:
 
@@ -518,28 +499,43 @@ This isn’t quite as elegant as `overrideAttrs (_: { doCheck = true; } )`, most
 
 To test all packages, see [examples/channels/test-all](examples/channels/test-all).
 
+## Technical Detail: Recursive Dependency Deduplicator
+
+This lisp derivation builder implements a transitive, “eval-time” full dependency tree resolver and deduplicator in Nix. It solves a fundamental impedance mismatch between Common Lisp and Nix.
+
+A Lisp project, e.g. `cl-async`, can provide multiple actual Lisp systems. Lisp likes to go back and forth between different such project directories as their respective systems include each other, and build what’s needed in different directories as it finds it. In Nix, this is impossible: you build a derivation alone, in one pass, and once it’s done it’s done, no more changing things.
+
+The source code has all the gory details, and hopefully plenty of comments to explain what is going on, and why. Long story short: you can now depend on a system from a separate derivation, which itself depends on another system defined back in your own repository, and you won’t get Nix build errors.
+
+## Glossary
+
+This package (lisp-modules-lite) makes a distinction between Nix *derivations* and Lisp *systems*:
+
+- **derivation**: A Nix concept. It is a single atomic "block" of "code": it can be just the source code, or a pre-built package ready to use.
+- **system**: A Common Lisp (actually an ASDF) concept. It is CL’s closest relative to e.g. a Python "package". Confusingly: Nix also has a concept of system, e.g. `x86_64-darwin`. It’s an OS+Architecture description. Because of that confusion, I try to call a Lisp system `lispSystem` in the code, instead of `system`.
+- **package**: Very confusing word which I avoid. It can mean “Lisp package” which is sort-of-but-not-really close to “namespaces” in other languages, or it can mean a Nix derivation. Don’t use this word.
+
+See the [`examples`](examples) directory for demonstrations on how to use this builder.
+
+### 1 Nix derivation, many Lisp systems
+
+A crucial, defining feature of this implementation is that there is only ever *one single Nix derivation per Lisp source code project*. This means *there is **no** 1 ⭤ 1 relationship between Lisp systems and Nix derivations*: if a single piece of code defines multiple systems (as many do; `trivia`, `cl-async`, `babel`, ...) they all still result in a single Nix derivation that exports all of them.
+
 ## TODO
 
 This is just my unofficial issue tracker.
 
-### Nice-to-have
-
-- Get all remaining packages’ tests passing.
 - An example showing fasl-only building, no binary
 - Don’t use `CL_SOURCE_REGISTRY` but use source map files?
 - Don’t clobber existing `CL_SOURCE_REGISTRY`
-- Document how to overwrite a package
-- Using that: in the test-all, can we "inject" a check=true version of every package into the entire chain? Instead of building every package in test mode separately, but have each of them depend on non-checking packages? Should we, even?
-- Fix binary building with ECL
-- More lisps
-- Test on Linux
+- ECL
 - Check if `lispDerivation` is actually the best name for this function
 
-## Comparison to `lisp-modules` and `lisp-modules-new`
+## Comparison to `lisp-modules` in nixpkgs
 
 The crucial difference with both: No QuickLisp. This is an ideological difference rather than a material one, to an end user.
 
-For a more detailed comparison than that: this project somewhere late 2022, and both the official `nixpkgs.lispPackages` and this `cl-nix-lite` have diverged considerably, since. I haven’t kept up to date with the main lispPackages development, so I’m not fully equipped to give a proper comparison anymore.
+For a more detailed comparison than that: this project started somewhere late 2022, and both the official `nixpkgs.lispPackages` and this `cl-nix-lite` have diverged considerably, since. I haven’t kept up to date with the main lispPackages development, so I’m not fully equipped to give a proper comparison anymore.
 
 ## Motivation
 
