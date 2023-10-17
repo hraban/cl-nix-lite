@@ -31,10 +31,15 @@ let
     ./channels/with-cffi
   ];
   channelTestsFor = lisp:
-    map
-      (p: allInputs (pkgs'.callPackage p { inherit lisp; }))
-      (channelTestPaths lisp);
-  channelTests = map channelTestsFor lisps;
+    let
+      callPackage = pkgs'.lib.callPackageWith { inherit lisp; };
+    in
+      map
+        (p: allInputs (callPackage p { }))
+        (channelTestPaths lisp);
+  channelTests = [
+    (pkgs'.callPackage ./channels/override-lisp { })
+  ] ++ (map channelTestsFor lisps);
 
   # These need some more work
   flakeTests = [
