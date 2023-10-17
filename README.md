@@ -445,6 +445,7 @@ The supported lisps are:
 
 - SBCL (default)
 - CLISP
+- ECL
 
 You can use any other lisp by passing a function which gets a filename, and returns a shell invocation that executes that file and then quits.
 
@@ -528,7 +529,6 @@ This is just my unofficial issue tracker.
 - An example showing fasl-only building, no binary
 - Don’t use `CL_SOURCE_REGISTRY` but use source map files?
 - Don’t clobber existing `CL_SOURCE_REGISTRY`
-- ECL
 - Check if `lispDerivation` is actually the best name for this function
 
 ## Comparison to `lisp-modules` in nixpkgs
