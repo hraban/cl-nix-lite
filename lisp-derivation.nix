@@ -22,17 +22,21 @@ with callPackage ./utils.nix {};
 
 let
   # Use strings to avoid interning keyword symbols and polluting the namespace
-  lisp-asdf-op = op: sys: ''(asdf:${op} "${sys}")'';
+  lispAsdfOp = { operation, system }: "(${operation} ${builtins.toJSON system})";
 
   # CLISP directly translates require calls to a filename, without case
   # conversion, and of course with CL being uppercase by default i.e. (require
   # :asdf) being (require :ASDF), whether that works or not depends on the case
   # sensitivity of your filesystem. Not ideal. So use a string here to ensure we
   # can find the (lowercase) asdf.lisp.
-  asdfOpScript = op: name: systems: pkgs.writeText "${op}-${name}.lisp" ''
-    (require "asdf")
-    ${b.concatStringsSep "\n" (map (lisp-asdf-op op) systems)}
-  '';
+  asdfOpScript = operation:
+    if b.isString operation
+    then asdfOpScript ([ operation ])
+    else name: system: pkgs.writeText "asdf-build-${name}.lisp" ''
+      (require "asdf")
+      ${b.concatStringsSep "\n"
+        (map lispAsdfOp (a.cartesianProductOfSets { inherit operation system; }))}
+    '';
 
   # Internal convention for lisp: a function which takes a file and returns a
   # shell invocation calling that file, then exiting. External API: same, but
@@ -99,14 +103,21 @@ rec {
     doCheck ? false,
 
     # Example:
-    # - lispBuildOp = "make",
-    # - lispBuildOp = "load-system",
-    # - lispBuildOp = "operate 'asdf:load-op",
-    # - lispBuildOp = "operate 'asdf:compile-bundle-op",
-    # - lispBuildOp = "operate 'asdf:monolithic-deliver-asd-op"
+    #
+    # - lispBuildOp = "asdf:make",
+    # - lispBuildOp = "asdf:load-system",
+    # - lispBuildOp = "asdf:operate 'asdf:load-op",
+    # - lispBuildOp = "asdf:operate 'asdf:compile-bundle-op",
+    # - lispBuildOp = "asdf:operate 'asdf:monolithic-deliver-asd-op"
+    #
     # If you control the source, though, you are much better off configuring the
     # defsystem in the .asd to do the right thing when called as ‘make’.
-    lispBuildOp ? "make",
+    # Finally, a list of strings indicates multiple ASDF operations to execute
+    # sequentially. The default is to call both ‘make’ (for compatibility with
+    # the defsystem’s :biuld-operation directive in the .asd file), and the
+    # 'asdf:lib-op operation (particularly for ECL to create a library .a file
+    # which can be loaded by future dependents).
+    lispBuildOp ? [ "asdf:make" "asdf:operate 'asdf:lib-op" ],
 
     # Extra directories to add to the ASDF search path for systems. Shouldn’t be
     # necessary—only use this to fix external packages you don’t control. For
@@ -384,7 +395,7 @@ rec {
         checkPhase = ''
           runHook preCheck
 
-          ${callLisp lisp (asdfOpScript "test-system" pname _lispOrigSystems)}
+          ${callLisp lisp (asdfOpScript "asdf:test-system" pname _lispOrigSystems)}
 
           runHook postCheck
         '';
