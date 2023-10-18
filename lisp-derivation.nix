@@ -67,6 +67,18 @@ let
       builtins.attrNames
       (map (d: import d))
     ];
+  # This is getting insane, and I’m sure I will come to regret this as it’s
+  # _way_ too much magic, but here goes: this is a heuristic, do-what-I-mean
+  # extraction of a sensible "derivation" from a "lisp" argument. Of course, if
+  # the passed lisp is an actual derivation like pkgs.sbcl: easy, that’s what it
+  # is.  But what if it’s a callback function, like (f: "${pkgs.sbcl}/bin/sbcl
+  # --some-options ... ${f}")? Well... there’s still the real sbcl hidden in
+  # there. Extract it through the string context (which could have multiple
+  # derivations but that’s crazy talk, so just choose the "first" one which is
+  # basically a random one).  Holy guacamole, this has to be a sign that my
+  # function callback API for passing lisps is just not a good API. But how
+  # else? 🥲 It’s so clean...
+  lispDrv = builtins.elemAt (lispDerivations lisp) 0;
 in
 
 rec {
@@ -299,14 +311,6 @@ rec {
       ];
       localizedArgs = a.mapAttrs (_: callIfFunc lispSystems') (optionalKeys stdArgs args);
 
-      # For dev shell only: a human readable comma-separated list of all
-      # dependency systems loaded by this derivation.
-      allDepsHumanReadable = pipe ancestry.deps [
-        (flatMap (d: d.lispSystems))
-        normaliseStrings
-        (s.concatStringsSep ", ")
-      ];
-
       # Secret arg to track how we were originally invoked by the end user. This
       # only matters for tests: for regular builds, you want to ‘make’
       # everything, but for tests you specifically really only want to test the
@@ -404,7 +408,13 @@ rec {
         # Put this one at the very end because we don’t override the
         # user-specified shellHook; we extend it, if it exists. So this is a
         # non-destructive operation.
-        shellHook = ''
+        shellHook = let
+          allDepsNames = pipe ancestry.deps [
+            (flatMap (d: d.lispSystems))
+            normaliseStrings
+          ];
+          allDepsHumanReadable = s.concatStringsSep ", " allDepsNames;
+        in ''
 eval "$setAsdfPathPhase"
 >&2 cat <<EOF
 Lisp dependencies available to ASDF: ${allDepsHumanReadable}.
@@ -412,9 +422,9 @@ Lisp dependencies available to ASDF: ${allDepsHumanReadable}.
 
 Example:
 
-    $ sbcl
-    > (require :asdf)
-    > (asdf:load-system :some-system)
+    $ ${lispDrv.pname or "your-lisp"}
+    > (require "asdf")${if allDepsNames != [] then "
+    > (asdf:load-system ${builtins.toJSON (builtins.head allDepsNames)})" else ""}
 
 The working directory's systems are also available, if any.
 EOF
@@ -456,38 +466,24 @@ EOF
 
   # Get a binary executable lisp which can load the given systems from ASDF
   # without any extra setup necessary.
-  lispWithSystems = systems: let
-    # This is getting insane, and I’m sure I will come to regret this as it’s
-    # _way_ too much magic, but here goes: this is a heuristic, do-what-I-mean
-    # extraction of a sensible "derivation" from a "lisp" argument. Of course,
-    # if the passed lisp is an actual derivation like pkgs.sbcl: easy, that’s
-    # what it is.  But what if it’s a callback function, like (f:
-    # "${pkgs.sbcl}/bin/sbcl --some-options ... ${f}")? Well... there’s still
-    # the real sbcl hidden in there. Extract it through the string context
-    # (which could have multiple derivations but that’s crazy talk, so just
-    # choose the "first" one which is basically a random one).  Holy guacamole,
-    # this has to be a sign that my function callback API for passing lisps is
-    # just not a good API. But how else? 🥲 It’s so clean...
-    lispDrv = builtins.elemAt (lispDerivations lisp) 0;
-  in
-    lispDerivation {
-      inherit (lispDrv) name;
-      lispSystem = "";
-      nativeBuildInputs = [ pkgs.makeBinaryWrapper ];
-      src = pkgs.writeText "mock" "source";
-      dontUnpack = true;
-      dontBuild = true;
-      lispDependencies = systems;
-      # This wrapper is necessary because Nix is just a build environment that
-      # delivers executables. Once the binary is built, Nix doesn’t control its
-      # environment when it is started--it’s a regular binary. Meaning: we can’t
-      # somehow set these envvars in some config, like you could do with
-      # e.g. Docker. To set envvars on a binary /at runtime/, you must create a
-      # wrapper that does this. Enter ‘makeWrapper’ et al.
-      # N.B.: The final wrapper is a bash script which isn’t ideal for startup
-      # speed. This is a good argument for using asdf registry configuration files
-      # rather than a big baked envvar.
-      installPhase = ''
+  lispWithSystems = systems: lispDerivation {
+    inherit (lispDrv) name;
+    lispSystem = "";
+    nativeBuildInputs = [ pkgs.makeBinaryWrapper ];
+    src = pkgs.writeText "mock" "source";
+    dontUnpack = true;
+    dontBuild = true;
+    lispDependencies = systems;
+    # This wrapper is necessary because Nix is just a build environment that
+    # delivers executables. Once the binary is built, Nix doesn’t control its
+    # environment when it is started--it’s a regular binary. Meaning: we can’t
+    # somehow set these envvars in some config, like you could do with
+    # e.g. Docker. To set envvars on a binary /at runtime/, you must create a
+    # wrapper that does this. Enter ‘makeWrapper’ et al.  N.B.: The final
+    # wrapper is a bash script which isn’t ideal for startup speed. This is a
+    # good argument for using asdf registry configuration files rather than a
+    # big baked envvar.
+    installPhase = ''
         mkdir -p $out/bin
         for f in ${lispDrv}/bin/*; do
           if [[ -x "$f" && -f "$f" ]]; then
@@ -499,5 +495,5 @@ EOF
           fi
         done
       '';
-    };
+  };
 }

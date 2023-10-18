@@ -5,7 +5,7 @@ Create a “wrapped” SBCL derivation which is a drop-in replacement for regula
 ```
 $ nix-build
 $ ./result/bin/sbcl --no-userinit
-> (require :asdf)
+> (require "asdf")
 > (asdf:load-system "alexandria")
 ```
 

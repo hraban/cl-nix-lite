@@ -41,8 +41,8 @@
 
 (defvar src "builtins.fetchTarball \"https://github.com/hraban/cl-nix-lite/archive/master.tar.gz\"")
 
-(require "ASDF")
-(require "UIOP")
+(require "asdf")
+(require "uiop")
 
 (defun run (cmd)
   (uiop:run-program cmd

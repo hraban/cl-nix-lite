@@ -32,9 +32,9 @@ SBCL is free software, provided as is, with absolutely no warranty.
 It is mostly in the public domain; some portions are provided under
 BSD-style licenses.  See the CREDITS and COPYING files in the
 distribution for more information.
-* (require :asdf)
+* (require "asdf")
 ("ASDF" "asdf" "UIOP" "uiop")
-* (asdf:load-system :alexandria)
+* (asdf:load-system "alexandria")
 T
 * (alexandria:iota 10)
 (0 1 2 3 4 5 6 7 8 9)

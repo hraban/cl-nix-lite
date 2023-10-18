@@ -13,8 +13,8 @@ Now you can run SBCL with arrow-macros on the ASDF path, plus all its dependenci
 
 ```
 sbcl --script <<EOF
-(require :asdf)
-(asdf:load-system :alexandria)
+(require "asdf")
+(asdf:load-system "alexandria")
 (print (alexandria:iota 3))
 EOF
 ```
