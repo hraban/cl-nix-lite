@@ -17,7 +17,6 @@
               lispSystem = "flake-app";
               lispDependencies = [
                 alexandria
-                asdf
                 arrow-macros
               ];
               src = pkgs.lib.cleanSource ./.;
