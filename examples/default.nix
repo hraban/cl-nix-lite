@@ -46,11 +46,16 @@ let
     ./flakes/make-binary
     ./flakes/override-input
   ];
-  flakeToDeriv = f: (builtins.getFlake (builtins.toString f)).packages.${builtins.currentSystem}.default;
+  flakeToDerivs = f: pipe f [
+    builtins.toString
+    builtins.getFlake
+    (x: x.packages.${builtins.currentSystem})
+    builtins.attrValues
+  ];
 in
 # Outputting a list of all derivations (instead of e.g. a mock wrapper
 # derivation) allows me to later filter this down to only derivations that need
 # to be /built/, on CI. That allows you to exclude anything that already exists
 # on cache. This is useful because otherwise it will redownload everything, just
 # to throw it away immediately again.
-flatten channelTests ++ (map flakeToDeriv flakeTests)
+flatten channelTests ++ (map flakeToDerivs flakeTests)
