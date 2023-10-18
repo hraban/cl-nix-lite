@@ -263,7 +263,17 @@ rec {
       # target. Not sure if this is the ideal way to “build” this package.
       # Note: Technically this will always be required because cffi-grovel
       # depends on cffi bare, but it’s a good litmus test for the system.
-      nativeBuildInputs = [ pkgs.pkg-config pkgs.gcc ];
+      nativeBuildInputs = with pkgs; [
+        pkg-config
+        gcc
+      ];
+      propagatedBuildInputs = with pkgs; l.optionals stdenv.isDarwin [
+        # On Darwin, osicat needed access to the libtool package. I have a
+        # feeling that’s because of CFFI, and CFFI should provide it, but
+        # honestly I don’t know if this is the right place. Maybe I should just
+        # make osicat define this as a nativeBuildInput?
+        pkgs.xcbuild
+      ];
       buildInputs = systems: l.optionals (b.elem "cffi" systems) [ pkgs.libffi ];
       # This is broken on Darwin because libcffi rewrites the import path in a
       # way that’s incompatible with pkgconfig. It should be "if darwin AND (not
