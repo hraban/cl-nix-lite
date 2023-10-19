@@ -466,9 +466,10 @@ in
 
 The supported lisps are:
 
-- SBCL (default)
+- ABCL
 - CLISP
 - ECL
+- SBCL (default)
 
 You can use any other lisp by passing a function which gets a filename, and returns a shell invocation that executes that file and then quits.
 
@@ -484,6 +485,8 @@ in
 
 ...
 ```
+
+Different lisps have different levels of support.  Most of this is best effort.
 
 ### Modern ASDF
 

@@ -247,9 +247,19 @@ rec {
         deriv = lisp;
         name = getName lisp;
         call = {
-          sbcl = file: ''"${lisp}/bin/sbcl" --script "${file}"'';
+          abcl = file: ''"${lisp}/bin/abcl" --batch --noinform --noinit --nosystem --load "${wrapAbclToplevel file}"'';
           clisp = file: ''"${lisp}/bin/clisp" -E UTF-8 -norc "${file}"'';
           ecl = file: ''"${lisp}/bin/ecl" --shell "${file}"'';
+          sbcl = file: ''"${lisp}/bin/sbcl" --script "${file}"'';
         }.${name};
       };
+
+  # ABCL doesn’t support running scripts with debugger disabled and "exit
+  # non-zero on any error" mode.
+  wrapAbclToplevel = file: pkgs.writeText "abcl-wrapper.lisp" ''
+    (handler-case (load #p"${file}")
+      (error (e)
+        (format *error-output* "~A~%" e)
+        (ext:quit :status 1)))
+  '';
 }

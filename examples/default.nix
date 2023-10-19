@@ -11,7 +11,7 @@ with pkgs.lib;
 
 let
   pkgs' = pkgs.extend (import cl-nix-lite);
-  lisps = with pkgs'; [ sbcl clisp ecl ];
+  lisps = with pkgs'; [ abcl clisp ecl sbcl ];
   # Massage a test input into a list of derivations (for later flattening)
   allInputs = input:
     if isDerivation input
