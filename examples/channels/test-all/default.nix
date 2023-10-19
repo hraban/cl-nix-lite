@@ -46,7 +46,8 @@
   "mgl-pax"
 ] ++ pkgs.lib.optionals pkgs.hostPlatform.isDarwin [
   "flexi-streams"
-] ++ pkgs.lib.optionals pkgs.hostPlatform.isLinux [
+] ++ pkgs.lib.optionals (pkgs.hostPlatform.isLinux || (lisp.pname or "" == "abcl")) [
+  # Hangs forever on ABCL
   "usocket"
 ] ++ pkgs.lib.optionals (lisp.pname or "" == "clisp") [
   "float-features" # *** - APPLY: too few arguments given to FIND

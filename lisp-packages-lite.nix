@@ -62,7 +62,7 @@ rec {
       lispCheckDependencies = [ parachute ];
       src = inputs."3d-math";
       lispSystem = "3d-math";
-      # Compiling this on CLISP hangs forever.
+      # Compiling this on CLISP and ABCL hangs forever.
       # On ECL:
       # * The declaration (DECLARE (FTYPE (FUNCTION ((OR IVEC4 DVEC4 VEC4 IVEC3 DVEC3 VEC3 IVEC2 DVEC2 VEC2)) (VALUES (OR I32 F64 F32) &OPTIONAL)) VX)) was found in a bad place.
       meta.broken = b.elem lispName [ "clisp" "ecl" ];
@@ -302,10 +302,12 @@ rec {
           (builtins.readFile ./cffi-setup-hook.sh ))
         else ./cffi-setup-hook.sh
       )];
-      # CFFI requires CLISP compiled with dynamic FFI support, which only
-      # enabled on Linux
       meta = systems: a.optionalAttrs (b.elem "cffi" systems) {
-        broken = ! (lispName == "clisp" -> pkgs.stdenv.isLinux);
+        # CFFI requires CLISP compiled with dynamic FFI support, which only
+        # enabled on Linux. And it’s supposed to work with ABCL but I don’t know
+        # how, so I’m marking this broken for now.
+        broken = ! (lispName == "clisp" -> pkgs.stdenv.isLinux) ||
+                 lispName == "abcl";
       };
     }) cffi cffi-grovel;
 
