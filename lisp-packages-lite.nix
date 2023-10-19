@@ -421,6 +421,19 @@ rec {
 
       systems = {
         cl-async = {
+          # ECL wants an archive file (.a) for every dependent /system/ (not
+          # just source derivation) when it creates a binary for an
+          # application. Since cl-async has this cl-async-base system
+          # internally, if it doesn’t exist ECL will create a cl-async-base.a
+          # file at build time of a dependent system, which obviously leads to a
+          # nix store read-only violation. What I hate about this: it’s a
+          # violation of the entire cl-nix-lite premise of “you don’t have to
+          # declare internal systems, just external ones”, only for the sake of
+          # ECL. Am I going to have to do this for every package now? I’m not
+          # looking forward to it. On the other hand: who cares? As always, I’ll
+          # just fix it here for now and see where this takes me further down
+          # the road. - hraban 2023-10
+          lispSystems = [ "cl-async" "cl-async-base" "cl-async-util" ];
           lispDependencies = [
             babel
             bordeaux-threads
