@@ -64,6 +64,7 @@ let
         deriv = lisp;
         name = getName lisp;
         call = {
+          abcl = file: ''"${lisp}/bin/abcl" --batch --noinform --noinit --nosystem --load "${file}"'';
           sbcl = file: ''"${lisp}/bin/sbcl" --script "${file}"'';
           clisp = file: ''"${lisp}/bin/clisp" -E UTF-8 -norc "${file}"'';
           ecl = file: ''"${lisp}/bin/ecl" --shell "${file}"'';
