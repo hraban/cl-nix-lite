@@ -25,11 +25,12 @@ let
   channelTestPaths = lisp: [
     ./channels/all-packages
     ./channels/all-packages-wrapped
-    ./channels/external-dependency
-    ./channels/hello-binary
     ./channels/lisp-script
     ./channels/override-package
-  ] ++ optionals (lisp.pname or "" != "clisp") [
+  ] ++ optionals (lisp.pname != "abcl") [
+    ./channels/external-dependency
+    ./channels/hello-binary
+  ] ++ optionals (! (builtins.elem lisp.pname [ "abcl" "clisp" ])) [
     ./channels/with-cffi
   ];
   channelTestsFor = lisp:
