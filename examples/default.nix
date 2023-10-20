@@ -32,7 +32,10 @@ let
   ];
   channelTestsFor = lisp:
     let
-      callPackage = pkgs'.lib.callPackageWith { inherit lisp; };
+      callPackage = pkgs'.lib.callPackageWith {
+        pkgs = pkgs';
+        inherit lisp;
+      };
     in
       map
         (p: allInputs (callPackage p { }))
