@@ -60,7 +60,9 @@ rec {
       src = inputs."3d-math";
       lispSystem = "3d-math";
       # Compiling this on CLISP hangs forever.
-      meta.broken = lispName == "clisp";
+      # On ECL:
+      # * The declaration (DECLARE (FTYPE (FUNCTION ((OR IVEC4 DVEC4 VEC4 IVEC3 DVEC3 VEC3 IVEC2 DVEC2 VEC2)) (VALUES (OR I32 F64 F32) &OPTIONAL)) VX)) was found in a bad place.
+      meta.broken = b.elem lispName [ "clisp" "ecl" ];
     };
 
     "3d-vectors" = lispDerivation {
@@ -419,6 +421,19 @@ rec {
 
       systems = {
         cl-async = {
+          # ECL wants an archive file (.a) for every dependent /system/ (not
+          # just source derivation) when it creates a binary for an
+          # application. Since cl-async has this cl-async-base system
+          # internally, if it doesn’t exist ECL will create a cl-async-base.a
+          # file at build time of a dependent system, which obviously leads to a
+          # nix store read-only violation. What I hate about this: it’s a
+          # violation of the entire cl-nix-lite premise of “you don’t have to
+          # declare internal systems, just external ones”, only for the sake of
+          # ECL. Am I going to have to do this for every package now? I’m not
+          # looking forward to it. On the other hand: who cares? As always, I’ll
+          # just fix it here for now and see where this takes me further down
+          # the road. - hraban 2023-10
+          lispSystems = [ "cl-async" "cl-async-base" "cl-async-util" ];
           lispDependencies = [
             babel
             bordeaux-threads
@@ -814,8 +829,13 @@ rec {
           ];
         };
       };
+      # CLISP:
       # *** - The function get-structure is not yet implemented for CLISP 2.49.92
-      meta.broken = lispName == "clisp";
+      # ECL:
+      # ;;; The function get-structure is not yet implemented for ECL 21.2.1 on arm64.
+      meta = systems: a.optionalAttrs (b.elem "cl-variates/with-metacopy" systems) {
+        broken = b.elem lispName [ "clisp" "ecl" ];
+      };
     }) cl-variates "cl-variates/with-metacopy";
 
     cl-who = lispDerivation {
@@ -1052,6 +1072,8 @@ rec {
       lispSystems = [ "docs-builder" "docs-config" ];
       src = inputs.docs-builder;
       lispDependencies = [ log4cl self."40ants-doc" ];
+      # Requires a modern version of ASDF
+      meta.broken = lispName == "ecl";
     };
 
     documentation-utils = lispDerivation {
@@ -1811,6 +1833,10 @@ rec {
       src = inputs.nclasses;
       lispCheckDependencies = [ lisp-unit2 ];
       lispSystem = "nclasses";
+      # Requires a new version of ASDF that I’m not sure how to load before
+      # building the code. See
+      # "https://gitlab.common-lisp.net/asdf/asdf/-/issues/145".
+      meta.broken = lispName == "ecl";
     };
 
     inherit (lispMultiDerivation {
@@ -2304,7 +2330,12 @@ rec {
       lispCheckDependencies = [ lift ];
     };
 
-    trivial-sockets = lispify "trivial-sockets" [ ];
+    trivial-sockets = lispDerivation {
+      lispSystem = "trivial-sockets";
+      src = inputs.trivial-sockets;
+      # Supported lisps: sbcl cmu clisp acl openmcl lispworks abcl mcl
+      meta.broken = lispName == "ecl";
+    };
 
     trivial-timeout = lispDerivation {
       lispSystem = "trivial-timeout";
@@ -2360,7 +2391,7 @@ rec {
       preCheck = ''
         export CL_SOURCE_REGISTRY="$PWD/code/test-suite:$CL_SOURCE_REGISTRY"
       '';
-      meta.broken = lispName == "clisp";
+      meta.broken = b.elem lispName [ "ecl" "clisp" ];
     };
 
     unit-test = lispify "unit-test" [ ];
@@ -2395,8 +2426,8 @@ rec {
       src = inputs.wild-package-inferred-system;
       # Clisp packages ASDF v3.2, WPI requires ≥3.3, this is the easiest way to
       # remedy that. Of course you can byo-ASDF, at which point you can just
-      # .overrideAttrs this flag back to false.
-      meta.broken = lispName == "clisp";
+      # .overrideAttrs this flag back to false. Same for ECL.
+      meta.broken = b.elem lispName ["clisp" "ecl"];
     };
 
     with-output-to-stream = lispDerivation {

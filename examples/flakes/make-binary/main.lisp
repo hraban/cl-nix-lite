@@ -15,13 +15,12 @@
 (uiop:define-package #:flake-app
   (:nicknames #:flake-app/main)
   (:use #:cl #:arrow-macros)
-  (:local-nicknames (#:alex #:alexandria))
-  (:import-from #:alexandria)
+  (:import-from #:alexandria #:proper-list-p)
   (:export #:main))
 
 (in-package #:flake-app/main)
 
 (defun main (&rest args)
   (->> '(1 2 3)
-       alex:proper-list-p
+       proper-list-p
        (format T "Hello from flakes: ~A~%")))

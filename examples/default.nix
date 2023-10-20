@@ -12,7 +12,7 @@ with pkgs.lib;
 let
   pkgs' = pkgs.extend (import cl-nix-lite);
   sbcl = f: "${pkgs'.sbcl}/bin/sbcl --dynamic-space-size 4000 --script ${f}";
-  lisps = [ sbcl pkgs'.clisp ];
+  lisps = [ sbcl pkgs'.clisp pkgs'.ecl ];
   # Massage a test input into a list of derivations (for later flattening)
   allInputs = input:
     if isDerivation input
@@ -46,11 +46,16 @@ let
     ./flakes/make-binary
     ./flakes/override-input
   ];
-  flakeToDeriv = f: (builtins.getFlake (builtins.toString f)).packages.${builtins.currentSystem}.default;
+  flakeToDerivs = f: pipe f [
+    builtins.toString
+    builtins.getFlake
+    (x: x.packages.${builtins.currentSystem})
+    builtins.attrValues
+  ];
 in
 # Outputting a list of all derivations (instead of e.g. a mock wrapper
 # derivation) allows me to later filter this down to only derivations that need
 # to be /built/, on CI. That allows you to exclude anything that already exists
 # on cache. This is useful because otherwise it will redownload everything, just
 # to throw it away immediately again.
-flatten channelTests ++ (map flakeToDeriv flakeTests)
+flatten channelTests ++ (map flakeToDerivs flakeTests)
