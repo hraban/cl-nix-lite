@@ -35,6 +35,7 @@ rec {
           lispSystem = name; # convention
           src = inputs.${name};
         };
+      lispName = (lisp.pname or "");
     in {
     inherit lispDerivation lispMultiDerivation lispWithSystems;
 
@@ -58,6 +59,8 @@ rec {
       lispCheckDependencies = [ parachute ];
       src = inputs."3d-math";
       lispSystem = "3d-math";
+      # Compiling this on CLISP hangs forever.
+      meta.broken = lispName == "clisp";
     };
 
     "3d-vectors" = lispDerivation {
@@ -161,6 +164,8 @@ rec {
           lispDependencies = [ arnesi swank ];
         };
       };
+      # #<PACKAGE CHARSET> has no external symbol with name "UTF-16"
+      meta.broken = lispName == "clisp";
     }) arnesi arnesi-cl-ppcre-extras arnesi-slime-extras;
 
     array-utils = lispDerivation {
@@ -198,6 +203,8 @@ rec {
       src = inputs.atomics;
       lispDependencies = [ documentation-utils ];
       lispCheckDependencies = [ parachute ];
+      # CLISP is not supported by the Atomics library.
+      meta.broken = lispName == "clisp";
     };
 
     inherit (lispMultiDerivation {
@@ -233,6 +240,7 @@ rec {
       buildInputs = [ pkgs.libuv ];
       lispSystem = "bordeaux-threads";
       src = inputs.bordeaux-threads;
+      meta.broken = lispName == "clisp";
     };
 
     inherit (lispMultiDerivation rec {
@@ -289,6 +297,11 @@ rec {
           (builtins.readFile ./cffi-setup-hook.sh ))
         else ./cffi-setup-hook.sh
       )];
+      # CFFI requires CLISP compiled with dynamic FFI support, which only
+      # enabled on Linux
+      meta = systems: a.optionalAttrs (b.elem "cffi" systems) {
+        broken = ! (lispName == "clisp" -> pkgs.stdenv.isLinux);
+      };
     }) cffi cffi-grovel;
 
     calispel = lispDerivation {
@@ -801,6 +814,8 @@ rec {
           ];
         };
       };
+      # *** - The function get-structure is not yet implemented for CLISP 2.49.92
+      meta.broken = lispName == "clisp";
     }) cl-variates "cl-variates/with-metacopy";
 
     cl-who = lispDerivation {
@@ -1004,7 +1019,7 @@ rec {
     dissect = lispDerivation {
       lispSystem = "dissect";
       src = inputs.dissect;
-      lispDependencies = l.optional ((lisp.pname or "") == "clisp") cl-ppcre;
+      lispDependencies = l.optional (lispName == "clisp") cl-ppcre;
     };
 
     djula = lispDerivation {
@@ -1272,6 +1287,8 @@ rec {
       src = inputs.history-tree;
       lispCheckDependencies = [ lisp-unit2 ];
       lispSystem = "history-tree";
+      # *** - EVAL: undefined function EXT::ADD-PACKAGE-LOCAL-NICKNAME
+      meta.broken = lispName == "clisp";
     };
 
     http-body = lispDerivation {
@@ -1541,6 +1558,10 @@ rec {
       lispSystems = [ "lass" "binary-lass" ];
       lispDependencies = [ trivial-indent trivial-mimes cl-base64 ];
       src = inputs.lass;
+      # This is kind of ridiculous, but there’s a file here called asdf.lisp
+      # which trips up clisp: ‘(require "asdf")’ loads that file, rather than
+      # actual asdf. Who’s at fault here?
+      meta.broken = lispName == "clisp";
     };
 
     legion = lispDerivation {
@@ -1562,7 +1583,17 @@ rec {
       src = inputs.let-plus;
     };
 
-    lift = lispify "lift" [ ];
+    lift = lispDerivation {
+      lispSystem = "lift";
+      src = inputs.lift;
+      # There is a bug in lift which causes some silly pathname, ‘mkdir -p’
+      # style problem. Setting the broken flag here is the easiest way to
+      # disable all lift tests on clisp for now.  The bug looks like this:
+      #
+      #  > *** - PROBE-FILE: No file name given:
+      #  >       #P"/private/tmp/nix-build-system-metatilities-base.drv-1/source/test-results-2023-10-16-1/
+      meta.broken = lispName == "clisp";
+    };
 
     lisp-namespace = lispDerivation {
       lispSystem = "lisp-namespace";
@@ -2091,6 +2122,7 @@ rec {
       src = inputs.static-vectors;
       lispDependencies = [ alexandria cffi cffi-grovel ];
       lispCheckDependencies = [ fiveam ];
+      meta.broken = lispName == "clisp";
     };
 
     stefil = lispify "stefil" [
@@ -2328,6 +2360,7 @@ rec {
       preCheck = ''
         export CL_SOURCE_REGISTRY="$PWD/code/test-suite:$CL_SOURCE_REGISTRY"
       '';
+      meta.broken = lispName == "clisp";
     };
 
     unit-test = lispify "unit-test" [ ];
@@ -2360,6 +2393,10 @@ rec {
       lispCheckDependencies = [ fiveam ];
       lispSystem = "wild-package-inferred-system";
       src = inputs.wild-package-inferred-system;
+      # Clisp packages ASDF v3.2, WPI requires ≥3.3, this is the easiest way to
+      # remedy that. Of course you can byo-ASDF, at which point you can just
+      # .overrideAttrs this flag back to false.
+      meta.broken = lispName == "clisp";
     };
 
     with-output-to-stream = lispDerivation {

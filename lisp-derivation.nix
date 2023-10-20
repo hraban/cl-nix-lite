@@ -49,6 +49,7 @@ let
       assert isDerivation lisp;
       {
         sbcl = file: ''"${lisp}/bin/sbcl" --script "${file}"'';
+        clisp = file: ''"${lisp}/bin/clisp" -E UTF-8 -norc "${file}"'';
         ecl = file: ''"${lisp}/bin/ecl" --shell "${file}"'';
       }.${lisp.pname};
 
