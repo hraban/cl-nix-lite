@@ -3,9 +3,10 @@
 , pkgs ? import <nixpkgs> { overlays = [ (import cl-nix-lite) ]; }
 }:
 
-with pkgs.lispPackagesLite; lispDerivation {
-  src = pkgs.lib.cleanSource ./.;
-  lispSystem = "dev";
-  lispDependencies = [ arrow-macros ];
-  buildInputs = [ pkgs.sbcl ];
+with pkgs.lispPackagesLite;
+
+pkgs.mkShell {
+  inputsFrom = [
+    (lispWithSystems [ arrow-macros ])
+  ];
 }
