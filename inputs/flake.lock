@@ -128,6 +128,21 @@
         "type": "github"
       }
     },
+    "adopt": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-2ievss/B4a3uuBNWssxSKbEjfZbFjpd2VSN91lMsvdk=",
+        "ref": "default",
+        "rev": "c009c39c567250743d6359d7d2e4cb649226714c",
+        "revCount": 52,
+        "type": "hg",
+        "url": "https://hg.stevelosh.com/adopt"
+      },
+      "original": {
+        "type": "hg",
+        "url": "https://hg.stevelosh.com/adopt"
+      }
+    },
     "alexandria": {
       "flake": false,
       "locked": {
@@ -354,6 +369,21 @@
         "owner": "orthecreedence",
         "repo": "blackbird",
         "type": "github"
+      }
+    },
+    "bobbin": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-1coatl8PUpAbLXK30x1xGjNaVi6A/MVU4d3uxRA/nAo=",
+        "ref": "default",
+        "rev": "856fc364e2b012063b597ea7bdafab78525ce174",
+        "revCount": 16,
+        "type": "hg",
+        "url": "https://hg.stevelosh.com/bobbin"
+      },
+      "original": {
+        "type": "hg",
+        "url": "https://hg.stevelosh.com/bobbin"
       }
     },
     "bordeaux-threads": {
@@ -1026,6 +1056,42 @@
         "type": "github"
       }
     },
+    "cl-tar": {
+      "flake": false,
+      "locked": {
+        "host": "gitlab.common-lisp.net",
+        "lastModified": 1644357707,
+        "narHash": "sha256-jlKNGaLZEtzX7ifY0FCZtiiaSjE/urhiS0iZODQb4nI=",
+        "owner": "cl-tar",
+        "repo": "cl-tar",
+        "rev": "7c6e07a10c93d9e311f087b5f6328cddd481669a",
+        "type": "gitlab"
+      },
+      "original": {
+        "host": "gitlab.common-lisp.net",
+        "owner": "cl-tar",
+        "repo": "cl-tar",
+        "type": "gitlab"
+      }
+    },
+    "cl-tar-file": {
+      "flake": false,
+      "locked": {
+        "host": "gitlab.common-lisp.net",
+        "lastModified": 1644359981,
+        "narHash": "sha256-fmvRcB80f47Hubywmfqlc2gCNTIMSHwJIx63N10BEkU=",
+        "owner": "cl-tar",
+        "repo": "cl-tar-file",
+        "rev": "0c10bc82f14702c97a26dc25ce075b5d3a2347d1",
+        "type": "gitlab"
+      },
+      "original": {
+        "host": "gitlab.common-lisp.net",
+        "owner": "cl-tar",
+        "repo": "cl-tar-file",
+        "type": "gitlab"
+      }
+    },
     "cl-tld": {
       "flake": false,
       "locked": {
@@ -1359,6 +1425,22 @@
         "owner": "pmai",
         "ref": "pull/4/head",
         "repo": "Deflate",
+        "type": "github"
+      }
+    },
+    "deptree": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1693398398,
+        "narHash": "sha256-j7MOyxhZhHOcqC3tDtAENBsqMr4vvzWonmq5AcRc3lk=",
+        "owner": "varjagg",
+        "repo": "deptree",
+        "rev": "134734f8a8e00f3a1d7fce49e88f8529a68d9a39",
+        "type": "github"
+      },
+      "original": {
+        "owner": "varjagg",
+        "repo": "deptree",
         "type": "github"
       }
     },
@@ -3039,6 +3121,7 @@
         "40ants-doc": "40ants-doc",
         "access": "access",
         "acclimation": "acclimation",
+        "adopt": "adopt",
         "alexandria": "alexandria",
         "alien-ring": "alien-ring",
         "anaphora": "anaphora",
@@ -3053,6 +3136,7 @@
         "atomics": "atomics",
         "babel": "babel",
         "blackbird": "blackbird",
+        "bobbin": "bobbin",
         "bordeaux-threads": "bordeaux-threads",
         "bordeaux-threads-v1": "bordeaux-threads-v1",
         "calispel": "calispel",
@@ -3095,6 +3179,8 @@
         "cl-speedy-queue": "cl-speedy-queue",
         "cl-strings": "cl-strings",
         "cl-syntax": "cl-syntax",
+        "cl-tar": "cl-tar",
+        "cl-tar-file": "cl-tar-file",
         "cl-tld": "cl-tld",
         "cl-tls": "cl-tls",
         "cl-unicode": "cl-unicode",
@@ -3116,6 +3202,7 @@
         "contextl": "contextl",
         "data-lens": "data-lens",
         "deflate": "deflate",
+        "deptree": "deptree",
         "dexador": "dexador",
         "dissect": "dissect",
         "djula": "djula",

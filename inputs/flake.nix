@@ -89,6 +89,10 @@
       url = "github:robert-strandh/Acclimation";
       flake = false;
     };
+    adopt = {
+      url = "hg+https://hg.stevelosh.com/adopt";
+      flake = false;
+    };
     alexandria = {
       url = "gitlab:alexandria/alexandria?host=gitlab.common-lisp.net";
       flake = false;
@@ -143,6 +147,10 @@
     };
     blackbird = {
       url = "github:orthecreedence/blackbird";
+      flake = false;
+    };
+    bobbin = {
+      url = "hg+https://hg.stevelosh.com/bobbin";
       flake = false;
     };
     bordeaux-threads = {
@@ -321,6 +329,14 @@
       url = "github:m2ym/cl-syntax";
       flake = false;
     };
+    cl-tar = {
+      url = "gitlab:cl-tar/cl-tar?host=gitlab.common-lisp.net";
+      flake = false;
+    };
+    cl-tar-file = {
+      url = "gitlab:cl-tar/cl-tar-file?host=gitlab.common-lisp.net";
+      flake = false;
+    };
     cl-tld = {
       url = "github:1u4nx/cl-tld";
       flake = false;
@@ -405,6 +421,10 @@
     };
     deflate = {
       url = "github:pmai/Deflate/pull/4/head"; # https://github.com/pmai/Deflate/issues/3
+      flake = false;
+    };
+    deptree = {
+      url = "github:varjagg/deptree";
       flake = false;
     };
     dexador = {

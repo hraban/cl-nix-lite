@@ -135,6 +135,13 @@ rec {
 
     acclimation = lispify "acclimation" [];
 
+    adopt = lispDerivation {
+      lispSystem = "adopt";
+      lispDependencies = [ bobbin split-sequence ];
+      lispCheckDependencies = [ self."1am" ];
+      src = inputs.adopt;
+    };
+
     alexandria = lispDerivation {
       lispSystem = "alexandria";
       src = inputs.alexandria;
@@ -232,6 +239,13 @@ rec {
       src = inputs.blackbird;
       lispDependencies = [ vom ];
       lispCheckDependencies = [ cl-async fiveam ];
+    };
+
+    bobbin = lispDerivation {
+      lispSystem = "bobbin";
+      src = inputs.bobbin;
+      lispDependencies = [ split-sequence ];
+      lispCheckDependencies = [ self."1am" ];
     };
 
     bordeaux-threads = lispDerivation rec {
@@ -1011,6 +1025,8 @@ rec {
     }) dbi;
 
     deflate = lispify "deflate" [];
+
+    deptree = lispify "deptree" [ self.tar ];
 
     dexador = lispDerivation {
       lispSystem = "dexador";
@@ -2199,6 +2215,37 @@ rec {
       lispSystem = "symbol-munger";
       lispDependencies = [ alexandria iterate ];
       lispCheckDependencies = [ lisp-unit2 ];
+    };
+
+    tar = lispDerivation {
+      lispSystems = [ "tar" "tar/create" ];
+      src = inputs.cl-tar;
+      lispDependencies = [
+        alexandria
+        babel
+        local-time
+        split-sequence
+        self."40ants-doc"
+        tar-file
+        # tar/create
+        osicat
+      ];
+      lispCheckDependencies = [ parachute ];
+    };
+
+    tar-file = lispDerivation {
+      lispSystem = "tar-file";
+      src = inputs.cl-tar-file;
+      lispDependencies = [
+        alexandria
+        babel
+        trivial-gray-streams
+        self."40ants-doc"
+        salza2
+        chipz
+        flexi-streams
+      ];
+      lispCheckDependencies = [ parachute ];
     };
 
     tmpdir = lispify "tmpdir" [ cl-fad ];
