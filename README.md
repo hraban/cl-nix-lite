@@ -446,6 +446,7 @@ The supported lisps are:
 - SBCL (default)
 - CLISP
 - ECL
+- ABCL (experimental)
 
 You can use any other lisp by passing a function which gets a filename, and returns a shell invocation that executes that file and then quits.
 
@@ -461,6 +462,8 @@ in
 
 ...
 ```
+
+ABCL support is experimental; I’ve merged in what I could but I would love to hear any feedback from actual users familiar with ABCL how this is working out for you.
 
 ### Modern ASDF
 
