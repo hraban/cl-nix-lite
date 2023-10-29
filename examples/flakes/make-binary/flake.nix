@@ -42,8 +42,8 @@
                 license = pkgs.lib.licenses.agpl3Only;
               };
             };
-            # This uses ECL
-            ecl = with pkgs.lispPackagesLiteFor pkgs.ecl; lispDerivation {
+            # This uses ABCL
+            abcl = with pkgs.lispPackagesLiteFor pkgs.abcl; lispDerivation {
               name = "flake-app";
               lispSystem = "flake-app";
               lispDependencies = [
