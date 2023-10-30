@@ -23,6 +23,9 @@ with {
 
 rec {
   lispPackagesLite = lispPackagesLiteFor pkgs.sbcl; # The King ❤️
+  # The lisp is a function which takes a file and returns a shell invocation
+  # calling that file, then exiting. Or just a derivation of a known Lisp,
+  # e.g. lisp = pkgs.sbcl.
   lispPackagesLiteFor = lisp: lib.recurseIntoAttrs (lib.makeScope pkgs.newScope (self:
     with self;
     with callPackage ./utils.nix {};
