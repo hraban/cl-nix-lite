@@ -119,11 +119,12 @@ rec {
     # If you control the source, though, you are much better off configuring the
     # defsystem in the .asd to do the right thing when called as ‘make’.
     # Finally, a list of strings indicates multiple ASDF operations to execute
-    # sequentially. The default is to call both ‘make’ (for compatibility with
-    # the defsystem’s :biuld-operation directive in the .asd file), and the
-    # 'asdf:lib-op operation (particularly for ECL to create a library .a file
-    # which can be loaded by future dependents).
-    lispBuildOp ? [ "asdf:make" "asdf:operate 'asdf:lib-op" ],
+    # sequentially. The default is to call ‘make’ (for compatibility with the
+    # defsystem’s :build-operation directive in the .asd file), and additionally
+    # the 'asdf:lib-op operation on ECL (particularly for ECL to create a
+    # library .a file which can be loaded by future dependents).
+    lispBuildOp ? ([ "asdf:make" ] ++
+                   optionals (lisp'.name == "ecl") [ "asdf:operate 'asdf:lib-op" ]),
 
     # Extra directories to add to the ASDF search path for systems. Shouldn’t be
     # necessary—only use this to fix external packages you don’t control. For
