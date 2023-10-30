@@ -434,7 +434,7 @@ Lisp dependencies available to ASDF: ${allDepsHumanReadable}.
 
 Example:
 
-    $ ${lispDrv.pname or "your-lisp"}
+    $ ${getName lispDrv}
     > (require "asdf")${if allDepsNames != [] then "
     > (asdf:load-system ${builtins.toJSON (builtins.head allDepsNames)})" else ""}
 
