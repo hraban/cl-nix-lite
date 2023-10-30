@@ -37,6 +37,15 @@ let
       ${b.concatStringsSep "\n"
         (map lispAsdfOp (a.cartesianProductOfSets { inherit operation system; }))}
     '';
+  # ABCL doesn’t support running scripts with debugger disabled and "exit
+  # non-zero on any error" mode.
+  wrapAbclToplevel = file: pkgs.writeText "abcl-wrapper.lisp" ''
+    (require "asdf")
+    (require "uiop")
+    (handler-case (load #p"${file}")
+      (t (_)
+        (format T "Loading ${file} failed~%")
+        (uiop:quit 1)))'';
 
   # Normalize the external lisp argument (see API of scope) to an easy-to-use
   # attrset.
@@ -64,7 +73,7 @@ let
         deriv = lisp;
         name = getName lisp;
         call = {
-          abcl = file: ''"${lisp}/bin/abcl" --batch --noinform --noinit --nosystem --load "${file}"'';
+          abcl = file: ''"${lisp}/bin/abcl" --batch --noinform --noinit --nosystem --load "${wrapAbclToplevel file}"'';
           sbcl = file: ''"${lisp}/bin/sbcl" --script "${file}"'';
           clisp = file: ''"${lisp}/bin/clisp" -E UTF-8 -norc "${file}"'';
           ecl = file: ''"${lisp}/bin/ecl" --shell "${file}"'';
