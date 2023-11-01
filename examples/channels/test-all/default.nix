@@ -69,6 +69,10 @@
   "lparallel"
 ] ++ pkgs.lib.optionals (builtins.elem (lisp.pname or "") [ "ecl" "clisp" ]) [
   "fset" # https://github.com/slburson/fset/issues/42
+] ++ pkgs.lib.optionals ((lisp.pname or "") == "sbcl") [
+  # stack overflow
+  "3d-math"
+  "quickhull"
 ]
 }:
 
