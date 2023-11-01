@@ -502,16 +502,16 @@ EOF
     # good argument for using asdf registry configuration files rather than a
     # big baked envvar.
     installPhase = ''
-        mkdir -p $out/bin
-        for f in ${lisp'.deriv}/bin/*; do
-          if [[ -x "$f" && -f "$f" ]]; then
-            # ASDF_.. is set, not suffixed, because it is an opaque string, not a
-            # search path.
-            makeBinaryWrapper $f $out/bin/$(basename $f) \
-              ''${CL_SOURCE_REGISTRY+--suffix CL_SOURCE_REGISTRY : $CL_SOURCE_REGISTRY} \
-              --set ASDF_OUTPUT_TRANSLATIONS $ASDF_OUTPUT_TRANSLATIONS
-          fi
-        done
-      '';
+      mkdir -p $out/bin
+      for f in ${lisp'.deriv}/bin/*; do
+        if [[ -x "$f" && -f "$f" ]]; then
+          # ASDF_.. is set, not suffixed, because it is an opaque string, not a
+          # search path.
+          makeBinaryWrapper $f $out/bin/$(basename $f) \
+            ''${CL_SOURCE_REGISTRY+--suffix CL_SOURCE_REGISTRY : $CL_SOURCE_REGISTRY} \
+            --set ASDF_OUTPUT_TRANSLATIONS $ASDF_OUTPUT_TRANSLATIONS
+        fi
+      done
+    '';
   };
 }
