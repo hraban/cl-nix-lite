@@ -40,7 +40,7 @@ rec {
         };
       lispName = (lisp.pname or "");
     in {
-    inherit lispDerivation lispMultiDerivation lispWithSystems;
+    inherit lispDerivation lispMultiDerivation lispWithSystems lispScript;
 
     "1am" = lispify "1am" [];
 

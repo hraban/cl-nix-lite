@@ -514,4 +514,41 @@ EOF
       done
     '';
   };
+
+  # A one-off, simple single-file lisp script with dependencies preloaded.
+  #
+  # Usage:
+  #
+  # In your Nix:
+  #
+  #   lispScript { name = "foo"; dependencies = [ alexandria ]; src = ./foo.lisp; }
+  #
+  # In foo.lisp:
+  #
+  #   #!/usr/bin/env sbcl --script
+  #
+  #   (require "asdf")
+  #   (asdf:load-system "alexandria")
+  #
+  #   (defpackage #:foo
+  #     (:use #:cl)
+  #     (:local-nicknames (#:alex #:alexandria)))
+  #
+  #   (in-package #:foo)
+  #
+  #   (format T "Hello: ~{~A~^, ~}~%" (alex:iota 9))
+  #
+  # This will create a derivation with in its output a single executable file,
+  # /bin/foo, which you can invoke directly. That makes it compatible to declare
+  # it e.g. as an entry in a flake’s .outputs.packages.<...>.foo.
+  lispScript = { name, src, dependencies ? [], ... }@args: pkgs.stdenv.mkDerivation ({
+    src = pkgs.concatTextFile {
+      inherit name;
+      executable = true;
+      files = [ src ];
+      destination = "/bin/${name}";
+    };
+    buildInputs = [ (lispWithSystems dependencies) ];
+    installPhase = "cp -r $src $out";
+  } // (builtins.removeAttrs args [ "dependencies" "src" ]));
 }
