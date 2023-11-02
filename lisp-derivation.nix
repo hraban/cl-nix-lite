@@ -542,13 +542,19 @@ EOF
   # /bin/foo, which you can invoke directly. That makes it compatible to declare
   # it e.g. as an entry in a flake’s .outputs.packages.<...>.foo.
   lispScript = { name, src, dependencies ? [], ... }@args: pkgs.stdenv.mkDerivation ({
-    src = pkgs.concatTextFile {
-      inherit name;
-      executable = true;
-      files = [ src ];
-      destination = "/bin/${name}";
-    };
+    inherit src;
+    dontUnpack = true;
     buildInputs = [ (lispWithSystems dependencies) ];
-    installPhase = "cp -r $src $out";
+    installPhase = ''
+      runHook preInstall
+
+      # This is the most reliable way to get a predictable folder structure with
+      # obvious permissions set etc
+      mkdir -p "$out/bin"
+      cat "$src" > "$out/bin/${name}"
+      chmod +x "$out/bin/${name}"
+
+      runHook postInstall
+    '';
   } // (builtins.removeAttrs args [ "dependencies" "src" ]));
 }
