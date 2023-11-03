@@ -296,8 +296,7 @@ with pkgs.lispPackagesLite; lispScript rec {
 (asdf:load-system "yason")
 
 (yason:with-output (t :indent t)
-  (let ((yason:*symbol-key-encoder* #'yason:encode-symbol-as-lowercase))
-    (yason:encode (yason:parse *standard-input*))))
+  (yason:encode (yason:parse *standard-input*)))
 ```
 
 You now have a JSON formatter written in Common Lisp.
