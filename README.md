@@ -272,43 +272,43 @@ The trade-off is in favour of robustness, at the cost of more human work in mana
 
 ## Usage
 
-### Full Example: Flakes (Recommended)
+### Code: `lispScript`: Single-file Scripts (Easy!)
 
-See the [flake example](examples/flakes/make-binary) for a demo which builds a `nix run` compatible binary.
+> See the beginner’s guide for details on where exactly this goes
 
-### Full Example: git-hly
-
-A project using cl-nix-lite in the wild is [git-hly](https://github.com/hraban/git-hly).
-
-### Full Example: Channels
-
-Still on channels? Not moving to flakes yet? Here’s the old school way:
+This is the easiest way to get started:
 
 ```nix
-{ pkgs ? import <nixpkgs> {} }:
-
-let
-  cl-nix-lite = pkgs.fetchFromGitHub {
-    owner = "hraban";
-    repo = "cl-nix-lite";
-    rev = "...";
-    sha256 = "";
-  };
-  pkgs' = pkgs.extend (import cl-nix-lite);
-in
-
-with pkgs'.lispPackagesLite; lispDerivation {
-  ...;
-}
+with pkgs.lispPackagesLite; lispScript rec {
+  name = "json-format";
+  src = ./main.lisp;
+  dependencies = [ yason ];
+};
 ```
 
-Have a look at the “Practical Example” chapters in the [Total Beginner’s Guide](#total-beginners-guide) for details.
+`main.lisp`:
 
-### Single derivation
+```common-lisp
+#!/usr/bin/env sbcl --script
 
-Once you have the lisp-packages-lite overlay installed, here’s how to use it.
+(require "asdf")
 
-Does your project expose only one Lisp system? You want the simple `lispDerivation` helper function:
+(asdf:load-system "yason")
+
+(yason:with-output (t :indent t)
+  (let ((yason:*symbol-key-encoder* #'yason:encode-symbol-as-lowercase))
+    (yason:encode (yason:parse *standard-input*))))
+```
+
+You now have a JSON formatter written in Common Lisp.
+
+Real project using this: [mac-app-util](https://github.com/hraban/mac-app-util).
+
+### Code: `lispDerivation`: Single System, Multiple Files
+
+> See the beginner’s guide for details on where exactly this goes
+
+When your project grows too large for a single `main.lisp` file, you can move on to a full-fledged Lisp system defined in ASDF with its own .asd file.
 
 ```nix
 lispDerivation {
@@ -332,7 +332,9 @@ Example for when that makes sense: the `prove` package (a testing framework) use
 
 Example for when you *don’t* need this: if your main system includes various "private" systems from the same repo explicitly, e.g. via `:depends-on`, you don’t need to tell ASDF about it. It will automatically start looking for them in the current directory. Again, this feature is only useful for “public” systems which are not referenced by the main system. You don’t need it for your `foo-utils.asd` or `foo-test.asd`: just reference them in your `foo.asd` as usual and they will be found.
 
-### Multi-derivation
+Real project using this: [git-hly](https://github.com/hraban/git-hly).
+
+### Code: `lispMultiDerivation`: Multiple Systems in One
 
 > This is only supported in the big package scope as of now. It’s an advanced API which doesn’t work and has very limited benefits. Concrete advice: do not use this, unless you are stubborn and don’t need my advice.
 
@@ -417,6 +419,13 @@ lispDerivation {
 ```
 
 For real-world examples, peruse [`lisp-packages-lite.nix`](lisp-packages-lite.nix).
+
+### Boiler Plate
+
+Every project needs some setup:
+
+- Flakes: [flake example](examples/flakes/make-binary)
+- Channels: look in the [Total Beginner’s Guide](#total-beginners-guide).
 
 ### Binary Cache
 
