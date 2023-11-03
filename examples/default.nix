@@ -25,6 +25,7 @@ let
     ./channels/all-packages
     ./channels/all-packages-wrapped
     ./channels/hello-binary
+    ./channels/lisp-script
     ./channels/override-package
     ./channels/test-all
   ] ++ optionals (lisp.pname or "" != "clisp") [
@@ -46,6 +47,7 @@ let
 
   # These need some more work
   flakeTests = [
+    ./flakes/lisp-script
     ./flakes/make-binary
     ./flakes/override-input
   ];
