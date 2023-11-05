@@ -2677,6 +2677,22 @@
         "type": "github"
       }
     },
+    "nibbles": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1695232104,
+        "narHash": "sha256-Mh3RDJ/J9/V2zC9KpZQzuba2pO9Rr71gC+PCECCLEos=",
+        "owner": "sharplispers",
+        "repo": "nibbles",
+        "rev": "a46a67736e07b548cdd7485cb36834f7942313f1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "sharplispers",
+        "repo": "nibbles",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1697009197,
@@ -3182,6 +3198,7 @@
         "named-readtables": "named-readtables",
         "nclasses": "nclasses",
         "nfiles": "nfiles",
+        "nibbles": "nibbles",
         "nixpkgs": "nixpkgs",
         "optima": "optima",
         "osicat": "osicat",

@@ -731,6 +731,10 @@
       url = "github:atlas-engineer/nfiles";
       flake = false;
     };
+    nibbles = {
+      url = "github:sharplispers/nibbles";
+      flake = false;
+    };
     optima = {
       url = "github:m2ym/optima";
       flake = false;

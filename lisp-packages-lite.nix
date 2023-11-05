@@ -266,6 +266,9 @@ rec {
           lispDependencies = [ alexandria cffi trivial-features ];
           lispCheckDependencies = [ bordeaux-threads rt ];
         };
+        cffi-libffi = {
+          lispDependencies = [ cffi-grovel trivial-features ];
+        };
       };
       # lisp-modules-new doesn’t specify GCC and somehow it works fine. Is
       # there an accidental transitive dependency, there? Is that because GCC is
@@ -307,7 +310,9 @@ rec {
       meta = systems: a.optionalAttrs (b.elem "cffi" systems) {
         broken = ! (lispName == "clisp" -> pkgs.stdenv.isLinux);
       };
-    }) cffi cffi-grovel;
+    }) cffi
+       cffi-grovel
+       cffi-libffi;
 
     calispel = lispDerivation {
       lispSystem = "calispel";
@@ -1869,6 +1874,12 @@ rec {
       lispAsdPath = systems:
         l.optional (builtins.elem "nasdf" systems) "nasdf";
     }) nfiles nasdf;
+
+    nibbles = lispDerivation {
+      src = inputs.nibbles;
+      lispSystem = "nibbles";
+      lispCheckDependencies = [ rt ];
+    };
 
     inherit (lispMultiDerivation {
       src = inputs.optima;
