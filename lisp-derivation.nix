@@ -100,8 +100,8 @@ rec {
     lispSystem ? null,
     lispSystems ? null,
     # The lisp dependencies FOR this derivation
-    lispDependencies ? [],
-    lispCheckDependencies ? [],
+    lispDependencies ? null,
+    lispCheckDependencies ? null,
     CL_SOURCE_REGISTRY ? "",
     # If you were to build this from source. Not necessarily the final src of
     # the actual derivation; that depends on the dependency chain.
@@ -144,6 +144,15 @@ rec {
     ...
   } @ args:
     let
+      autoInferDependencies = lispScript {
+        name = "infer-deps";
+        src = pkgs.writeText "infer-deps.lisp" ''
+          #!/usr/bin/env sbcl --script
+        '';
+      lispDependencies' =
+        if lispDependencies == null
+        then (
+        else lispDependencies;
       # Normalised value of the systems argument to this derivation. All
       # internal access to that arg ("what system(s) am I loaded with?") should
       # be through this value.
@@ -156,7 +165,7 @@ rec {
       ancestry = ancestryWalker {
         inherit me;
         key = drv: derivPath drv.origSrc;
-        dependencies = lispDependencies ++ (optionals doCheck lispCheckDependencies);
+        dependencies = lispDependencies' ++ (optionals doCheck lispCheckDependencies);
         # (There is probably a neater, more idiomatic way to do this overriding
         # business.)
         merge = other:
