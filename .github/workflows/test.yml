@@ -10,7 +10,7 @@ on:
     # fine, so if we give it an extra hour of leeway to get cancelled and upload
     # its partial results to the cache the next job can pick up where the
     # previous one left off.
-    - cron: '13 */7 * * *'
+    - cron: '13 */8 * * *'
 jobs:
   tests:
     strategy:
