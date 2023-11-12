@@ -1211,7 +1211,7 @@ rec {
         };
         fare-quasiquote-optima = {
           lispDependencies = [
-            trivia-quasiquote
+            self."trivia.quasiquote"
           ];
         };
         fare-quasiquote-readtable = {
@@ -1399,7 +1399,7 @@ rec {
         fare-quasiquote-extras
         fare-mop
         trivia
-        trivia-quasiquote
+        self."trivia.quasiquote"
       ];
       lispCheckDependencies = [ hu_dwim_stefil ];
       src = inputs.inferior-shell;
@@ -2200,53 +2200,48 @@ rec {
           lispDependencies = [
             alexandria
             iterate
-            trivia-trivial
+            self."trivia.trivial"
             type-i
           ];
           lispCheckDependencies = [
             fiveam
             optima
-            trivia-cffi
-            trivia-fset
-            trivia-ppcre
-            trivia-quasiquote
+            self."trivia.cffi"
+            self."trivia.fset"
+            self."trivia.ppcre"
+            self."trivia.quasiquote"
           ];
         };
 
-        trivia-cffi = {
-          lispSystem = "trivia.cffi";
+        "trivia.cffi" = {
           lispDependencies = [
             cffi
-            trivia-trivial
+            self."trivia.trivial"
           ];
         };
 
-        trivia-fset = {
-          lispSystem = "trivia.fset";
+        "trivia.fset" = {
           lispDependencies = [
             fset
-            trivia-trivial
+            self."trivia.trivial"
           ];
         };
 
-        trivia-ppcre = {
-          lispSystem = "trivia.ppcre";
+        "trivia.ppcre" = {
           lispDependencies = [
             cl-ppcre
-            trivia-trivial
+            self."trivia.trivial"
           ];
         };
 
-        trivia-quasiquote = {
-          lispSystem = "trivia.quasiquote";
+        "trivia.quasiquote" = {
           lispDependencies = [
             fare-quasiquote-readtable
             trivia
           ];
         };
 
-        trivia-trivial = {
-          lispSystem = "trivia.trivial";
+        "trivia.trivial" = {
           lispDependencies = [
             alexandria
             closer-mop
@@ -2256,11 +2251,11 @@ rec {
         };
       };
     }) trivia
-       trivia-cffi
-       trivia-fset
-       trivia-ppcre
-       trivia-quasiquote
-       trivia-trivial;
+       "trivia.cffi"
+       "trivia.fset"
+       "trivia.ppcre"
+       "trivia.quasiquote"
+       "trivia.trivial";
 
     trivial-arguments = lispify "trivial-arguments" [ ];
 
@@ -2367,7 +2362,7 @@ rec {
       lispDependencies = [
         alexandria
         introspect-environment
-        trivia-trivial
+        self."trivia.trivial"
         lisp-namespace
       ];
       lispCheckDependencies = [ fiveam ];
