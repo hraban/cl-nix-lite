@@ -70,11 +70,11 @@ Returns a list of the built paths, as output to stdout by Nix.
   (let ((nix (format NIL "
 let
   pkgs = (import <nixpkgs> {}).extend(import (~A));
+  l = pkgs.lispPackagesLite;
 in
-with pkgs.lispPackagesLite;
 map
 (x: x.src)
-(lispWithSystems [ ~(~{~A~^ ~}~) ]).ancestry.deps
+(l.lispWithSystems [ ~(~{l.\"~A\"~^ ~}~) ]).ancestry.deps
 " src packages)))
     ;; Assume that any nix store path is managed by this package. Safe
     ;; assumption.
