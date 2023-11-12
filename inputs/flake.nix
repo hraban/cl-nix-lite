@@ -1013,6 +1013,10 @@
       url = "github:hanshuebner/unit-test";
       flake = false;
     };
+    unix-options = {
+      url = "github:astine/unix-options";
+      flake = false;
+    };
     usocket = {
       url = "github:usocket/usocket";
       flake = false;

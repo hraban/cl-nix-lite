@@ -3253,6 +3253,7 @@
         "type-templates": "type-templates",
         "typo": "typo",
         "unit-test": "unit-test",
+        "unix-options": "unix-options",
         "usocket": "usocket",
         "uuid": "uuid",
         "vom": "vom",
@@ -4070,6 +4071,22 @@
       "original": {
         "owner": "hanshuebner",
         "repo": "unit-test",
+        "type": "github"
+      }
+    },
+    "unix-options": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1446092795,
+        "narHash": "sha256-W+eQKXFSFSxyWPPp2KVA5yabIlUBQIPkO0qqunKOB58=",
+        "owner": "astine",
+        "repo": "unix-options",
+        "rev": "0cf7380588ba4358a1940c77fa1452f1ed1c179b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "astine",
+        "repo": "unix-options",
         "type": "github"
       }
     },

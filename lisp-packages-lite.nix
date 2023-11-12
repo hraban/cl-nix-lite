@@ -2399,6 +2399,8 @@ rec {
 
     unit-test = lispify "unit-test" [ ];
 
+    unix-options = lispify "unix-options" [ ];
+
     inherit (lispMultiDerivation {
       src = inputs.usocket;
       systems = {
