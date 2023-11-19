@@ -13,6 +13,9 @@ on:
     - cron: '13 */8 * * *'
 jobs:
   tests:
+    # Leave some time for the post actions to run, particularly cachix to upload
+    # any successful builds.
+    timeout-minutes: 300
     strategy:
       matrix:
         config:
