@@ -21,8 +21,12 @@ jobs:
         config:
           - os: ubuntu-latest
             channel: nixpkgs-unstable
+          - os: ubuntu-latest
+            channel: nixos-23.11
           - os: macos-latest
             channel: nixpkgs-unstable
+          - os: macos-latest
+            channel: nixpkgs-23.11-darwin
     runs-on: ${{ matrix.config.os }}
     concurrency:
       # Different runs of the same job are very likely candidates for (partial)
