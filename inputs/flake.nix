@@ -436,7 +436,7 @@
       flake = false;
     };
     dynamic-classes = {
-      url = "github:gwkkwg/dynamic-classes";
+      url = "github:hraban/dynamic-classes";
       flake = false;
     };
     eager-future2 = {
@@ -636,7 +636,7 @@
       flake = false;
     };
     lift = {
-      url = "github:gwkkwg/lift";
+      url = "github:hraban/lift";
       flake = false;
     };
     lisp-namespace = {
@@ -688,7 +688,7 @@
       flake = false;
     };
     metabang-bind = {
-      url = "github:gwkkwg/metabang-bind";
+      url = "github:hraban/metabang-bind";
       flake = false;
     };
     metacopy = {
@@ -696,11 +696,11 @@
       flake = false;
     };
     metatilities = {
-      url = "github:gwkkwg/metatilities";
+      url = "github:hraban/metatilities";
       flake = false;
     };
     metatilities-base = {
-      url = "github:gwkkwg/metatilities-base";
+      url = "github:hraban/metatilities-base";
       flake = false;
     };
     mgl-pax = {
@@ -712,7 +712,7 @@
       flake = false;
     };
     moptilities = {
-      url = "github:gwkkwg/moptilities";
+      url = "github:hraban/moptilities";
       flake = false;
     };
     mt19937 = {
@@ -970,7 +970,7 @@
       flake = false;
     };
     trivial-shell = {
-      url = "github:gwkkwg/trivial-shell";
+      url = "github:hraban/trivial-shell";
       flake = false;
     };
     trivial-sockets = {
@@ -978,7 +978,7 @@
       flake = false;
     };
     trivial-timeout = {
-      url = "github:gwkkwg/trivial-timeout";
+      url = "github:hraban/trivial-timeout";
       flake = false;
     };
     trivial-types = {
