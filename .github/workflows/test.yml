@@ -17,6 +17,7 @@ jobs:
     # any successful builds.
     timeout-minutes: 300
     strategy:
+      fail-fast: false
       matrix:
         config:
           - os: ubuntu-latest
