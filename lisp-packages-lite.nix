@@ -1305,7 +1305,6 @@ rec {
         alexandria
         cl-custom-hash-table
         local-time
-        nasdf
         nclasses
         trivial-package-local-nicknames
       ];
@@ -1832,7 +1831,7 @@ rec {
     };
 
     nclasses = lispDerivation {
-      lispDependencies = [ moptilities nasdf ];
+      lispDependencies = [ moptilities ];
       src = inputs.nclasses;
       lispCheckDependencies = [ lisp-unit2 ];
       lispSystem = "nclasses";
@@ -1842,33 +1841,22 @@ rec {
       meta.broken = lispName == "ecl";
     };
 
-    inherit (lispMultiDerivation {
+    nfiles = lispDerivation {
+      lispSystem = "nfiles";
       src =  inputs.nfiles;
-      systems = {
-        nfiles = {
-          lispDependencies = [
-            alexandria
-            nasdf
-            nclasses
-            quri
-            serapeum
-            trivial-garbage
-            trivial-package-local-nicknames
-            trivial-types
-          ];
-          lispCheckDependencies = [
-            lisp-unit2
-          ];
-        };
-        nasdf = {
-          lispCheckDependencies = [
-            lisp-unit2
-          ];
-        };
-      };
-      lispAsdPath = systems:
-        l.optional (builtins.elem "nasdf" systems) "nasdf";
-    }) nfiles nasdf;
+      lispDependencies = [
+        alexandria
+        nclasses
+        quri
+        serapeum
+        trivial-garbage
+        trivial-package-local-nicknames
+        trivial-types
+      ];
+      lispCheckDependencies = [
+        lisp-unit2
+      ];
+    };
 
     inherit (lispMultiDerivation {
       src = inputs.optima;
