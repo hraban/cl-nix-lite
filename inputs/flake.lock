@@ -2054,6 +2054,22 @@
         "type": "github"
       }
     },
+    "in-nomine": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1700986122,
+        "narHash": "sha256-ZGfQMqMb42dpjpbO2pllkUfEfdVWfJtJerO6ViTujvE=",
+        "owner": "phoe",
+        "repo": "in-nomine",
+        "rev": "03524bab99309848d8a18de0673f055192058f0a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "phoe",
+        "repo": "in-nomine",
+        "type": "github"
+      }
+    },
     "inferior-shell": {
       "flake": false,
       "locked": {
@@ -3148,6 +3164,7 @@
         "hunchentoot-errors": "hunchentoot-errors",
         "idna": "idna",
         "ieee-floats": "ieee-floats",
+        "in-nomine": "in-nomine",
         "inferior-shell": "inferior-shell",
         "infix-math": "infix-math",
         "introspect-environment": "introspect-environment",

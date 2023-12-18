@@ -1255,7 +1255,7 @@ rec {
     float-features = lispDerivation {
       lispSystem = "float-features";
       src = inputs.float-features;
-      lispDependencies = [ documentation-utils ];
+      lispDependencies = [ documentation-utils trivial-features ];
       lispCheckDependencies = [ parachute ];
     };
 
@@ -1388,6 +1388,15 @@ rec {
       lispSystem = "ieee-floats";
       src = inputs.ieee-floats;
       lispCheckDependencies = [ fiveam ];
+    };
+
+    in-nomine = lispDerivation {
+      lispSystem = "in-nomine";
+      lispDependencies = [
+        alexandria
+        trivial-arguments
+      ];
+      src = inputs.in-nomine;
     };
 
     inferior-shell = lispDerivation {
@@ -2114,6 +2123,7 @@ rec {
             alexandria
             cl-ppcre
             global-vars
+            in-nomine
             parenscript
             serapeum
             trivia

@@ -575,6 +575,10 @@
       url = "github:marijnh/ieee-floats";
       flake = false;
     };
+    in-nomine = {
+      url = "github:phoe/in-nomine";
+      flake = false;
+    };
     inferior-shell = {
       url = "github:fare/inferior-shell";
       flake = false;
