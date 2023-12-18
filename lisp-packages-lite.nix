@@ -1396,6 +1396,13 @@ rec {
         alexandria
         trivial-arguments
       ];
+      lispCheckDependencies = [
+        alexandria
+        closer-mop
+        fiveam
+        introspect-environment
+        lisp-namespace
+      ];
       src = inputs.in-nomine;
     };
 
