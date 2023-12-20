@@ -1465,11 +1465,10 @@ rec {
       ];
     };
 
-    jpl-queues = lispDerivation rec {
+    jpl-queues = lispDerivation {
       lispSystem = "jpl-queues";
       lispDependencies = [ bordeaux-threads jpl-util ];
       pname = "jpl-queues";
-      version = "0.1";
       src = inputs.jpl-queues;
     };
 
@@ -1484,7 +1483,7 @@ rec {
       lispCheckDependencies = [ cl-quickcheck flexi-streams ];
     };
 
-    kmrcl = lispDerivation rec {
+    kmrcl = lispDerivation {
       lispSystem = "kmrcl";
       version = "4a27407aad9deb607ffb8847630cde3d041ea25a";
       src = inputs.kmrcl;
