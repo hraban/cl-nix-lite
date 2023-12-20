@@ -866,8 +866,6 @@ rec {
             alexandria
             bordeaux-threads
             lack
-            lack-middleware-backtrace
-            lack-util
             swank
             usocket
           ];
@@ -1041,7 +1039,7 @@ rec {
         babel
         cl-cookie
         clack-test
-        lack-request
+        lack
         rove
       ];
     };
@@ -1493,113 +1491,70 @@ rec {
       lispCheckDependencies = [ rt ];
     };
 
-    inherit (lispMultiDerivation {
+    # I can’t be bothered sorting out this dependency jungle
+    lack = lispDerivation {
       src = inputs.lack;
-      systems = {
-        lack = {
-          lispDependencies = [ lack-util ];
-          lispCheckDependencies = [ clack prove ];
-        };
-
-        # meta nix-only derivation for packages that just want all of lack
-        lack-full = {
-          lispSystems = [
-            "lack-app-directory"
-            "lack-app-file"
-            "lack-component"
-            "lack-middleware-accesslog"
-            "lack-middleware-auth-basic"
-            "lack-middleware-backtrace"
-            "lack-middleware-csrf"
-            "lack-middleware-mount"
-            "lack-middleware-session"
-            "lack-middleware-static"
-            "lack-request"
-            "lack-response"
-            "lack-session-store-dbi"
-            "lack-session-store-redis"
-            "lack-util-writer-stream"
-            "lack-util"
-            "lack"
-          ];
-          lispDependencies = [
-            lack
-            lack-middleware-backtrace
-            lack-request
-            lack-response
-            lack-util
-            # Kitchen sink dependencies
-            # In an ideal world this would be unnecessary: every individual lack
-            # system would be listed explicitly in Nix, with its dependencies. I
-            # just can’t be bothered to do that right now.
-            cl-base64
-            cl-redis
-            dbi
-            marshal
-            trivial-mimes
-            trivial-rfc-1123
-            trivial-utf-8
-          ];
-          lispCheckDependencies = [ lack-test ];
-        };
-
-        lack-middleware-backtrace = {
-          lispCheckDependencies = [ alexandria lack prove ];
-        };
-
-        lack-request = {
-          lispDependencies = [
-            circular-streams
-            cl-ppcre
-            http-body
-            quri
-          ];
-          lispCheckDependencies = [
-            alexandria
-            clack-test
-            dexador
-            flexi-streams
-            hunchentoot
-            prove
-          ];
-        };
-
-        lack-response = {
-          lispDependencies = [
-            local-time
-            quri
-          ];
-        };
-
-        # stand-alone project used as a dependency of help systems
-        lack-test = {
-          lispDependencies = [
-            bordeaux-threads
-            clack
-            clack-handler-hunchentoot
-            dexador
-            flexi-streams
-            http-body
-            ironclad
-            rove
-            usocket
-          ];
-        };
-
-        lack-util = {
-          lispDependencies = if pkgs.hostPlatform.isWindows
-                             then [ ironclad ]
-                             else [ cl-isaac ];
-          lispCheckDependencies = [ lack-test prove ];
-        };
-      };
-    }) lack
-       lack-full
-       lack-middleware-backtrace
-       lack-request
-       lack-response
-       lack-test
-       lack-util;
+      # Kitchen sink dependencies In an ideal world this would be unnecessary:
+      # every individual lack system would be listed explicitly in Nix, with its
+      # dependencies. I just can’t be bothered to do that right now.
+      lispDependencies = [
+        anypool
+        circular-streams
+        cl-base64
+        cl-cookie
+        cl-ppcre
+        cl-redis
+        dbi
+        http-body
+        local-time
+        marshal
+        quri
+        trivial-mimes
+        trivial-rfc-1123
+        trivial-utf-8
+      ] ++ (if pkgs.hostPlatform.isWindows
+            then [ ironclad ]
+            else [ cl-isaac ]);
+      # Extracted from the main asd file. This will probably grow out of date within 3 days.
+      lispSystems = [
+        "lack/app/directory"
+        "lack-app-directory"
+        "lack/app/file"
+        "lack-app-file"
+        "lack/component"
+        "lack-component"
+        "lack/middleware/accesslog"
+        "lack-middleware-accesslog"
+        "lack/middleware/auth/basic"
+        "lack-middleware-auth-basic"
+        "lack/middleware/backtrace"
+        "lack-middleware-backtrace"
+        "lack/middleware/csrf"
+        "lack-middleware-csrf"
+        "lack/middleware/dbpool"
+        "lack-middleware-dbpool"
+        "lack/middleware/mount"
+        "lack-middleware-mount"
+        "lack/middleware/session"
+        "lack-middleware-session"
+        "lack/middleware/static"
+        "lack-middleware-static"
+        "lack/request"
+        "lack-request"
+        "lack/response"
+        "lack-response"
+        "lack/session/store/dbi"
+        "lack-session-store-dbi"
+        "lack/session/store/redis"
+        "lack-session-store-redis"
+        "lack/test"
+        "lack-test"
+        "lack/util/writer/stream"
+        "lack-util-writer-stream"
+        "lack/util"
+        "lack-util"
+      ];
+    };
 
     lass = lispDerivation {
       lispSystems = [ "lass" "binary-lass" ];
@@ -2011,7 +1966,7 @@ rec {
         f-underscore
         find-port
         http-body
-        lack-full
+        lack
         log4cl
         log4cl-extras
         metacopy

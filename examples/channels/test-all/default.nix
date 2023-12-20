@@ -19,9 +19,7 @@
   "gettext" # I’m confused as to why this one is failing
   "hamcrest"
   "hunchentoot" # https://github.com/edicl/hunchentoot/issues/217
-  "lack"
-  "lack-full"
-  "lack-request"
+  "lack" # broken test configuration in asdf declarations
   "lift"
   "log4cl"
   "log4cl-extras"
