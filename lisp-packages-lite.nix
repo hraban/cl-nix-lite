@@ -1409,6 +1409,8 @@ rec {
         lisp-namespace
       ];
       src = inputs.in-nomine;
+      # Uses :local-nickname in defpackage. Ah, the state of CLISP...
+      meta.broken = lispName == "clisp";
     };
 
     inferior-shell = lispDerivation {
