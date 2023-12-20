@@ -1423,8 +1423,8 @@ rec {
         trivia
         self."trivia.quasiquote"
       ];
-      lispCheckDependencies = [ hu_dwim_stefil ];
       src = inputs.inferior-shell;
+      lispCheckDependencies = [ fiveam ];
     };
 
     infix-math = lispify "infix-math" [ alexandria serapeum wu-decimal parse-number ];
