@@ -178,6 +178,22 @@
         "type": "github"
       }
     },
+    "anypool": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1694943904,
+        "narHash": "sha256-URzTqsQ51b2o95yiaSeY3V4xXclsjRojMhyHjU0HCh4=",
+        "owner": "fukamachi",
+        "repo": "anypool",
+        "rev": "2e0e387bce6b57e9d36b4e0382f109d5d292362e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "fukamachi",
+        "repo": "anypool",
+        "type": "github"
+      }
+    },
     "archive": {
       "flake": false,
       "locked": {
@@ -3047,6 +3063,7 @@
         "alexandria": "alexandria",
         "alien-ring": "alien-ring",
         "anaphora": "anaphora",
+        "anypool": "anypool",
         "archive": "archive",
         "arnesi": "arnesi",
         "array-utils": "array-utils",

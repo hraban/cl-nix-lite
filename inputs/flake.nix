@@ -101,6 +101,10 @@
       url = "github:spwhitton/anaphora";
       flake = false;
     };
+    anypool = {
+      url = "github:fukamachi/anypool";
+      flake = false;
+    };
     archive = {
       url = "github:sharplispers/archive";
       flake = false;

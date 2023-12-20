@@ -151,6 +151,13 @@ rec {
       src = inputs.anaphora;
     };
 
+    anypool = lispDerivation {
+      src = inputs.anypool;
+      lispSystem = "anypool";
+      lispDependencies = [ bordeaux-threads cl-speedy-queue ];
+      lispCheckDependencies = [ rove ];
+    };
+
     archive = lispify "archive" [ trivial-gray-streams cl-fad ];
 
     inherit (lispMultiDerivation {
