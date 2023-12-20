@@ -709,11 +709,11 @@
     "cl-dot": {
       "flake": false,
       "locked": {
-        "lastModified": 1650531004,
-        "narHash": "sha256-ql/MVIQLhiM/AvpuPRV1Lg4qRfZCKfQzyj+Xxxz+m1U=",
+        "lastModified": 1703011437,
+        "narHash": "sha256-R+4JVpcr1B2LepXY6lTA7UqIcgyPx/QZUsGy9Z0Clls=",
         "owner": "michaelw",
         "repo": "cl-dot",
-        "rev": "73dfbb6e015a28ebed873266e4e8190e509b43de",
+        "rev": "1f6b2956b9c532873d3b0848e44d5e0f7422ce20",
         "type": "github"
       },
       "original": {
@@ -2089,11 +2089,11 @@
     "inferior-shell": {
       "flake": false,
       "locked": {
-        "lastModified": 1699569480,
-        "narHash": "sha256-BXGGaAybCYR+sLv4MCRYpfHKmzWPy8LTfH2Vm5v1j1k=",
+        "lastModified": 1703057249,
+        "narHash": "sha256-5XEn2uS2B+/gSetwUz6LrvyFbyrht4irh0rry6QEvK4=",
         "owner": "fare",
         "repo": "inferior-shell",
-        "rev": "ae7c7dbea0e00c61ded65255ecda830a6d45e932",
+        "rev": "b40cc9244481a4e756e5665d55dee414b0b9056e",
         "type": "github"
       },
       "original": {
@@ -2137,11 +2137,11 @@
     "ironclad": {
       "flake": false,
       "locked": {
-        "lastModified": 1690441206,
-        "narHash": "sha256-5p81UBOHHcmiW5cgxI63JCmvOK4Yo90bzvEJ45O5sxU=",
+        "lastModified": 1702734406,
+        "narHash": "sha256-JKuJpkMBpJ7STN1e50frInQn9I6FjNTTfVqurVXuf4E=",
         "owner": "sharplispers",
         "repo": "ironclad",
-        "rev": "6da010fea49a4edf075943e20f8ec7adea0d9d65",
+        "rev": "cd67e7b606acd2d14ed854f7f10b6955a68ceec4",
         "type": "github"
       },
       "original": {
@@ -2715,11 +2715,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1702272962,
-        "narHash": "sha256-D+zHwkwPc6oYQ4G3A1HuadopqRwUY/JkMwHz1YF7j4Q=",
+        "lastModified": 1702539185,
+        "narHash": "sha256-KnIRG5NMdLIpEkZTnN5zovNYc0hhXjAgv6pfd5Z4c7U=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "e97b3e4186bcadf0ef1b6be22b8558eab1cdeb5d",
+        "rev": "aa9d4729cbc99dabacb50e3994dcefb3ea0f7447",
         "type": "github"
       },
       "original": {
@@ -3471,11 +3471,11 @@
     "slime": {
       "flake": false,
       "locked": {
-        "lastModified": 1702645642,
-        "narHash": "sha256-3EAEJCaGg2U7TKfCo0R78qfmgboz/UDTlZj0BP10ndQ=",
+        "lastModified": 1702937187,
+        "narHash": "sha256-IcCAHSZlzAQqSZip0+ePQNU9FDvC3y2wNgxKf2TKV18=",
         "owner": "slime",
         "repo": "slime",
-        "rev": "2ca97012da4ab744ca008b7308b3be3c433c7c6b",
+        "rev": "1be7fd2da04d52eee29a50ea06c5f121943c3c9f",
         "type": "github"
       },
       "original": {
