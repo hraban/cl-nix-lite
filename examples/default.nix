@@ -24,6 +24,7 @@ let
   channelTestPaths = lisp: [
     ./channels/all-packages
     ./channels/all-packages-wrapped
+    ./channels/external-dependency
     ./channels/hello-binary
     ./channels/lisp-script
     ./channels/override-package
@@ -47,6 +48,7 @@ let
 
   # These need some more work
   flakeTests = [
+    ./flakes/external-dependency
     ./flakes/lisp-script
     ./flakes/make-binary
     ./flakes/override-input
