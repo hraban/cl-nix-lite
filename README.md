@@ -274,6 +274,7 @@ The trade-off is in favour of robustness, at the cost of more human work in mana
 
 ### Code: `lispScript`: Single-file Scripts (Easy!)
 
+> !Note
 > See the beginner’s guide for details on where exactly this goes
 
 This is the easiest way to get started:
@@ -418,6 +419,22 @@ lispDerivation {
 ```
 
 For real-world examples, peruse [`lisp-packages-lite.nix`](lisp-packages-lite.nix).
+
+### Missing Dependency
+
+If you need a third party library which does not exist in cl-nix-lite, there are two solutions:
+
+1. Include it in your own project as a separate `lispDerivation`, which you then add in your `lispDependencies`
+2. Add it to `cl-nix-lite` and send a PR to get it upstreamed.[^1]
+
+[^1]: Upstreaming means merging into the original package repository, in this case `cl-nix-lite`.
+
+Fundamentally there is little difference between an “external” dependency, or your “main” project or code. To `cl-nix-lite` it’s all the same. The only difference is the `src` attribute: does it point outside, or to a local path? Due to how Nix works, at the end of the day, `cl-nix-lite` just sees a local directory with the source and it won’t know if it came from your system or an external host.
+
+There are two examples to demonstrate this:
+
+- [external dependency using channels](./examples/channels/external-dependency)
+- [external dependency using flakes](./examples/flakes/external-dependency)
 
 ### Boiler Plate
 
