@@ -221,8 +221,6 @@ Notable language that *doesn’t* have a package repository: Go. In Go, you spec
 
 Theoretically, Nix makes package repositories obsolete. Specifically: nixpkgs makes package repositories obsolete. More specifically: nixpkgs *is* a package repository.[^1]
 
-[^1]: Ok *even more specifically*: it’s not a package repository as it doesn’t actually store any actual packages! It just stores a deterministic configuration for how to build those packages. So it’s a... “package recipe repository”? The point is, with Nix, the derivation (= recipe) might as well be the final package itself. Like for a program, the source code might as well be the binary: whether that’s true depends on your perspective and your star sign.
-
 Practically, most x-language-in-Nix ecosystems are bootstrapped by leveraging their respective existing package repositories. It’s easier for both maintainers and users to just copy all of NPM / Pip / ... into nixpkgs. Maintainers don’t need to worry about where to find each project, or when to update it. Users get a familiar environment. “Oh, this is like NPM / Pip / ..., but with different syntax.”
 
 This lisp-packages-lite project *does* drop the existing Lisp package repository, but that’s only possible because of two peculiarities in the Common Lisp world:
@@ -425,9 +423,7 @@ For real-world examples, peruse [`lisp-packages-lite.nix`](lisp-packages-lite.ni
 If you need a third party library which does not exist in cl-nix-lite, there are two solutions:
 
 1. Include it in your own project as a separate `lispDerivation`, which you then add in your `lispDependencies`
-2. Add it to `cl-nix-lite` and send a PR to get it upstreamed.[^1]
-
-[^1]: Upstreaming means merging into the original package repository, in this case `cl-nix-lite`.
+2. Add it to `cl-nix-lite` and send a PR to get it upstreamed.[^2]
 
 Fundamentally there is little difference between an “external” dependency, or your “main” project or code. To `cl-nix-lite` it’s all the same. The only difference is the `src` attribute: does it point outside, or to a local path? Due to how Nix works, at the end of the day, `cl-nix-lite` just sees a local directory with the source and it won’t know if it came from your system or an external host.
 
@@ -616,3 +612,7 @@ GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+[^1]: Ok *even more specifically*: it’s not a package repository as it doesn’t actually store any actual packages! It just stores a deterministic configuration for how to build those packages. So it’s a... “package recipe repository”? The point is, with Nix, the derivation (= recipe) might as well be the final package itself. Like for a program, the source code might as well be the binary: whether that’s true depends on your perspective and your star sign.
+[^2]: Upstreaming means merging into the original package repository, in this case `cl-nix-lite`.
+
