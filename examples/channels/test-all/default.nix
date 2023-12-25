@@ -19,9 +19,7 @@
   "gettext" # I’m confused as to why this one is failing
   "hamcrest"
   "hunchentoot" # https://github.com/edicl/hunchentoot/issues/217
-  "lack"
-  "lack-full"
-  "lack-request"
+  "lack" # broken test configuration in asdf declarations
   "lift"
   "log4cl"
   "log4cl-extras"
@@ -69,6 +67,13 @@
   "lparallel"
 ] ++ pkgs.lib.optionals (builtins.elem (lisp.pname or "") [ "ecl" "clisp" ]) [
   "fset" # https://github.com/slburson/fset/issues/42
+] ++ pkgs.lib.optionals (! (builtins.elem (lisp.pname or "") [ "ecl" "clisp" ]) && pkgs.system == "x86_64-darwin") [
+  # Oddly specific failure: "https://github.com/fukamachi/anypool/issues/5".
+  # This test really should be lisp.pname == sbcl, but due to allowing functions
+  # as lisps, and SBCL specifically being such a function in these tests, it’s
+  # hard to test for right now.  There are a few solutions but none of them fit
+  # in the margin of this PR.
+  "anypool"
 ]
 }:
 
