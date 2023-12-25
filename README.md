@@ -272,7 +272,7 @@ The trade-off is in favour of robustness, at the cost of more human work in mana
 
 ### Code: `lispScript`: Single-file Scripts (Easy!)
 
-> !Note
+> [!NOTE]
 > See the beginner’s guide for details on where exactly this goes
 
 This is the easiest way to get started:
@@ -304,6 +304,7 @@ Real project using this: [mac-app-util](https://github.com/hraban/mac-app-util).
 
 ### Code: `lispDerivation`: Single System, Multiple Files
 
+> [!TIP]
 > See the beginner’s guide for details on where exactly this goes
 
 When your project grows too large for a single `main.lisp` file, you can move on to a full-fledged Lisp system defined in ASDF with its own .asd file.
@@ -334,6 +335,7 @@ Real project using this: [git-hly](https://github.com/hraban/git-hly).
 
 ### Code: `lispMultiDerivation`: Multiple Systems in One
 
+> [!NOTE]
 > This is only supported in the big package scope as of now. It’s an advanced API which doesn’t work and has very limited benefits. Concrete advice: do not use this, unless you are stubborn and don’t need my advice.
 
 Does your Lisp project expose multiple separate, different systems, each with different functionality and (in particular) different dependencies?
