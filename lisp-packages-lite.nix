@@ -1113,7 +1113,15 @@ rec {
       lispCheckDependencies = [ lift ];
     };
 
-    eager-future2 = lispify "eager-future2" [ bordeaux-threads trivial-garbage ];
+    eager-future2 = lispDerivation {
+      lispSystem = "eager-future2";
+      lispDependencies = [ bordeaux-threads trivial-garbage ];
+      src = inputs.eager-future2;
+      # Very specific deadlock: ECL & x86 & Macos, since ECL 21.2.1 -> 23.9.9
+      # got merged: https://github.com/NixOS/nixpkgs/pull/276506
+      # No idea what’s wrong here, or even who’s wrong: ECL? eager-future2?
+      meta.broken = lispName == "ecl" && pkgs.system == "x86_64-darwin";
+    };
 
     inherit (lispMultiDerivation {
       src = inputs.easy-routes;
