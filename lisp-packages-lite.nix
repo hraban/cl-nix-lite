@@ -1418,6 +1418,7 @@ rec {
       ];
       src = inputs.in-nomine;
       # Uses :local-nickname in defpackage. Ah, the state of CLISP...
+      # https://gitlab.com/gnu-clisp/clisp/-/merge_requests/3
       meta.broken = lispName == "clisp";
     };
 
@@ -1491,6 +1492,22 @@ rec {
       src = inputs.json-streams;
       lispSystem = "json-streams";
       lispCheckDependencies = [ cl-quickcheck flexi-streams ];
+    };
+
+    jzon = lispDerivation {
+      src = inputs.jzon;
+      lispSystem = "com.inuoe.jzon";
+      lispDependencies = [
+        closer-mop
+        flexi-streams
+        trivial-gray-streams
+      ] ++ lib.optionals (lispName != "ecl") [
+        float-features
+      ];
+      lispAsdPath = [ "src" "test" ];
+      lispCheckDependencies = [ alexandria fiveam ];
+      # PLNs; https://gitlab.com/gnu-clisp/clisp/-/merge_requests/3
+      meta.broken = lispName == "clisp";
     };
 
     kmrcl = lispDerivation {

@@ -2245,6 +2245,22 @@
         "type": "github"
       }
     },
+    "jzon": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1703123468,
+        "narHash": "sha256-/1Fe7FCUAc2bOGERCWniZdGR/KQ3qM25FMtc+XXrURE=",
+        "owner": "Zulu-Inuoe",
+        "repo": "jzon",
+        "rev": "6967eac39e77162cea8628f8d6416408db2d450c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Zulu-Inuoe",
+        "repo": "jzon",
+        "type": "github"
+      }
+    },
     "kmrcl": {
       "flake": false,
       "locked": {
@@ -3192,6 +3208,7 @@
         "jpl-util": "jpl-util",
         "js": "js",
         "json-streams": "json-streams",
+        "jzon": "jzon",
         "kmrcl": "kmrcl",
         "lack": "lack",
         "lass": "lass",

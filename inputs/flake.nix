@@ -623,6 +623,10 @@
       url = "github:rotatef/json-streams";
       flake = false;
     };
+    jzon = {
+      url = "github:Zulu-Inuoe/jzon";
+      flake = false;
+    };
     kmrcl = {
       url = "git://git.kpe.io/kmrcl.git";
       flake = false;
