@@ -57,7 +57,6 @@
   # https://github.com/sharplispers/ironclad/issues/63, but aside from that it
   # also just hangs sometimes on Linux
   "ironclad"
-  "jzon" # https://github.com/Zulu-Inuoe/jzon/issues/59
   "legion" # hangs forever on ECL
   "trivial-custom-debugger" #An error occurred during initialization: #<a TRIVIAL-CUSTOM-DEBUGGER/TEST::MY-ERROR 0x105c49d80>.
   "type-i" # hangs forever on ECL
