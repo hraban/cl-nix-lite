@@ -1506,8 +1506,6 @@ rec {
       ];
       lispAsdPath = [ "src" "test" ];
       lispCheckDependencies = [ alexandria fiveam ];
-      # PLNs; https://gitlab.com/gnu-clisp/clisp/-/merge_requests/3
-      meta.broken = lispName == "clisp";
     };
 
     kmrcl = lispDerivation {
