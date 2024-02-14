@@ -1120,7 +1120,8 @@ rec {
       # Very specific deadlock: ECL & x86 & Macos, since ECL 21.2.1 -> 23.9.9
       # got merged: https://github.com/NixOS/nixpkgs/pull/276506
       # No idea what’s wrong here, or even who’s wrong: ECL? eager-future2?
-      meta.broken = lispName == "ecl" && pkgs.system == "x86_64-darwin";
+      # Update: now also broken on aarch64-darwin, not sure why or since when.
+      meta.broken = lispName == "ecl" && pkgs.stdenv.isDarwin;
     };
 
     inherit (lispMultiDerivation {
