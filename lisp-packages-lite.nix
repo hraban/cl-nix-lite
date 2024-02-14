@@ -54,8 +54,15 @@ rec {
         "3bmd-ext-code-blocks" = {
           lispDependencies = [ self."3bmd" alexandria colorize split-sequence ];
         };
+        "3bmd-ext-tables" = {
+          lispDependencies = [
+            self."3bmd"
+          ];
+        };
       };
-    }) "3bmd" "3bmd-ext-code-blocks";
+    }) "3bmd"
+       "3bmd-ext-code-blocks"
+       "3bmd-ext-tables";
 
     "3d-math" = lispDerivation {
       lispDependencies = [ documentation-utils type-templates ];
@@ -566,7 +573,13 @@ rec {
 
     cl-difflib = lispify "cl-difflib" [ ];
 
-    cl-dot = lispify "cl-dot" [];
+    cl-dot = lispDerivation {
+      lispSystem = "cl-dot";
+      src = inputs.cl-dot;
+      propagatedBuildInputs = [ pkgs.graphviz ];
+      # https://github.com/michaelw/cl-dot/issues/42
+      meta.broken = lispName == "clisp";
+    };
 
     cl-fad = lispDerivation {
       lispSystem = "cl-fad";
@@ -952,6 +965,7 @@ rec {
       lispDependencies = [
         self."3bmd"
         self."3bmd-ext-code-blocks"
+        self."3bmd-ext-tables"
         common-doc
         common-html
         str

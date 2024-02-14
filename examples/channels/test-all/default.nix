@@ -54,6 +54,7 @@
   "data-lens" # Tests fail
   "cl-markdown" # > The function LIFT::GET-BACKTRACE-AS-STRING is undefined..
   "cl-prevalence" # Tests fail
+  "djula" # https://github.com/mmontone/djula/issues/90
   # https://github.com/sharplispers/ironclad/issues/63, but aside from that it
   # also just hangs sometimes on Linux
   "ironclad"
