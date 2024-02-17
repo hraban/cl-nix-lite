@@ -542,7 +542,6 @@ EOF
   # /bin/foo, which you can invoke directly. That makes it compatible to declare
   # it e.g. as an entry in a flake’s .outputs.packages.<...>.foo.
   lispScript = { name, src, dependencies ? [], ... }@args: pkgs.stdenv.mkDerivation ({
-    inherit src;
     dontUnpack = true;
     buildInputs = [ (lispWithSystems dependencies) ];
     installPhase = ''
@@ -556,5 +555,8 @@ EOF
 
       runHook postInstall
     '';
-  } // (builtins.removeAttrs args [ "dependencies" "src" ]));
+    meta = {
+      mainProgram = name;
+    } // (args.meta or {});
+  } // (builtins.removeAttrs args [ "dependencies" ]));
 }
