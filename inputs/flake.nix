@@ -207,7 +207,7 @@
       flake = false;
     };
     cl-colors2 = {
-      url = "tarball+https://notabug.org/cage/cl-colors2/archive/cc37737fc70892ed97152842fafa086ad1b7beab.tar.gz";
+      url = "tarball+https://codeberg.org/cage/cl-colors2/archive/master.tar.gz";
       flake = false;
     };
     cl-containers = {
@@ -368,7 +368,7 @@
       flake = false;
     };
     clunit2 = {
-      url = "tarball+https://notabug.org/cage/clunit2/archive/200839e8e47e9212ded2d36520d84b9be681037c.tar.gz";
+      url = "tarball+https://codeberg.org/cage/clunit2/archive/master.tar.gz";
       flake = false;
     };
     coalton = {

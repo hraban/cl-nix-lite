@@ -600,14 +600,14 @@
     "cl-colors2": {
       "flake": false,
       "locked": {
-        "lastModified": 1633534627,
-        "narHash": "sha256-GXq3Q6MjdS79EKks2ayojI+ZYh8hRVkd0TNkpjWF9zI=",
+        "lastModified": 1687281542,
+        "narHash": "sha256-2UGxHgeb7iYirvuUVDkHIDLVPwP6Bbn4SGEHcaHmY/Y=",
         "type": "tarball",
-        "url": "https://notabug.org/cage/cl-colors2/archive/cc37737fc70892ed97152842fafa086ad1b7beab.tar.gz"
+        "url": "https://codeberg.org/cage/cl-colors2/archive/master.tar.gz"
       },
       "original": {
         "type": "tarball",
-        "url": "https://notabug.org/cage/cl-colors2/archive/cc37737fc70892ed97152842fafa086ad1b7beab.tar.gz"
+        "url": "https://codeberg.org/cage/cl-colors2/archive/master.tar.gz"
       }
     },
     "cl-containers": {
@@ -1209,14 +1209,14 @@
     "clunit2": {
       "flake": false,
       "locked": {
-        "lastModified": 1664718105,
-        "narHash": "sha256-5Pud/s5LywqrY+EjDG2iCtuuildTzfDmVYzqhnJ5iyQ=",
+        "lastModified": 1699453913,
+        "narHash": "sha256-K5RNtGQUBLWFzTS/n7tiv6NYEsDQId8ZZjyM/wXjZA4=",
         "type": "tarball",
-        "url": "https://notabug.org/cage/clunit2/archive/200839e8e47e9212ded2d36520d84b9be681037c.tar.gz"
+        "url": "https://codeberg.org/cage/clunit2/archive/master.tar.gz"
       },
       "original": {
         "type": "tarball",
-        "url": "https://notabug.org/cage/clunit2/archive/200839e8e47e9212ded2d36520d84b9be681037c.tar.gz"
+        "url": "https://codeberg.org/cage/clunit2/archive/master.tar.gz"
       }
     },
     "coalton": {
