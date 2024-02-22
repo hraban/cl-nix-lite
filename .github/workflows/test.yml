@@ -35,13 +35,18 @@ jobs:
       cancel-in-progress: true
     steps:
     - uses: actions/checkout@v4
-    - uses: cachix/install-nix-action@v25
-      with:
-        nix_path: nixpkgs=channel:${{ matrix.config.channel }}
+    - uses: DeterminateSystems/nix-installer-action@v9
     - uses: cachix/cachix-action@v14
       with:
         name: cl-nix-lite
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+    - name: "Pin the nixpkgs channel to ${{ matrix.config.channel }}"
+      # Works for the local user only! And this only pins the registry, which is
+      # only used by flakes, it just happens that the DeterminateSystems nix
+      # installer also sets extra-nix-path = nixpkgs=flake:nixpkgs, which makes
+      # nix-build pick up on this, too.
+      run: |
+        nix registry add nixpkgs "github:NixOS/nixpkgs/${{ matrix.config.channel }}"
     - name: Update flake locks to use this cl-nix-lite
       run: |
         for example in examples/flakes/* ; do
