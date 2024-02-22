@@ -6,11 +6,10 @@ on:
   # this a cheap operation when nothing changed, so no need for further logic.
   schedule:
     # 13 is a random non-0 minute to be nice to GitHub because most jobs
-    # probably run on the hour. The default timeout of a job is 6h, which is
-    # fine, so if we give it an extra hour of leeway to get cancelled and upload
-    # its partial results to the cache the next job can pick up where the
-    # previous one left off.
-    - cron: '13 */8 * * *'
+    # probably run on the hour. Give it a bit more time than the timeout of jobs
+    # (5h) to allow the caching step to finish uploading cache so the next job
+    # can pick up where the timed out job left off.
+    - cron: '13 */6 * * *'
 jobs:
   tests:
     # Leave some time for the post actions to run, particularly cachix to upload
