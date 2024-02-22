@@ -40,6 +40,9 @@ jobs:
       with:
         name: cl-nix-lite
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+    # Use GH Actions cache /in addition to/ Cachix because my cachix allowance
+    # account is too small to cache a single run.
+    - uses: DeterminateSystems/magic-nix-cache-action@main
     - name: "Pin the nixpkgs channel to ${{ matrix.config.channel }}"
       # Works for the local user only! And this only pins the registry, which is
       # only used by flakes, it just happens that the DeterminateSystems nix
