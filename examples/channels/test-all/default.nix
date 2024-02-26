@@ -54,9 +54,6 @@
   "data-lens" # Tests fail
   "cl-markdown" # > The function LIFT::GET-BACKTRACE-AS-STRING is undefined..
   "cl-prevalence" # Tests fail
-  # https://github.com/sharplispers/ironclad/issues/63, but aside from that it
-  # also just hangs sometimes on Linux
-  "ironclad"
   "legion" # hangs forever on ECL
   "trivial-custom-debugger" #An error occurred during initialization: #<a TRIVIAL-CUSTOM-DEBUGGER/TEST::MY-ERROR 0x105c49d80>.
   "type-i" # hangs forever on ECL

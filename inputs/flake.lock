@@ -2137,11 +2137,11 @@
     "ironclad": {
       "flake": false,
       "locked": {
-        "lastModified": 1708421187,
-        "narHash": "sha256-wzudwbvMvGBzXe04qxoOi3XemWoZdeWGY0dpnaDchXo=",
+        "lastModified": 1708938555,
+        "narHash": "sha256-Kfmb72wKQO6PkixFoBE/Vopl51hW2HpmCY8njzklA2A=",
         "owner": "sharplispers",
         "repo": "ironclad",
-        "rev": "a0220ba3f0b4fc93ac99bba5680cbace1b95cf70",
+        "rev": "6a80a6ae9aeb0c4cac1489909960e1468457c3c3",
         "type": "github"
       },
       "original": {
