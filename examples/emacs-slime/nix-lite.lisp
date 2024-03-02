@@ -33,13 +33,17 @@
 
 (defpackage #:nix-lite
   (:use #:cl)
-  (:export #:load-package #:unload-package #:src))
+  (:export #:load-package
+           #:unload-package
+           #:*src-cl-nix-lite*
+           #:*src-nixpkgs*))
 
 (in-package #:nix-lite)
 
 (defvar packages '())
 
-(defvar src "builtins.fetchTarball \"https://github.com/hraban/cl-nix-lite/archive/master.tar.gz\"")
+(defvar *src-cl-nix-lite* "builtins.fetchTarball \"https://github.com/hraban/cl-nix-lite/archive/master.tar.gz\"")
+(defvar *src-nixpkgs* "<nixpkgs>")
 
 (require "asdf")
 (require "uiop")
@@ -69,13 +73,13 @@ Returns a list of the built paths, as output to stdout by Nix.
 (defun refresh-packages ()
   (let ((nix (format NIL "
 let
-  pkgs = (import <nixpkgs> {}).extend(import (~A));
+  pkgs = import (~A) { overlays = [ (import (~A)) ]; };
   l = pkgs.lispPackagesLite;
 in
 map
 (x: x.src)
 (l.lispWithSystems [ ~(~{l.\"~A\"~^ ~}~) ]).ancestry.deps
-" src packages)))
+" *src-nixpkgs* *src-cl-nix-lite* packages)))
     ;; Assume that any nix store path is managed by this package. Safe
     ;; assumption.
     (delete-nix-paths)
