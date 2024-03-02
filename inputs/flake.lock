@@ -1011,6 +1011,22 @@
         "type": "github"
       }
     },
+    "cl-sqlite": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1564740778,
+        "narHash": "sha256-kzxfH8vPAZ6gxnVbFjdotL1sQSiO4M1ExwdCUMk6OyI=",
+        "owner": "TeMPOraL",
+        "repo": "cl-sqlite",
+        "rev": "be2fcc193f98e3d5bdc85958a806d612cc48740c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "TeMPOraL",
+        "repo": "cl-sqlite",
+        "type": "github"
+      }
+    },
     "cl-strings": {
       "flake": false,
       "locked": {
@@ -3131,6 +3147,7 @@
         "cl-redis": "cl-redis",
         "cl-slice": "cl-slice",
         "cl-speedy-queue": "cl-speedy-queue",
+        "cl-sqlite": "cl-sqlite",
         "cl-strings": "cl-strings",
         "cl-syntax": "cl-syntax",
         "cl-tld": "cl-tld",

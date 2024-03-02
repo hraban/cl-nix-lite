@@ -792,6 +792,14 @@ rec {
       lispCheckDependencies = [ clunit ];
     };
 
+    cl-sqlite = lispDerivation {
+      src = inputs.cl-sqlite;
+      lispDependencies = [ iterate cffi ];
+      lispCheckDependencies = [ fiveam bordeaux-threads ];
+      propagatedBuildInputs = [ pkgs.sqlite ];
+      lispSystem = "sqlite";
+    };
+
     cl-speedy-queue = lispify "cl-speedy-queue" [ ];
 
     cl-strings = lispDerivation {

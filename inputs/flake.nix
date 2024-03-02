@@ -317,6 +317,10 @@
       url = "github:zkat/cl-speedy-queue";
       flake = false;
     };
+    cl-sqlite = {
+      url = "github:TeMPOraL/cl-sqlite";
+      flake = false;
+    };
     cl-strings = {
       url = "github:diogoalexandrefranco/cl-strings";
       flake = false;
