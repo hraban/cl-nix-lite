@@ -602,12 +602,15 @@
       "locked": {
         "lastModified": 1711387143,
         "narHash": "sha256-zTJCVSsNRsiM3tdXA5kfVzITor4KHozMIUD32BOm224=",
-        "type": "tarball",
-        "url": "https://codeberg.org/cage/cl-colors2/archive/master.tar.gz"
+        "ref": "refs/heads/master",
+        "rev": "f77913acab0c745e0662c374bd52e952d4e4b474",
+        "revCount": 111,
+        "type": "git",
+        "url": "https://codeberg.org/cage/cl-colors2.git"
       },
       "original": {
-        "type": "tarball",
-        "url": "https://codeberg.org/cage/cl-colors2/archive/master.tar.gz"
+        "type": "git",
+        "url": "https://codeberg.org/cage/cl-colors2.git"
       }
     },
     "cl-containers": {
@@ -1227,12 +1230,15 @@
       "locked": {
         "lastModified": 1699453913,
         "narHash": "sha256-K5RNtGQUBLWFzTS/n7tiv6NYEsDQId8ZZjyM/wXjZA4=",
-        "type": "tarball",
-        "url": "https://codeberg.org/cage/clunit2/archive/master.tar.gz"
+        "ref": "refs/heads/master",
+        "rev": "b24c56851ee6ee6c4a9dc3725a634c06b604f207",
+        "revCount": 118,
+        "type": "git",
+        "url": "https://codeberg.org/cage/clunit2.git"
       },
       "original": {
-        "type": "tarball",
-        "url": "https://codeberg.org/cage/clunit2/archive/master.tar.gz"
+        "type": "git",
+        "url": "https://codeberg.org/cage/clunit2.git"
       }
     },
     "coalton": {

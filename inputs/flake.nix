@@ -207,7 +207,7 @@
       flake = false;
     };
     cl-colors2 = {
-      url = "tarball+https://codeberg.org/cage/cl-colors2/archive/master.tar.gz";
+      url = "git+https://codeberg.org/cage/cl-colors2.git";
       flake = false;
     };
     cl-containers = {
@@ -372,7 +372,7 @@
       flake = false;
     };
     clunit2 = {
-      url = "tarball+https://codeberg.org/cage/clunit2/archive/master.tar.gz";
+      url = "git+https://codeberg.org/cage/clunit2.git";
       flake = false;
     };
     coalton = {
