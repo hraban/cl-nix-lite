@@ -507,7 +507,7 @@ rec {
     cl-colors2 = lispDerivation {
       lispSystem = "cl-colors2";
       src = inputs.cl-colors2;
-      lispDependencies = [ alexandria cl-ppcre ];
+      lispDependencies = [ alexandria cl-ppcre parse-number ];
       lispCheckDependencies = [ clunit2 ];
     };
 
