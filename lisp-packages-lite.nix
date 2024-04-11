@@ -299,7 +299,7 @@ rec {
         # feeling that’s because of CFFI, and CFFI should provide it, but
         # honestly I don’t know if this is the right place. Maybe I should just
         # make osicat define this as a nativeBuildInput?
-        pkgs.xcbuild
+        xcbuild
       ];
       buildInputs = systems: l.optionals (b.elem "cffi" systems) [ pkgs.libffi ];
       # This is broken on Darwin because libcffi rewrites the import path in a
@@ -670,11 +670,7 @@ rec {
       preBuild = systems:
         s.optionalString (b.elem "cl-libxslt" systems) (
           let
-            libname =
-              # There has to be a better way. How do you make CC automatically
-              # decide on the "correct" extension?
-              if pkgs.hostPlatform.isDarwin then "cllibxml2.dylib"
-              else "cllibxml2.so"; # I’m not even going to try windows
+            libname = "cllibxml2${pkgs.stdenv.hostPlatform.extensions.sharedLibrary}";
           in ''
             LIBNAME=${libname} make -C foreign
             mkdir -p $lib
