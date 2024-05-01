@@ -85,3 +85,10 @@ jobs:
     - name: nix-build error output
       if: failure()
       run: "cat examples/nix-build.out"
+
+  nocommit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: nobssoftware/nocommit@v1
+        name: nocommit
