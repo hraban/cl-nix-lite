@@ -37,58 +37,6 @@ let
       ${b.concatStringsSep "\n"
         (map lispAsdfOp (a.cartesianProductOfSets { inherit operation system; }))}
     '';
-
-  # Normalize the external lisp argument (see API of scope) to an easy-to-use
-  # attrset.
-  makeLisp = lisp:
-    if b.isFunction lisp
-    then rec {
-      call = lisp;
-      name = getName deriv;
-      # This is getting insane, and I’m sure I will come to regret this as it’s
-      # _way_ too much magic, but here goes: this is a heuristic, do-what-I-mean
-      # extraction of a sensible "derivation" from a "lisp" argument. Of course,
-      # if the passed lisp is an actual derivation like pkgs.sbcl: easy, that’s
-      # what it is.  But what if it’s a callback function, like (f:
-      # "${pkgs.sbcl}/bin/sbcl --some-options ... ${f}")? Well... there’s still
-      # the real sbcl hidden in there. Extract it through the string context
-      # (which could have multiple derivations but that’s crazy talk, so just
-      # choose the "first" one which is basically a random one).  Holy
-      # guacamole, this has to be a sign that my function callback API for
-      # passing lisps is just not a good API. But how else? 🥲 It’s so clean...
-      deriv = builtins.elemAt (lispFuncDerivations lisp) 0;
-    }
-    else
-      assert isDerivation lisp;
-      rec {
-        deriv = lisp;
-        name = getName lisp;
-        call = {
-          sbcl = file: ''"${lisp}/bin/sbcl" --script "${file}"'';
-          clisp = file: ''"${lisp}/bin/clisp" -E UTF-8 -norc "${file}"'';
-          ecl = file: ''"${lisp}/bin/ecl" --shell "${file}"'';
-        }.${name};
-      };
-
-  # For a “lisp callable” function (see public API), get an array of all its
-  # derivations. E.g. for ‘f: "${pkgs.sbcl}/bin/sbcl --script ${f}"’ this
-  # returns [ pkgs.sbcl ].
-  lispFuncDerivations = lisp:
-    assert isFunction lisp;
-    # Extremely hacky but it works. Assume that any derivation we’re interested
-    # in lives in the string context. This is painful because we’re doing
-    # runtime imports for every single derivation, only really for nix-shell
-    # purposes which is a tiny fraction of actual use. But it’s just such a nice
-    # feature to have the correct lisp right there in your shell that I’m loath
-    # to remove this until it’s absolutely necessary.
-    pipe "sentinel" [
-      lisp
-      builtins.getContext
-      builtins.attrNames
-      (map (d: import d))
-    ];
-
-  lisp' = makeLisp lisp;
 in
 
 rec {
@@ -124,7 +72,7 @@ rec {
     # the 'asdf:lib-op operation on ECL (particularly for ECL to create a
     # library .a file which can be loaded by future dependents).
     lispBuildOp ? ([ "asdf:make" ] ++
-                   optionals (lisp'.name == "ecl") [ "asdf:operate 'asdf:lib-op" ]),
+                   optionals (lisp.name == "ecl") [ "asdf:operate 'asdf:lib-op" ]),
 
     # Extra directories to add to the ASDF search path for systems. Shouldn’t be
     # necessary—only use this to fix external packages you don’t control. For
@@ -388,7 +336,7 @@ rec {
         buildPhase = ''
           runHook preBuild
 
-          ${lisp'.call (asdfOpScript lispBuildOp pname lispSystems')}
+          ${lisp.call (asdfOpScript lispBuildOp pname lispSystems')}
 
           runHook postBuild
         '';
@@ -402,7 +350,7 @@ rec {
         checkPhase = ''
           runHook preCheck
 
-          ${lisp'.call (asdfOpScript "asdf:test-system" pname _lispOrigSystems)}
+          ${lisp.call (asdfOpScript "asdf:test-system" pname _lispOrigSystems)}
 
           runHook postCheck
         '';
@@ -422,7 +370,7 @@ rec {
         # of a devshell. This is definitely what you want, particularly for
         # flakes which are likely to be running a few SBCL versions behind, or
         # users without global SBCL installed in the first place.
-        nativeBuildInputs = (localizedArgs.nativeBuildInputs or []) ++ [ lisp'.deriv ];
+        nativeBuildInputs = (localizedArgs.nativeBuildInputs or []) ++ [ lisp.deriv ];
         # Put this one at the very end because we don’t override the
         # user-specified shellHook; we extend it, if it exists. So this is a
         # non-destructive operation.
@@ -440,7 +388,7 @@ Lisp dependencies available to ASDF: ${allDepsHumanReadable}.
 
 Example:
 
-    $ ${lisp'.name}
+    $ ${lisp.name}
     > (require "asdf")${if allDepsNames != [] then "
     > (asdf:load-system ${builtins.toJSON (builtins.head allDepsNames)})" else ""}
 
@@ -485,7 +433,7 @@ EOF
   # Get a binary executable lisp which can load the given systems from ASDF
   # without any extra setup necessary.
   lispWithSystems = systems: lispDerivation {
-    inherit (lisp'.deriv) name;
+    inherit (lisp.deriv) name;
     lispSystem = "";
     nativeBuildInputs = [ pkgs.makeBinaryWrapper ];
     src = pkgs.writeText "mock" "source";
@@ -503,7 +451,7 @@ EOF
     # big baked envvar.
     installPhase = ''
       mkdir -p $out/bin
-      for f in ${lisp'.deriv}/bin/*; do
+      for f in ${lisp.deriv}/bin/*; do
         if [[ -x "$f" && -f "$f" ]]; then
           # ASDF_.. is set, not suffixed, because it is an opaque string, not a
           # search path.

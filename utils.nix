@@ -211,4 +211,54 @@ rec {
     # A flat list of all my dependencies.
     deps = builtins.attrValues depsMap;
   };
+
+  # For a “lisp callable” function (see public API), get an array of all its
+  # derivations. E.g. for ‘f: "${pkgs.sbcl}/bin/sbcl --script ${f}"’ this
+  # returns [ pkgs.sbcl ].
+  lispFuncDerivations = lisp:
+    assert isFunction lisp;
+    # Extremely hacky but it works. Assume that any derivation we’re interested
+    # in lives in the string context. This is painful because we’re doing
+    # runtime imports for every single derivation, only really for nix-shell
+    # purposes which is a tiny fraction of actual use. But it’s just such a nice
+    # feature to have the correct lisp right there in your shell that I’m loath
+    # to remove this until it’s absolutely necessary.
+    pipe "sentinel" [
+      lisp
+      builtins.getContext
+      builtins.attrNames
+      (map (d: import d))
+    ];
+
+  # Normalize the external lisp argument (see API of scope) to an easy-to-use
+  # attrset.
+  makeLisp = lisp:
+    if b.isFunction lisp
+    then rec {
+      call = lisp;
+      name = getName deriv;
+      # This is getting insane, and I’m sure I will come to regret this as it’s
+      # _way_ too much magic, but here goes: this is a heuristic, do-what-I-mean
+      # extraction of a sensible "derivation" from a "lisp" argument. Of course,
+      # if the passed lisp is an actual derivation like pkgs.sbcl: easy, that’s
+      # what it is.  But what if it’s a callback function, like (f:
+      # "${pkgs.sbcl}/bin/sbcl --some-options ... ${f}")? Well... there’s still
+      # the real sbcl hidden in there. Extract it through the string context
+      # (which could have multiple derivations but that’s crazy talk, so just
+      # choose the "first" one which is basically a random one).  Holy
+      # guacamole, this has to be a sign that my function callback API for
+      # passing lisps is just not a good API. But how else? 🥲 It’s so clean...
+      deriv = builtins.elemAt (lispFuncDerivations lisp) 0;
+    }
+    else
+      assert isDerivation lisp;
+      rec {
+        deriv = lisp;
+        name = getName lisp;
+        call = {
+          sbcl = file: ''"${lisp}/bin/sbcl" --script "${file}"'';
+          clisp = file: ''"${lisp}/bin/clisp" -E UTF-8 -norc "${file}"'';
+          ecl = file: ''"${lisp}/bin/ecl" --shell "${file}"'';
+        }.${name};
+      };
 }

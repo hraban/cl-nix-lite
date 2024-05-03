@@ -26,9 +26,12 @@ rec {
   # The lisp is a function which takes a file and returns a shell invocation
   # calling that file, then exiting. Or just a derivation of a known Lisp,
   # e.g. lisp = pkgs.sbcl.
-  lispPackagesLiteFor = lisp: lib.recurseIntoAttrs (lib.makeScope pkgs.newScope (self:
+  lispPackagesLiteFor = lisp': lib.recurseIntoAttrs (lib.makeScope pkgs.newScope (self:
     with self;
     with callPackage ./utils.nix {};
+    with {
+      lisp = makeLisp lisp';
+    };
     with callPackage ./lisp-derivation.nix { inherit lisp; };
 
     let
@@ -38,7 +41,6 @@ rec {
           lispSystem = name; # convention
           src = inputs.${name};
         };
-      lispName = (lisp.pname or "");
     in {
     inherit lispDerivation lispMultiDerivation lispWithSystems lispScript;
 
@@ -72,7 +74,7 @@ rec {
       # Compiling this on CLISP hangs forever.
       # On ECL:
       # * The declaration (DECLARE (FTYPE (FUNCTION ((OR IVEC4 DVEC4 VEC4 IVEC3 DVEC3 VEC3 IVEC2 DVEC2 VEC2)) (VALUES (OR I32 F64 F32) &OPTIONAL)) VX)) was found in a bad place.
-      meta.broken = b.elem lispName [ "clisp" "ecl" ];
+      meta.broken = b.elem lisp.name [ "clisp" "ecl" ];
     };
 
     "3d-vectors" = lispDerivation {
@@ -184,7 +186,7 @@ rec {
         };
       };
       # #<PACKAGE CHARSET> has no external symbol with name "UTF-16"
-      meta.broken = lispName == "clisp";
+      meta.broken = lisp.name == "clisp";
     }) arnesi arnesi-cl-ppcre-extras arnesi-slime-extras;
 
     array-utils = lispDerivation {
@@ -223,7 +225,7 @@ rec {
       lispDependencies = [ documentation-utils ];
       lispCheckDependencies = [ parachute ];
       # CLISP is not supported by the Atomics library.
-      meta.broken = lispName == "clisp";
+      meta.broken = lisp.name == "clisp";
     };
 
     inherit (lispMultiDerivation {
@@ -259,7 +261,7 @@ rec {
       buildInputs = [ pkgs.libuv ];
       lispSystem = "bordeaux-threads";
       src = inputs.bordeaux-threads;
-      meta.broken = lispName == "clisp";
+      meta.broken = lisp.name == "clisp";
     };
 
     inherit (lispMultiDerivation rec {
@@ -319,7 +321,7 @@ rec {
       # CFFI requires CLISP compiled with dynamic FFI support, which only
       # enabled on Linux
       meta = systems: a.optionalAttrs (b.elem "cffi" systems) {
-        broken = ! (lispName == "clisp" -> pkgs.stdenv.isLinux);
+        broken = ! (lisp.name == "clisp" -> pkgs.stdenv.isLinux);
       };
     }) cffi cffi-grovel;
 
@@ -578,7 +580,7 @@ rec {
       src = inputs.cl-dot;
       propagatedBuildInputs = [ pkgs.graphviz ];
       # https://github.com/michaelw/cl-dot/issues/42
-      meta.broken = lispName == "clisp";
+      meta.broken = lisp.name == "clisp";
     };
 
     cl-fad = lispDerivation {
@@ -861,7 +863,7 @@ rec {
       # ECL:
       # ;;; The function get-structure is not yet implemented for ECL 21.2.1 on arm64.
       meta = systems: a.optionalAttrs (b.elem "cl-variates/with-metacopy" systems) {
-        broken = b.elem lispName [ "clisp" "ecl" ];
+        broken = b.elem lisp.name [ "clisp" "ecl" ];
       };
     }) cl-variates "cl-variates/with-metacopy";
 
@@ -1065,7 +1067,7 @@ rec {
     dissect = lispDerivation {
       lispSystem = "dissect";
       src = inputs.dissect;
-      lispDependencies = l.optional (lispName == "clisp") cl-ppcre;
+      lispDependencies = l.optional (lisp.name == "clisp") cl-ppcre;
     };
 
     djula = lispDerivation {
@@ -1099,7 +1101,7 @@ rec {
       src = inputs.docs-builder;
       lispDependencies = [ log4cl self."40ants-doc" ];
       # Requires a modern version of ASDF
-      meta.broken = lispName == "ecl";
+      meta.broken = lisp.name == "ecl";
     };
 
     documentation-utils = lispDerivation {
@@ -1139,7 +1141,7 @@ rec {
       # got merged: https://github.com/NixOS/nixpkgs/pull/276506
       # No idea what’s wrong here, or even who’s wrong: ECL? eager-future2?
       # Update: now also broken on aarch64-darwin, not sure why or since when.
-      meta.broken = lispName == "ecl" && pkgs.stdenv.isDarwin;
+      meta.broken = lisp.name == "ecl" && pkgs.stdenv.isDarwin;
     };
 
     inherit (lispMultiDerivation {
@@ -1344,7 +1346,7 @@ rec {
       lispCheckDependencies = [ lisp-unit2 ];
       lispSystem = "history-tree";
       # *** - EVAL: undefined function EXT::ADD-PACKAGE-LOCAL-NICKNAME
-      meta.broken = lispName == "clisp";
+      meta.broken = lisp.name == "clisp";
     };
 
     http-body = lispDerivation {
@@ -1438,7 +1440,7 @@ rec {
       src = inputs.in-nomine;
       # Uses :local-nickname in defpackage. Ah, the state of CLISP...
       # https://gitlab.com/gnu-clisp/clisp/-/merge_requests/3
-      meta.broken = lispName == "clisp";
+      meta.broken = lisp.name == "clisp";
     };
 
     inferior-shell = lispDerivation {
@@ -1520,7 +1522,7 @@ rec {
         closer-mop
         flexi-streams
         trivial-gray-streams
-      ] ++ lib.optionals (lispName != "ecl") [
+      ] ++ lib.optionals (lisp.name != "ecl") [
         float-features
       ];
       lispAsdPath = [ "src" "test" ];
@@ -1606,7 +1608,7 @@ rec {
       # This is kind of ridiculous, but there’s a file here called asdf.lisp
       # which trips up clisp: ‘(require "asdf")’ loads that file, rather than
       # actual asdf. Who’s at fault here?
-      meta.broken = lispName == "clisp";
+      meta.broken = lisp.name == "clisp";
     };
 
     legion = lispDerivation {
@@ -1637,7 +1639,7 @@ rec {
       #
       #  > *** - PROBE-FILE: No file name given:
       #  >       #P"/private/tmp/nix-build-system-metatilities-base.drv-1/source/test-results-2023-10-16-1/
-      meta.broken = lispName == "clisp";
+      meta.broken = lisp.name == "clisp";
     };
 
     lisp-namespace = lispDerivation {
@@ -1859,7 +1861,7 @@ rec {
       # Requires a new version of ASDF that I’m not sure how to load before
       # building the code. See
       # "https://gitlab.common-lisp.net/asdf/asdf/-/issues/145".
-      meta.broken = lispName == "ecl";
+      meta.broken = lisp.name == "ecl";
     };
 
     nfiles = lispDerivation {
@@ -2161,7 +2163,7 @@ rec {
       src = inputs.static-vectors;
       lispDependencies = [ alexandria cffi cffi-grovel ];
       lispCheckDependencies = [ fiveam ];
-      meta.broken = lispName == "clisp";
+      meta.broken = lisp.name == "clisp";
     };
 
     stefil = lispify "stefil" [
@@ -2342,7 +2344,7 @@ rec {
       lispSystem = "trivial-sockets";
       src = inputs.trivial-sockets;
       # Supported lisps: sbcl cmu clisp acl openmcl lispworks abcl mcl
-      meta.broken = lispName == "ecl";
+      meta.broken = lisp.name == "ecl";
     };
 
     trivial-timeout = lispDerivation {
@@ -2399,7 +2401,7 @@ rec {
       preCheck = ''
         export CL_SOURCE_REGISTRY="$PWD/code/test-suite:$CL_SOURCE_REGISTRY"
       '';
-      meta.broken = b.elem lispName [ "ecl" "clisp" ];
+      meta.broken = b.elem lisp.name [ "ecl" "clisp" ];
     };
 
     unit-test = lispify "unit-test" [ ];
@@ -2437,7 +2439,7 @@ rec {
       # Clisp packages ASDF v3.2, WPI requires ≥3.3, this is the easiest way to
       # remedy that. Of course you can byo-ASDF, at which point you can just
       # .overrideAttrs this flag back to false. Same for ECL.
-      meta.broken = b.elem lispName ["clisp" "ecl"];
+      meta.broken = b.elem lisp.name ["clisp" "ecl"];
     };
 
     with-output-to-stream = lispDerivation {
