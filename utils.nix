@@ -102,15 +102,6 @@ rec {
 
   getLispDeps = x: x.CL_SOURCE_REGISTRY or "";
 
-  asdf = pkgs.fetchFromGitLab {
-    name = "asdf-src";
-    domain = "gitlab.common-lisp.net";
-    owner = "asdf";
-    repo = "asdf";
-    rev = "3.3.6";
-    sha256 = "sha256-GCmGUMLniPakjyL/D/aEI93Y6bBxjdR+zxXdSgc9NWo=";
-  };
-
   # Get a context-less string representing this source derivation, come what
   # come may.
   derivPath = src: drvStrWithoutContext (
