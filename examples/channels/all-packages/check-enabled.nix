@@ -43,8 +43,6 @@
   # disable the tests for now and pick this up ASAP.
   "dref"
   "mgl-pax"
-] ++ pkgs.lib.optionals pkgs.hostPlatform.isDarwin [
-  "flexi-streams"
 ] ++ pkgs.lib.optionals pkgs.hostPlatform.isLinux [
   "usocket"
 ] ++ pkgs.lib.optionals (lisp.pname == "clisp") [
