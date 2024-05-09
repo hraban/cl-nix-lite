@@ -16,7 +16,7 @@
         pkgs = nixpkgs.legacyPackages.${system}.appendOverlays [
           cl-nix-lite.overlays.default
           (final: prev: {
-            lispPackagesLite = prev.lispPackagesLite.overrideScope' (lfinal: lprev: {
+            lispPackagesLite = prev.lispPackagesLite.overrideScope (lfinal: lprev: {
               alexandria = lprev.alexandria.overrideAttrs {
                 src = fauxlexandria;
               };
