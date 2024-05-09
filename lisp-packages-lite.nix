@@ -1261,6 +1261,10 @@ rec {
       lispSystem = "fare-utils";
       src = inputs.fare-utils;
       lispCheckDependencies = [ hu_dwim_stefil ];
+      # "https://gitlab.common-lisp.net/frideau/fare-utils/-/issues/1".  Getting
+      # the version here from the derivation is very ugly and I hate it but is
+      # there a better way?
+      meta.broken = lisp.name == "sbcl" && (lib.getVersion lisp.deriv) == "2.4.4";
     };
 
     # I’m defining this as a multideriv because it exposes lots of derivs. Even
