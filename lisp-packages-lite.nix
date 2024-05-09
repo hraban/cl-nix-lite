@@ -826,7 +826,9 @@ rec {
       ];
       lispCheckDependencies = [ bordeaux-threads should-test ];
       src = inputs.cl-redis;
-    };
+      # Not sure why this doesn’t work
+      meta.broken = self.doCheck;
+    });
 
     cl-slice = lispDerivation {
       lispSystem = "cl-slice";
