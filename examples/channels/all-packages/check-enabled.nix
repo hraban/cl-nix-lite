@@ -58,18 +58,6 @@
   "type-i" # hangs forever on ECL
 ] ++ pkgs.lib.optionals (lisp.pname == "clisp" && pkgs.hostPlatform.isLinux) [
   "3bmd-ext-code-blocks"
-] ++ pkgs.lib.optionals ((lisp.pname == "ecl" && pkgs.hostPlatform.isLinux) || pkgs.hostPlatform.isDarwin) [
-  # On ECL & Linux: ;;; Unknown keyword :HANDLED
-  "lparallel"
-] ++ pkgs.lib.optionals (builtins.elem lisp.pname [ "ecl" "clisp" ]) [
-  "fset" # https://github.com/slburson/fset/issues/42
-] ++ pkgs.lib.optionals (! (builtins.elem lisp.pname [ "ecl" "clisp" ]) && pkgs.system == "x86_64-darwin") [
-  # Oddly specific failure: "https://github.com/fukamachi/anypool/issues/5".
-  "anypool"
-] ++ pkgs.lib.optionals (! (builtins.elem lisp.pname [ "ecl" "clisp" ]) && pkgs.system == "x86_64-linux") [
-  # https://github.com/edicl/flexi-streams/issues/51".  This technically only
-  # affects SBCL 2.4.4 but I can’t check the SBCL version here.  Oh well.
-  "flexi-streams"
 ]
 }@args:
 

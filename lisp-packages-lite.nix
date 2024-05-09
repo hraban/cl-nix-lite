@@ -163,12 +163,18 @@ rec {
       src = inputs.anaphora;
     };
 
-    anypool = lispDerivation {
+    anypool = lispDerivation (self: {
       src = inputs.anypool;
       lispSystem = "anypool";
       lispDependencies = [ bordeaux-threads cl-speedy-queue ];
       lispCheckDependencies = [ rove ];
-    };
+      # Oddly specific failure: "https://github.com/fukamachi/anypool/issues/5".
+      meta.broken = (
+        self.doCheck &&
+        lisp.name == "sbcl" &&
+        pkgs.system == "x86_64-darwin"
+      );
+    });
 
     archive = lispify "archive" [ trivial-gray-streams cl-fad ];
 
@@ -1336,7 +1342,18 @@ rec {
       lispCheckDependencies = [ parachute ];
     };
 
-    flexi-streams = lispify "flexi-streams" [ trivial-gray-streams ];
+    flexi-streams = lispDerivation (self: {
+      lispSystem = "flexi-streams";
+      lispDependencies = [ trivial-gray-streams ];
+      src = inputs.flexi-streams;
+      # https://github.com/edicl/flexi-streams/issues/51
+      meta.broken = (
+        self.doCheck &&
+        lisp.name == "sbcl" &&
+        (lib.getVersion lisp.deriv) == "2.4.4" &&
+        pkgs.system == "x86_64-linux"
+      );
+    });
 
     form-fiddle = lispDerivation {
       lispSystem = "form-fiddle";
@@ -1344,7 +1361,12 @@ rec {
       lispDependencies = [ documentation-utils ];
     };
 
-    fset = lispify "fset" [ misc-extensions mt19937 named-readtables ];
+    fset = lispDerivation (self: {
+      lispSystem = "fset";
+      lispDependencies = [ misc-extensions mt19937 named-readtables ];
+      # https://github.com/slburson/fset/issues/42
+      meta.broken = self.doCheck && builtins.elem lisp.name [ "ecl" "clisp" ];
+    });
 
     garbage-pools = lispDerivation {
       lispSystem = "garbage-pools";
@@ -1758,17 +1780,26 @@ rec {
 
     # Technically this package also contains a benchmark system with different
     # dependencies but I’m not going to bother exposing that to this scope.
-    lparallel = (
+    lparallel =
       let
         # Please don’t use this anywhere else
         bordeaux-threads-v1 = bordeaux-threads.overrideAttrs (_: { src = inputs.bordeaux-threads-v1; });
       in
-        lispify "lparallel" [
-          alexandria
-          # If anyone else in your entire family includes
-          # bordeaux-threads-master, you’re dead.
-          bordeaux-threads-v1
-        ]);
+        lispDerivation (self: {
+          lispSystem = "lparallel";
+          src = inputs.lparallel;
+          lispDependencies = [
+            alexandria
+            # If anyone else in your entire family includes
+            # bordeaux-threads-master, you’re dead.
+            bordeaux-threads-v1
+          ];
+          # On ECL & Linux: ;;; Unknown keyword :HANDLED
+          meta.broken = self.doCheck && (
+            (lisp.name == "ecl" && pkgs.hostPlatform.isLinux) ||
+            pkgs.hostPlatform.isDarwin
+          );
+        });
 
     lquery = lispDerivation {
       lispSystem = "lquery";
