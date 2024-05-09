@@ -37,13 +37,11 @@ let
       ${b.concatStringsSep "\n"
         (map lispAsdfOp (a.cartesianProductOfSets { inherit operation system; }))}
     '';
-in
 
-rec {
   # Build a lisp derivation from this source, for the specific given
   # systems. When two separate packages include the same src, but both for a
   # different system, it resolves to the same derivation.
-  lispDerivation = {
+  lispDerivationConst = {
     # The system(s) defined by this derivation
     lispSystem ? null,
     lispSystems ? null,
@@ -418,6 +416,17 @@ EOF
       then ancestry.me
       else me;
 
+  lispDerivationFunc = argsFun:
+    let
+      args = argsFun args;
+    in
+      lispDerivationConst args;
+
+  lispDerivation = fnOrAttrs:
+    if builtins.isFunction fnOrAttrs
+    then lispDerivationFunc fnOrAttrs
+    else lispDerivationConst fnOrAttrs;
+
   # If a single src derivation specifies multiple lisp systems, you can use this
   # helper to define them.
   lispMultiDerivation = args: a.mapAttrs (name: system:
@@ -507,4 +516,11 @@ EOF
       mainProgram = name;
     } // (args.meta or {});
   } // (builtins.removeAttrs args [ "dependencies" ]));
+in
+{
+  inherit
+    lispDerivation
+    lispMultiDerivation
+    lispWithSystems
+    lispScript;
 }
