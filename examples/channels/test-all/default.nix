@@ -71,6 +71,10 @@
   # hard to test for right now.  There are a few solutions but none of them fit
   # in the margin of this PR.
   "anypool"
+] ++ pkgs.lib.optionals (! (builtins.elem (lisp.pname or "") [ "ecl" "clisp" ]) && pkgs.system == "x86_64-linux") [
+  # https://github.com/edicl/flexi-streams/issues/51".  This technically only
+  # affects SBCL 2.4.4 but I can’t check the SBCL version here.  Oh well.
+  "flexi-streams"
 ]
 }:
 
