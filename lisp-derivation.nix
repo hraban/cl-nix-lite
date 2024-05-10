@@ -32,7 +32,7 @@ let
   asdfOpScript = operation:
     if b.isString operation
     then asdfOpScript ([ operation ])
-    else name: system: pkgs.writeText "asdf-build-${name}.lisp" ''
+    else name: system: ''
       (require "asdf")
       ${b.concatStringsSep "\n"
         (map lispAsdfOp (a.cartesianProductOfSets { inherit operation system; }))}
@@ -296,7 +296,7 @@ rec {
       # assume that if you’re referring to this “me”, that (by definition)
       # you’re talking to the “final” one, with deduplicated dependencies and
       # all. It’s a mind-bend, welcome to lazy evaluation.
-      me = pkgs.stdenv.mkDerivation ({
+      me = pkgs.stdenv.mkDerivation (self: {
         lispSystems = lispSystems';
         name = args.name or "system-${pname}";
         passthru = (derivArgs.passthru or {}) // {
@@ -326,6 +326,9 @@ rec {
           export CL_SOURCE_REGISTRY="''${CL_SOURCE_REGISTRY+$CL_SOURCE_REGISTRY:}${b.concatStringsSep ":" buildTimeAsdPath}"
         '';
         preConfigurePhases = [ "setAsdfPathPhase" ];
+        # Allow overriding the phases in pure Lisp code
+        lispBuildPhase = asdfOpScript lispBuildOp pname lispSystems';
+        lispCheckPhase = asdfOpScript "asdf:test-system" pname _lispOrigSystems;
         # Like lisp-modules-new, pre-build every package independently.
         #
         # Reason to do this: packages like libuv contain quite complex build
@@ -336,7 +339,7 @@ rec {
         buildPhase = ''
           runHook preBuild
 
-          ${lisp.call (asdfOpScript lispBuildOp pname lispSystems')}
+          ${lisp.call (pkgs.writeText "build-${pname}.lisp" self.lispBuildPhase)}
 
           runHook postBuild
         '';
@@ -350,7 +353,7 @@ rec {
         checkPhase = ''
           runHook preCheck
 
-          ${lisp.call (asdfOpScript "asdf:test-system" pname _lispOrigSystems)}
+          ${lisp.call (pkgs.writeText "check-${pname}.lisp" self.lispCheckPhase)}
 
           runHook postCheck
         '';
