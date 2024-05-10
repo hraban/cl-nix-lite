@@ -296,7 +296,7 @@ rec {
       # assume that if you’re referring to this “me”, that (by definition)
       # you’re talking to the “final” one, with deduplicated dependencies and
       # all. It’s a mind-bend, welcome to lazy evaluation.
-      me = pkgs.stdenv.mkDerivation (derivArgs // {
+      me = pkgs.stdenv.mkDerivation ({
         lispSystems = lispSystems';
         name = args.name or "system-${pname}";
         passthru = (derivArgs.passthru or {}) // {
@@ -354,7 +354,7 @@ rec {
 
           runHook postCheck
         '';
-      } // localizedArgs // {
+      } // derivArgs // localizedArgs // {
         meta = (localizedArgs.meta or {}) // {
           # Being aggressive about finding a broken flag in my dependencies
           # helps surfacing it early enough for a wrapping tryEval to catch
