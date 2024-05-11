@@ -50,6 +50,21 @@
                 alexandria
                 arrow-macros
               ];
+              # ECL has very bespoke build instructions. See
+              # https://ecl.common-lisp.dev/static/manual/System-building.html#Build-it-as-an-single-executable
+              lispBuildPhase = ''
+                (load "${asdf}/build/asdf.lisp")
+                (let ((sys "flake-app"))
+                  (asdf:load-system sys)
+                  (asdf:make-build sys
+                                   :type :program
+                                   :move-here #P"./bin/"
+                                   :epilogue-code `(progn
+                                                    (,(read-from-string
+                                                       (asdf::component-entry-point
+                                                        (asdf:find-system sys))))
+                                                    (quit))))
+              '';
               src = pkgs.lib.cleanSource ./.;
               meta = {
                 license = pkgs.lib.licenses.agpl3Only;
