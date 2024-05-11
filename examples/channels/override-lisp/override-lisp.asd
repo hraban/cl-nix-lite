@@ -1,4 +1,4 @@
-(asdf:defsystem :override-lisp
+(asdf:defsystem #:override-lisp
   :description "A binary that only works when compiled with CLISP"
   :version "0.1"
   :author "Hraban Luyat"

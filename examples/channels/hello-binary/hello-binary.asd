@@ -1,4 +1,4 @@
-(asdf:defsystem :hello-binary
+(asdf:defsystem #:hello-binary
   :description "A hello-world binary"
   :version "0.1"
   :author "Hraban Luyat"

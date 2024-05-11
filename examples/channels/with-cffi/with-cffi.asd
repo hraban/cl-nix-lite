@@ -1,4 +1,4 @@
-(asdf:defsystem :with-cffi
+(asdf:defsystem #:with-cffi
   :description "Demo app using CFFI"
   :version "0.1"
   :author "Hraban Luyat"

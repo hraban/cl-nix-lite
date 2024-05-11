@@ -1,4 +1,4 @@
-(asdf:defsystem :flake-app
+(asdf:defsystem #:flake-app
   :class :package-inferred-system
   :description "Flake demo app"
   :version "0.1"

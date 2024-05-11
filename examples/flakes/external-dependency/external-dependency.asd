@@ -1,4 +1,4 @@
-(asdf:defsystem :external-dependency
+(asdf:defsystem #:external-dependency
   :description "A hello-world example using an external dependency"
   :version "0.1"
   :author "Hraban Luyat"

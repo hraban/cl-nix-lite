@@ -1,4 +1,4 @@
-(asdf:defsystem :flake-override-input
+(asdf:defsystem #:flake-override-input
   :class :package-inferred-system
   :description "Flake demo app for overriding input"
   :version "0.1"
