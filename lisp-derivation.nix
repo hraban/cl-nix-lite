@@ -327,7 +327,42 @@ rec {
         '';
         preConfigurePhases = [ "setAsdfPathPhase" ];
         # Allow overriding the phases in pure Lisp code
-        lispBuildPhase = asdfOpScript lispBuildOp pname lispSystems';
+        lispBuildPhase =
+          if lisp.name == "ecl"
+          # This is a totally crazy, insane hack for ECL: when building a
+          # stand-alone executable binary using ‘asdf:make-build’, it wants a .a
+          # file for each system in its entire dependency tree, including any
+          # “private” systems of any dependencies. The only way to build an .a
+          # file for a system is to explicitly call ‘(asdf:operate 'asdf:lib-op
+          # ...)’ on it. This build phase finds all systems in the dependency
+          # tree that are part of the same directory as the system(s) being
+          # built, and explicitly builds them. Other lisps don’t need this.
+          then ''
+            (require "asdf")
+            (labels ((union-strings (ls)
+                       (reduce (lambda (l1 l2) (union l1 l2 :test #'equal)) ls :initial-value nil))
+                     (dep-names (name)
+                       (cons
+                        name
+                        (union-strings
+                         (mapcar #'dep-names
+                                 (remove-if #'listp
+                                            (asdf:system-depends-on (asdf:find-system name)))))))
+                     (dep-dirs (name)
+                       (mapcar (lambda (name)
+                                 (list name (asdf:system-source-directory (asdf:find-system name))))
+                               (dep-names name)))
+                     (siblings (name)
+                       (let ((myd (asdf:system-source-directory (asdf:find-system name))))
+                         (mapcar #'first
+                                 (remove myd (dep-dirs name) :test-not #'equal :key #'second)))))
+              (let* ((all-me '(${concatMapStringsSep " " builtins.toJSON lispSystems'}))
+                     (all-sibs (union-strings (mapcar #'siblings all-me))))
+                (dolist (sys all-sibs)
+                  (asdf:make sys)
+                  (asdf:operate 'asdf:lib-op sys))))
+          ''
+          else asdfOpScript lispBuildOp pname lispSystems';
         lispCheckPhase = asdfOpScript "asdf:test-system" pname _lispOrigSystems;
         # Like lisp-modules-new, pre-build every package independently.
         #
