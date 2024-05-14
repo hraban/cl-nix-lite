@@ -4,7 +4,7 @@
 {
   cl-nix-lite ? ../../..
 , pkgs ? import <nixpkgs> {}
-, lisp ? (f: "${pkgs.sbcl}/bin/sbcl --dynamic-space-size 4000 --script ${f}")
+, lisp ? pkgs.sbcl
 }:
 
 let

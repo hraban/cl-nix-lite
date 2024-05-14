@@ -1,7 +1,7 @@
 {
   cl-nix-lite ? ../../..
 , pkgs ? import <nixpkgs> { overlays = [ (import cl-nix-lite) ]; }
-, lisp ? (f: "${pkgs.sbcl}/bin/sbcl --dynamic-space-size 4000 --script ${f}")
+, lisp ? pkgs.sbcl
 }:
 
 with pkgs.lispPackagesLiteFor lisp;
