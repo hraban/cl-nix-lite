@@ -70,6 +70,9 @@ rec {
       lispDependencies = [ documentation-utils type-templates ];
       lispCheckDependencies = [ parachute ];
       src = inputs."3d-math";
+      env = lib.optionalAttrs (lisp.name == "sbcl") {
+        NIX_SBCL_DYNAMIC_SPACE_SIZE = "4gb";
+      };
       lispSystem = "3d-math";
       # Compiling this on CLISP hangs forever.
       # On ECL:
