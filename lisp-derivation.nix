@@ -37,13 +37,11 @@ let
       ${b.concatStringsSep "\n"
         (map lispAsdfOp (a.cartesianProductOfSets { inherit operation system; }))}
     '';
-in
 
-rec {
   # Build a lisp derivation from this source, for the specific given
   # systems. When two separate packages include the same src, but both for a
   # different system, it resolves to the same derivation.
-  lispDerivation = {
+  lispDerivation' = {
     # The system(s) defined by this derivation
     lispSystem ? null,
     lispSystems ? null,
@@ -184,6 +182,10 @@ rec {
         (map (d: [ (b.toString d) ] ++ (map (x: "${d}/${x}") (d.lispAsdPath or []))))
         flatten
         l.naturalSort
+      ];
+      allDepsNames = pipe ancestry.deps [
+        (flatMap (d: d.lispSystems))
+        normaliseStrings
       ];
 
       # The search path for ASDF at build time. Includes the build
@@ -413,10 +415,6 @@ rec {
         # user-specified shellHook; we extend it, if it exists. So this is a
         # non-destructive operation.
         shellHook = let
-          allDepsNames = pipe ancestry.deps [
-            (flatMap (d: d.lispSystems))
-            normaliseStrings
-          ];
           allDepsHumanReadable = s.concatStringsSep ", " allDepsNames;
         in ''
 eval "$setAsdfPathPhase"
@@ -455,6 +453,10 @@ EOF
       if !_lispDontDeduplicate
       then ancestry.me
       else me;
+
+  lispDerivation = makeOverridable lispDerivation';
+in rec {
+  inherit lispDerivation;
 
   # If a single src derivation specifies multiple lisp systems, you can use this
   # helper to define them.
