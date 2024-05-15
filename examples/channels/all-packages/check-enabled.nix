@@ -76,28 +76,11 @@
   # affects SBCL 2.4.4 but I can’t check the SBCL version here.  Oh well.
   "flexi-streams"
 ]
-}:
+}@args:
 
-with pkgs.lib;
-with rec {
-  lispPackagesLite = pkgs.lispPackagesLiteFor lisp;
-  isSafeLisp = d: let
-    ev = builtins.tryEval (isDerivation d && !(d.meta.broken or false));
-  in ev.success && ev.value;
+let
+  inherit (pkgs) lib;
   shouldTest = name: ! builtins.elem name skip;
-};
+in
 
-pipe lispPackagesLite [
-  (builtins.mapAttrs (name: value: let
-    ev = builtins.tryEval (let
-      d = value.enableCheck;
-    in
-      if shouldTest name && isDerivation value && !(d.meta.broken or false)
-      then d
-      else null);
-    in
-      if ev.success && ev.value != null
-      then ev.value
-      else null))
-  (attrsets.filterAttrs (n: d: d != null))
-]
+lib.filterAttrs (n: d: shouldTest n) (lib.callPackageWith args ./check-disabled.nix {})

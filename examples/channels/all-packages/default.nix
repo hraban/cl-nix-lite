@@ -2,14 +2,11 @@
   cl-nix-lite ? ../../..
 , pkgs ? import <nixpkgs> { overlays = [ (import cl-nix-lite) ]; }
 , lisp ? pkgs.sbcl
-}:
+}@args:
 
-with pkgs.lib;
-with rec {
-  lispPackagesLite = pkgs.lispPackagesLiteFor lisp;
-  isSafeLisp = d: let
-    ev = builtins.tryEval (isDerivation d && !(d.meta.broken or false));
-  in ev.success && ev.value;
-};
+let
+  derivs = p: builtins.attrValues (pkgs.lib.callPackageWith args p {});
+  inherit (pkgs) lib;
+in
 
-attrsets.filterAttrs (_: isSafeLisp) lispPackagesLite
+lib.filter lib.isDerivation (lib.flatten (map derivs [ ./check-disabled.nix ./check-enabled.nix ]))

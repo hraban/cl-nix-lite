@@ -16,9 +16,11 @@ let
   allInputs = input:
     if isDerivation input
     then [ input ]
+    else if isAttrs input
+    then allInputs (builtins.attrValues input)
     else
-      assert isAttrs input;
-      builtins.filter isDerivation (builtins.attrValues input);
+      assert isList input;
+      builtins.filter isDerivation input;
   # Simple paths which can just be imported directly
   channelTestPaths = lisp: [
     ./channels/all-packages
@@ -27,7 +29,6 @@ let
     ./channels/hello-binary
     ./channels/lisp-script
     ./channels/override-package
-    ./channels/test-all
   ] ++ optionals (lisp.pname or "" != "clisp") [
     ./channels/with-cffi
   ];
@@ -35,7 +36,7 @@ let
     let
       callPackage = pkgs'.lib.callPackageWith {
         pkgs = pkgs';
-        inherit lisp;
+        inherit lisp cl-nix-lite;
       };
     in
       map
@@ -55,7 +56,7 @@ let
   flakeToDerivs = f: pipe f [
     builtins.toString
     builtins.getFlake
-    (x: x.packages.${builtins.currentSystem})
+    (x: x.packages.${pkgs.system})
     builtins.attrValues
   ];
 in
