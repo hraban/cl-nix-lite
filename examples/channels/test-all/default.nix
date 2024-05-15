@@ -80,8 +80,6 @@
 
 with pkgs.lib;
 with rec {
-  # The tests for Shinmera/3d-math require a lot of memory, might as well grant
-  # it
   lispPackagesLite = pkgs.lispPackagesLiteFor lisp;
   isSafeLisp = d: let
     ev = builtins.tryEval (isDerivation d && !(d.meta.broken or false));
