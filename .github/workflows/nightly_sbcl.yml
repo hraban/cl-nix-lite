@@ -12,6 +12,7 @@ on:
   schedule:
     # Run all tests on latest nightly lisp releases
     - cron: '49 3 * * *'
+  push: {} #NOMERGE
 
 jobs:
   sbcl:
