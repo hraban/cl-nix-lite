@@ -59,7 +59,7 @@ jobs:
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - name: "Build all packages against nightly SBCL"
         run: |
-          nix-build --no-out-link \
+          nix-build --no-out-link --keep-going \
             ${LISP_URL:+--argstr url "$LISP_URL"} \
             ${LISP_REF:+--argstr ref "$LISP_REF"} \
             examples/channels/all-packages/nightly-sbcl.nix
