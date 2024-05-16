@@ -1,0 +1,39 @@
+name: "SBCL Nightly"
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: "git clone URL"
+        default: "https://git.code.sf.net/p/sbcl/sbcl"
+      ref:
+        description: "either: git reference (e.g. HEAD, refs/heads/mybranch)"
+      rev:
+        description: "or: git revision (e.g. 6a6cb3752f41d23be4303361ccf32749469c974c)"
+  schedule:
+    # Run all tests on latest nightly lisp releases
+    - cron: '49 3 * * *'
+
+jobs:
+  sbcl:
+    timeout-minutes: 300
+    # Let’s not waste github’s macos minutes on this
+    runs-on: ubuntu-latest
+    env:
+      LISP_REF: "${{ inputs.ref }}"
+      LISP_REV: "${{ inputs.rev }}"
+      LISP_URL: "${{ inputs.url }}"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v11
+        with:
+          extra-conf: |
+            substituters = https://cl-nix-lite.cachix.org https://cache.nixos.org/
+            trusted-public-keys = cl-nix-lite.cachix.org-1:ab6+b0u2vxymMLcZ5DDqPKnxz0WObbMszmC+BDBHpFc= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - name: "Build all packages against nightly SBCL"
+        run: |
+          nix-build --no-out-link \
+            ${LISP_URL:+--argstr url "$LISP_URL"} \
+            ${LISP_REF:+--argstr ref "$LISP_REF"} \
+            ${LISP_REV:+--argstr rev "$LISP_REV"} \
+            examples/channels/all-packages/nightly-sbcl.nix
