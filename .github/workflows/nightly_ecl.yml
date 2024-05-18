@@ -8,8 +8,7 @@ on:
       ref:
         description: "git reference (e.g. HEAD, refs/heads/mybranch)"
         default: "HEAD"
-      rev:
-        description: "git revision (must be an ancestor of the reference)"
+      # See SBCL workflow note about fetching a revision
   schedule:
     # Run all tests on latest nightly lisp release
     - cron: '12 5 * * *'
@@ -21,7 +20,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       LISP_REF: "${{ inputs.ref }}"
-      LISP_REV: "${{ inputs.rev }}"
       LISP_URL: "${{ inputs.url }}"
     steps:
       - uses: actions/checkout@v4
@@ -36,5 +34,4 @@ jobs:
           nix-build --no-out-link \
             ${LISP_URL:+--argstr url "$LISP_URL"} \
             ${LISP_REF:+--argstr ref "$LISP_REF"} \
-            ${LISP_REV:+--argstr rev "$LISP_REV"} \
             examples/channels/all-packages/nightly-ecl.nix

@@ -8,8 +8,35 @@ on:
       ref:
         description: "git reference (e.g. HEAD, refs/heads/mybranch)"
         default: "HEAD"
-      rev:
-        description: "git revision (must be an ancestor of the reference)"
+      # I don’t know how to make this work on github actions. It works locally
+      # but on GA there is some resistance to deep cloning git repositories,
+      # even at the builtins.fetchGit level. For whatever reason I keep getting
+      # this:
+      #
+      # + nix-build --no-out-link --keep-going --argstr url https://git.code.sf.net/p/sbcl/sbcl --argstr ref HEAD --argstr rev 6a6cb3752f41d23be4303361ccf32749469c974c examples/channels/all-packages/nightly-sbcl.nix
+      # error: Server does not allow request for unadvertised object 6a6cb3752f41d23be4303361ccf32749469c974c
+      # warning: could not update mtime for file '/home/runner/.cache/nix/gitv3/0l4dwy1z0vxk09fnvns00hhfn5sq3i9d5056pc68xm348xljcnik/refs/heads/HEAD': No such file or directory
+      # error:
+      #        … while calling the 'filter' builtin
+      #          at /home/runner/work/test/test/examples/channels/all-packages/default.nix:12:1:
+      #            11|
+      #            12| lib.filter lib.isDerivation (lib.flatten (map derivs [ ./check-disabled.nix ./check-enabled.nix ]))
+      #              | ^
+      #            13|
+      #        … while calling the 'concatMap' builtin
+      #          at /nix/store/dxhd1dkjiddmx9qd4a185b93bj0zz6kv-source/lib/lists.nix:433:10:
+      #           432|     if isList x
+      #           433|     then concatMap (y: flatten y) x
+      #              |          ^
+      #           434|     else [x];
+      #        (stack trace truncated; use '--show-trace' to show the full trace)
+      #        error: Cannot find Git revision '6a6cb3752f41d23be4303361ccf32749469c974c' in ref 'HEAD' of repository 'https://git.code.sf.net/p/sbcl/sbcl'! Please make sure that the rev exists on the ref you've specified or add allRefs = true; to fetchGit.
+      #
+      # So just disable this entirely for now and always fetch the latest for
+      # this reference.
+      #
+      # rev:
+      #   description: "git revision (must be ancestor of the reference)"
   schedule:
     # Run all tests on latest nightly lisp releases
     - cron: '49 3 * * *'
@@ -21,7 +48,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       LISP_REF: "${{ inputs.ref }}"
-      LISP_REV: "${{ inputs.rev }}"
       LISP_URL: "${{ inputs.url }}"
     steps:
       - uses: actions/checkout@v4
@@ -36,5 +62,4 @@ jobs:
           nix-build --no-out-link \
             ${LISP_URL:+--argstr url "$LISP_URL"} \
             ${LISP_REF:+--argstr ref "$LISP_REF"} \
-            ${LISP_REV:+--argstr rev "$LISP_REV"} \
             examples/channels/all-packages/nightly-sbcl.nix
