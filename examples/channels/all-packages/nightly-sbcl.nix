@@ -5,14 +5,17 @@
 
 { pkgs ? import <nixpkgs> {}
 , url ? "https://git.code.sf.net/p/sbcl/sbcl"
+# A single arg sbclOverride can be passed to change top-level options of the
+# SBCL derivation in nixpkgs. Only really useful as a short-cut for CI.
+, sbclOverride ? {}
 , ...
 }@args:
 
 let
-  src = builtins.fetchGit ({ inherit url; } // builtins.removeAttrs args ["pkgs"]);
-  lisp = (pkgs.sbcl.override {
+  src = builtins.fetchGit ({ inherit url; } // builtins.removeAttrs args ["pkgs" "sbclOverride"]);
+  lisp = (pkgs.sbcl.override ({
     bootstrapLisp = pkgs.lib.getExe pkgs.sbcl;
-  }).overrideAttrs {
+  } // sbclOverride)).overrideAttrs {
     src = builtins.trace "SBCL from ${url} @ ${src.rev}" src;
   };
 in

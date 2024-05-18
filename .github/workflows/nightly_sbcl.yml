@@ -46,6 +46,13 @@ jobs:
     timeout-minutes: 300
     # Let’s not waste github’s macos minutes on this
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        linkableRuntime: [true, false]
+        coreCompression: [true, false]
+        markRegionGC: [true, false]
+        threadSupport: [true, false]
     env:
       LISP_REF: "${{ inputs.ref }}"
       LISP_URL: "${{ inputs.url }}"
@@ -59,7 +66,14 @@ jobs:
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - name: "Build all packages against nightly SBCL"
         run: |
+          set -x
           nix-build --no-out-link --keep-going \
             ${LISP_URL:+--argstr url "$LISP_URL"} \
             ${LISP_REF:+--argstr ref "$LISP_REF"} \
+            --arg sbclOverride '{
+              linkableRuntime = ${{matrix.linkableRuntime}};
+              coreCompression = ${{matrix.coreCompression}};
+              markRegionGC = ${{matrix.markRegionGC}};
+              threadSupport = ${{matrix.threadSupport}};
+            }' \
             examples/channels/all-packages/nightly-sbcl.nix
