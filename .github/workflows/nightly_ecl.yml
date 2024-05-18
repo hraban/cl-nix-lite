@@ -18,9 +18,6 @@ jobs:
     timeout-minutes: 300
     # Let’s not waste github’s macos minutes on this
     runs-on: ubuntu-latest
-    env:
-      LISP_REF: "${{ inputs.ref }}"
-      LISP_URL: "${{ inputs.url }}"
     steps:
       - uses: actions/checkout@v4
       - uses: DeterminateSystems/nix-installer-action@v11
@@ -31,7 +28,9 @@ jobs:
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - name: "Build all packages against nightly ECL"
         run: |
-          nix-build --no-out-link --keep-going \
-            ${LISP_URL:+--argstr url "$LISP_URL"} \
-            ${LISP_REF:+--argstr ref "$LISP_REF"} \
-            examples/channels/all-packages/nightly-ecl.nix
+          nix build --print-build-logs --no-link --keep-going --impure --expr '
+            import examples/channels/all-packages/nightly-ecl.nix {
+              ${{ inputs.url && format('url = {0};', toJSON(inputs.url)) }}
+              ${{ inputs.ref && format('ref = {0};', toJSON(inputs.ref)) }}
+            }
+          '

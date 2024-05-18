@@ -53,9 +53,6 @@ jobs:
         coreCompression: [true, false]
         markRegionGC: [true, false]
         threadSupport: [true, false]
-    env:
-      LISP_REF: "${{ inputs.ref }}"
-      LISP_URL: "${{ inputs.url }}"
     steps:
       - uses: actions/checkout@v4
       - uses: DeterminateSystems/nix-installer-action@v11
@@ -65,15 +62,19 @@ jobs:
             trusted-public-keys = cl-nix-lite.cachix.org-1:ab6+b0u2vxymMLcZ5DDqPKnxz0WObbMszmC+BDBHpFc= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - name: "Build all packages against nightly SBCL"
+        # Using nix build is a bit kludgy; nix-build with --arg is nicer, but
+        # nix build has better output for parallel jobs, especially when one of
+        # them fails.
         run: |
-          set -x
-          nix-build --no-out-link --keep-going \
-            ${LISP_URL:+--argstr url "$LISP_URL"} \
-            ${LISP_REF:+--argstr ref "$LISP_REF"} \
-            --arg sbclOverride '{
-              linkableRuntime = ${{matrix.linkableRuntime}};
-              coreCompression = ${{matrix.coreCompression}};
-              markRegionGC = ${{matrix.markRegionGC}};
-              threadSupport = ${{matrix.threadSupport}};
-            }' \
-            examples/channels/all-packages/nightly-sbcl.nix
+          nix build --print-build-logs --no-link --keep-going --impure --expr '
+            import examples/channels/all-packages/nightly-sbcl.nix {
+              ${{ inputs.url && format('url = {0};', toJSON(inputs.url)) }}
+              ${{ inputs.ref && format('ref = {0};', toJSON(inputs.ref)) }}
+              sbclOverride = {
+                linkableRuntime = ${{matrix.linkableRuntime}};
+                coreCompression = ${{matrix.coreCompression}};
+                markRegionGC = ${{matrix.markRegionGC}};
+                threadSupport = ${{matrix.threadSupport}};
+              };
+            }
+          '
