@@ -77,7 +77,8 @@ jobs:
               bb
             }
           }' | \
-          xargs -r nix-build --keep-going --no-out-link
+          sed -e 's/$/^*/' | \
+          xargs -r nix build --keep-going --print-build-logs --no-link
     - name: nix-build error output
       if: failure()
       run: "cat examples/nix-build.out"
