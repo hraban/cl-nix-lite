@@ -46,32 +46,28 @@
   "flexi-streams"
 ] ++ pkgs.lib.optionals pkgs.hostPlatform.isLinux [
   "usocket"
-] ++ pkgs.lib.optionals (lisp.pname or "" == "clisp") [
+] ++ pkgs.lib.optionals (lisp.pname == "clisp") [
   "float-features" # *** - APPLY: too few arguments given to FIND
   "kmrcl" # odd floating point error on clisp
   "trivial-custom-debugger" # *** - Condition of type TRIVIAL-CUSTOM-DEBUGGER/TEST::MY-ERROR.
-] ++ pkgs.lib.optionals (lisp.pname or "" == "ecl") [
+] ++ pkgs.lib.optionals (lisp.pname == "ecl") [
   "data-lens" # Tests fail
   "cl-markdown" # > The function LIFT::GET-BACKTRACE-AS-STRING is undefined..
   "cl-prevalence" # Tests fail
   "legion" # hangs forever on ECL
   "trivial-custom-debugger" #An error occurred during initialization: #<a TRIVIAL-CUSTOM-DEBUGGER/TEST::MY-ERROR 0x105c49d80>.
   "type-i" # hangs forever on ECL
-] ++ pkgs.lib.optionals (lisp.pname or "" == "clisp" && pkgs.hostPlatform.isLinux) [
+] ++ pkgs.lib.optionals (lisp.pname == "clisp" && pkgs.hostPlatform.isLinux) [
   "3bmd-ext-code-blocks"
-] ++ pkgs.lib.optionals ((lisp.pname or "" == "ecl" && pkgs.hostPlatform.isLinux) || pkgs.hostPlatform.isDarwin) [
+] ++ pkgs.lib.optionals ((lisp.pname == "ecl" && pkgs.hostPlatform.isLinux) || pkgs.hostPlatform.isDarwin) [
   # On ECL & Linux: ;;; Unknown keyword :HANDLED
   "lparallel"
-] ++ pkgs.lib.optionals (builtins.elem (lisp.pname or "") [ "ecl" "clisp" ]) [
+] ++ pkgs.lib.optionals (builtins.elem lisp.pname [ "ecl" "clisp" ]) [
   "fset" # https://github.com/slburson/fset/issues/42
-] ++ pkgs.lib.optionals (! (builtins.elem (lisp.pname or "") [ "ecl" "clisp" ]) && pkgs.system == "x86_64-darwin") [
+] ++ pkgs.lib.optionals (! (builtins.elem lisp.pname [ "ecl" "clisp" ]) && pkgs.system == "x86_64-darwin") [
   # Oddly specific failure: "https://github.com/fukamachi/anypool/issues/5".
-  # This test really should be lisp.pname == sbcl, but due to allowing functions
-  # as lisps, and SBCL specifically being such a function in these tests, it’s
-  # hard to test for right now.  There are a few solutions but none of them fit
-  # in the margin of this PR.
   "anypool"
-] ++ pkgs.lib.optionals (! (builtins.elem (lisp.pname or "") [ "ecl" "clisp" ]) && pkgs.system == "x86_64-linux") [
+] ++ pkgs.lib.optionals (! (builtins.elem lisp.pname [ "ecl" "clisp" ]) && pkgs.system == "x86_64-linux") [
   # https://github.com/edicl/flexi-streams/issues/51".  This technically only
   # affects SBCL 2.4.4 but I can’t check the SBCL version here.  Oh well.
   "flexi-streams"
