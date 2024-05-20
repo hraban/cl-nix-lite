@@ -80,7 +80,21 @@
 
 let
   inherit (pkgs) lib;
+  lispPackagesLite = pkgs.lispPackagesLiteFor lisp;
   shouldTest = name: ! builtins.elem name skip;
 in
 
-lib.filterAttrs (n: d: shouldTest n) (lib.callPackageWith args ./check-disabled.nix {})
+lib.pipe lispPackagesLite [
+  (builtins.mapAttrs (name: value: let
+    ev = builtins.tryEval (let
+      d = value.enableCheck;
+    in
+      if shouldTest name && lib.isDerivation value && !(d.meta.broken or false)
+      then d
+      else null);
+    in
+      if ev.success && ev.value != null
+      then ev.value
+      else null))
+  (lib.filterAttrs (n: d: d != null))
+]
