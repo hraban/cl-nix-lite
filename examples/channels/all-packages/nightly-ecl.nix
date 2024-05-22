@@ -1,4 +1,4 @@
-# Build all packages with latest ECL
+# Latest ECL from git
 #
 # Pass ‘rev’ to build a specific git revision by its ID
 # Pass ‘ref’ to build a git reference, e.g. HEAD or refs/heads/mybranch
@@ -10,8 +10,7 @@
 
 let
   src = builtins.fetchGit ({ inherit url; } // builtins.removeAttrs args ["pkgs"]);
-  lisp = pkgs.ecl.overrideAttrs {
-    src = builtins.trace "ECL from ${url} @ ${src.rev}" src;
-  };
 in
-import ./. { inherit lisp; }
+pkgs.ecl.overrideAttrs {
+  src = builtins.trace "ECL from ${url} @ ${src.rev}" src;
+}

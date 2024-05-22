@@ -6,7 +6,7 @@ on:
         description: "git clone URL"
         default: "https://gitlab.com/embeddable-common-lisp/ecl.git"
       ref:
-        description: "git reference (e.g. HEAD, refs/heads/mybranch)"
+        description: "git reference (refs/heads/mybranch, refs/tags/mytag)"
         default: "HEAD"
       # See SBCL workflow note about fetching a revision
   schedule:
@@ -18,6 +18,9 @@ jobs:
     timeout-minutes: 300
     # Let’s not waste github’s macos minutes on this
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./examples/channels/all-packages
     steps:
       - uses: actions/checkout@v4
       - uses: DeterminateSystems/nix-installer-action@v11
@@ -26,11 +29,17 @@ jobs:
             substituters = https://cl-nix-lite.cachix.org https://cache.nixos.org/
             trusted-public-keys = cl-nix-lite.cachix.org-1:ab6+b0u2vxymMLcZ5DDqPKnxz0WObbMszmC+BDBHpFc= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
       - uses: DeterminateSystems/magic-nix-cache-action@main
-      - name: "Build all packages against nightly ECL"
+      - name: "Build nightly ECL"
         run: |
-          nix build --print-build-logs --no-link --keep-going --impure --expr '
-            import examples/channels/all-packages/nightly-ecl.nix {
+          cat > lisp.nix <<"EOF"
+            import ./nightly-ecl.nix {
               ${{ inputs.url && format('url = {0};', toJSON(inputs.url)) }}
               ${{ inputs.ref && format('ref = {0};', toJSON(inputs.ref)) }}
             }
+          EOF
+          nix-build --no-out-link lisp.nix
+      - name: "Build all packages against nightly ECL"
+        run: |
+          nix build --print-build-logs --no-link --keep-going --impure --expr '
+            import ./. { lisp = import ./lisp.nix; }
           '

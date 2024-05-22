@@ -6,7 +6,7 @@ on:
         description: "git clone URL"
         default: "https://git.code.sf.net/p/sbcl/sbcl"
       ref:
-        description: "git reference (e.g. HEAD, refs/heads/mybranch)"
+        description: "git reference (refs/heads/mybranch, refs/tags/mytag)"
         default: "HEAD"
       # I don’t know how to make this work on github actions. It works locally
       # but on GA there is some resistance to deep cloning git repositories,
@@ -53,6 +53,9 @@ jobs:
         coreCompression: [true, false]
         markRegionGC: [true, false]
         threadSupport: [true, false]
+    defaults:
+      run:
+        working-directory: ./examples/channels/all-packages
     steps:
       - uses: actions/checkout@v4
       - uses: DeterminateSystems/nix-installer-action@v11
@@ -61,13 +64,10 @@ jobs:
             substituters = https://cl-nix-lite.cachix.org https://cache.nixos.org/
             trusted-public-keys = cl-nix-lite.cachix.org-1:ab6+b0u2vxymMLcZ5DDqPKnxz0WObbMszmC+BDBHpFc= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
       - uses: DeterminateSystems/magic-nix-cache-action@main
-      - name: "Build all packages against nightly SBCL"
-        # Using nix build is a bit kludgy; nix-build with --arg is nicer, but
-        # nix build has better output for parallel jobs, especially when one of
-        # them fails.
+      - name: "Build nightly SBCL"
         run: |
-          nix build --print-build-logs --no-link --keep-going --impure --expr '
-            import examples/channels/all-packages/nightly-sbcl.nix {
+          cat > lisp.nix <<"EOF"
+            import ./nightly-sbcl.nix {
               ${{ inputs.url && format('url = {0};', toJSON(inputs.url)) }}
               ${{ inputs.ref && format('ref = {0};', toJSON(inputs.ref)) }}
               sbclOverride = {
@@ -77,4 +77,13 @@ jobs:
                 threadSupport = ${{matrix.threadSupport}};
               };
             }
+          EOF
+          nix-build --no-out-link lisp.nix
+        # Using nix build is a bit kludgy; nix-build with --arg is nicer, but
+        # nix build has better output for parallel jobs, especially when one of
+        # them fails.
+      - name: "Build all packages against nightly SBCL"
+        run: |
+          nix build --print-build-logs --no-link --keep-going --impure --expr '
+            import ./. { lisp = import ./lisp.nix; }
           '
