@@ -30,7 +30,7 @@ jobs:
       - run: |
           nix build --print-build-logs --print-out-paths --no-link https://flakehub.com/f/NixOS/nix/2.20.tar.gz
       - run: |
-          nix-store --export "$(nix run --print-build-logs https://flakehub.com/f/NixOS/nix/2.20.tar.gz -- build --print-build-logs --no-link --print-out-paths github:DeterminateSystems/magic-nix-cache/pull/69/head)" > /tmp/export
+          nix-store --export "$(nix run --print-build-logs https://flakehub.com/f/NixOS/nix/2.20.tar.gz -- build --print-build-logs --no-link --print-out-paths github:DeterminateSystems/magic-nix-cache/pull/69/head)" | nix run nixpkgs#xz > /tmp/export
       - uses: DeterminateSystems/magic-nix-cache-action@main
         with:
           #NOMERGE
