@@ -19,20 +19,24 @@ jobs:
     timeout-minutes: 100
     # Let’s not waste github’s macos minutes on this
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./examples/channels/all-packages
     steps:
       - uses: actions/checkout@v4
       - uses: DeterminateSystems/nix-installer-action@v11
         with:
           extra-conf: |
-            substituters = https://cl-nix-lite.cachix.org https://cache.nixos.org/
-            trusted-public-keys = cl-nix-lite.cachix.org-1:ab6+b0u2vxymMLcZ5DDqPKnxz0WObbMszmC+BDBHpFc= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+            #NOMERGE
+            substituters = https://cl-nix-lite.cachix.org https://magic-nix-cache.cachix.org https://cache.nixos.org/
+            trusted-public-keys = cl-nix-lite.cachix.org-1:ab6+b0u2vxymMLcZ5DDqPKnxz0WObbMszmC+BDBHpFc= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= magic-nix-cache.cachix.org-1:xVI23AblJOci6H2/L3YzvGl4+hkdUT0DSJpKj5jT15o=
+      - run: |
+          nix build --print-build-logs --print-out-paths --no-link https://flakehub.com/f/NixOS/nix/2.20.tar.gz
+      - run: |
+          nix-store --export "$(nix run --print-build-logs https://flakehub.com/f/NixOS/nix/2.20.tar.gz -- build --print-build-logs --no-link --print-out-paths github:DeterminateSystems/magic-nix-cache/pull/69/head)" > /tmp/export
       - uses: DeterminateSystems/magic-nix-cache-action@main
         with:
-          source-pr: 69 #NOMERGEPp
+          #NOMERGE
+          source-binary: "/tmp/export"
       - name: "Build nightly ECL"
+        working-directory: ./examples/channels/all-packages
         run: |
           cat > lisp.nix <<"EOF"
             import ./nightly-ecl.nix {
@@ -42,6 +46,7 @@ jobs:
           EOF
           nix-build --no-out-link lisp.nix
       - name: "Build all packages against nightly ECL"
+        working-directory: ./examples/channels/all-packages
         run: |
           nix build --print-build-logs --no-link --keep-going --impure --expr '
             import ./. { lisp = import ./lisp.nix; }
