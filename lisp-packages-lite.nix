@@ -1477,6 +1477,9 @@ rec {
       src = inputs.ironclad;
       lispDependencies = [ bordeaux-threads ];
       lispCheckDependencies = [ rt ];
+      env = lib.optionalAttrs (lisp.name == "sbcl") {
+        NIX_SBCL_DYNAMIC_SPACE_SIZE = "2gb";
+      };
     };
 
     iterate = lispDerivation {
