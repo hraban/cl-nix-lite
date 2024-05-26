@@ -43,7 +43,8 @@ on:
 
 jobs:
   sbcl:
-    timeout-minutes: 300
+    # Arbtirary limit
+    timeout-minutes: 100
     # Let’s not waste github’s macos minutes on this
     runs-on: ubuntu-latest
     strategy:

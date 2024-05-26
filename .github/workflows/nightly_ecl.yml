@@ -15,7 +15,7 @@ on:
 
 jobs:
   ecl:
-    timeout-minutes: 300
+    timeout-minutes: 100
     # Let’s not waste github’s macos minutes on this
     runs-on: ubuntu-latest
     defaults:
