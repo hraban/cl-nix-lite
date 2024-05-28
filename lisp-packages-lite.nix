@@ -207,7 +207,13 @@ rec {
       lispCheckDependencies = [ fiveam ];
     };
 
-    asdf = lispify "asdf" [ ];
+    asdf = lispDerivation {
+      # Sometimes a dependent project will try and build asdf/defsystems. I’m
+      # not exactly clear on when this happens but it’s fixed by just always
+      # precompiling it here.
+      lispSystems = [ "asdf" "asdf/defsystem" ];
+      src = inputs.asdf;
+    };
 
     asdf-flv = lispDerivation {
       lispSystem = "net.didierverna.asdf-flv";
