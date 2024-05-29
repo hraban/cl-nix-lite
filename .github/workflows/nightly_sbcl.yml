@@ -52,8 +52,13 @@ jobs:
       matrix:
         linkableRuntime: [true, false]
         coreCompression: [true, false]
-        markRegionGC: [true, false]
-        threadSupport: [true, false]
+        gcAndThreads:
+          - gc: true
+            threads: true
+          - gc: false
+            threads: true
+          - gc: false
+            threads: false
     defaults:
       run:
         working-directory: ./examples/channels/all-packages
@@ -74,8 +79,8 @@ jobs:
               sbclOverride = {
                 linkableRuntime = ${{matrix.linkableRuntime}};
                 coreCompression = ${{matrix.coreCompression}};
-                markRegionGC = ${{matrix.markRegionGC}};
-                threadSupport = ${{matrix.threadSupport}};
+                markRegionGC = ${{matrix.gcAndThreads.gc}};
+                threadSupport = ${{matrix.gcAndThreads.threads}};
               };
             }
           EOF
