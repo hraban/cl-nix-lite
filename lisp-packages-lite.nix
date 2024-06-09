@@ -793,6 +793,22 @@ rec {
 
     cl-quickcheck = lispify "cl-quickcheck" [ ];
 
+    cl-reactive = lispDerivation {
+      src = inputs.cl-reactive;
+      lispSystem = "cl-reactive";
+      lispDependencies = [
+        bordeaux-threads
+        closer-mop
+        trivial-garbage
+        anaphora
+      ];
+      lispCheckDependencies = [
+        nst
+      ];
+      # Class #<The BUILT-IN-CLASS FUNCTION> is not a valid superclass for #<The CLOS:FUNCALLABLE-STANDARD-CLASS CL-REACTIVE::SIGNAL-FUNCTION>
+      meta.broken = lisp.name == "ecl";
+    };
+
     cl-redis = lispDerivation {
       lispSystem = "cl-redis";
       lispDependencies = [
@@ -1924,6 +1940,19 @@ rec {
       ];
     };
 
+    nst = lispDerivation {
+      lispSystem = "nst";
+      src = inputs.nst;
+      lispDependencies = [
+        org-sampler
+      ] ++ lib.optionals (builtins.elem lisp.name [ "sbcl" "clisp" ]) [
+        closer-mop
+      ];
+      preCheck = ''
+        export CL_SOURCE_REGISTRY="$PWD/test//:$CL_SOURCE_REGISTRY"
+      '';
+    };
+
     inherit (lispMultiDerivation {
       src = inputs.optima;
       systems = {
@@ -1937,6 +1966,8 @@ rec {
         };
       };
     }) optima optima-ppcre;
+
+    org-sampler = lispify "org-sampler" [ iterate ];
 
     osicat = lispDerivation {
       lispSystem = "osicat";
@@ -2072,6 +2103,31 @@ rec {
         trivial-timeout
         uuid
         yason
+      ];
+    };
+
+    reblocks-parenscript = lispDerivation {
+      lispSystem = "reblocks-parenscript";
+      lispDependencies = [
+        alexandria
+        bordeaux-threads
+        parenscript
+        reblocks
+      ];
+      lispCheckDependencies = [
+        rove
+      ];
+      src = inputs.reblocks-parenscript;
+    };
+
+    reblocks-ui = lispDerivation {
+      lispSystem = "reblocks-ui";
+      src = inputs.reblocks-ui;
+      lispDependencies = [
+        self."40ants-doc"
+        log4cl
+        reblocks
+        reblocks-parenscript
       ];
     };
 
@@ -2320,7 +2376,7 @@ rec {
 
     trivial-backtrace = lispify "trivial-backtrace" [ lift ];
 
-    trivial-benchmark = lispify "trivial-benchmark" [ alexandria ];
+    trivial-benchmark = lispify "trivial-benchmark" [ documentation-utils ];
 
     trivial-cltl2 = lispDerivation {
       lispSystem = "trivial-cltl2";
