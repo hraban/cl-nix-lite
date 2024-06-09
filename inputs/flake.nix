@@ -828,6 +828,14 @@
       url = "github:40ants/reblocks";
       flake = false;
     };
+    reblocks-parenscript = {
+      url = "github:40ants/reblocks-parenscript";
+      flake = false;
+    };
+    reblocks-ui = {
+      url = "github:40ants/reblocks-ui";
+      flake = false;
+    };
     rfc2388 = {
       url = "gitlab:rfc2388/rfc2388?host=gitlab.common-lisp.net";
       flake = false;

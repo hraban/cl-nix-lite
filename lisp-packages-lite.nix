@@ -2075,6 +2075,30 @@ rec {
       ];
     };
 
+    reblocks-parenscript = lispDerivation {
+      lispSystem = "reblocks-parenscript";
+      lispDependencies = [
+        alexandria
+        bordeaux-threads
+        parenscript
+        reblocks
+      ];
+      lispCheckDependencies = [
+        rove
+      ];
+      src = inputs.reblocks-parenscript;
+    };
+
+    reblocks-ui = lispDerivation {
+      lispSystem = "reblocks-ui";
+      src = inputs.reblocks-ui;
+      lispDependencies = [
+        self."40ants-doc"
+        log4cl
+        reblocks
+      ];
+    };
+
     rfc2388 = lispify "rfc2388" [ ];
 
     routes = lispDerivation {
@@ -2320,7 +2344,7 @@ rec {
 
     trivial-backtrace = lispify "trivial-backtrace" [ lift ];
 
-    trivial-benchmark = lispify "trivial-benchmark" [ alexandria ];
+    trivial-benchmark = lispify "trivial-benchmark" [ documentation-utils ];
 
     trivial-cltl2 = lispDerivation {
       lispSystem = "trivial-cltl2";

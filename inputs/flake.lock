@@ -3069,6 +3069,38 @@
         "type": "github"
       }
     },
+    "reblocks-parenscript": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1709582704,
+        "narHash": "sha256-Zt69Z0PKs/gPQDnGwaslXeORnI9g6ufCZ/+zaebxSTA=",
+        "owner": "40ants",
+        "repo": "reblocks-parenscript",
+        "rev": "0d6354226d2cf16ffa1d1ed374986028034eae92",
+        "type": "github"
+      },
+      "original": {
+        "owner": "40ants",
+        "repo": "reblocks-parenscript",
+        "type": "github"
+      }
+    },
+    "reblocks-ui": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1709582538,
+        "narHash": "sha256-+TizpAsJLIhkdc9tCFSqPSh4htTguicG5XtE0MilWIg=",
+        "owner": "40ants",
+        "repo": "reblocks-ui",
+        "rev": "b35f364a7cc18ad7f2e8d70e6c788914f6e550f5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "40ants",
+        "repo": "reblocks-ui",
+        "type": "github"
+      }
+    },
     "rfc2388": {
       "flake": false,
       "locked": {
