@@ -1334,18 +1334,31 @@ rec {
 
     global-vars = lispify "global-vars" [ ];
 
-    hamcrest = lispDerivation {
-      lispSystem = "hamcrest";
-      lispCheckDependencies = [ prove rove ];
-      lispDependencies = [
-        self."40ants-asdf-system"
-        alexandria
-        iterate
-        cl-ppcre
-        split-sequence
-      ];
+    inherit (lispMultiDerivation {
       src = inputs.hamcrest;
-    };
+      systems = {
+        hamcrest = {
+          lispCheckDependencies = [ prove rove ];
+          lispDependencies = [
+            self."40ants-asdf-system"
+            alexandria
+            iterate
+            cl-ppcre
+            split-sequence
+          ];
+        };
+        # I’m not 100% on how this system is exported exactly, but it is,
+        # somehow. Apparently ASDFv3 automatically recognizes this? Reblocks
+        # seems to use it.
+        "hamcrest/rove" = {
+          lispDependencies = [
+            hamcrest
+            rove
+          ];
+        };
+      };
+    }) hamcrest
+       "hamcrest/rove";
 
     history-tree = lispDerivation {
       lispDependencies = [
