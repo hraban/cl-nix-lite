@@ -46,10 +46,17 @@ jobs:
       # nix-build pick up on this, too.
       run: |
         nix registry add nixpkgs "github:NixOS/nixpkgs/${{ matrix.config.channel }}"
-    - name: Update flake locks to use this cl-nix-lite
+    # This avoids having to fetch an older nixpkgs just for tests and it helps
+    # detect problems early.
+    - name: Update flake locks to use this cl-nix-lite and nixpkgs
       run: |
         for example in examples/flakes/* ; do
-          ( cd "$example" && nix flake lock --override-input cl-nix-lite ../../.. )
+          (
+            cd "$example"
+            nix flake lock \
+                --override-input cl-nix-lite ../../.. \
+                --override-input nixpkgs nixpkgs
+          )
         done
     # Only bother actually building derivations that are not yet in the
     # store. This prevents nix-build from downloading all built binaries from
