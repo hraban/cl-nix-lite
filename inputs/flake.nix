@@ -195,7 +195,7 @@
       flake = false;
     };
     cl-base64 = {
-      url = "git://git.kpe.io/cl-base64.git";
+      url = "http://git.kpe.io/cl-base64.git";
       flake = false;
     };
     cl-change-case = {
@@ -298,7 +298,7 @@
       flake = false;
     };
     cl-prevalence = {
-      url = "github:40ants/cl-prevalence";
+      url = "github:40ants/cl-prevalence/pull/27/head";
       flake = false;
     };
     cl-qrencode = {
@@ -416,7 +416,7 @@
       flake = false;
     };
     deflate = {
-      url = "github:pmai/Deflate/pull/4/head"; # https://github.com/pmai/Deflate/issues/3
+      url = "github:pmai/Deflate";
       flake = false;
     };
     dexador = {
@@ -528,7 +528,7 @@
       flake = false;
     };
     fset = {
-      url = "github:slburson/fset/pull/46/head";
+      url = "github:slburson/fset";
       flake = false;
     };
     garbage-pools = {
@@ -636,7 +636,7 @@
       flake = false;
     };
     kmrcl = {
-      url = "git://git.kpe.io/kmrcl.git";
+      url = "http://git.kpe.io/kmrcl.git";
       flake = false;
     };
     lack = {
@@ -672,7 +672,7 @@
       flake = false;
     };
     lml2 = {
-      url = "git://git.kpe.io/lml2.git";
+      url = "http://git.kpe.io/lml2.git";
       flake = false;
     };
     local-time = {
@@ -728,7 +728,7 @@
       flake = false;
     };
     misc-extensions = {
-      url = "gitlab:misc-extensions/devel?host=gitlab.common-lisp.net";
+      url = "gitlab:misc-extensions/misc-extensions?host=gitlab.common-lisp.net";
       flake = false;
     };
     moptilities = {
@@ -801,7 +801,7 @@
       flake = false;
     };
     ptester = {
-      url = "git://git.kpe.io/ptester.git";
+      url = "http://git.kpe.io/ptester.git";
       flake = false;
     };
     punycode = {
@@ -841,7 +841,7 @@
       flake = false;
     };
     rt = {
-      url = "git://git.kpe.io/rt.git";
+      url = "http://git.kpe.io/rt.git";
       flake = false;
     };
     rutils = {
@@ -849,7 +849,7 @@
       flake = false;
     };
     s-sysdeps = {
-      url = "github:svenvc/s-sysdeps";
+      url = "github:svenvc/s-sysdeps/pull/3/head";
       flake = false;
     };
     s-xml = {
@@ -1067,7 +1067,7 @@
       flake = false;
     };
     xlunit = {
-      url = "git://git.kpe.io/xlunit.git";
+      url = "http://git.kpe.io/xlunit.git";
       flake = false;
     };
     xml-emitter = {
