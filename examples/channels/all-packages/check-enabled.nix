@@ -24,6 +24,7 @@
   "log4cl"
   "log4cl-extras"
   "moptilities"
+  "reblocks"
   "reblocks-ui" # The test definition in the .asd looks broken
   "routes"
   "rutils"
