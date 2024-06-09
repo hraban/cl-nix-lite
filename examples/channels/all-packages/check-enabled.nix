@@ -24,6 +24,7 @@
   "log4cl"
   "log4cl-extras"
   "moptilities"
+  "reblocks-ui" # The test definition in the .asd looks broken
   "routes"
   "rutils"
   "spinneret"

@@ -2127,6 +2127,7 @@ rec {
         self."40ants-doc"
         log4cl
         reblocks
+        reblocks-parenscript
       ];
     };
 
