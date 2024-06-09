@@ -552,12 +552,16 @@
     "cl-base64": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-dCUKjW6aNoyt1hAm0fLMzUFH+mZFlhUx/Yyi6gocYDE=",
-        "type": "file",
+        "lastModified": 1601489696,
+        "narHash": "sha256-cuVDuPj8gXiN9kLgWpWerkZgodno2s3OENZoByApUoo=",
+        "ref": "refs/heads/master",
+        "rev": "577683b18fd880b82274d99fc96a18a710e3987a",
+        "revCount": 76,
+        "type": "git",
         "url": "http://git.kpe.io/cl-base64.git"
       },
       "original": {
-        "type": "file",
+        "type": "git",
         "url": "http://git.kpe.io/cl-base64.git"
       }
     },
@@ -2298,12 +2302,16 @@
     "kmrcl": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-4GG2e5xUmHLOMCsAI+VRxN0UmN+uTSN13oz4MRWm/Lk=",
-        "type": "file",
+        "lastModified": 1601328591,
+        "narHash": "sha256-oq28Xy1NrL/v4cipw4sObu3YkDBIAo0OR8wWqCoB/Rk=",
+        "ref": "refs/heads/master",
+        "rev": "4a27407aad9deb607ffb8847630cde3d041ea25a",
+        "revCount": 411,
+        "type": "git",
         "url": "http://git.kpe.io/kmrcl.git"
       },
       "original": {
-        "type": "file",
+        "type": "git",
         "url": "http://git.kpe.io/kmrcl.git"
       }
     },
@@ -2438,12 +2446,16 @@
     "lml2": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-AdPCzQMrhuotdm5j/ioKHrAfFkp4CaPqLv9ArgU1aSg=",
-        "type": "file",
+        "lastModified": 1440828970,
+        "narHash": "sha256-Rp3ilUs2uMyLOtpKkOkN9Yp5Jf3ZhpTJ1SrgXzoYjWw=",
+        "ref": "refs/heads/master",
+        "rev": "f6fab048b73e0b2d1deb2c3c93703fdacf4b5e22",
+        "revCount": 88,
+        "type": "git",
         "url": "http://git.kpe.io/lml2.git"
       },
       "original": {
-        "type": "file",
+        "type": "git",
         "url": "http://git.kpe.io/lml2.git"
       }
     },
@@ -2962,12 +2974,16 @@
     "ptester": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-LMwJQ5iKeP/f1fyWMmBJOueeVMaQA1qHSn2BCVj9ias=",
-        "type": "file",
+        "lastModified": 1472479703,
+        "narHash": "sha256-jjc7JP+T7jrbSsPU+RNhQrxOKYkQDfiJwyLbxg51FNA=",
+        "ref": "refs/heads/master",
+        "rev": "fe69fde54f4bce00ce577feb918796c293fc7253",
+        "revCount": 42,
+        "type": "git",
         "url": "http://git.kpe.io/ptester.git"
       },
       "original": {
-        "type": "file",
+        "type": "git",
         "url": "http://git.kpe.io/ptester.git"
       }
     },
@@ -3418,12 +3434,16 @@
     "rt": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-j/H87CU6yCut5zDyGqktPcNL5tznxMMAQO0MNxrPRHY=",
-        "type": "file",
+        "lastModified": 1250098784,
+        "narHash": "sha256-KxlltS8zCpuYX6Yp05eC2t/eWcTavD0XyOsp1XMWUY8=",
+        "ref": "refs/heads/master",
+        "rev": "a6a7503a0b47953bc7579c90f02a6dba1f6e4c5a",
+        "revCount": 20,
+        "type": "git",
         "url": "http://git.kpe.io/rt.git"
       },
       "original": {
-        "type": "file",
+        "type": "git",
         "url": "http://git.kpe.io/rt.git"
       }
     },
@@ -4313,12 +4333,16 @@
     "xlunit": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-x+txrepr3EKBWzEwPMQNL3ucUZqD8OP49QfuDb+4Kbo=",
-        "type": "file",
+        "lastModified": 1440828994,
+        "narHash": "sha256-g/dCnf5PqvhTLfsASs8SKzqcIENuSA+jJho+m251Lys=",
+        "ref": "refs/heads/master",
+        "rev": "3805d34b1d8dc77f7e0ee527a2490194292dd0fc",
+        "revCount": 33,
+        "type": "git",
         "url": "http://git.kpe.io/xlunit.git"
       },
       "original": {
-        "type": "file",
+        "type": "git",
         "url": "http://git.kpe.io/xlunit.git"
       }
     },
