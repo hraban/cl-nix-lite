@@ -285,6 +285,10 @@
       url = "github:mmontone/cl-mimeparse";
       flake = false;
     };
+    cl-mock = {
+      url = "github:Ferada/cl-mock";
+      flake = false;
+    };
     "cl+ssl" = {
       url = "github:cl-plus-ssl/cl-plus-ssl";
       flake = false;

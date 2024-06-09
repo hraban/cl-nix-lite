@@ -723,6 +723,20 @@ rec {
       lispSystem = "cl-mimeparse";
     };
 
+    cl-mock = lispDerivation {
+      src = inputs.cl-mock;
+      lispSystem = "cl-mock";
+      lispDependencies = [
+        alexandria
+        bordeaux-threads
+        closer-mop
+        trivia
+      ];
+      lispCheckDependencies = [
+        fiveam
+      ];
+    };
+
     "cl+ssl" = lispDerivation {
       lispSystem = "cl+ssl";
       src = inputs."cl+ssl";

@@ -902,6 +902,22 @@
         "type": "github"
       }
     },
+    "cl-mock": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1658400873,
+        "narHash": "sha256-tyeXe6gDD87wvBOG68Xx24g2XTZnZIqm86nTOaoOxKQ=",
+        "owner": "Ferada",
+        "repo": "cl-mock",
+        "rev": "01762fda96718fefd3745ce4a20a4013a865b109",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Ferada",
+        "repo": "cl-mock",
+        "type": "github"
+      }
+    },
     "cl-ppcre": {
       "flake": false,
       "locked": {
@@ -3146,6 +3162,7 @@
         "cl-locale": "cl-locale",
         "cl-markdown": "cl-markdown",
         "cl-mimeparse": "cl-mimeparse",
+        "cl-mock": "cl-mock",
         "cl-ppcre": "cl-ppcre",
         "cl-prevalence": "cl-prevalence",
         "cl-qrencode": "cl-qrencode",
