@@ -70,14 +70,19 @@ Returns a list of the built paths, as output to stdout by Nix.
   "Remove all nix store paths from the ASDF central registry"
   (setf asdf:*central-registry* (delete-if #'nix-store-p asdf:*central-registry*)))
 
+;; This builds every package even though that build probably isn’t used, unless
+;; the user has ASDF_OUTPUT_TRANSLATIONS=/:/ which is uncommon for SLIME. For
+;; almost all packages we could instead of using the build, just map this to use
+;; the ‘drv.src’ instead; the reason to build it anyway is some odd packages
+;; like asdf which, on load, will try and write to their own source
+;; directory. Using the final derivation directory is the only way to reliably
+;; load those packages.
 (defun refresh-packages ()
   (let ((nix (format NIL "
 let
   pkgs = import (~A) { overlays = [ (import (~A)) ]; };
   l = pkgs.lispPackagesLite;
 in
-map
-(x: x.src)
 (l.lispWithSystems [ ~(~{l.\"~A\"~^ ~}~) ]).ancestry.deps
 " *src-nixpkgs* *src-cl-nix-lite* packages)))
     ;; Assume that any nix store path is managed by this package. Safe
