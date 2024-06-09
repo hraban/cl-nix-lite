@@ -983,6 +983,22 @@
         "type": "github"
       }
     },
+    "cl-reactive": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1673907089,
+        "narHash": "sha256-skRu2PHY6eGZUIFnvUPmC7p4HsxLJOWJ/DL171YbFeI=",
+        "owner": "nklein",
+        "repo": "cl-reactive",
+        "rev": "670e8bd809e71c8d659c413f62a7a03462ec0630",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nklein",
+        "repo": "cl-reactive",
+        "type": "github"
+      }
+    },
     "cl-redis": {
       "flake": false,
       "locked": {
@@ -2780,6 +2796,22 @@
         "type": "indirect"
       }
     },
+    "nst": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1615310293,
+        "narHash": "sha256-6pk8ZIWBS7N4dCrW16A4Kk4k0q+YiBia3qnZha/Jw8E=",
+        "owner": "jphmrst",
+        "repo": "cl-nst",
+        "rev": "6c0990f594abcf5887e8d80f1035e3b60454b61b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "jphmrst",
+        "repo": "cl-nst",
+        "type": "github"
+      }
+    },
     "optima": {
       "flake": false,
       "locked": {
@@ -2793,6 +2825,22 @@
       "original": {
         "owner": "m2ym",
         "repo": "optima",
+        "type": "github"
+      }
+    },
+    "org-sampler": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1506802239,
+        "narHash": "sha256-iuIgVjJ9eZT8B8qO3uGf+kPeavdQu90dRiKRYGMS4LU=",
+        "owner": "jphmrst",
+        "repo": "cl-org-sampler",
+        "rev": "ee135a417750e5b1d810bb9574eb85223cb3038a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "jphmrst",
+        "repo": "cl-org-sampler",
         "type": "github"
       }
     },
@@ -3198,6 +3246,7 @@
         "cl-prevalence": "cl-prevalence",
         "cl-qrencode": "cl-qrencode",
         "cl-quickcheck": "cl-quickcheck",
+        "cl-reactive": "cl-reactive",
         "cl-redis": "cl-redis",
         "cl-slice": "cl-slice",
         "cl-speedy-queue": "cl-speedy-queue",
@@ -3310,7 +3359,9 @@
         "nclasses": "nclasses",
         "nfiles": "nfiles",
         "nixpkgs": "nixpkgs",
+        "nst": "nst",
         "optima": "optima",
+        "org-sampler": "org-sampler",
         "osicat": "osicat",
         "parachute": "parachute",
         "parenscript": "parenscript",

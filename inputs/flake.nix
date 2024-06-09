@@ -309,6 +309,10 @@
       url = "github:mcandre/cl-quickcheck";
       flake = false;
     };
+    cl-reactive = {
+      url = "github:nklein/cl-reactive";
+      flake = false;
+    };
     cl-redis = {
       url = "github:vseloved/cl-redis";
       flake = false;
@@ -751,8 +755,16 @@
       url = "github:atlas-engineer/nfiles";
       flake = false;
     };
+    nst = {
+      url = "github:jphmrst/cl-nst";
+      flake = false;
+    };
     optima = {
       url = "github:m2ym/optima";
+      flake = false;
+    };
+    org-sampler = {
+      url = "github:jphmrst/cl-org-sampler";
       flake = false;
     };
     osicat = {
