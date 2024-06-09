@@ -2040,10 +2040,14 @@ rec {
       src = inputs.quri;
     };
 
-    reblocks  = lispDerivation {
+    reblocks = lispDerivation {
       lispSystem = "reblocks";
       src = inputs.reblocks;
-      lispCheckDependencies = [ hamcrest ];
+      lispCheckDependencies = [
+        cl-mock
+        self."hamcrest/rove"
+        rove
+      ];
       lispDependencies = [
         self."40ants-doc"
         circular-streams

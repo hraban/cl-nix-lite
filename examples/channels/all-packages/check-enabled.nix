@@ -24,7 +24,6 @@
   "log4cl"
   "log4cl-extras"
   "moptilities"
-  "reblocks"
   "routes"
   "rutils"
   "spinneret"
