@@ -19,6 +19,7 @@ let
         with pkgs';
         [
           abcl
+          clasp-common-lisp
           clisp
           ecl
           sbcl
