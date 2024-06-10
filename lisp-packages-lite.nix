@@ -327,7 +327,7 @@ rec {
         if pkgs.hostPlatform.isDarwin
         # LD_.. only works with CFFI on Mac, but not with
         # sb-alien:load-shared-object. DYLD_.. works with both.
-        then pkgs.writeText "cffi-setup-hook-darwin.sh" (builtins.replaceStrings
+        then builtins.toFile "cffi-setup-hook-darwin.sh" (builtins.replaceStrings
           [ "LD_LIBRARY_PATH" ]
           [ "DYLD_LIBRARY_PATH" ]
           (builtins.readFile ./cffi-setup-hook.sh ))

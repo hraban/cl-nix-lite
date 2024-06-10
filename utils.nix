@@ -256,7 +256,7 @@ rec {
 
   # ABCL doesn’t support running scripts with debugger disabled and "exit
   # non-zero on any error" mode.
-  wrapAbclToplevel = file: pkgs.writeText "abcl-wrapper.lisp" ''
+  wrapAbclToplevel = file: builtins.toFile "abcl-wrapper.lisp" ''
     (handler-case (load #p"${file}")
       (error (e)
         (format *error-output* "~A~%" e)

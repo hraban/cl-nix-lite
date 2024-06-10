@@ -17,6 +17,9 @@
 , lisp
 }:
 
+with {
+  inherit (pkgs) lib;
+};
 with pkgs.lib;
 with callPackage ./utils.nix {};
 
@@ -32,7 +35,7 @@ let
   asdfOpScript = operation:
     if b.isString operation
     then asdfOpScript ([ operation ])
-    else name: system: pkgs.writeText "asdf-build-${name}.lisp" ''
+    else name: system: builtins.toFile (lib.strings.sanitizeDerivationName "asdf-build-${name}.lisp") ''
       (require "asdf")
       ${b.concatStringsSep "\n"
         (map lispAsdfOp (a.cartesianProductOfSets { inherit operation system; }))}
@@ -436,7 +439,7 @@ EOF
     inherit (lisp.deriv) name;
     lispSystem = "";
     nativeBuildInputs = [ pkgs.makeBinaryWrapper ];
-    src = pkgs.writeText "mock" "source";
+    src = builtins.toFile "mock" "source";
     dontUnpack = true;
     dontBuild = true;
     lispDependencies = systems;
