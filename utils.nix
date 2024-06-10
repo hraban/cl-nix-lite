@@ -247,9 +247,10 @@ rec {
         deriv = lisp;
         name = getName lisp;
         call = {
-          sbcl = file: ''"${lisp}/bin/sbcl" --script "${file}"'';
-          clisp = file: ''"${lisp}/bin/clisp" -E UTF-8 -norc "${file}"'';
-          ecl = file: ''"${lisp}/bin/ecl" --shell "${file}"'';
+          sbcl = file: ''${escapeShellArg (getExe lisp)} --script ${escapeShellArg file}'';
+          clisp = file: ''${escapeShellArg (getExe lisp)} -E UTF-8 -norc ${escapeShellArg file}'';
+          ecl = file: ''${escapeShellArg (getExe lisp)} --shell ${escapeShellArg file}'';
+          clasp = file: ''${escapeShellArg (getExe lisp)} --script ${escapeShellArg file}'';
         }.${name};
       };
 }

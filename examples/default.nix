@@ -13,7 +13,7 @@ let
   pkgs' = pkgs.extend (import cl-nix-lite);
   lisps = builtins.filter (drv:
     !drv.meta.broken && meta.availableOn { inherit (pkgs.hostPlatform) system; } drv
-  ) (with pkgs'; [ clisp ecl sbcl ]);
+  ) (with pkgs'; [ clasp-common-lisp clisp ecl sbcl ]);
   # Massage a test input into a list of derivations (for later flattening)
   allInputs = input:
     if isDerivation input
