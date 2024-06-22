@@ -486,6 +486,7 @@ rec {
         };
       };
 
+      meta.broken = lisp.name == "clasp";
       propagatedBuildInputs = systems: l.optionals (builtins.elem "cl-async-ssl" systems) [
         pkgs.openssl
       ];
