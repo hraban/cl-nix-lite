@@ -52,6 +52,7 @@ let
       !(builtins.elem lisp.pname [
         "abcl"
         "clisp"
+        "clasp"
       ])
     ) [ ./channels/with-cffi ];
   channelTestsFor =
