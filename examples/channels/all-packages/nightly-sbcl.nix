@@ -14,8 +14,8 @@
 let
   src = builtins.fetchGit ({ inherit url; } // builtins.removeAttrs args ["pkgs" "sbclOverride"]);
 in
-(pkgs.sbcl.override ({
+(pkgs.sbcl.override {
   bootstrapLisp = pkgs.lib.getExe pkgs.sbcl;
-} // sbclOverride)).overrideAttrs {
+}).overrideAttrs ({
   src = builtins.trace "SBCL from ${url} @ ${src.rev}" src;
-}
+} // sbclOverride)
