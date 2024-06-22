@@ -270,7 +270,7 @@ rec {
       buildInputs = [ pkgs.libuv ];
       lispSystem = "bordeaux-threads";
       src = inputs.bordeaux-threads;
-      meta.broken = lisp.name == "clisp";
+      meta.broken = lisp.name == "clisp" || (lisp.name == "sbcl" && !lisp.deriv.threadSupport);
     };
 
     inherit (lispMultiDerivation rec {
