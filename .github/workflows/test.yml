@@ -49,12 +49,18 @@ jobs:
     # This avoids having to fetch an older nixpkgs just for tests and it helps
     # detect problems early.
     - name: Update flake locks to use this cl-nix-lite and nixpkgs
+      # This used to override cl-nix-lite to “../../..”, which is simple,
+      # obvious and works locally.  Github Actions hates those things, and it
+      # finds in the filesystem is a fantastic opportunity to waste your time.
+      # They do lord knows what here with shallow checkouts or not or whatever,
+      # I have no idea, I don’t care, shut up.  Locking to the revision and
+      # re-fetching this from remote is the easiest thing to do.
       run: |
         for example in examples/flakes/* ; do
           (
             cd "$example"
             nix flake lock \
-                --override-input cl-nix-lite ../../.. \
+                --override-input cl-nix-lite "github:${{ github.repository }}/${{ github.sha }}" \
                 --override-input nixpkgs nixpkgs
           )
         done
