@@ -35,11 +35,11 @@
     "3d-math": {
       "flake": false,
       "locked": {
-        "lastModified": 1716986207,
-        "narHash": "sha256-HytBT4KHSvNx0u8CYiS/Z1lOX4UFUflc4k696yC53bo=",
+        "lastModified": 1718710536,
+        "narHash": "sha256-WuXG+sllXUINEfQFENy4EuamnMlIhFfTeIBBeyn3IQQ=",
         "owner": "Shinmera",
         "repo": "3d-math",
-        "rev": "6ca2d898aba6ce095bb9b2b56b632296838bd61b",
+        "rev": "1e7d391b950993a5f13deeef9df15ba189b2ec36",
         "type": "github"
       },
       "original": {
