@@ -45,8 +45,24 @@
   "mgl-pax"
 ] ++ pkgs.lib.optionals pkgs.hostPlatform.isDarwin [
   "flexi-streams"
-] ++ pkgs.lib.optionals pkgs.hostPlatform.isLinux [
+] ++ pkgs.lib.optionals (pkgs.hostPlatform.isLinux || (lisp.pname == "abcl")) [
+  # Hangs forever on ABCL
   "usocket"
+] ++ pkgs.lib.optionals (lisp.pname == "abcl") [
+  "3bmd"
+  "3bmd-ext-code-blocks"
+  "3bmd-ext-tables"
+  "cl-containers"
+  "cl-containers/with-asdf-system-connections"
+  # There is no applicable method for the generic function #<STANDARD-GENERIC-FUNCTION EXECUTE {39BBD1DE}> when called with arguments (NIL #<TRANSACTION TX-CREATE-PERSON (Kathryn Janeway) {290C186E}>)..
+  "cl-prevalence"
+  "salza2"
+  "trivial-custom-debugger" # #<MY-ERROR {354E970D}>
+] ++ pkgs.lib.optionals (lisp.pname == "abcl" && pkgs.hostPlatform.isDarwin) [
+  # Works locally but broken on Github Actions I don’t know why:
+  #
+  # Running test FIND-PORTS XThe following check failed: ((FIND-PORT:FIND-PORT))
+  "find-port"
 ] ++ pkgs.lib.optionals (lisp.pname == "clisp") [
   "float-features" # *** - APPLY: too few arguments given to FIND
   "kmrcl" # odd floating point error on clisp

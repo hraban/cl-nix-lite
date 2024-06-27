@@ -70,6 +70,7 @@ rec {
       lispDependencies = [ documentation-utils type-templates ];
       lispCheckDependencies = [ parachute ];
       src = inputs."3d-math";
+      # For ABCL, if that would fix it: _JAVA_OPTIONS="-Xmx4g";
       env = lib.optionalAttrs (lisp.name == "sbcl") {
         NIX_SBCL_DYNAMIC_SPACE_SIZE = "4gb";
       };
@@ -77,7 +78,7 @@ rec {
       # Compiling this on CLISP hangs forever.
       # On ECL:
       # * The declaration (DECLARE (FTYPE (FUNCTION ((OR IVEC4 DVEC4 VEC4 IVEC3 DVEC3 VEC3 IVEC2 DVEC2 VEC2)) (VALUES (OR I32 F64 F32) &OPTIONAL)) VX)) was found in a bad place.
-      meta.broken = b.elem lisp.name [ "clisp" "ecl" ];
+      meta.broken = b.elem lisp.name [ "clisp" "ecl" "abcl" ];
     };
 
     "3d-vectors" = lispDerivation {
@@ -234,7 +235,12 @@ rec {
       lispDependencies = [ documentation-utils ];
       lispCheckDependencies = [ parachute ];
       # CLISP is not supported by the Atomics library.
-      meta.broken = lisp.name == "clisp";
+      # The CAS operation is not supported by Armed Bear Common Lisp in Atomics.
+      # This is most likely due to lack of support by the implementation.
+      # If you think this is in error, and the implementation does expose
+      # the necessary operators, please file an issue at
+      #   https://github.com/shinmera/atomics/issues
+      meta.broken = b.elem lisp.name [ "abcl" "clisp" ];
     };
 
     inherit (lispMultiDerivation {
@@ -327,10 +333,12 @@ rec {
           (builtins.readFile ./cffi-setup-hook.sh ))
         else ./cffi-setup-hook.sh
       )];
-      # CFFI requires CLISP compiled with dynamic FFI support, which only
-      # enabled on Linux
       meta = systems: a.optionalAttrs (b.elem "cffi" systems) {
-        broken = ! (lisp.name == "clisp" -> pkgs.stdenv.isLinux);
+        # CFFI requires CLISP compiled with dynamic FFI support, which only
+        # enabled on Linux. And it’s supposed to work with ABCL but I don’t know
+        # how, so I’m marking this broken for now.
+        broken = ! (lisp.name == "clisp" -> pkgs.stdenv.isLinux) ||
+                 lisp.name == "abcl";
       };
     }) cffi cffi-grovel;
 
@@ -529,7 +537,7 @@ rec {
           lispDependencies = [ metatilities-base ];
           lispCheckDependencies = [ lift ];
         };
-        # This is an infections dependency which, if available on the search
+        # This is an infectious dependency which, if available on the search
         # path at all, will cause cl-containers to start compiling some extra of
         # its files. This must of course happen at build time of cl-containers,
         # otherwise it happens in the nix store which will fail. So if if you
@@ -597,6 +605,8 @@ rec {
       src = inputs.cl-fad;
       lispDependencies = [ alexandria bordeaux-threads ];
       lispCheckDependencies = [ cl-ppcre unit-test ];
+      # The assertion (PATH:= (PATH:CATDIR #P"/a/" #P"/b/" #P"c/" #P"d/" #P"e" #P"f/") #P"/b/c/./d/f/") failed.
+      meta.broken = lisp.name == "abcl";
     };
 
     cl-gopher = lispify "cl-gopher" [
@@ -714,6 +724,8 @@ rec {
         metatilities-base
       ];
       lispCheckDependencies = [ lift trivial-shell ];
+      # “There is no class named ABSTRACT-CONTAINER.”
+      meta.broken = lisp.name == "abcl";
     };
 
     cl-mimeparse = lispDerivation {
@@ -805,8 +817,12 @@ rec {
       lispCheckDependencies = [
         nst
       ];
-      # Class #<The BUILT-IN-CLASS FUNCTION> is not a valid superclass for #<The CLOS:FUNCALLABLE-STANDARD-CLASS CL-REACTIVE::SIGNAL-FUNCTION>
-      meta.broken = lisp.name == "ecl";
+      meta.broken = builtins.elem lisp.name [
+        # Attempt to define a subclass of built-in-class FUNCTION.
+        "abcl"
+        # Class #<The BUILT-IN-CLASS FUNCTION> is not a valid superclass for #<The CLOS:FUNCALLABLE-STANDARD-CLASS CL-REACTIVE::SIGNAL-FUNCTION>
+        "ecl"
+      ];
     };
 
     cl-redis = lispDerivation {
@@ -897,12 +913,15 @@ rec {
           ];
         };
       };
-      # CLISP:
-      # *** - The function get-structure is not yet implemented for CLISP 2.49.92
-      # ECL:
-      # ;;; The function get-structure is not yet implemented for ECL 21.2.1 on arm64.
       meta = systems: a.optionalAttrs (b.elem "cl-variates/with-metacopy" systems) {
-        broken = b.elem lisp.name [ "clisp" "ecl" ];
+        broken = b.elem lisp.name [
+          # The function get-structure is not yet implemented for Armed Bear Common Lisp 1.9.2 on AARCH64.
+          "abcl"
+          # *** - The function get-structure is not yet implemented for CLISP 2.49.92
+          "clisp"
+          # ;;; The function get-structure is not yet implemented for ECL 21.2.1 on arm64.
+          "ecl"
+        ];
       };
     }) cl-variates "cl-variates/with-metacopy";
 
@@ -1593,6 +1612,8 @@ rec {
       version = "4a27407aad9deb607ffb8847630cde3d041ea25a";
       src = inputs.kmrcl;
       lispCheckDependencies = [ rt ];
+      # > The symbol "MAKE-THREAD-LOCK" was not found in package EXT.
+      meta.broken = lisp.name == "abcl";
     };
 
     # I can’t be bothered sorting out this dependency jungle
@@ -2069,6 +2090,11 @@ rec {
       lispDependencies = [ alexandria babel cl-utilities split-sequence ];
       lispCheckDependencies = [ prove ];
       src = inputs.quri;
+      # On ABCL this hard-codes a build path which isn’t available once it’s
+      # moved to the store.  The dependent pacage will throw:
+      #
+      # The file #P"/private/tmp/nix-build-system-quri.drv-0/source/data/effective_tld_names.dat" does not exist.
+      meta.broken = lisp.name == "abcl";
     };
 
     reblocks = lispDerivation {
@@ -2201,6 +2227,24 @@ rec {
         trivial-macroexpand-all
         atomics
       ];
+      # Something rather benign seems going on with packages depending on
+      # Serapeum in ABCL:
+      #
+      # ; Caught DEPENDENCY-NOT-DONE:
+      # ;   Computing just-done stamp  for action (ASDF/LISP-ACTION:PREPARE-OP "serapeum"), but dependency (ASDF/LISP-ACTION:LOAD-OP "extensible-sequences") wasn't done yet!
+
+
+      # ; Compilation unit finished
+      # ;   Caught 1 WARNING condition
+
+      # Unable to open #P"/nix/store/dg1am35c5dlfa1n7493kjhks86ibh3cz-system-serapeum/package-tmpCEA7HV6J.abcl".
+      #
+      # Looking at the serapeum source it seems to be because ABCL provides a
+      # native "extensible-sequences" feature, which serapeum includes somehow,
+      # but downstream ASDF gets confused about whether or not this was loaded
+      # and tries to rebuild serapeum because of it.  I don’t have the
+      # inclination to fix it 🤷
+      meta.broken = lisp.name == "abcl";
     };
 
     should-test = lispDerivation {

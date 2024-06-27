@@ -55,6 +55,8 @@
                 license = pkgs.lib.licenses.agpl3Only;
               };
             };
+            # Error using ABCL:
+            # Not (currently) implemented on ABCL: UIOP/IMAGE:DUMP-IMAGE dumping an executable
           };
         });
   }
