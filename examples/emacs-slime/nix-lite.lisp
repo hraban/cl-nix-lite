@@ -109,7 +109,11 @@ in
   "Add a package (and its dependencies) to the ASDF search path"
   (let ((new (adjoin package packages :test #'equal)))
     (refresh-packages new)
-    (setf packages new)))
+    (setf packages new)
+    ;; Best effort--this usually works
+    (if (asdf:find-system package nil)
+        (asdf:load-system package)
+        (format *error-output* "Nix package cl-nix-lite.~A successfully loaded, but ASDF system ~:*~A not found.~%" package))))
 
 (defun unload-package (package)
   "Remove a package (and any unused dependencies) from the ASDF search path.
