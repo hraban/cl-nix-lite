@@ -49,9 +49,19 @@
 (require "uiop")
 
 (defun run (cmd)
-  (uiop:run-program cmd
-                    :output '(:string :stripped t)
-                    :error-output :interactive))
+  ;; The only way I know how to get streaming stderr from the spawned process to
+  ;; SLIME.
+  (let* ((p (uiop:launch-program cmd :output :stream :error-output :stream))
+         (outs (uiop:process-info-output p))
+         (errs (uiop:process-info-error-output p)))
+    (uiop:slurp-input-stream *error-output* errs :linewise t)
+    (let ((out (uiop:slurp-input-stream :string outs :stripped t))
+          (status (uiop:wait-process p)))
+      ;; Copied from UIOP.  This is sensible.
+      (unless (eql 0 status)
+        (cerror "IGNORE-ERROR-STATUS"
+                'uiop:subprocess-error :command cmd :code status :process p))
+      out)))
 
 (defun nix-build (nix)
   "Build this nix expression.
