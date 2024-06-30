@@ -55,7 +55,7 @@
          (outs (uiop:process-info-output p))
          (errs (uiop:process-info-error-output p)))
     (uiop:slurp-input-stream *error-output* errs :linewise t)
-    (let ((out (uiop:slurp-input-stream :string outs :stripped t))
+    (let ((out (uiop:slurp-input-stream :lines outs))
           (status (uiop:wait-process p)))
       ;; Copied from UIOP.  This is sensible.
       (unless (eql 0 status)
@@ -68,10 +68,9 @@
 
 Returns a list of the built paths, as output to stdout by Nix.
 "
-  (let ((out (run `("nix-build" "--no-out-link" "-E" ,nix))))
-    (remove ""
-            (uiop:split-string out :separator '(#\Newline))
-            :test #'string=)))
+  (remove ""
+          (run `("nix-build" "--no-out-link" "-E" ,nix))
+          :test #'string=))
 
 (defun nix-store-p (p)
   (string= "/nix/store/" (subseq (namestring p) 0 11)))
