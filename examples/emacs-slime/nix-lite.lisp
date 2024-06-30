@@ -86,28 +86,30 @@ Returns a list of the built paths, as output to stdout by Nix.
 ;; like asdf which, on load, will try and write to their own source
 ;; directory. Using the final derivation directory is the only way to reliably
 ;; load those packages.
-(defun refresh-packages ()
-  (let ((nix (format NIL "
+(defun refresh-packages (packages)
+  (let* ((nix (format NIL "
 let
   pkgs = import (~A) { overlays = [ (import (~A)) ]; };
   l = pkgs.lispPackagesLite;
 in
 (l.lispWithSystems [ ~(~{l.\"~A\"~^ ~}~) ]).ancestry.deps
-" *src-nixpkgs* *src-cl-nix-lite* packages)))
-    ;; Assume that any nix store path is managed by this package. Safe
+" *src-nixpkgs* *src-cl-nix-lite* packages))
+         (fresh-dirs (nix-build nix)))
+    ;; Assume that any nix store path is managed by this package.  Safe
     ;; assumption.
     (delete-nix-paths)
     (setf asdf:*central-registry*
           (nconc asdf:*central-registry*
                  (mapcar (lambda (p) (pathname (concatenate 'string p "/")))
-                         (nix-build nix))))))
+                         fresh-dirs)))))
 
 ;; TODO: Normalize package names. Not doing that now because nobody cares.
 
 (defun load-package (package)
   "Add a package (and its dependencies) to the ASDF search path"
-  (pushnew package packages :test #'equal)
-  (refresh-packages))
+  (let ((new (adjoin package packages :test #'equal)))
+    (refresh-packages new)
+    (setf packages new)))
 
 (defun unload-package (package)
   "Remove a package (and any unused dependencies) from the ASDF search path.
@@ -115,5 +117,6 @@ in
 N.B.: This does not unload the package from your Lisp image. It merely removes
 it from the path.
 "
-  (setf packages (delete package packages :test #'equal))
-  (refresh-packages))
+  (let ((new (remove package packages :test #'equal)))
+    (refresh-packages new)
+    (setf packages new)))
