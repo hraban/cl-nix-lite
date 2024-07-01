@@ -2111,6 +2111,7 @@ rec {
         cl-cookie
         cl-fad
         clack
+        clack-handler-hunchentoot
         dexador
         f-underscore
         find-port
