@@ -2638,11 +2638,11 @@
     "metatilities": {
       "flake": false,
       "locked": {
-        "lastModified": 1490877504,
-        "narHash": "sha256-bZuWup9boM8+Xo+D+BIw6XgnIMhU0yJnj4DsDG2zEG8=",
+        "lastModified": 1719805396,
+        "narHash": "sha256-2Hce6PSy8LF2SVx61HJNKLpHweRG0gMZFAykTUrDzeY=",
         "owner": "hraban",
         "repo": "metatilities",
-        "rev": "82e13df0545d0e47ae535ea35c5c99dd3a44e69e",
+        "rev": "be4bafe15df720c378187b2af06e43d8c030fd2a",
         "type": "github"
       },
       "original": {

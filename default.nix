@@ -10,3 +10,4 @@ let
   flake = (prev.callPackage flake-compat { src = ./inputs; }).defaultNix;
 in
 import ./lisp-packages-lite.nix { inherit (flake) inputs; pkgs = prev; }
+#NOMERGE
