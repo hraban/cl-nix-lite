@@ -105,22 +105,29 @@ in
 
 ;; TODO: Normalize package names. Not doing that now because nobody cares.
 
-(defun load-package (package)
+(defun load-package (&rest add)
   "Add a package (and its dependencies) to the ASDF search path"
-  (let ((new (adjoin package packages :test #'equal)))
-    (refresh-packages new)
-    (setf packages new)
+  (let ((all (union packages add :test #'equal)))
+    (refresh-packages all)
+    (setf packages all)
     ;; Best effort--this usually works
-    (if (asdf:find-system package nil)
-        (asdf:load-system package)
-        (format *error-output* "Nix package cl-nix-lite.~A successfully loaded, but ASDF system ~:*~A not found.~%" package))))
+    (dolist (failed (mapcan (lambda (package)
+                              (if (asdf:find-system package nil)
+                                  (progn
+                                    (asdf:load-system package)
+                                    nil)
+                                  (list package)))
+                            ;; Reload all new packages even if already loaded
+                            add))
+      (format *error-output* "Nix package cl-nix-lite.~A successfully loaded, but ASDF system ~:*~A not found.~%" failed))
+    all))
 
-(defun unload-package (package)
+(defun unload-package (&rest remove)
   "Remove a package (and any unused dependencies) from the ASDF search path.
 
 N.B.: This does not unload the package from your Lisp image. It merely removes
 it from the path.
 "
-  (let ((new (remove package packages :test #'equal)))
+  (let ((new (set-difference packages remove :test #'equal)))
     (refresh-packages new)
     (setf packages new)))
