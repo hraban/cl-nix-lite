@@ -76,6 +76,10 @@
   "type-i" # hangs forever on ECL
 ] ++ pkgs.lib.optionals (lisp.pname == "clisp" && pkgs.hostPlatform.isLinux) [
   "3bmd-ext-code-blocks"
+  # This fails on Github Actions, not in my local VM:
+  # *** - handle_fault error2 ! address = 0x1fffffd6e640 not in [0x1000000c0000,0x10000058dd90) !
+  # SIGSEGV cannot be cured. Fault address = 0x1fffffd6e640.
+  "event-emitter"
 ] ++ pkgs.lib.optionals ((lisp.pname == "ecl" && pkgs.hostPlatform.isLinux) || pkgs.hostPlatform.isDarwin) [
   # On ECL & Linux: ;;; Unknown keyword :HANDLED
   "lparallel"

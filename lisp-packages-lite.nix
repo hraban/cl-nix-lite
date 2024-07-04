@@ -1251,33 +1251,13 @@ rec {
       lispCheckDependencies = [ fiveam ];
     };
 
-    f-underscore = lispify "f-underscore" [ ];
-
-    fast-http = lispDerivation {
-      src = inputs.fast-http;
-      lispSystem = "fast-http";
-      lispDependencies = [
-        alexandria
-        babel
-        cl-utilities
-        log4cl
-        proc-parse
-        smart-buffer
-        xsubseq
-      ];
-      lispCheckDependencies = [
-        babel
-        cl-syntax-interpol
-        prove
-        xsubseq
-      ];
+    event-emitter = lispDerivation {
+      lispSystem = "event-emitter";
+      src = inputs.event-emitter;
+      lispCheckDependencies = [ prove ];
     };
 
-    fast-io = lispify "fast-io" [
-      alexandria
-      static-vectors
-      trivial-gray-streams
-    ];
+    f-underscore = lispify "f-underscore" [ ];
 
     fare-mop = lispify "fare-mop" [
       closer-mop
@@ -1323,6 +1303,46 @@ rec {
       # the version here from the derivation is very ugly and I hate it but is
       # there a better way?
       meta.broken = lisp.name == "sbcl" && (lib.getVersion lisp.deriv) == "2.4.4";
+    };
+
+    fast-http = lispDerivation {
+      src = inputs.fast-http;
+      lispSystem = "fast-http";
+      lispDependencies = [
+        alexandria
+        babel
+        cl-utilities
+        log4cl
+        proc-parse
+        smart-buffer
+        xsubseq
+      ];
+      lispCheckDependencies = [
+        babel
+        cl-syntax-interpol
+        prove
+        xsubseq
+      ];
+    };
+
+    fast-io = lispify "fast-io" [
+      alexandria
+      static-vectors
+      trivial-gray-streams
+    ];
+
+    fast-websocket = lispDerivation {
+      lispSystem = "fast-websocket";
+      src = inputs.fast-websocket;
+      lispCheckDependencies = [
+        prove
+        trivial-utf-8
+      ];
+      lispDependencies = [
+        fast-io
+        babel
+        alexandria
+      ];
     };
 
     # I’m defining this as a multideriv because it exposes lots of derivs. Even
@@ -2158,6 +2178,22 @@ rec {
       ];
     };
 
+    reblocks-websocket = lispDerivation {
+      lispSystem = "reblocks-websocket";
+      src = inputs.reblocks-websocket;
+      lispDependencies = [
+        alexandria
+        bordeaux-threads
+        jonathan
+        log4cl-extras
+        reblocks
+        reblocks-parenscript
+        serapeum
+        websocket-driver
+      ];
+      lispCheckDependencies = [ rove ];
+    };
+
     rfc2388 = lispify "rfc2388" [ ];
 
     routes = lispDerivation {
@@ -2247,6 +2283,8 @@ rec {
       # inclination to fix it 🤷
       meta.broken = lisp.name == "abcl";
     };
+
+    sha1 = lispify "sha1" [];
 
     should-test = lispDerivation {
       lispSystem = "should-test";
@@ -2572,6 +2610,22 @@ rec {
     uuid = lispify "uuid" [ ironclad trivial-utf-8 ];
 
     vom = lispify "vom" [ ];
+
+    websocket-driver = lispify "websocket-driver" [
+      babel
+      bordeaux-threads
+      self."cl+ssl"
+      cl-base64
+      clack-socket
+      event-emitter
+      fast-http
+      fast-io
+      fast-websocket
+      quri
+      sha1
+      split-sequence
+      usocket
+    ];
 
     which = lispDerivation {
       lispSystem = "which";

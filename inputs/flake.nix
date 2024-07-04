@@ -479,6 +479,10 @@
       url = "github:scymtym/esrap";
       flake = false;
     };
+    event-emitter = {
+      url = "github:fukamachi/event-emitter";
+      flake = false;
+    };
     f-underscore = {
       url = "gitlab:bpm/f-underscore?host=gitlab.common-lisp.net";
       flake = false;
@@ -501,6 +505,10 @@
     };
     fast-io = {
       url = "github:rpav/fast-io";
+      flake = false;
+    };
+    fast-websocket = {
+      url = "github:fukamachi/fast-websocket";
       flake = false;
     };
     femlisp = {
@@ -848,6 +856,10 @@
       url = "github:40ants/reblocks-ui";
       flake = false;
     };
+    reblocks-websocket = {
+      url = "github:40ants/reblocks-websocket";
+      flake = false;
+    };
     rfc2388 = {
       url = "gitlab:rfc2388/rfc2388?host=gitlab.common-lisp.net";
       flake = false;
@@ -883,6 +895,10 @@
     };
     serapeum = {
       url = "github:ruricolist/serapeum";
+      flake = false;
+    };
+    sha1 = {
+      url = "github:massung/sha1";
       flake = false;
     };
     should-test = {
@@ -1067,6 +1083,10 @@
     };
     vom = {
       url = "github:orthecreedence/vom";
+      flake = false;
+    };
+    websocket-driver = {
+      url = "github:fukamachi/websocket-driver";
       flake = false;
     };
     which = {

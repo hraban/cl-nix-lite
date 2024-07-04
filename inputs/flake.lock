@@ -1660,6 +1660,22 @@
         "type": "github"
       }
     },
+    "event-emitter": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1717761537,
+        "narHash": "sha256-1l+bI8xEfK5hDZbCyvyw454BXZpvb2GswVEvnkA+R04=",
+        "owner": "fukamachi",
+        "repo": "event-emitter",
+        "rev": "d8bd3d9300004185fd8d11261ea6a909e8a75ff8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "fukamachi",
+        "repo": "event-emitter",
+        "type": "github"
+      }
+    },
     "f-underscore": {
       "flake": false,
       "locked": {
@@ -1755,6 +1771,22 @@
       "original": {
         "owner": "rpav",
         "repo": "fast-io",
+        "type": "github"
+      }
+    },
+    "fast-websocket": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1715572255,
+        "narHash": "sha256-Xw6vlbKdGu5XPGY9D13Ty0al3lWGTQT6pcakIxoqX4A=",
+        "owner": "fukamachi",
+        "repo": "fast-websocket",
+        "rev": "66ea86617edc07d8753ed91a5558e176318be92f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "fukamachi",
+        "repo": "fast-websocket",
         "type": "github"
       }
     },
@@ -3165,6 +3197,22 @@
         "type": "github"
       }
     },
+    "reblocks-websocket": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1709584614,
+        "narHash": "sha256-yzi2bZLZoAECfQMRxlv7XmYM05n+sZF+U46dYVwkwX4=",
+        "owner": "40ants",
+        "repo": "reblocks-websocket",
+        "rev": "a973282b3b54a7f75fd3f76061eb5473bda5bb14",
+        "type": "github"
+      },
+      "original": {
+        "owner": "40ants",
+        "repo": "reblocks-websocket",
+        "type": "github"
+      }
+    },
     "rfc2388": {
       "flake": false,
       "locked": {
@@ -3288,12 +3336,14 @@
         "enchant": "enchant",
         "eos": "eos",
         "esrap": "esrap",
+        "event-emitter": "event-emitter",
         "f-underscore": "f-underscore",
         "fare-mop": "fare-mop",
         "fare-quasiquote": "fare-quasiquote",
         "fare-utils": "fare-utils",
         "fast-http": "fast-http",
         "fast-io": "fast-io",
+        "fast-websocket": "fast-websocket",
         "femlisp": "femlisp",
         "fiasco": "fiasco",
         "find-port": "find-port",
@@ -3382,6 +3432,7 @@
         "reblocks": "reblocks",
         "reblocks-parenscript": "reblocks-parenscript",
         "reblocks-ui": "reblocks-ui",
+        "reblocks-websocket": "reblocks-websocket",
         "rfc2388": "rfc2388",
         "routes": "routes",
         "rove": "rove",
@@ -3391,6 +3442,7 @@
         "s-xml": "s-xml",
         "salza2": "salza2",
         "serapeum": "serapeum",
+        "sha1": "sha1",
         "should-test": "should-test",
         "simple-date-time": "simple-date-time",
         "slime": "slime",
@@ -3437,6 +3489,7 @@
         "usocket": "usocket",
         "uuid": "uuid",
         "vom": "vom",
+        "websocket-driver": "websocket-driver",
         "which": "which",
         "wild-package-inferred-system": "wild-package-inferred-system",
         "with-output-to-stream": "with-output-to-stream",
@@ -3575,6 +3628,22 @@
       "original": {
         "owner": "ruricolist",
         "repo": "serapeum",
+        "type": "github"
+      }
+    },
+    "sha1": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1630000465,
+        "narHash": "sha256-n3RMSHmzQ2UQSnPR/uzQvDb0Ycp8nNpE5hNz54sE1rE=",
+        "owner": "massung",
+        "repo": "sha1",
+        "rev": "be8b1b155c3a6ad3eb9b200212af6ff52f5611de",
+        "type": "github"
+      },
+      "original": {
+        "owner": "massung",
+        "repo": "sha1",
         "type": "github"
       }
     },
@@ -4317,6 +4386,22 @@
       "original": {
         "owner": "orthecreedence",
         "repo": "vom",
+        "type": "github"
+      }
+    },
+    "websocket-driver": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1694957320,
+        "narHash": "sha256-Yz0GCKHrpFUeE5IoJgo96o7XynyQn0apWQSpuyt77oA=",
+        "owner": "fukamachi",
+        "repo": "websocket-driver",
+        "rev": "ff606c1ff373b6b07380978f848cf6b6aa192977",
+        "type": "github"
+      },
+      "original": {
+        "owner": "fukamachi",
+        "repo": "websocket-driver",
         "type": "github"
       }
     },
