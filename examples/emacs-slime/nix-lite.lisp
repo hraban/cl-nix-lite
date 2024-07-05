@@ -27,10 +27,6 @@
 ;;       (load nix-lite-init)))
 
 
-;; Extremely hacky, proof-of-concept, alpha, 0.0, use-at-your-own-risk level
-;; code. I have committed this to document my work rather than as a sign of
-;; sanity.
-
 (defpackage #:nix-lite
   (:use #:cl)
   (:export #:load-package
@@ -40,7 +36,7 @@
 
 (in-package #:nix-lite)
 
-(defvar packages '())
+(defvar *packages* '())
 
 (defvar *src-cl-nix-lite* "builtins.fetchTarball \"https://github.com/hraban/cl-nix-lite/archive/master.tar.gz\"")
 (defvar *src-nixpkgs* "<nixpkgs>")
@@ -93,12 +89,13 @@ let
   l = pkgs.lispPackagesLite;
 in
 (l.lispWithSystems [ ~(~{l.\"~A\"~^ ~}~) ]).ancestry.deps
-" *src-nixpkgs* *src-cl-nix-lite* packages))
+" *src-nixpkgs* *src-cl-nix-lite* *packages*))
          (fresh-dirs (nix-build nix)))
     ;; Assume that any nix store path is managed by this package.  Safe
     ;; assumption.
     (delete-nix-paths)
     (setf asdf:*central-registry*
+          ;; Append, so custom paths take precedence
           (nconc asdf:*central-registry*
                  (mapcar (lambda (p) (pathname (concatenate 'string p "/")))
                          fresh-dirs)))))
@@ -107,9 +104,9 @@ in
 
 (defun load-package (&rest add)
   "Add a package (and its dependencies) to the ASDF search path"
-  (let ((all (union packages add :test #'equal)))
+  (let ((all (union *packages* add :test #'equal)))
     (refresh-packages all)
-    (setf packages all)
+    (setf *packages* all)
     ;; Best effort--this usually works
     (dolist (failed (mapcan (lambda (package)
                               (if (asdf:find-system package nil)
@@ -128,6 +125,6 @@ in
 N.B.: This does not unload the package from your Lisp image. It merely removes
 it from the path.
 "
-  (let ((new (set-difference packages remove :test #'equal)))
+  (let ((new (set-difference *packages* remove :test #'equal)))
     (refresh-packages new)
-    (setf packages new)))
+    (setf *packages* new)))
