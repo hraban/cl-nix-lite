@@ -89,7 +89,7 @@ let
   l = pkgs.lispPackagesLite;
 in
 (l.lispWithSystems [ ~(~{l.\"~A\"~^ ~}~) ]).ancestry.deps
-" *src-nixpkgs* *src-cl-nix-lite* *packages*))
+" *src-nixpkgs* *src-cl-nix-lite* packages))
          (fresh-dirs (nix-build nix)))
     ;; Assume that any nix store path is managed by this package.  Safe
     ;; assumption.
