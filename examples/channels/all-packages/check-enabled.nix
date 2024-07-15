@@ -9,6 +9,7 @@
   "bordeaux-threads" # There’s a deadlock heisenbug in these tests
   "cffi"
   "cl-difflib" # see https://github.com/wiseman/cl-difflib/pull/1
+  "cl-libxslt" # Broken since nixpkgs 91594d11a2248ebe00f45f6b9be63fe264bb74e1
   "cl-redis"
   "common-doc"
   "commondoc-markdown" # I have no idea what’s happening here but I need to move on
