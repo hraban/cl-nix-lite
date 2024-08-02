@@ -226,7 +226,7 @@ rec {
     assoc-utils = lispDerivation {
       lispSystem = "assoc-utils";
       src = inputs.assoc-utils;
-      lispCheckDependencies = [ prove ];
+      lispCheckDependencies = [ rove ];
     };
 
     atomics = lispDerivation {
@@ -565,7 +565,7 @@ rec {
       lispSystem = "cl-cookie";
       src = inputs.cl-cookie;
       lispDependencies = [ alexandria cl-ppcre proc-parse local-time quri ];
-      lispCheckDependencies = [ prove ];
+      lispCheckDependencies = [ rove ];
     };
 
     cl-coveralls = lispDerivation {
@@ -1073,20 +1073,21 @@ rec {
       src = inputs.data-lens;
     };
 
-    inherit (lispMultiDerivation {
+    dbi = lispDerivation {
+      lispSystem = "dbi";
       src = inputs.cl-dbi;
-
-      systems = {
-        dbi = {
-          lispDependencies = [ bordeaux-threads split-sequence closer-mop ];
-          lispCheckDependencies = [
-            alexandria
-            rove
-            trivial-types
-          ];
-        };
-      };
-    }) dbi;
+      lispDependencies = [
+        cl-ppcre
+        bordeaux-threads
+        split-sequence
+        closer-mop
+      ];
+      lispCheckDependencies = [
+        alexandria
+        rove
+        trivial-types
+      ];
+    };
 
     deflate = lispify "deflate" [];
 
