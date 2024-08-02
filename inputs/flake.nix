@@ -540,7 +540,7 @@
       flake = false;
     };
     fset = {
-      url = "github:slburson/fset";
+      url = "github:slburson/fset/pull/57/head";
       flake = false;
     };
     garbage-pools = {

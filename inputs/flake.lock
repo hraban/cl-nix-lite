@@ -1922,15 +1922,16 @@
     "fset": {
       "flake": false,
       "locked": {
-        "lastModified": 1722452791,
-        "narHash": "sha256-qRX3I7RN63dBplBEyW7hklhsftUVINPf6eq7KbUcw1s=",
+        "lastModified": 1722567739,
+        "narHash": "sha256-c/+syA+uYRIVulRTpKZxpJRO6VGAnxQ5+tna+qMLQQg=",
         "owner": "slburson",
         "repo": "fset",
-        "rev": "a2b8778598e04c2725d9b591f451e1a3fb23e62d",
+        "rev": "04d50d35b2e25310e931c2424726f0a68716a76e",
         "type": "github"
       },
       "original": {
         "owner": "slburson",
+        "ref": "pull/57/head",
         "repo": "fset",
         "type": "github"
       }
