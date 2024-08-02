@@ -661,6 +661,22 @@
         "type": "github"
       }
     },
+    "cl-csv": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1706294080,
+        "narHash": "sha256-sWf7L9CyRrMIS9bw4S8PMna5aW2Ai630mZaJuAZNaF0=",
+        "owner": "AccelerationNet",
+        "repo": "cl-csv",
+        "rev": "2d64d4183bfc91824068cd4cf3414238d3c00fe5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AccelerationNet",
+        "repo": "cl-csv",
+        "type": "github"
+      }
+    },
     "cl-custom-hash-table": {
       "flake": false,
       "locked": {
@@ -1415,6 +1431,22 @@
       "original": {
         "owner": "fiddlerwoaroof",
         "repo": "data-lens",
+        "type": "github"
+      }
+    },
+    "data-table": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1688397905,
+        "narHash": "sha256-zSOrukD3XihtnvQbOrH7SlQFUixAVOdOfxyJK/LQxPQ=",
+        "owner": "AccelerationNet",
+        "repo": "data-table",
+        "rev": "fe3a9e66e0105c97002ccb4ec6e82f606f54760b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AccelerationNet",
+        "repo": "data-table",
         "type": "github"
       }
     },
@@ -3275,6 +3307,7 @@
         "cl-containers": "cl-containers",
         "cl-cookie": "cl-cookie",
         "cl-coveralls": "cl-coveralls",
+        "cl-csv": "cl-csv",
         "cl-custom-hash-table": "cl-custom-hash-table",
         "cl-dbi": "cl-dbi",
         "cl-difflib": "cl-difflib",
@@ -3322,6 +3355,7 @@
         "concrete-syntax-tree": "concrete-syntax-tree",
         "contextl": "contextl",
         "data-lens": "data-lens",
+        "data-table": "data-table",
         "deflate": "deflate",
         "dexador": "dexador",
         "dissect": "dissect",

@@ -584,6 +584,31 @@ rec {
       src = inputs.cl-coveralls;
     };
 
+    inherit (lispMultiDerivation {
+      src = inputs.cl-csv;
+      systems = {
+        cl-csv = {
+          lispDependencies = [
+            iterate
+            alexandria
+            cl-interpol
+          ];
+          lispCheckDependencies = [
+            lisp-unit2
+          ];
+        };
+        cl-csv-data-table = {
+          lispDependencies = [
+            data-table
+            cl-csv
+          ];
+        };
+        # There is also a cl-csv-clsql but I don’t feel like adding clsql right
+        # now.
+      };
+    }) cl-csv
+       cl-csv-data-table;
+
     cl-custom-hash-table = lispDerivation {
       src = inputs.cl-custom-hash-table;
       lispSystem = "cl-custom-hash-table";
@@ -1072,6 +1097,27 @@ rec {
       lispCheckDependencies = [ fiveam string-case ];
       src = inputs.data-lens;
     };
+
+    inherit (lispMultiDerivation {
+      src = inputs.data-table;
+      systems = {
+        data-table = {
+          lispDependencies = [
+            alexandria
+            cl-interpol
+            symbol-munger
+            iterate
+          ];
+          lispCheckDependencies = [
+            lisp-unit2
+          ];
+        };
+        # There is also a data-table-clsql but I don’t feel like adding clsql
+        # right now.
+      };
+      # * Wrong number of arguments for function COLUMN-TYPE
+      meta.broken = lisp.name == "ecl";
+    }) data-table;
 
     dbi = lispDerivation {
       lispSystem = "dbi";

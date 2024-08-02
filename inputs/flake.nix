@@ -222,6 +222,10 @@
       url = "github:fukamachi/cl-coveralls";
       flake = false;
     };
+    cl-csv = {
+      url = "github:AccelerationNet/cl-csv";
+      flake = false;
+    };
     cl-custom-hash-table = {
       url = "github:metawilm/cl-custom-hash-table";
       flake = false;
@@ -413,6 +417,10 @@
     };
     contextl = {
       url = "github:pcostanza/contextl";
+      flake = false;
+    };
+    data-table = {
+      url = "github:AccelerationNet/data-table";
       flake = false;
     };
     data-lens = {
