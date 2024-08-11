@@ -128,3 +128,34 @@ it from the path.
   (let ((new (set-difference *packages* remove :test #'equal)))
     (refresh-packages new)
     (setf *packages* new)))
+
+
+;; Load an entire system from a local path, including dependencies.
+
+;; Highly experimental and WIP, so unexported for now.
+
+(declaim (ftype (function (string &optional string) list) dependencies))
+(defun dependencies (p &optional (parent p))
+  "Find list of all ASDF dependencies of this system"
+  (remove-duplicates
+   ;; TODO: Filter uiop, private packages…
+   (mapcan (lambda (dep)
+             (if ;; This probably needs tightening up. Symbols, case, …
+              (uiop:string-prefix-p parent dep)
+              (dependencies dep parent)
+              (list dep)))
+           (asdf:system-depends-on (asdf:find-system p)))
+   :test #'equal))
+
+(declaim (ftype (function (pathname) string) path->system-name))
+(defun path->system-name (p)
+  (first (last (pathname-directory p))))
+
+(declaim (ftype (function (pathname &optional string) t) load-local))
+(defun load-local (path &optional (system-name (path->system-name path)))
+  "Load the full system from this directory."
+  (when (pathname-name path)
+    (error "Package path ~S must be a directory. Must end with a slash (/)." path))
+  (pushnew path asdf:*central-registry* :test #'equal)
+  (apply #'load-package (dependencies system-name))
+  (asdf:load-system system-name))
