@@ -226,7 +226,7 @@ rec {
     assoc-utils = lispDerivation {
       lispSystem = "assoc-utils";
       src = inputs.assoc-utils;
-      lispCheckDependencies = [ prove ];
+      lispCheckDependencies = [ rove ];
     };
 
     atomics = lispDerivation {
@@ -565,7 +565,7 @@ rec {
       lispSystem = "cl-cookie";
       src = inputs.cl-cookie;
       lispDependencies = [ alexandria cl-ppcre proc-parse local-time quri ];
-      lispCheckDependencies = [ prove ];
+      lispCheckDependencies = [ rove ];
     };
 
     cl-coveralls = lispDerivation {
@@ -1073,20 +1073,21 @@ rec {
       src = inputs.data-lens;
     };
 
-    inherit (lispMultiDerivation {
+    dbi = lispDerivation {
+      lispSystem = "dbi";
       src = inputs.cl-dbi;
-
-      systems = {
-        dbi = {
-          lispDependencies = [ bordeaux-threads split-sequence closer-mop ];
-          lispCheckDependencies = [
-            alexandria
-            rove
-            trivial-types
-          ];
-        };
-      };
-    }) dbi;
+      lispDependencies = [
+        cl-ppcre
+        bordeaux-threads
+        split-sequence
+        closer-mop
+      ];
+      lispCheckDependencies = [
+        alexandria
+        rove
+        trivial-types
+      ];
+    };
 
     deflate = lispify "deflate" [];
 
@@ -1383,7 +1384,23 @@ rec {
       lispDependencies = [ documentation-utils ];
     };
 
-    fset = lispify "fset" [ misc-extensions mt19937 named-readtables ];
+    fset = lispDerivation {
+      lispDependencies = [ misc-extensions mt19937 named-readtables ];
+      src = inputs.fset;
+      lispSystem = "fset";
+      meta.broken = builtins.elem lisp.name [
+        # The value FSET::IDENTITY-ORDERING-MIXIN-NEXT-SERIAL-NUMBER is not of type LIST.
+        "abcl"
+        # *** - CAR: IDENTITY-ORDERING-MIXIN-NEXT-SERIAL-NUMBER is not a list
+        "clisp"
+        #   * The macro form (INCREMENT-ATOMIC-SERIES IDENTITY-ORDERING-MIXIN-NEXT-SERIAL-NUMBER) was not expanded successfully.
+        # Error detected:
+        # In function CAR, the value of the first argument is
+        #   IDENTITY-ORDERING-MIXIN-NEXT-SERIAL-NUMBER
+        # which is not of the expected type LIST
+        "ecl"
+      ];
+    };
 
     garbage-pools = lispDerivation {
       lispSystem = "garbage-pools";
