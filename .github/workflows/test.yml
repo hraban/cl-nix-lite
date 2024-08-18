@@ -31,6 +31,18 @@ jobs:
       cancel-in-progress: true
     steps:
     - uses: actions/checkout@v4
+    # This is different from cachix which is about the actual derivations and
+    # their builds.  This is just to speed up eval.
+    - name: "Cache ~/.cache (including Nix eval cache)"
+      uses: actions/cache@v4
+      with:
+        path: "~/.cache"
+        key: constant
+    # NOMERGE
+    - run: |
+        pwd
+        ls -la ~
+        if [[ -d ~/.cache ]]; then tree ~/.cache ; fi
     - uses: DeterminateSystems/nix-installer-action@v9
     - uses: cachix/cachix-action@v14
       with:
