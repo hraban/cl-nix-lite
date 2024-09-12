@@ -11,7 +11,7 @@ N.B.: You must supply the _Nix name_ of the package, not the ASDF system name. T
 Usage:
 
 ```
-CL-USER> (load #p"/path/to/my/cl-nix-lite/examples/slime/nix-lisp.lisp") ; or put this in ~/.sbclrc
+CL-USER> (load #p"/path/to/my/cl-nix-lite/examples/slime/nix-lite.lisp") ; or put this in ~/.sbclrc
 CL-USER> (nix-lite:load-package "alexandria")
 
 ; ... compilation output ...
