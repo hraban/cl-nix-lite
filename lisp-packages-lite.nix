@@ -1240,6 +1240,7 @@ rec {
     enchant = lispDerivation {
       lispDependencies = [ cffi ];
       lispSystem = "enchant";
+      propagatedBuildInputs = [ pkgs.enchant ];
       src = inputs.enchant;
     };
 
@@ -1785,7 +1786,7 @@ rec {
     local-time = lispDerivation {
       lispSystem = "local-time";
       src = inputs.local-time;
-      lispCheckDependencies = [ hu_dwim_stefil ];
+      lispCheckDependencies = [ fiasco ];
     };
 
     log4cl = lispDerivation {
@@ -2124,7 +2125,7 @@ rec {
 
     quri = lispDerivation {
       lispSystem = "quri";
-      lispDependencies = [ alexandria babel cl-utilities split-sequence ];
+      lispDependencies = [ alexandria babel cl-utilities idna split-sequence ];
       lispCheckDependencies = [ prove ];
       src = inputs.quri;
       # On ABCL this hard-codes a build path which isn’t available once it’s

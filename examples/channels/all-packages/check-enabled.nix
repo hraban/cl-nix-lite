@@ -58,6 +58,7 @@
   "cl-containers/with-asdf-system-connections"
   # There is no applicable method for the generic function #<STANDARD-GENERIC-FUNCTION EXECUTE {39BBD1DE}> when called with arguments (NIL #<TRANSACTION TX-CREATE-PERSON (Kathryn Janeway) {290C186E}>)..
   "cl-prevalence"
+  "local-time"
   "salza2"
   "trivial-custom-debugger" # #<MY-ERROR {354E970D}>
 ] ++ pkgs.lib.optionals (lisp.pname == "abcl" && pkgs.hostPlatform.isDarwin) [
@@ -68,6 +69,7 @@
 ] ++ pkgs.lib.optionals (lisp.pname == "clisp") [
   "float-features" # *** - APPLY: too few arguments given to FIND
   "kmrcl" # odd floating point error on clisp
+  "local-time" # *** - Invalid pathname designator T
   "trivial-custom-debugger" # *** - Condition of type TRIVIAL-CUSTOM-DEBUGGER/TEST::MY-ERROR.
 ] ++ pkgs.lib.optionals (lisp.pname == "ecl") [
   "data-lens" # Tests fail
