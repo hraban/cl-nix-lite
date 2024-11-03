@@ -195,7 +195,7 @@
       flake = false;
     };
     cl-base64 = {
-      url = "git+http://git.kpe.io/cl-base64.git";
+      url = "sourcehut:~hraban/git.kpe.io-mirror/cl-base64";
       flake = false;
     };
     cl-change-case = {
@@ -648,7 +648,7 @@
       flake = false;
     };
     kmrcl = {
-      url = "git+http://git.kpe.io/kmrcl.git";
+      url = "sourcehut:~hraban/git.kpe.io-mirror/kmrcl";
       flake = false;
     };
     lack = {
@@ -684,7 +684,7 @@
       flake = false;
     };
     lml2 = {
-      url = "git+http://git.kpe.io/lml2.git";
+      url = "sourcehut:~hraban/git.kpe.io-mirror/lml2";
       flake = false;
     };
     local-time = {
@@ -821,7 +821,7 @@
       flake = false;
     };
     ptester = {
-      url = "git+http://git.kpe.io/ptester.git";
+      url = "sourcehut:~hraban/git.kpe.io-mirror/ptester";
       flake = false;
     };
     punycode = {
@@ -873,7 +873,7 @@
       flake = false;
     };
     rt = {
-      url = "git+http://git.kpe.io/rt.git";
+      url = "sourcehut:~hraban/git.kpe.io-mirror/rt";
       flake = false;
     };
     rutils = {
@@ -1107,7 +1107,7 @@
       flake = false;
     };
     xlunit = {
-      url = "git+http://git.kpe.io/xlunit.git";
+      url = "sourcehut:~hraban/git.kpe.io-mirror/xlunit";
       flake = false;
     };
     xml-emitter = {

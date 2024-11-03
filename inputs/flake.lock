@@ -552,17 +552,18 @@
     "cl-base64": {
       "flake": false,
       "locked": {
-        "lastModified": 1601489696,
+        "lastModified": 1730662348,
         "narHash": "sha256-cuVDuPj8gXiN9kLgWpWerkZgodno2s3OENZoByApUoo=",
-        "ref": "refs/heads/master",
-        "rev": "577683b18fd880b82274d99fc96a18a710e3987a",
-        "revCount": 76,
-        "type": "git",
-        "url": "http://git.kpe.io/cl-base64.git"
+        "owner": "~hraban",
+        "repo": "git.kpe.io-mirror",
+        "rev": "f1dc3ee1843e9fa2fd1ea0914b208f36f77deccd",
+        "type": "sourcehut"
       },
       "original": {
-        "type": "git",
-        "url": "http://git.kpe.io/cl-base64.git"
+        "owner": "~hraban",
+        "ref": "cl-base64",
+        "repo": "git.kpe.io-mirror",
+        "type": "sourcehut"
       }
     },
     "cl-change-case": {
@@ -2350,17 +2351,18 @@
     "kmrcl": {
       "flake": false,
       "locked": {
-        "lastModified": 1601328591,
+        "lastModified": 1730662459,
         "narHash": "sha256-oq28Xy1NrL/v4cipw4sObu3YkDBIAo0OR8wWqCoB/Rk=",
-        "ref": "refs/heads/master",
-        "rev": "4a27407aad9deb607ffb8847630cde3d041ea25a",
-        "revCount": 411,
-        "type": "git",
-        "url": "http://git.kpe.io/kmrcl.git"
+        "owner": "~hraban",
+        "repo": "git.kpe.io-mirror",
+        "rev": "a574b885272b19cf24e70583afd4d80dd0f5a500",
+        "type": "sourcehut"
       },
       "original": {
-        "type": "git",
-        "url": "http://git.kpe.io/kmrcl.git"
+        "owner": "~hraban",
+        "ref": "kmrcl",
+        "repo": "git.kpe.io-mirror",
+        "type": "sourcehut"
       }
     },
     "lack": {
@@ -2494,17 +2496,18 @@
     "lml2": {
       "flake": false,
       "locked": {
-        "lastModified": 1440828970,
+        "lastModified": 1730662488,
         "narHash": "sha256-Rp3ilUs2uMyLOtpKkOkN9Yp5Jf3ZhpTJ1SrgXzoYjWw=",
-        "ref": "refs/heads/master",
-        "rev": "f6fab048b73e0b2d1deb2c3c93703fdacf4b5e22",
-        "revCount": 88,
-        "type": "git",
-        "url": "http://git.kpe.io/lml2.git"
+        "owner": "~hraban",
+        "repo": "git.kpe.io-mirror",
+        "rev": "c82367e87ec449fe587fd38b32a19302040ed1e3",
+        "type": "sourcehut"
       },
       "original": {
-        "type": "git",
-        "url": "http://git.kpe.io/lml2.git"
+        "owner": "~hraban",
+        "ref": "lml2",
+        "repo": "git.kpe.io-mirror",
+        "type": "sourcehut"
       }
     },
     "local-time": {
@@ -3054,17 +3057,18 @@
     "ptester": {
       "flake": false,
       "locked": {
-        "lastModified": 1472479703,
+        "lastModified": 1730662555,
         "narHash": "sha256-jjc7JP+T7jrbSsPU+RNhQrxOKYkQDfiJwyLbxg51FNA=",
-        "ref": "refs/heads/master",
-        "rev": "fe69fde54f4bce00ce577feb918796c293fc7253",
-        "revCount": 42,
-        "type": "git",
-        "url": "http://git.kpe.io/ptester.git"
+        "owner": "~hraban",
+        "repo": "git.kpe.io-mirror",
+        "rev": "8058f73b228da93e6163d029027830bd67ffc1e0",
+        "type": "sourcehut"
       },
       "original": {
-        "type": "git",
-        "url": "http://git.kpe.io/ptester.git"
+        "owner": "~hraban",
+        "ref": "ptester",
+        "repo": "git.kpe.io-mirror",
+        "type": "sourcehut"
       }
     },
     "punycode": {
@@ -3538,17 +3542,18 @@
     "rt": {
       "flake": false,
       "locked": {
-        "lastModified": 1250098784,
+        "lastModified": 1730662555,
         "narHash": "sha256-KxlltS8zCpuYX6Yp05eC2t/eWcTavD0XyOsp1XMWUY8=",
-        "ref": "refs/heads/master",
-        "rev": "a6a7503a0b47953bc7579c90f02a6dba1f6e4c5a",
-        "revCount": 20,
-        "type": "git",
-        "url": "http://git.kpe.io/rt.git"
+        "owner": "~hraban",
+        "repo": "git.kpe.io-mirror",
+        "rev": "c9cdde3860dd17ebac9539cbb731de64e9a56564",
+        "type": "sourcehut"
       },
       "original": {
-        "type": "git",
-        "url": "http://git.kpe.io/rt.git"
+        "owner": "~hraban",
+        "ref": "rt",
+        "repo": "git.kpe.io-mirror",
+        "type": "sourcehut"
       }
     },
     "rutils": {
@@ -4469,17 +4474,18 @@
     "xlunit": {
       "flake": false,
       "locked": {
-        "lastModified": 1440828994,
+        "lastModified": 1730662555,
         "narHash": "sha256-g/dCnf5PqvhTLfsASs8SKzqcIENuSA+jJho+m251Lys=",
-        "ref": "refs/heads/master",
-        "rev": "3805d34b1d8dc77f7e0ee527a2490194292dd0fc",
-        "revCount": 33,
-        "type": "git",
-        "url": "http://git.kpe.io/xlunit.git"
+        "owner": "~hraban",
+        "repo": "git.kpe.io-mirror",
+        "rev": "a19bf1b5216cbe3f07736eed1dc4b17c7a1aa869",
+        "type": "sourcehut"
       },
       "original": {
-        "type": "git",
-        "url": "http://git.kpe.io/xlunit.git"
+        "owner": "~hraban",
+        "ref": "xlunit",
+        "repo": "git.kpe.io-mirror",
+        "type": "sourcehut"
       }
     },
     "xml-emitter": {
