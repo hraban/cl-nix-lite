@@ -76,6 +76,8 @@ jobs:
             import ./nightly-sbcl.nix {
               ${{ inputs.url && format('url = {0};', toJSON(inputs.url)) }}
               ${{ inputs.ref && format('ref = {0};', toJSON(inputs.ref)) }}
+              # Fixes check phase for 2.4.11, not yet merged in nixpkgs
+              pkgs = import (builtins.fetchTree "github:nixos/nixpkgs/pull/360320/head") {};
               sbclOverride = {
                 linkableRuntime = ${{matrix.linkableRuntime}};
                 coreCompression = ${{matrix.coreCompression}};
