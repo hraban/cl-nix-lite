@@ -16,6 +16,7 @@ let
 in
 (pkgs.sbcl.override {
   bootstrapLisp = pkgs.lib.getExe pkgs.sbcl;
-}).overrideAttrs ({
+}).overrideAttrs (old: {
   src = builtins.trace "SBCL from ${url} @ ${src.rev}" src;
+  version = "${old.version}-next";
 } // sbclOverride)

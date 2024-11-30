@@ -11,6 +11,7 @@
 let
   src = builtins.fetchGit ({ inherit url; } // builtins.removeAttrs args ["pkgs"]);
 in
-pkgs.ecl.overrideAttrs {
+pkgs.ecl.overrideAttrs (old: {
   src = builtins.trace "ECL from ${url} @ ${src.rev}" src;
-}
+  version = "${old.version}-next";
+})
