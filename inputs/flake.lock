@@ -4285,11 +4285,11 @@
     "type-templates": {
       "flake": false,
       "locked": {
-        "lastModified": 1701637406,
-        "narHash": "sha256-ModZ7YLchquEaDKWBm1WacaEj0W2Ri7twsyix+sav/4=",
+        "lastModified": 1733405845,
+        "narHash": "sha256-bkWENHvtvxgt5f900WQcKl4mBw+oAWGKFsCecxcSkvo=",
         "owner": "Shinmera",
         "repo": "type-templates",
-        "rev": "5b389ebcff61b81585a64d0b899b69fa12aa5f96",
+        "rev": "ade30b450e018c4e650f1e8bab16fa3f21d240d5",
         "type": "github"
       },
       "original": {

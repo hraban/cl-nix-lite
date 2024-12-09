@@ -35,7 +35,6 @@
   "trivial-backtrace"
   "trivial-timeout"
   "try"
-  "type-templates" # https://github.com/Shinmera/type-templates/issues/1
   "typo"
   "with-output-to-stream"
   "xlunit"
