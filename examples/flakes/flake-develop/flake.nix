@@ -1,7 +1,7 @@
 {
   description = "Nix develop shell using lispPackagesLite";
   inputs = {
-    cl-nix-lite.url = "github:hraban/cl-nix-lite";
+    cl-nix-lite.url = "github:hraban/cl-nix-lite/v0";
   };
   outputs = {
     self, nixpkgs, cl-nix-lite, flake-utils

@@ -113,7 +113,7 @@ let
     owner = "hraban";
     repo = "cl-nix-lite";
     # replace these two lines with the output of
-    # nix run nixpkgs#nix-prefetch-github -- hraban cl-nix-lite --nix | grep 'rev\|sha'
+    # nix run nixpkgs#nix-prefetch-github -- hraban cl-nix-lite --rev v0 --nix | grep 'rev\|sha'
     rev = "";
     sha256 = "";
   };
@@ -128,7 +128,7 @@ with pkgs'.lispPackagesLite;
 3. Run the following command:
 
 ```sh
-nix run nixpkgs#nix-prefetch-github -- hraban cl-nix-lite --nix | grep 'rev\|sha'
+nix run nixpkgs#nix-prefetch-github -- hraban cl-nix-lite --rev v0 --nix | grep 'rev\|sha'
 ```
 
 Grab the two lines of output, and replace their corresponding lines in the snippet you just pasted, in step 2.

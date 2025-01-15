@@ -2,7 +2,7 @@
   description = "Demo lispPackagesLite app using an external dependency";
 
   inputs = {
-    cl-nix-lite.url = "github:hraban/cl-nix-lite";
+    cl-nix-lite.url = "github:hraban/cl-nix-lite/v0";
     hello-world = {
       url = "sourcehut:~hraban/hello-world";
       flake = false;
