@@ -131,19 +131,15 @@
     "alexandria": {
       "flake": false,
       "locked": {
-        "host": "gitlab.common-lisp.net",
         "lastModified": 1706204274,
         "narHash": "sha256-vPHp/dXX24zUPF1t7EdBryzqlG33A0fOoD5loFOxAEs=",
-        "owner": "alexandria",
-        "repo": "alexandria",
         "rev": "8514d8e68ed0c733abf7f96f9e91b24912686dc4",
-        "type": "gitlab"
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/alexandria/alexandria"
       },
       "original": {
-        "host": "gitlab.common-lisp.net",
-        "owner": "alexandria",
-        "repo": "alexandria",
-        "type": "gitlab"
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/alexandria/alexandria"
       }
     },
     "alien-ring": {
@@ -261,19 +257,15 @@
     "asdf": {
       "flake": false,
       "locked": {
-        "host": "gitlab.common-lisp.net",
         "lastModified": 1727371251,
         "narHash": "sha256-QAhV9Rs2I5SqRWDtatIIuY11sTKYfnMfhf0Nqta8l6c=",
-        "owner": "asdf",
-        "repo": "asdf",
         "rev": "9d1e1fa761215c2f833b072b227fded31b137881",
-        "type": "gitlab"
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/asdf/asdf"
       },
       "original": {
-        "host": "gitlab.common-lisp.net",
-        "owner": "asdf",
-        "repo": "asdf",
-        "type": "gitlab"
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/asdf/asdf"
       }
     },
     "asdf-flv": {
@@ -1147,19 +1139,15 @@
     "cl-utilities": {
       "flake": false,
       "locked": {
-        "host": "gitlab.common-lisp.net",
         "lastModified": 1146621435,
         "narHash": "sha256-XHAFEE2/6kqewbyQyZqWsaLZ0E0ek5vJUFThoHKyup4=",
-        "owner": "cl-utilities",
-        "repo": "cl-utilities",
         "rev": "dce2d2f6387091ea90357a130fa6d13a6776884b",
-        "type": "gitlab"
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/cl-utilities/cl-utilities"
       },
       "original": {
-        "host": "gitlab.common-lisp.net",
-        "owner": "cl-utilities",
-        "repo": "cl-utilities",
-        "type": "gitlab"
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/cl-utilities/cl-utilities"
       }
     },
     "cl-variates": {
@@ -1566,19 +1554,15 @@
     "eager-future2": {
       "flake": false,
       "locked": {
-        "host": "gitlab.common-lisp.net",
         "lastModified": 1530742488,
         "narHash": "sha256-jeaCSUn0gszAGmqo9FJLWQjoM+vUafhZoShOUMdeQeM=",
-        "owner": "vsedach",
-        "repo": "eager-future2",
         "rev": "54df8effd9d9eccac917509590286b5ac5f9cb30",
-        "type": "gitlab"
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/vsedach/eager-future2"
       },
       "original": {
-        "host": "gitlab.common-lisp.net",
-        "owner": "vsedach",
-        "repo": "eager-future2",
-        "type": "gitlab"
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/vsedach/eager-future2"
       }
     },
     "easy-routes": {
@@ -1680,19 +1664,15 @@
     "f-underscore": {
       "flake": false,
       "locked": {
-        "host": "gitlab.common-lisp.net",
         "lastModified": 1215093865,
         "narHash": "sha256-ZVkb87TCDSRU4fXg7gRAYrwY3EO3aiPpAR4B1bNYG1c=",
-        "owner": "bpm",
-        "repo": "f-underscore",
         "rev": "7988171194cd259e12469dd7c30000be6ef1b31a",
-        "type": "gitlab"
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/bpm/f-underscore"
       },
       "original": {
-        "host": "gitlab.common-lisp.net",
-        "owner": "bpm",
-        "repo": "f-underscore",
-        "type": "gitlab"
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/bpm/f-underscore"
       }
     },
     "fare-mop": {
@@ -2240,19 +2220,15 @@
     "iterate": {
       "flake": false,
       "locked": {
-        "host": "gitlab.common-lisp.net",
         "lastModified": 1703814168,
         "narHash": "sha256-1qkaZbghNAHj7/FsuJXNqREjJdsGXEDu4WHMclz7oWU=",
-        "owner": "iterate",
-        "repo": "iterate",
         "rev": "26cf129a03b45d6dd7d2a659622244d20a9ab6f5",
-        "type": "gitlab"
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/iterate/iterate"
       },
       "original": {
-        "host": "gitlab.common-lisp.net",
-        "owner": "iterate",
-        "repo": "iterate",
-        "type": "gitlab"
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/iterate/iterate"
       }
     },
     "jonathan": {
@@ -2721,19 +2697,15 @@
     "misc-extensions": {
       "flake": false,
       "locked": {
-        "host": "gitlab.common-lisp.net",
         "lastModified": 1717364123,
         "narHash": "sha256-slgYZhwMEUTWhhYwdNiOpB6xM9/WrjCQuM3Pbc54b18=",
-        "owner": "misc-extensions",
-        "repo": "misc-extensions",
         "rev": "57f2d235f0137b6074de75d6eefed13cf2637ad4",
-        "type": "gitlab"
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/misc-extensions/misc-extensions"
       },
       "original": {
-        "host": "gitlab.common-lisp.net",
-        "owner": "misc-extensions",
-        "repo": "misc-extensions",
-        "type": "gitlab"
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/misc-extensions/misc-extensions"
       }
     },
     "moptilities": {
@@ -2755,19 +2727,15 @@
     "mt19937": {
       "flake": false,
       "locked": {
-        "host": "gitlab.common-lisp.net",
         "lastModified": 1627032295,
         "narHash": "sha256-j3YzNAJODcJR4nsp7Myl1K7889Kg3ojMAuYwZq3WAkA=",
-        "owner": "nyxt",
-        "repo": "mt19937",
         "rev": "831284f0c7fbda54ddfd135eee1e80afad7cc16e",
-        "type": "gitlab"
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/nyxt/mt19937"
       },
       "original": {
-        "host": "gitlab.common-lisp.net",
-        "owner": "nyxt",
-        "repo": "mt19937",
-        "type": "gitlab"
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/nyxt/mt19937"
       }
     },
     "named-readtables": {
@@ -2927,19 +2895,15 @@
     "parse-declarations": {
       "flake": false,
       "locked": {
-        "host": "gitlab.common-lisp.net",
         "lastModified": 1252391499,
         "narHash": "sha256-rd//Wwn0pmpua9KYgixE8BzoZqd6XURUrzYVRvTE5Q0=",
-        "owner": "parse-declarations",
-        "repo": "parse-declarations",
         "rev": "549aebbfb9403a7fe948654126b9c814f443f4f2",
-        "type": "gitlab"
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/parse-declarations/parse-declarations"
       },
       "original": {
-        "host": "gitlab.common-lisp.net",
-        "owner": "parse-declarations",
-        "repo": "parse-declarations",
-        "type": "gitlab"
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/parse-declarations/parse-declarations"
       }
     },
     "parse-js": {
@@ -3090,19 +3054,15 @@
     "puri": {
       "flake": false,
       "locked": {
-        "host": "gitlab.common-lisp.net",
         "lastModified": 1601488469,
         "narHash": "sha256-rV5ViV0082r3PQlmUdYo+GtCW934kw3EBxpGBbLOAj8=",
-        "owner": "clpm",
-        "repo": "puri",
         "rev": "4bbab89d9ccbb26346899d1f496c97604fec567b",
-        "type": "gitlab"
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/clpm/puri"
       },
       "original": {
-        "host": "gitlab.common-lisp.net",
-        "owner": "clpm",
-        "repo": "puri",
-        "type": "gitlab"
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/clpm/puri"
       }
     },
     "pythonic-string-reader": {
@@ -3220,19 +3180,15 @@
     "rfc2388": {
       "flake": false,
       "locked": {
-        "host": "gitlab.common-lisp.net",
         "lastModified": 1374148329,
         "narHash": "sha256-RqFzdYyAEvJZKcSjSNXHog2KYxxFmyHupiX2DphUV4U=",
-        "owner": "rfc2388",
-        "repo": "rfc2388",
         "rev": "51bf93e91cb6c2d515c7674db19cc87d4550fd0b",
-        "type": "gitlab"
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/rfc2388/rfc2388"
       },
       "original": {
-        "host": "gitlab.common-lisp.net",
-        "owner": "rfc2388",
-        "repo": "rfc2388",
-        "type": "gitlab"
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/rfc2388/rfc2388"
       }
     },
     "root": {
@@ -3592,19 +3548,15 @@
     "s-xml": {
       "flake": false,
       "locked": {
-        "host": "gitlab.common-lisp.net",
         "lastModified": 1203083697,
         "narHash": "sha256-wcXT9OGaCdEbkwWPYV4JA6FNGlppTXAuK+8QR/MvTv8=",
-        "owner": "s-xml",
-        "repo": "s-xml",
         "rev": "194cceaf90fb1a268d63f25f9b36e570af07cfb1",
-        "type": "gitlab"
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/s-xml/s-xml"
       },
       "original": {
-        "host": "gitlab.common-lisp.net",
-        "owner": "s-xml",
-        "repo": "s-xml",
-        "type": "gitlab"
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/s-xml/s-xml"
       }
     },
     "salza2": {
@@ -3783,19 +3735,15 @@
     "stefil": {
       "flake": false,
       "locked": {
-        "host": "gitlab.common-lisp.net",
         "lastModified": 1541161636,
         "narHash": "sha256-kLKFBG6ZD3cRQAHoLAgxqp2fd9XaY/9DcvB/LTAxHy8=",
-        "owner": "stefil",
-        "repo": "stefil",
         "rev": "0398548ec95dceb50fc2c2c03e5fb0ce49b86c7a",
-        "type": "gitlab"
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/stefil/stefil"
       },
       "original": {
-        "host": "gitlab.common-lisp.net",
-        "owner": "stefil",
-        "repo": "stefil",
-        "type": "gitlab"
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/stefil/stefil"
       }
     },
     "stem": {
@@ -3913,19 +3861,15 @@
     "trivial-backtrace": {
       "flake": false,
       "locked": {
-        "host": "gitlab.common-lisp.net",
         "lastModified": 1337170046,
         "narHash": "sha256-0enXFClfULa7iPagwD9x5ueaJPBcLURp1vuhGMyPZUs=",
-        "owner": "trivial-backtrace",
-        "repo": "trivial-backtrace",
         "rev": "43ef7d947f4b4de767d0f91f28b50d9c03ad29d6",
-        "type": "gitlab"
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/trivial-backtrace/trivial-backtrace"
       },
       "original": {
-        "host": "gitlab.common-lisp.net",
-        "owner": "trivial-backtrace",
-        "repo": "trivial-backtrace",
-        "type": "gitlab"
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/trivial-backtrace/trivial-backtrace"
       }
     },
     "trivial-benchmark": {
@@ -4219,19 +4163,15 @@
     "trivial-utf-8": {
       "flake": false,
       "locked": {
-        "host": "gitlab.common-lisp.net",
         "lastModified": 1693231710,
         "narHash": "sha256-OmES85S9e4h+iAYF99S1YYf/vMsjZk9jL9Q5wxs9Tl0=",
-        "owner": "trivial-utf-8",
-        "repo": "trivial-utf-8",
         "rev": "718e74506ca02ec1d46c1f424a7881fed6373349",
-        "type": "gitlab"
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/trivial-utf-8/trivial-utf-8"
       },
       "original": {
-        "host": "gitlab.common-lisp.net",
-        "owner": "trivial-utf-8",
-        "repo": "trivial-utf-8",
-        "type": "gitlab"
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/trivial-utf-8/trivial-utf-8"
       }
     },
     "trivial-with-current-source-form": {

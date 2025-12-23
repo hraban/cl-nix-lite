@@ -90,7 +90,7 @@
       flake = false;
     };
     alexandria = {
-      url = "gitlab:alexandria/alexandria?host=gitlab.common-lisp.net";
+      url = "git+https://gitlab.common-lisp.net/alexandria/alexandria";
       flake = false;
     };
     alien-ring = {
@@ -122,7 +122,7 @@
       flake = false;
     };
     asdf = {
-      url = "gitlab:asdf/asdf?host=gitlab.common-lisp.net";
+      url = "git+https://gitlab.common-lisp.net/asdf/asdf";
       flake = false;
     };
     asdf-flv = {
@@ -350,12 +350,12 @@
       flake = false;
     };
     cl-utilities = {
-      url = "gitlab:cl-utilities/cl-utilities?host=gitlab.common-lisp.net";
+      url = "git+https://gitlab.common-lisp.net/cl-utilities/cl-utilities";
       flake = false;
     };
     cl-variates = {
       # Temporarily point at personal fork with some fixes
-      # url = "gitlab:cl-variates/cl-variates?host=gitlab.common-lisp.net";
+      # url = "git+https://gitlab.common-lisp.net/cl-variates/cl-variates";
       url = "github:hraban/cl-variates/build";
       flake = false;
     };
@@ -456,7 +456,7 @@
       flake = false;
     };
     eager-future2 = {
-      url = "gitlab:vsedach/eager-future2?host=gitlab.common-lisp.net";
+      url = "git+https://gitlab.common-lisp.net/vsedach/eager-future2";
       flake = false;
     };
     easy-routes = {
@@ -484,7 +484,7 @@
       flake = false;
     };
     f-underscore = {
-      url = "gitlab:bpm/f-underscore?host=gitlab.common-lisp.net";
+      url = "git+https://gitlab.common-lisp.net/bpm/f-underscore";
       flake = false;
     };
     fare-mop = {
@@ -620,7 +620,7 @@
       flake = false;
     };
     iterate = {
-      url =  "gitlab:iterate/iterate?host=gitlab.common-lisp.net";
+      url = "git+https://gitlab.common-lisp.net/iterate/iterate";
       flake = false;
     };
     jonathan = {
@@ -740,7 +740,7 @@
       flake = false;
     };
     misc-extensions = {
-      url = "gitlab:misc-extensions/misc-extensions?host=gitlab.common-lisp.net";
+      url = "git+https://gitlab.common-lisp.net/misc-extensions/misc-extensions";
       flake = false;
     };
     moptilities = {
@@ -748,7 +748,7 @@
       flake = false;
     };
     mt19937 = {
-      url = "gitlab:nyxt/mt19937?host=gitlab.common-lisp.net";
+      url = "git+https://gitlab.common-lisp.net/nyxt/mt19937";
       flake = false;
     };
     named-readtables = {
@@ -789,7 +789,7 @@
       flake = false;
     };
     parse-declarations = {
-      url = "gitlab:parse-declarations/parse-declarations?host=gitlab.common-lisp.net";
+      url = "git+https://gitlab.common-lisp.net/parse-declarations/parse-declarations";
       flake = false;
     };
     parse-js = {
@@ -829,7 +829,7 @@
       flake = false;
     };
     puri = {
-      url = "gitlab:clpm/puri?host=gitlab.common-lisp.net";
+      url = "git+https://gitlab.common-lisp.net/clpm/puri";
       flake = false;
     };
     pythonic-string-reader = {
@@ -861,7 +861,7 @@
       flake = false;
     };
     rfc2388 = {
-      url = "gitlab:rfc2388/rfc2388?host=gitlab.common-lisp.net";
+      url = "git+https://gitlab.common-lisp.net/rfc2388/rfc2388";
       flake = false;
     };
     routes = {
@@ -885,7 +885,7 @@
       flake = false;
     };
     s-xml = {
-      url = "gitlab:s-xml/s-xml?host=gitlab.common-lisp.net";
+      url = "git+https://gitlab.common-lisp.net/s-xml/s-xml";
       flake = false;
     };
     # TODO: Somehow create a versioned URL from this.
@@ -934,7 +934,7 @@
       flake = false;
     };
     stefil = {
-      url = "gitlab:stefil/stefil?host=gitlab.common-lisp.net";
+      url = "git+https://gitlab.common-lisp.net/stefil/stefil";
       flake = false;
     };
     stem = {
@@ -966,7 +966,7 @@
       flake = false;
     };
     trivial-backtrace = {
-      url =  "gitlab:trivial-backtrace/trivial-backtrace?host=gitlab.common-lisp.net";
+      url = "git+https://gitlab.common-lisp.net/trivial-backtrace/trivial-backtrace";
       flake = false;
     };
     trivial-benchmark = {
@@ -1042,7 +1042,7 @@
       flake = false;
     };
     trivial-utf-8 = {
-      url = "gitlab:trivial-utf-8/trivial-utf-8?host=gitlab.common-lisp.net";
+      url = "git+https://gitlab.common-lisp.net/trivial-utf-8/trivial-utf-8";
       flake = false;
     };
     trivial-with-current-source-form = {
