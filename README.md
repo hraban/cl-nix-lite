@@ -109,7 +109,7 @@ into:
 
 let
   # This is just the cl-nix-lite source code
-  cl-nix-lite = pkgs.fetchFromGitHub {
+  cl-nix-lite-src = pkgs.fetchFromGitHub {
     owner = "hraban";
     repo = "cl-nix-lite";
     # replace these two lines with the output of
@@ -118,7 +118,7 @@ let
     sha256 = "";
   };
   # Create a copy of nixpkgs with the cl-nix-lite overlay applied
-  pkgs' = pkgs.extend (import cl-nix-lite);
+  pkgs' = pkgs.extend (import cl-nix-lite-src);
 in
 
 # Now replace every occurrence of pkgs in this file by pkgs'

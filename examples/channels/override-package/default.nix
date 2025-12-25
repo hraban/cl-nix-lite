@@ -2,7 +2,7 @@
 # regression, or a bug:
 
 {
-  cl-nix-lite ? ../../..,
+  cl-nix-lite ? import ../../..,
   pkgs ? import <nixpkgs> { },
   lisp ? pkgs.sbcl,
 }:
@@ -20,7 +20,7 @@ let
   # overrides alexandria in there:
   pkgs' = pkgs.appendOverlays [
     # Set lispPackagesLite
-    (import cl-nix-lite)
+    cl-nix-lite
     # Now override alexandria in it
     (final: prev: {
       lispPackagesLite = (prev.lispPackagesLiteFor lisp).overrideScope (

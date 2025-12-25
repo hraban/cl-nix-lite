@@ -1,6 +1,6 @@
 {
-  cl-nix-lite ? ../../..,
-  pkgs ? import <nixpkgs> { overlays = [ (import cl-nix-lite) ]; },
+  cl-nix-lite ? import ../../..,
+  pkgs ? import <nixpkgs> { overlays = [ cl-nix-lite ]; },
   lisp ? pkgs.sbcl,
 }:
 

@@ -3,14 +3,14 @@
 # to a binary cache.
 
 {
-  cl-nix-lite ? ../.,
+  cl-nix-lite ? import ../.,
   pkgs ? import <nixpkgs> { },
 }:
 
 with pkgs.lib;
 
 let
-  pkgs' = pkgs.extend (import cl-nix-lite);
+  pkgs' = pkgs.extend cl-nix-lite;
   lisps = with pkgs'; [
     abcl
     clisp
