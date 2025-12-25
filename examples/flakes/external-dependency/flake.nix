@@ -9,11 +9,20 @@
     };
   };
 
-  outputs = { self, nixpkgs, flake-utils, cl-nix-lite, hello-world }:
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      flake-utils,
+      cl-nix-lite,
+      hello-world,
+    }:
+    flake-utils.lib.eachDefaultSystem (
+      system:
       let
         pkgs = nixpkgs.legacyPackages.${system}.extend cl-nix-lite.overlays.default;
-      in {
+      in
+      {
         packages = with pkgs.lispPackagesLite; {
           # I like exposing these "internal" packages as top-level flake outputs
           # because it makes debugging easier, but you can also declare this in
@@ -32,5 +41,6 @@
             lispDependencies = [ self.packages.${system}.hello ];
           };
         };
-      });
+      }
+    );
 }

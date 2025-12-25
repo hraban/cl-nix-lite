@@ -12,19 +12,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-
-
-
-
-
-
-
-
 # !!!! THIS IS NOT AN ACTUAL FLAKE -- DO NOT USE !!!!!
-
-
-
-
 
 # This is an internal trick I use for dependency management ONLY. The flake UI
 # neatly solves some problems I had as a maintainer of this scope, but you can’t
@@ -33,15 +21,7 @@
 # fixed-output-derivation shim before you can do anything with it. Anyway long
 # story short:
 
-
-
 #  DO  NOT  USE  !!!!
-
-
-
-
-
-
 
 {
 
@@ -1138,7 +1118,8 @@
   };
 
   # DO NOT USE!!!
-  outputs = inputs@{ nixpkgs, ... }:
+  outputs =
+    inputs@{ nixpkgs, ... }:
     {
       inherit inputs;
     };

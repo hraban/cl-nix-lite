@@ -12,10 +12,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-{
-  pkgs
-  , lib
-}:
+{ pkgs, lib }:
 
 with lib;
 
@@ -34,9 +31,11 @@ rec {
   # Like foldr but without a nul-value. Doesn’t support actual ‘null’ in the
   # list because I don’t know how to make singletons (is that even possible in
   # Nix?) and because I don’t care.
-  reduce = (op: seq:
-    assert ! b.elem null seq; # N.B.: THIS MAKES IT STRICT!
-    foldr (a: b: if b == null then a else (op a b)) null seq);
+  reduce = (
+    op: seq:
+    assert !b.elem null seq; # N.B.: THIS MAKES IT STRICT!
+    foldr (a: b: if b == null then a else (op a b)) null seq
+  );
 
   # Create an empty string with the same context as the given string
   emptyCopyWithContext = str: s.addContextFrom str "";
@@ -44,7 +43,12 @@ rec {
   # Turn a derivation path into a context-less string. I suspect this isn’t in
   # the stdlib because this is a perversion of a low-level feature, not intended
   # for casual access in regular derivations.
-  drvStrWithoutContext = rpipe [ toString b.getContext attrNames l.head ];
+  drvStrWithoutContext = rpipe [
+    toString
+    b.getContext
+    attrNames
+    l.head
+  ];
 
   # optionalKeys [ "a" "b" ] { a = 1; b = 2; c = 3; }
   # => { a = 1; b = 2; }
@@ -59,15 +63,23 @@ rec {
   # Like the inverse of lists.remove but takes a test function instead of an
   # element
   # (a -> Bool) -> [a] -> [a]
-  keepBy = f: foldr (a: b: l.optional (f a) a ++ b) [];
+  keepBy = f: foldr (a: b: l.optional (f a) a ++ b) [ ];
 
   # If argument is a function, call it with a constant value. Otherwise pass it
   # through.
   callIfFunc = val: f: if isFunction f then f val else f;
 
-  flatMap = f: rpipe [ (map f) l.flatten ];
+  flatMap =
+    f:
+    rpipe [
+      (map f)
+      l.flatten
+    ];
 
-  normaliseStrings = rpipe [ l.unique l.naturalSort ];
+  normaliseStrings = rpipe [
+    l.unique
+    l.naturalSort
+  ];
 
   # This is a /nested/ union operation on attrsets: if you have e.g. a 2-layer
   # deep set (so a set of sets, so [ { String => { String => T } } ]), you can
@@ -94,22 +106,26 @@ rec {
   # Tip:
   # - nestedUnion head 1 [ a b ] == b // a
   # - nestedUnion tail 1 [ a b ] == a // b
-  nestedUnion = item: n: sets:
-    if n == 0
-    then item sets
-    else
-      a.zipAttrsWith (_: vals: nestedUnion item (n - 1) vals) sets;
+  nestedUnion =
+    item: n: sets:
+    if n == 0 then item sets else a.zipAttrsWith (_: vals: nestedUnion item (n - 1) vals) sets;
 
   getLispDeps = x: x.CL_SOURCE_REGISTRY or "";
 
   # Get a context-less string representing this source derivation, come what
   # come may.
-  derivPath = src: drvStrWithoutContext (
-    if b.isPath src
-    # Purely a developer ergonomics feature. Don’t rely on this for published
-    # libs. It breaks pure eval.
-    then b.path { path = src; }
-    else src);
+  derivPath =
+    src:
+    drvStrWithoutContext (
+      if
+        b.isPath src
+      # Purely a developer ergonomics feature. Don’t rely on this for published
+      # libs. It breaks pure eval.
+      then
+        b.path { path = src; }
+      else
+        src
+    );
 
   isLispDeriv = x: x ? lispSystems;
 
@@ -148,65 +164,65 @@ rec {
   #
   # Note that bar only depends on a single "foo" derivation, which is built with
   # foo-b and foo-c; not on two copies of foo, one with b & c, one with just c.
-  ancestryWalker = {
-    # Function to convert a derivation to a string identifying it
-    # uniquely. Think src path.
-    key
-    # This derivation, if it were built as-is, no deduplication applied. Think
-    # stdenv.mkDerivation ...
-    , me
-    # How to merge this derivation with another one.
-    , merge
-    # My directly defined top-level dependencies.
-    , dependencies
-  }: let
-    # Create a single source map entry for this derivation. This is the core
-    # datastructure around which the derivation deduplication detection
-    # mechanism is built.
-    entryFor = drv: { ${key drv} = drv; };
-    # Given a lispDerivation, get all its dependencies in the { src-drv =>
-    # lisp-drv } format. The invariant for ancestry._depsMap is that it
-    # can’t contain itself, so this is a non-destructive operation.
-    depsFor = drv: drv.ancestry._depsMap // (entryFor drv);
-    # Always order dependencies deterministically.  If either of the two is not
-    # a lisp deriv, we’re basically in the foo-b situation. This situation only
-    # happens when we are in a derivation that has itself as a dependency. It
-    # never occurs from an unrelated dependency, because those will never have
-    # an entry for this src anyway.
-    #
-    # We are in the “bar” situation, above. Or perhaps in this situation:
-    #
-    #          -- blub-a
-    #        /
-    # bim --
-    #        \
-    #          -- blub-b
-    #
-    # Either way, the solution is the same: create an entirely new derivation
-    # that unions the two dependencies.
-    allDepsIncMyself = nestedUnion (reduce (x: x.ancestry.merge)) 1 (map depsFor dependencies);
-    depsMap = removeAttrs allDepsIncMyself [ (key me) ];
-  in
-  # The resulting ancestry object. This must be assigned to the output
-  # derivation’s passthru object, in a key called ‘ancestry’.
-  {
-    inherit merge;
-    # If I depend on myself in any way, first flatten me and all my transitive
-    # dependent copies of me into one big union derivation.
-    me =
-      if allDepsIncMyself ? ${key me}
-      then merge allDepsIncMyself.${key me}
-      else me;
-    # Internal only. Invariant: never includes myself.
-    _depsMap = depsMap;
-    # A flat list of all my dependencies.
-    deps = builtins.attrValues depsMap;
-  };
+  ancestryWalker =
+    {
+      # Function to convert a derivation to a string identifying it
+      # uniquely. Think src path.
+      key,
+      # This derivation, if it were built as-is, no deduplication applied. Think
+      # stdenv.mkDerivation ...
+      me,
+      # How to merge this derivation with another one.
+      merge,
+      # My directly defined top-level dependencies.
+      dependencies,
+    }:
+    let
+      # Create a single source map entry for this derivation. This is the core
+      # datastructure around which the derivation deduplication detection
+      # mechanism is built.
+      entryFor = drv: { ${key drv} = drv; };
+      # Given a lispDerivation, get all its dependencies in the { src-drv =>
+      # lisp-drv } format. The invariant for ancestry._depsMap is that it
+      # can’t contain itself, so this is a non-destructive operation.
+      depsFor = drv: drv.ancestry._depsMap // (entryFor drv);
+      # Always order dependencies deterministically.  If either of the two is not
+      # a lisp deriv, we’re basically in the foo-b situation. This situation only
+      # happens when we are in a derivation that has itself as a dependency. It
+      # never occurs from an unrelated dependency, because those will never have
+      # an entry for this src anyway.
+      #
+      # We are in the “bar” situation, above. Or perhaps in this situation:
+      #
+      #          -- blub-a
+      #        /
+      # bim --
+      #        \
+      #          -- blub-b
+      #
+      # Either way, the solution is the same: create an entirely new derivation
+      # that unions the two dependencies.
+      allDepsIncMyself = nestedUnion (reduce (x: x.ancestry.merge)) 1 (map depsFor dependencies);
+      depsMap = removeAttrs allDepsIncMyself [ (key me) ];
+    in
+    # The resulting ancestry object. This must be assigned to the output
+    # derivation’s passthru object, in a key called ‘ancestry’.
+    {
+      inherit merge;
+      # If I depend on myself in any way, first flatten me and all my transitive
+      # dependent copies of me into one big union derivation.
+      me = if allDepsIncMyself ? ${key me} then merge allDepsIncMyself.${key me} else me;
+      # Internal only. Invariant: never includes myself.
+      _depsMap = depsMap;
+      # A flat list of all my dependencies.
+      deps = builtins.attrValues depsMap;
+    };
 
   # For a “lisp callable” function (see public API), get an array of all its
   # derivations. E.g. for ‘f: "${pkgs.sbcl}/bin/sbcl --script ${f}"’ this
   # returns [ pkgs.sbcl ].
-  lispFuncDerivations = lisp:
+  lispFuncDerivations =
+    lisp:
     assert isFunction lisp;
     # Extremely hacky but it works. Assume that any derivation we’re interested
     # in lives in the string context. This is painful because we’re doing
@@ -223,43 +239,50 @@ rec {
 
   # Normalize the external lisp argument (see API of scope) to an easy-to-use
   # attrset.
-  makeLisp = lisp:
-    if b.isFunction lisp
-    then rec {
-      call = lisp;
-      name = getName deriv;
-      # This is getting insane, and I’m sure I will come to regret this as it’s
-      # _way_ too much magic, but here goes: this is a heuristic, do-what-I-mean
-      # extraction of a sensible "derivation" from a "lisp" argument. Of course,
-      # if the passed lisp is an actual derivation like pkgs.sbcl: easy, that’s
-      # what it is.  But what if it’s a callback function, like (f:
-      # "${pkgs.sbcl}/bin/sbcl --some-options ... ${f}")? Well... there’s still
-      # the real sbcl hidden in there. Extract it through the string context
-      # (which could have multiple derivations but that’s crazy talk, so just
-      # choose the "first" one which is basically a random one).  Holy
-      # guacamole, this has to be a sign that my function callback API for
-      # passing lisps is just not a good API. But how else? 🥲 It’s so clean...
-      deriv = builtins.elemAt (lispFuncDerivations lisp) 0;
-    }
+  makeLisp =
+    lisp:
+    if b.isFunction lisp then
+      rec {
+        call = lisp;
+        name = getName deriv;
+        # This is getting insane, and I’m sure I will come to regret this as it’s
+        # _way_ too much magic, but here goes: this is a heuristic, do-what-I-mean
+        # extraction of a sensible "derivation" from a "lisp" argument. Of course,
+        # if the passed lisp is an actual derivation like pkgs.sbcl: easy, that’s
+        # what it is.  But what if it’s a callback function, like (f:
+        # "${pkgs.sbcl}/bin/sbcl --some-options ... ${f}")? Well... there’s still
+        # the real sbcl hidden in there. Extract it through the string context
+        # (which could have multiple derivations but that’s crazy talk, so just
+        # choose the "first" one which is basically a random one).  Holy
+        # guacamole, this has to be a sign that my function callback API for
+        # passing lisps is just not a good API. But how else? 🥲 It’s so clean...
+        deriv = builtins.elemAt (lispFuncDerivations lisp) 0;
+      }
     else
       assert isDerivation lisp;
       rec {
         deriv = lisp;
         name = getName lisp;
-        call = {
-          abcl = file: ''"${lisp}/bin/abcl" --batch --noinform --noinit --nosystem --load "${wrapAbclToplevel file}"'';
-          clisp = file: ''"${lisp}/bin/clisp" -E UTF-8 -norc "${file}"'';
-          ecl = file: ''"${lisp}/bin/ecl" --shell "${file}"'';
-          sbcl = file: ''"${lisp}/bin/sbcl" --script "${file}"'';
-        }.${name};
+        call =
+          {
+            abcl =
+              file:
+              ''"${lisp}/bin/abcl" --batch --noinform --noinit --nosystem --load "${wrapAbclToplevel file}"'';
+            clisp = file: ''"${lisp}/bin/clisp" -E UTF-8 -norc "${file}"'';
+            ecl = file: ''"${lisp}/bin/ecl" --shell "${file}"'';
+            sbcl = file: ''"${lisp}/bin/sbcl" --script "${file}"'';
+          }
+          .${name};
       };
 
   # ABCL doesn’t support running scripts with debugger disabled and "exit
   # non-zero on any error" mode.
-  wrapAbclToplevel = file: builtins.toFile "abcl-wrapper.lisp" ''
-    (handler-case (load #p"${file}")
-      (error (e)
-        (format *error-output* "~A~%" e)
-        (ext:quit :status 1)))
-  '';
+  wrapAbclToplevel =
+    file:
+    builtins.toFile "abcl-wrapper.lisp" ''
+      (handler-case (load #p"${file}")
+        (error (e)
+          (format *error-output* "~A~%" e)
+          (ext:quit :status 1)))
+    '';
 }

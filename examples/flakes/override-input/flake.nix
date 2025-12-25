@@ -8,25 +8,32 @@
     };
   };
 
-  outputs = {
-    self, nixpkgs, cl-nix-lite, fauxlexandria, flake-utils, ...
-  }:
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      cl-nix-lite,
+      fauxlexandria,
+      flake-utils,
+      ...
+    }:
+    flake-utils.lib.eachDefaultSystem (
+      system:
       let
         pkgs = nixpkgs.legacyPackages.${system}.appendOverlays [
           cl-nix-lite.overlays.default
           (final: prev: {
-            lispPackagesLite = prev.lispPackagesLite.overrideScope (lfinal: lprev: {
-              alexandria = lprev.alexandria.overrideAttrs {
-                src = fauxlexandria;
-              };
-            });
+            lispPackagesLite = prev.lispPackagesLite.overrideScope (
+              lfinal: lprev: { alexandria = lprev.alexandria.overrideAttrs { src = fauxlexandria; }; }
+            );
           })
         ];
       in
-        {
-          packages = {
-            default = with pkgs.lispPackagesLite; lispDerivation {
+      {
+        packages = {
+          default =
+            with pkgs.lispPackagesLite;
+            lispDerivation {
               name = "flake-override-input";
               lispSystem = "flake-override-input";
               lispDependencies = [
@@ -40,6 +47,7 @@
                 license = pkgs.lib.licenses.agpl3Only;
               };
             };
-          };
-        });
-  }
+        };
+      }
+    );
+}

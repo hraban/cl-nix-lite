@@ -1,6 +1,6 @@
 {
-  cl-nix-lite ? ../../..
-, pkgs ? import <nixpkgs> { overlays = [ (import cl-nix-lite) ]; }
+  cl-nix-lite ? ../../..,
+  pkgs ? import <nixpkgs> { overlays = [ (import cl-nix-lite) ]; },
 }:
 
 # To use CLISP instead of SBCL:

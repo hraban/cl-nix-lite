@@ -2,9 +2,9 @@
 # regression, or a bug:
 
 {
-  cl-nix-lite ? ../../..
-, pkgs ? import <nixpkgs> {}
-, lisp ? pkgs.sbcl
+  cl-nix-lite ? ../../..,
+  pkgs ? import <nixpkgs> { },
+  lisp ? pkgs.sbcl,
 }:
 
 let
@@ -23,15 +23,15 @@ let
     (import cl-nix-lite)
     # Now override alexandria in it
     (final: prev: {
-      lispPackagesLite = (prev.lispPackagesLiteFor lisp).overrideScope (lfinal: lprev: {
-        # And because I’m only overriding the source, not any build
-        # instructions, I’m just overriding the existing derivation. But here of
-        # course you could also set this to an entirely custom lispDerivation
-        # you create yourself.
-        alexandria = lprev.alexandria.overrideAttrs {
-          src = fauxlexandria;
-        };
-      });
+      lispPackagesLite = (prev.lispPackagesLiteFor lisp).overrideScope (
+        lfinal: lprev: {
+          # And because I’m only overriding the source, not any build
+          # instructions, I’m just overriding the existing derivation. But here of
+          # course you could also set this to an entirely custom lispDerivation
+          # you create yourself.
+          alexandria = lprev.alexandria.overrideAttrs { src = fauxlexandria; };
+        }
+      );
     })
   ];
 in
