@@ -17,7 +17,7 @@
   outputs =
     { flake-parts, ... }@inputs:
     flake-parts.lib.mkFlake { inherit inputs; } (
-      { ... }:
+      { config, ... }:
       {
         systems = import inputs.systems;
         imports = [
@@ -25,9 +25,22 @@
           ({
             flake.overlays.default = import ./.;
             perSystem =
-              { ... }:
+              {
+                self,
+                lib,
+                pkgs,
+                ...
+              }:
               {
                 treefmt = import ./treefmt.nix { };
+                checks =
+                  let
+                    examples = pkgs.callPackage ./examples {
+                      cl-nix-lite = config.flake.overlays.default;
+                      withFlakes = false;
+                    };
+                  in
+                  builtins.listToAttrs (map (d: lib.nameValuePair d.name d) (lib.flatten examples));
               };
           })
         ];

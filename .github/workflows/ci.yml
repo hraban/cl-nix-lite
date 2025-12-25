@@ -1,15 +1,7 @@
-name: "Test"
+name: "CI"
 on:
   pull_request:
   push:
-  # Run periodically, to build with latest -unstable releases. Caching makes
-  # this a cheap operation when nothing changed, so no need for further logic.
-  schedule:
-    # 13 is a random non-0 minute to be nice to GitHub because most jobs
-    # probably run on the hour. Give it a bit more time than the timeout of jobs
-    # (5h) to allow the caching step to finish uploading cache so the next job
-    # can pick up where the timed out job left off.
-    - cron: '13 */6 * * *'
 jobs:
   tests:
     # Leave some time for the post actions to run, particularly cachix to upload
@@ -39,43 +31,19 @@ jobs:
     # Use GH Actions cache /in addition to/ Cachix because my cachix allowance
     # account is too small to cache a single run.
     - uses: DeterminateSystems/magic-nix-cache-action@main
-    - name: "Pin the nixpkgs channel to ${{ matrix.config.channel }}"
-      # Works for the local user only! And this only pins the registry, which is
-      # only used by flakes, it just happens that the DeterminateSystems nix
-      # installer also sets extra-nix-path = nixpkgs=flake:nixpkgs, which makes
-      # nix-build pick up on this, too.
-      run: |
-        nix registry add nixpkgs "github:NixOS/nixpkgs/${{ matrix.config.channel }}"
     # This avoids having to fetch an older nixpkgs just for tests and it helps
     # detect problems early.
-    - name: Update flake locks to use this cl-nix-lite and nixpkgs
-      # This used to override cl-nix-lite to “../../..”, which is simple,
-      # obvious and works locally.  Github Actions hates those things, and it
-      # finds in the filesystem is a fantastic opportunity to waste your time.
-      # They do lord knows what here with shallow checkouts or not or whatever,
-      # I have no idea, I don’t care, shut up.  Locking to the revision and
-      # re-fetching this from remote is the easiest thing to do.
-      run: |
-        for example in examples/flakes/* ; do
-          (
-            cd "$example"
-            nix flake lock \
-                --override-input cl-nix-lite "github:${{ github.repository }}/${{ github.sha }}" \
-                --override-input nixpkgs nixpkgs
-          )
-        done
     # Only bother actually building derivations that are not yet in the
     # store. This prevents nix-build from downloading all built binaries from
     # the store only to discard them immediately afterwards.
-    - name: All examples
+    - name: nix flake check
       # Inspired by
       # https://github.com/divnix/std-action/blob/5ead0a37047d44137f950247ee4d3e26fda291d7/run/build-uncached-extractor.sed
       # Works on both BSD (Darwin) and GNU sed. Prints every store path
       # following “.. will be built:”.
       run: |
         set -euo pipefail
-        cd examples && \
-          nix-build --no-out-link --dry-run 2>&1 | \
+        nix build --no-link --dry-run --impure --expr 'let f = builtins.getFlake "git+file://${toString ./.}"; in f.checks.${builtins.currentSystem}' 2>&1 | \
           tee nix-build.out | \
           sed -ne '/will be built:$/ {
             # label
@@ -92,6 +60,15 @@ jobs:
           }' | \
           sed -e 's/$/^*/' | \
           xargs -r nix build --keep-going --print-build-logs --no-link
+    - name: Run flake based checks
+      run: |
+        for example in examples/flakes/* ; do
+          (
+            cd "$example"
+            nix flake check -L \
+                --override-input cl-nix-lite "github:${{ github.repository }}/${{ github.sha }}"
+          )
+        done
     - name: nix-build error output
       if: failure()
       run: "cat examples/nix-build.out"

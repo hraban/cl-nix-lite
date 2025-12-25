@@ -5,6 +5,7 @@
 {
   cl-nix-lite ? import ../.,
   pkgs ? import <nixpkgs> { },
+  withFlakes ? true,
 }:
 
 with pkgs.lib;
@@ -58,7 +59,7 @@ let
   channelTests = [ (pkgs'.callPackage ./channels/override-lisp { }) ] ++ (map channelTestsFor lisps);
 
   # These need some more work
-  flakeTests = [
+  flakeTests = optionals withFlakes [
     ./flakes/external-dependency
     ./flakes/lisp-script
     ./flakes/make-binary
