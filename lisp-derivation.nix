@@ -206,13 +206,14 @@ rec {
       # The search path for ASDF at build time. Includes the build
       # directory. Must be :-join’ed and eval’ed before use. NOT for “release”
       # time! Do not bake this into the final derivation.
-      buildTimeAsdPath =
-        [ "$PWD" ]
-        ++
-          # Must localize the path first because it depends on which systems are
-          # being built
-          (map (x: "$PWD/${x}") (localizedArgs.lispAsdPath or [ ]))
-        ++ allDepsPaths;
+      buildTimeAsdPath = [
+        "$PWD"
+      ]
+      ++
+        # Must localize the path first because it depends on which systems are
+        # being built
+        (map (x: "$PWD/${x}") (localizedArgs.lispAsdPath or [ ]))
+      ++ allDepsPaths;
 
       ####
       #### THE FINAL DERIVATION
@@ -552,7 +553,8 @@ rec {
         '';
         meta = {
           mainProgram = name;
-        } // (args.meta or { });
+        }
+        // (args.meta or { });
       }
       // (builtins.removeAttrs args [ "dependencies" ])
     );

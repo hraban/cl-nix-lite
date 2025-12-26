@@ -1401,7 +1401,8 @@ rec {
               trivial-gray-streams
               trivial-mimes
               usocket
-            ] ++ lib.optionals pkgs.hostPlatform.isWindows [ flexi-streams ];
+            ]
+            ++ lib.optionals pkgs.hostPlatform.isWindows [ flexi-streams ];
             lispCheckDependencies = [
               babel
               cl-cookie
@@ -2015,7 +2016,8 @@ rec {
               closer-mop
               flexi-streams
               trivial-gray-streams
-            ] ++ lib.optionals (lisp.name != "ecl") [ float-features ];
+            ]
+            ++ lib.optionals (lisp.name != "ecl") [ float-features ];
             lispAsdPath = [
               "src"
               "test"
@@ -2056,7 +2058,8 @@ rec {
               trivial-mimes
               trivial-rfc-1123
               trivial-utf-8
-            ] ++ (if pkgs.hostPlatform.isWindows then [ ironclad ] else [ cl-isaac ]);
+            ]
+            ++ (if pkgs.hostPlatform.isWindows then [ ironclad ] else [ cl-isaac ]);
             # Extracted from the main asd file. This will probably grow out of date within 3 days.
             lispSystems = [
               "lack/app/directory"
@@ -2414,12 +2417,13 @@ rec {
           nst = lispDerivation {
             lispSystem = "nst";
             src = inputs.nst;
-            lispDependencies =
-              [ org-sampler ]
-              ++ lib.optionals (builtins.elem lisp.name [
-                "sbcl"
-                "clisp"
-              ]) [ closer-mop ];
+            lispDependencies = [
+              org-sampler
+            ]
+            ++ lib.optionals (builtins.elem lisp.name [
+              "sbcl"
+              "clisp"
+            ]) [ closer-mop ];
             preCheck = ''
               export CL_SOURCE_REGISTRY="$PWD/test//:$CL_SOURCE_REGISTRY"
             '';
