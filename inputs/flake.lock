@@ -258,7 +258,7 @@
       "flake": false,
       "locked": {
         "lastModified": 1727371251,
-        "narHash": "sha256-QAhV9Rs2I5SqRWDtatIIuY11sTKYfnMfhf0Nqta8l6c=",
+        "narHash": "sha256-lZO71rwI0WkJRQJts3JD9NbZ5ITEvDQesHD1+wfFFCk=",
         "rev": "9d1e1fa761215c2f833b072b227fded31b137881",
         "type": "git",
         "url": "https://gitlab.common-lisp.net/asdf/asdf"
@@ -1838,11 +1838,11 @@
     "flake-compat": {
       "flake": false,
       "locked": {
-        "lastModified": 1730663653,
-        "narHash": "sha256-kFCUWettiFHDIqxCWWQ9qY8pVh+Lj+XL0Giyy/kdomg=",
+        "lastModified": 1766808011,
+        "narHash": "sha256-s83BS0abtIj7vzUf8JE0209KphfHA6qRw/92D9k/F+0=",
         "owner": "hraban",
         "repo": "flake-compat",
-        "rev": "e5b16676185cb7548581c852f51ce7f3a49bba5e",
+        "rev": "6e0aafdc4c4c2043c66f756d5045374b42184fc5",
         "type": "github"
       },
       "original": {
