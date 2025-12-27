@@ -258,7 +258,7 @@
       "flake": false,
       "locked": {
         "lastModified": 1727371251,
-        "narHash": "sha256-QAhV9Rs2I5SqRWDtatIIuY11sTKYfnMfhf0Nqta8l6c=",
+        "narHash": "sha256-lZO71rwI0WkJRQJts3JD9NbZ5ITEvDQesHD1+wfFFCk=",
         "rev": "9d1e1fa761215c2f833b072b227fded31b137881",
         "type": "git",
         "url": "https://gitlab.common-lisp.net/asdf/asdf"
