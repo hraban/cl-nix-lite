@@ -40,7 +40,21 @@
                       withFlakes = false;
                     };
                   in
-                  builtins.listToAttrs (map (d: lib.nameValuePair d.name d) (lib.flatten examples));
+                  builtins.listToAttrs (map (d: lib.nameValuePair d.name d) (lib.flatten examples))
+                  // {
+                    markdown-links =
+                      pkgs.runCommand "mkdocs-linkcheck"
+                        {
+                          nativeBuildInputs = [ pkgs.markdown-link-check ];
+                          cfg = builtins.toFile "mlc-config.json" (
+                            builtins.toJSON { ignorePatterns = [ { pattern = "^http"; } ]; }
+                          );
+                        }
+                        ''
+                          markdown-link-check -c $cfg ${./.}
+                          touch $out
+                        '';
+                  };
               };
           })
         ];

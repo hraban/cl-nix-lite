@@ -61,7 +61,7 @@ To actually build a binary executable you can run later, read on.
 
 This is the easiest way to start building a binary, in number of actual steps.
 
-See the [flake example](examples/flake-app).
+See the various [flake examples](examples/flakes).
 
 But, a word of caution: flakes are a layer *on top of Nix*. This is fine as long as it works, but if you really don’t know any Nix at all, it’s yet another thing to learn before you get it.
 
@@ -524,7 +524,7 @@ $ nix-build -A alexandria.enableCheck
 
 This isn’t quite as elegant as `overrideAttrs (_: { doCheck = true; } )`, mostly because my Nix-fu isn’t at that level yet. WIP.
 
-To test all packages, see [examples/channels/test-all](examples/channels/test-all).
+To test all packages, see [examples/channels/all-packages/check-enabled.nix](examples/channels/all-packages/check-enabled.nix).
 
 ## Technical Detail: Recursive Dependency Deduplicator
 
@@ -596,8 +596,7 @@ But perhaps the most important reason to omit QL is “because there are already
 
 - [ASDF best practices][ASDF best practices]
 - [ASDF 3, or Why Lisp is Now an Acceptable Scripting Language (extended version)](http://fare.tunes.org/files/asdf3/asdf3-2014.html): Extremely detailed design document by the author of ASDFv3 with tons of lisp wisdom, and general programming wisdom. Recommended reading.
-- [lisp-modules](../lisp-modules): The original Common Lisp module in nixpkgs. Relies on QuickLisp.
-- [lisp-modules-new](../lisp-modules-new): A fresh reimplementation of Common-Lisp-in-Nix. Also relies on QuickLisp.
+- [lisp-modules](https://github.com/NixOS/nixpkgs/tree/master/pkgs/development/lisp-modules): The original Common Lisp module in nixpkgs. Relies on QuickLisp.
 - [what is `makeScope`](https://old.reddit.com/r/NixOS/comments/z47sky/introducing_lisppackageslite_common_lisp_in_pure/ixr0snv/): Reddit user jonringer117 explains `makeScope`.
 
 [ASDF best practices]: https://github.com/fare/asdf/blob/master/doc/best_practices.md
