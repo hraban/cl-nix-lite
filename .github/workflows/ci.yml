@@ -12,14 +12,12 @@ jobs:
       matrix:
         config:
           - os: ubuntu-latest
-            channel: nixpkgs-unstable
           - os: macos-latest
-            channel: nixpkgs-unstable
     runs-on: ${{ matrix.config.os }}
     concurrency:
       # Different runs of the same job are very likely candidates for (partial)
       # caching, which is defeated in parallel runs. Be nice to GitHub.
-      group: ${{ matrix.config.os }}-${{ matrix.config.channel }}-${{ github.ref }}
+      group: ${{ matrix.config.os }}-flake-${{ github.ref }}
       cancel-in-progress: true
     steps:
     - uses: actions/checkout@v4

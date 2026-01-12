@@ -29,7 +29,7 @@ jobs:
       cancel-in-progress: true
     steps:
     - uses: actions/checkout@v4
-    - uses: DeterminateSystems/nix-installer-action@v9
+    - uses: cachix/install-nix-action@v31
     - uses: cachix/cachix-action@v14
       with:
         name: cl-nix-lite
@@ -37,16 +37,9 @@ jobs:
     # Use GH Actions cache /in addition to/ Cachix because my cachix allowance
     # account is too small to cache a single run.
     - uses: DeterminateSystems/magic-nix-cache-action@main
-    - name: "Pin the nixpkgs channel to ${{ matrix.config.channel }}"
-      # Works for the local user only! And this only pins the registry, which is
-      # only used by flakes, it just happens that the DeterminateSystems nix
-      # installer also sets extra-nix-path = nixpkgs=flake:nixpkgs, which makes
-      # nix-build pick up on this, too.
-      run: |
-        nix registry add nixpkgs "github:NixOS/nixpkgs/${{ matrix.config.channel }}"
     # This avoids having to fetch an older nixpkgs just for tests and it helps
     # detect problems early.
-    - name: Update flake locks to use this cl-nix-lite and nixpkgs
+    - name: Update flake locks to use this cl-nix-lite and ${{ matrix.config.channel }}
       # This used to override cl-nix-lite to “../../..”, which is simple,
       # obvious and works locally.  Github Actions hates those things, and it
       # finds in the filesystem is a fantastic opportunity to waste your time.
@@ -59,9 +52,11 @@ jobs:
             cd "$example"
             nix flake lock \
                 --override-input cl-nix-lite "github:${{ github.repository }}/${{ github.sha }}" \
-                --override-input nixpkgs nixpkgs
+                --override-input nixpkgs github:nixos/nixpkgs/${{ matrix.config.channel }}
           )
         done
+        nix flake lock \
+            --override-input nixpkgs github:nixos/nixpkgs/${{ matrix.config.channel }}
     # Only bother actually building derivations that are not yet in the
     # store. This prevents nix-build from downloading all built binaries from
     # the store only to discard them immediately afterwards.
@@ -72,8 +67,7 @@ jobs:
       # following “.. will be built:”.
       run: |
         set -euo pipefail
-        cd examples && \
-          nix-build --no-out-link --dry-run 2>&1 | \
+        nix build --no-link --dry-run --impure --expr 'let f = builtins.getFlake "git+file://${toString ./.}"; in f.checks.${builtins.currentSystem}' 2>&1 | \
           tee nix-build.out | \
           sed -ne '/will be built:$/ {
             # label
