@@ -8,6 +8,8 @@ on:
     # (5h) to allow the caching step to finish uploading cache so the next job
     # can pick up where the timed out job left off.
     - cron: '13 */6 * * *'
+  push:
+    #NOMERGE
 jobs:
   tests:
     # Leave some time for the post actions to run, particularly cachix to upload
