@@ -34,6 +34,7 @@
       url = "github:hraban/flake-compat/fixed-output";
       flake = false;
     };
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     # Lisp packages
 
