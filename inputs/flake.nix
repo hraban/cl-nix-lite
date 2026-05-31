@@ -348,7 +348,7 @@
       flake = false;
     };
     closer-mop = {
-      url = "github:pcostanza/closer-mop";
+      url = "git+https://codeberg.org/pcostanza/closer-mop";
       flake = false;
     };
     clss = {
@@ -392,7 +392,7 @@
       flake = false;
     };
     contextl = {
-      url = "github:pcostanza/contextl";
+      url = "git+https://codeberg.org/pcostanza/contextl";
       flake = false;
     };
     data-lens = {
@@ -688,7 +688,7 @@
       flake = false;
     };
     lw-compat = {
-      url = "github:pcostanza/lw-compat";
+      url = "git+https://codeberg.org/pcostanza/lw-compat";
       flake = false;
     };
     marshal = {

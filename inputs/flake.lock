@@ -1204,15 +1204,15 @@
       "locked": {
         "lastModified": 1727689796,
         "narHash": "sha256-GbvMHjTNkuiI46wUf5nUeqlkHFxbBIWNhjdUDSBWzqk=",
-        "owner": "pcostanza",
-        "repo": "closer-mop",
+        "ref": "refs/heads/master",
         "rev": "8a7177721e86f6f95d2f3f85cf9806d84f4abbe0",
-        "type": "github"
+        "revCount": 224,
+        "type": "git",
+        "url": "https://codeberg.org/pcostanza/closer-mop"
       },
       "original": {
-        "owner": "pcostanza",
-        "repo": "closer-mop",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/pcostanza/closer-mop"
       }
     },
     "clss": {
@@ -1380,15 +1380,15 @@
       "locked": {
         "lastModified": 1697877002,
         "narHash": "sha256-03vXx0cdSMaEB3G8kMS6VkYEKxDdtBHjTdz9Lz0vSss=",
-        "owner": "pcostanza",
-        "repo": "contextl",
+        "ref": "refs/heads/master",
         "rev": "3d5fbff50c686f0b89b9ca7fdebfe056343dc366",
-        "type": "github"
+        "revCount": 16,
+        "type": "git",
+        "url": "https://codeberg.org/pcostanza/contextl"
       },
       "original": {
-        "owner": "pcostanza",
-        "repo": "contextl",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/pcostanza/contextl"
       }
     },
     "data-lens": {
@@ -2571,15 +2571,15 @@
       "locked": {
         "lastModified": 1456682661,
         "narHash": "sha256-WykCJ7M4y7INyDy1EXpnhO6onTU7OlWhW2nTKmbBOYw=",
-        "owner": "pcostanza",
-        "repo": "lw-compat",
+        "ref": "refs/heads/master",
         "rev": "aabfe28c6c1a4949f9d7b3cb30319367c9fd1c0d",
-        "type": "github"
+        "revCount": 5,
+        "type": "git",
+        "url": "https://codeberg.org/pcostanza/lw-compat"
       },
       "original": {
-        "owner": "pcostanza",
-        "repo": "lw-compat",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/pcostanza/lw-compat"
       }
     },
     "marshal": {
