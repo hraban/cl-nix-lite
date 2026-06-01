@@ -41,7 +41,14 @@
                     };
                   in
                   builtins.listToAttrs (
-                    lib.imap0 (i: d: lib.nameValuePair "${d.name}-${toString i}" d) (lib.flatten examples)
+                    lib.imap0 (
+                      i: d:
+                      let
+                        lispName = lib.optionalString (d ? lisp) "-${d.lisp.pname or d.lisp.name}";
+                        name = "${d.name}${lispName}-${toString i}";
+                      in
+                      lib.nameValuePair name d
+                    ) (lib.flatten examples)
                   )
                   // {
                     markdown-links =

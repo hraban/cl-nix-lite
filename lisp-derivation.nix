@@ -326,22 +326,29 @@ rec {
         // {
           lispSystems = lispSystems';
           name = args.name or "system-${pname}";
-          passthru = (derivArgs.passthru or { }) // {
-            inherit
-              ancestry
-              # Give others access to the args with which I was built
-              args
-              ;
-            # The original, non-deduplicated src we were called with
-            origSrc = _lispOrigSrc;
-            enableCheck = if doCheck then me else lispDerivation (args // { doCheck = true; });
-            # Helper attribute for outsiders who want access to the underlying
-            # search path. This path only contains the dependencies. Putting this
-            # in passthru, not the derivation itself, to stay conservative for
-            # now. It might be useful as a first-class derivation property but I’m
-            # not sure yet.
-            asdSearchPath = allDepsPaths;
-          };
+          passthru =
+            (derivArgs.passthru or { })
+            // {
+              inherit
+                ancestry
+                # Give others access to the args with which I was built
+                args
+                ;
+              # The original, non-deduplicated src we were called with
+              origSrc = _lispOrigSrc;
+              enableCheck = if doCheck then me else lispDerivation (args // { doCheck = true; });
+              # Helper attribute for outsiders who want access to the underlying
+              # search path. This path only contains the dependencies. Putting this
+              # in passthru, not the derivation itself, to stay conservative for
+              # now. It might be useful as a first-class derivation property but I’m
+              # not sure yet.
+              asdSearchPath = allDepsPaths;
+            }
+            // lib.optionalAttrs (lisp ? deriv) {
+              # If available, expose the lisp derivation as a passthrough, for
+              # debugging sake if for nothing else.
+              lisp = lisp.deriv;
+            };
           # Store .fasl files next to the respective .lisp file
           ASDF_OUTPUT_TRANSLATIONS = "/:/";
           # Set this as a separate phase because I’m scared of shell escaping and
