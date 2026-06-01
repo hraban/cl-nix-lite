@@ -40,7 +40,9 @@
                       withFlakes = false;
                     };
                   in
-                  builtins.listToAttrs (map (d: lib.nameValuePair d.name d) (lib.flatten examples))
+                  builtins.listToAttrs (
+                    lib.imap0 (i: d: lib.nameValuePair "${d.name}-${toString i}" d) (lib.flatten examples)
+                  )
                   // {
                     markdown-links =
                       pkgs.runCommand "mkdocs-linkcheck"
