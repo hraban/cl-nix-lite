@@ -28,9 +28,9 @@ jobs:
       group: ${{ matrix.config.os }}-${{ matrix.config.channel }}-${{ github.ref }}
       cancel-in-progress: true
     steps:
-    - uses: actions/checkout@v4
-    - uses: DeterminateSystems/nix-installer-action@v9
-    - uses: cachix/cachix-action@v14
+    - uses: actions/checkout@v6
+    - uses: DeterminateSystems/nix-installer-action@main
+    - uses: cachix/cachix-action@v17
       with:
         name: cl-nix-lite
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'

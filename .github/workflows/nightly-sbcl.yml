@@ -63,8 +63,8 @@ jobs:
       run:
         working-directory: ./examples/channels/all-packages
     steps:
-      - uses: actions/checkout@v4
-      - uses: DeterminateSystems/nix-installer-action@v11
+      - uses: actions/checkout@v6
+      - uses: DeterminateSystems/nix-installer-action@main
         with:
           extra-conf: |
             substituters = https://cl-nix-lite.cachix.org https://cache.nixos.org/
