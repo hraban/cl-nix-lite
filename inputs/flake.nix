@@ -608,7 +608,10 @@
       flake = false;
     };
     jpl-queues = {
-      url = "tarball+https://www.thoughtcrime.us/software/jpl-queues/jpl-queues-0.1.tar.gz";
+      # upstream:
+      # "tarball+https://www.thoughtcrime.us/software/jpl-queues/jpl-queues-0.1.tar.gz";
+      # Switched to mirror on 2026/05/31 because upstream is unreachable.
+      url = "git+https://gitlab.common-lisp.net/nyxt/jpl-queues";
       flake = false;
     };
     jpl-util = {

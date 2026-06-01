@@ -2250,14 +2250,17 @@
     "jpl-queues": {
       "flake": false,
       "locked": {
-        "lastModified": 1255986970,
+        "lastModified": 1627031947,
         "narHash": "sha256-CMl5j4uzTlP6SSSm6Z3gKHZdhyRgMNqqZCC/oJxu7fU=",
-        "type": "tarball",
-        "url": "https://www.thoughtcrime.us/software/jpl-queues/jpl-queues-0.1.tar.gz"
+        "ref": "refs/heads/master",
+        "rev": "b774d24b3a2935b6e5ad17f83ff20ff359e2df81",
+        "revCount": 1,
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/nyxt/jpl-queues"
       },
       "original": {
-        "type": "tarball",
-        "url": "https://www.thoughtcrime.us/software/jpl-queues/jpl-queues-0.1.tar.gz"
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/nyxt/jpl-queues"
       }
     },
     "jpl-util": {
