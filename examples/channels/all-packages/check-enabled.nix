@@ -82,6 +82,11 @@
     "trivial-custom-debugger" # An error occurred during initialization: #<a TRIVIAL-CUSTOM-DEBUGGER/TEST::MY-ERROR 0x105c49d80>.
     "type-i" # hangs forever on ECL
   ]
+  ++ pkgs.lib.optionals (lisp.pname == "sbcl") [
+    # failed AVER:
+    #   (AND (EQ (CTRAN-KIND START) INSIDE-BLOCK) (NOT (BLOCK-DELETE-P BLOCK)))
+    "serapeum"
+  ]
   ++ pkgs.lib.optionals (lisp.pname == "clisp" && pkgs.hostPlatform.isLinux) [
     "3bmd-ext-code-blocks"
     # This fails on Github Actions, not in my local VM:
