@@ -266,11 +266,10 @@ rec {
         call =
           {
             abcl =
-              file:
-              ''"${lisp}/bin/abcl" --batch --noinform --noinit --nosystem --load "${wrapAbclToplevel file}"'';
-            clisp = file: ''"${lisp}/bin/clisp" -E UTF-8 -norc "${file}"'';
-            ecl = file: ''"${lisp}/bin/ecl" --shell "${file}"'';
-            sbcl = file: ''"${lisp}/bin/sbcl" --script "${file}"'';
+              file: "${lib.getExe lisp} --batch --noinform --noinit --nosystem --load ${wrapAbclToplevel file}";
+            clisp = file: "${lib.getExe lisp} -E UTF-8 -norc ${lib.escapeShellArg file}";
+            ecl = file: "${lib.getExe lisp} --shell ${lib.escapeShellArg file}";
+            sbcl = file: "${lib.getExe lisp} --script ${lib.escapeShellArg file}";
           }
           .${name};
       };
