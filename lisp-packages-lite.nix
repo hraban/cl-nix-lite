@@ -2462,6 +2462,9 @@ rec {
           osicat = lispDerivation {
             lispSystem = "osicat";
             src = inputs.osicat;
+            postCheck = ''
+              rm -rf tests
+            '';
             # I am ashamed to say I /still/ don’t know how dynamic linking really works
             # in Nix. My God it’s not a learning curve it’s a fractal.
             postInstall = ''
