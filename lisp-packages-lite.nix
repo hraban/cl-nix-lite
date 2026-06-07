@@ -260,7 +260,7 @@ rec {
           };
 
           asdf = lispDerivation {
-            # Sometimes a dependent project will try and build asdf/defsystems. I’m
+            # Sometimes a dependent project will try and build asdf/defsystem. I’m
             # not exactly clear on when this happens but it’s fixed by just always
             # precompiling it here.
             lispSystems = [
@@ -268,6 +268,9 @@ rec {
               "asdf/defsystem"
             ];
             src = inputs.asdf;
+            # Not exactly sure why, but clasp doesn’t seem happy rebuilding asdf
+            # from source?
+            meta.broken = lisp.name == "clasp";
           };
 
           asdf-flv = lispDerivation {
