@@ -14,40 +14,32 @@
 
 { pkgs, lib }:
 
-with lib;
-
 rec {
-  a = attrsets;
-  b = builtins;
-  l = lists;
-  s = strings;
-  t = trivial;
-
   # The obvious signature for pipe. Who wants ltr? (Clarification: putting the
   # function pipeline first and the value second allows using rpipe in
   # point-free context. See other uses in this file.)
-  rpipe = flip pipe;
+  rpipe = lib.flip lib.pipe;
 
   # Like foldr but without a nul-value. Doesn’t support actual ‘null’ in the
   # list because I don’t know how to make singletons (is that even possible in
   # Nix?) and because I don’t care.
   reduce = (
     op: seq:
-    assert !b.elem null seq; # N.B.: THIS MAKES IT STRICT!
-    foldr (a: b: if b == null then a else (op a b)) null seq
+    assert !builtins.elem null seq; # N.B.: THIS MAKES IT STRICT!
+    lib.foldr (a: b: if b == null then a else (op a b)) null seq
   );
 
   # Create an empty string with the same context as the given string
-  emptyCopyWithContext = str: s.addContextFrom str "";
+  emptyCopyWithContext = str: lib.addContextFrom str "";
 
   # Turn a derivation path into a context-less string. I suspect this isn’t in
   # the stdlib because this is a perversion of a low-level feature, not intended
   # for casual access in regular derivations.
   drvStrWithoutContext = rpipe [
     toString
-    b.getContext
-    attrNames
-    l.head
+    builtins.getContext
+    builtins.attrNames
+    builtins.head
   ];
 
   # optionalKeys [ "a" "b" ] { a = 1; b = 2; c = 3; }
@@ -58,27 +50,27 @@ rec {
   # => { a = 1; }
   # optionalKeys [ "a" "b" ] { }
   # => { }
-  optionalKeys = keys: a.filterAttrs (k: v: b.elem k keys);
+  optionalKeys = keys: lib.filterAttrs (k: v: builtins.elem k keys);
 
   # Like the inverse of lists.remove but takes a test function instead of an
   # element
   # (a -> Bool) -> [a] -> [a]
-  keepBy = f: foldr (a: b: l.optional (f a) a ++ b) [ ];
+  keepBy = f: lib.foldr (a: b: lib.optionals (f a) [ a ] ++ b) [ ];
 
   # If argument is a function, call it with a constant value. Otherwise pass it
   # through.
-  callIfFunc = val: f: if isFunction f then f val else f;
+  callIfFunc = val: f: if lib.isFunction f then f val else f;
 
   flatMap =
     f:
     rpipe [
       (map f)
-      l.flatten
+      lib.flatten
     ];
 
   normaliseStrings = rpipe [
-    l.unique
-    l.naturalSort
+    lib.unique
+    lib.naturalSort
   ];
 
   # This is a /nested/ union operation on attrsets: if you have e.g. a 2-layer
@@ -108,7 +100,7 @@ rec {
   # - nestedUnion tail 1 [ a b ] == a // b
   nestedUnion =
     item: n: sets:
-    if n == 0 then item sets else a.zipAttrsWith (_: vals: nestedUnion item (n - 1) vals) sets;
+    if n == 0 then item sets else lib.zipAttrsWith (_: vals: nestedUnion item (n - 1) vals) sets;
 
   getLispDeps = x: x.CL_SOURCE_REGISTRY or "";
 
@@ -118,11 +110,11 @@ rec {
     src:
     drvStrWithoutContext (
       if
-        b.isPath src
+        builtins.isPath src
       # Purely a developer ergonomics feature. Don’t rely on this for published
       # libs. It breaks pure eval.
       then
-        b.path { path = src; }
+        builtins.path { path = src; }
       else
         src
     );
@@ -223,14 +215,14 @@ rec {
   # returns [ pkgs.sbcl ].
   lispFuncDerivations =
     lisp:
-    assert isFunction lisp;
+    assert lib.isFunction lisp;
     # Extremely hacky but it works. Assume that any derivation we’re interested
     # in lives in the string context. This is painful because we’re doing
     # runtime imports for every single derivation, only really for nix-shell
     # purposes which is a tiny fraction of actual use. But it’s just such a nice
     # feature to have the correct lisp right there in your shell that I’m loath
     # to remove this until it’s absolutely necessary.
-    pipe "sentinel" [
+    lib.pipe "sentinel" [
       lisp
       builtins.getContext
       builtins.attrNames
@@ -241,10 +233,10 @@ rec {
   # attrset.
   makeLisp =
     lisp:
-    if b.isFunction lisp then
+    if builtins.isFunction lisp then
       rec {
         call = lisp;
-        name = getName deriv;
+        name = lib.getName deriv;
         # This is getting insane, and I’m sure I will come to regret this as it’s
         # _way_ too much magic, but here goes: this is a heuristic, do-what-I-mean
         # extraction of a sensible "derivation" from a "lisp" argument. Of course,
@@ -259,10 +251,10 @@ rec {
         deriv = builtins.elemAt (lispFuncDerivations lisp) 0;
       }
     else
-      assert isDerivation lisp;
+      assert lib.isDerivation lisp;
       rec {
         deriv = lisp;
-        name = getName lisp;
+        name = lib.getName lisp;
         call =
           {
             abcl =

@@ -4,19 +4,19 @@
   lisp ? pkgs.sbcl,
 }:
 
-with pkgs.lib;
-with rec {
+let
+  inherit (pkgs) lib;
   lispPackagesLite = pkgs.lispPackagesLiteFor lisp;
   isSafeLisp =
     d:
     let
-      ev = builtins.tryEval (isDerivation d && !(d.meta.broken or false));
+      ev = builtins.tryEval (lib.isDerivation d && !(d.meta.broken or false));
     in
     ev.success && ev.value;
-};
+in
 
 lispPackagesLite.lispWithSystems (
-  pipe lispPackagesLite [
+  lib.pipe lispPackagesLite [
     builtins.attrValues
     (builtins.filter isSafeLisp)
   ]

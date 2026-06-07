@@ -18,11 +18,10 @@
   lisp,
 }:
 
-with { inherit (pkgs) lib; };
-with pkgs.lib;
-with callPackage ./utils.nix { };
-
 let
+  inherit (pkgs) lib;
+  utils = callPackage ./utils.nix { };
+
   # Use strings to avoid interning keyword symbols and polluting the namespace
   lispAsdfOp = { operation, system }: "(${operation} ${builtins.toJSON system})";
 
@@ -33,13 +32,15 @@ let
   # can find the (lowercase) asdf.lisp.
   asdfOpScript =
     operation:
-    if b.isString operation then
+    if builtins.isString operation then
       asdfOpScript ([ operation ])
     else
       name: system:
       builtins.toFile (lib.strings.sanitizeDerivationName "asdf-build-${name}.lisp") ''
         (require "asdf")
-        ${b.concatStringsSep "\n" (map lispAsdfOp (a.cartesianProduct { inherit operation system; }))}
+        ${builtins.concatStringsSep "\n" (
+          map lispAsdfOp (lib.cartesianProduct { inherit operation system; })
+        )}
       '';
 in
 
@@ -76,7 +77,9 @@ rec {
       # defsystem’s :build-operation directive in the .asd file), and additionally
       # the 'asdf:lib-op operation on ECL (particularly for ECL to create a
       # library .a file which can be loaded by future dependents).
-      lispBuildOp ? ([ "asdf:make" ] ++ optionals (lisp.name == "ecl") [ "asdf:operate 'asdf:lib-op" ]),
+      lispBuildOp ? (
+        [ "asdf:make" ] ++ lib.optionals (lisp.name == "ecl") [ "asdf:operate 'asdf:lib-op" ]
+      ),
 
       # Extra directories to add to the ASDF search path for systems. Shouldn’t be
       # necessary—only use this to fix external packages you don’t control. For
@@ -105,10 +108,10 @@ rec {
         assert (lispSystem == null) != (lispSystems == null);
         args.lispSystems or [ args.lispSystem ];
 
-      ancestry = ancestryWalker {
+      ancestry = utils.ancestryWalker {
         inherit me;
-        key = drv: derivPath drv.origSrc;
-        dependencies = lispDependencies ++ (optionals doCheck lispCheckDependencies);
+        key = drv: utils.derivPath drv.origSrc;
+        dependencies = lispDependencies ++ (lib.optionals doCheck lispCheckDependencies);
         # (There is probably a neater, more idiomatic way to do this overriding
         # business.)
         merge =
@@ -118,8 +121,8 @@ rec {
           # properties to be evaluated. This only works because Nix is lazily
           # evaluated.
           # Not technically necessary but it makes for slightly cleaner API.
-          assert isLispDeriv other;
-          assert derivPath _lispOrigSrc == derivPath other.origSrc;
+          assert utils.isLispDeriv other;
+          assert utils.derivPath _lispOrigSrc == utils.derivPath other.origSrc;
           let
             # The new arguments that define this merged derivation: which
             # systems do you build, and are you in check mode y/n? The
@@ -128,7 +131,7 @@ rec {
             # Don’t get the lispSystems from the original args: we want to
             # know what the final, real collection of lisp system names was
             # that was used for this derivation.
-            newLispSystems = normaliseStrings (lispSystems' ++ other.lispSystems);
+            newLispSystems = utils.normaliseStrings (lispSystems' ++ other.lispSystems);
             newDoCheck = doCheck || other.args.doCheck or false;
           in
           # Only build a new one if it improves on both existing derivations.
@@ -175,8 +178,10 @@ rec {
                 # invocation of lispDerivation. These args are safe across
                 # deduplication.
                 inherit _lispOrigSystems _lispOrigSrc;
-                lispDependencies = l.unique (lispDependencies ++ other.args.lispDependencies or [ ]);
-                lispCheckDependencies = l.unique (lispCheckDependencies ++ other.args.lispCheckDependencies or [ ]);
+                lispDependencies = lib.unique (lispDependencies ++ other.args.lispDependencies or [ ]);
+                lispCheckDependencies = lib.unique (
+                  lispCheckDependencies ++ other.args.lispCheckDependencies or [ ]
+                );
                 doCheck = newDoCheck;
                 lispSystems = newLispSystems;
                 # Important: we assume all the other args are automatically
@@ -197,10 +202,10 @@ rec {
       # All derivations I depend on, directly or indirectly, without me. Sort
       # deterministically to avoid rebuilding the same derivation just because
       # the order of dependencies was different (in the envvar).
-      allDepsPaths = pipe ancestry.deps [
-        (map (d: [ (b.toString d) ] ++ (map (x: "${d}/${x}") (d.lispAsdPath or [ ]))))
-        flatten
-        l.naturalSort
+      allDepsPaths = lib.pipe ancestry.deps [
+        (map (d: [ (builtins.toString d) ] ++ (map (x: "${d}/${x}") (d.lispAsdPath or [ ]))))
+        lib.flatten
+        lib.naturalSort
       ];
 
       # The search path for ASDF at build time. Includes the build
@@ -222,7 +227,7 @@ rec {
       # I use naturalSort because it’s an easy way to sort a list strings in Nix
       # but any sort will do. What’s important is that this is deterministically
       # sorted.
-      lispSystems' = normaliseStrings lispSystemsArg;
+      lispSystems' = utils.normaliseStrings lispSystemsArg;
       # Clean out the arguments to this function which aren’t deriv props. Leave
       # in the systems because it’s a useful and harmless prop.
       derivArgs = removeAttrs args [
@@ -232,7 +237,7 @@ rec {
         "_lispDontDeduplicate"
         "_lispOrigSrc"
       ];
-      pname = args.pname or "${b.concatStringsSep "_" lispSystems'}";
+      pname = args.pname or "${builtins.concatStringsSep "_" lispSystems'}";
 
       # Add here all "standard" derivation args which are system
       # dependent. Meaning these can be either strings as per, or functions, in
@@ -300,7 +305,7 @@ rec {
         "distPhase"
         "postDist"
       ];
-      localizedArgs = a.mapAttrs (_: callIfFunc lispSystems') (optionalKeys stdArgs args);
+      localizedArgs = lib.mapAttrs (_: utils.callIfFunc lispSystems') (utils.optionalKeys stdArgs args);
 
       # Secret arg to track how we were originally invoked by the end user. This
       # only matters for tests: for regular builds, you want to ‘make’
@@ -356,7 +361,7 @@ rec {
           # preConfigure or preBuild hook, but I’d rather take an extra step and
           # expose a single identifier as a function to execute.
           setAsdfPathPhase = ''
-            export CL_SOURCE_REGISTRY="''${CL_SOURCE_REGISTRY+$CL_SOURCE_REGISTRY:}${b.concatStringsSep ":" buildTimeAsdPath}"
+            export CL_SOURCE_REGISTRY="''${CL_SOURCE_REGISTRY+$CL_SOURCE_REGISTRY:}${builtins.concatStringsSep ":" buildTimeAsdPath}"
           '';
           preConfigurePhases = [ "setAsdfPathPhase" ];
           # Like lisp-modules-new, pre-build every package independently.
@@ -411,11 +416,11 @@ rec {
           # non-destructive operation.
           shellHook =
             let
-              allDepsNames = pipe ancestry.deps [
-                (flatMap (d: d.lispSystems))
-                normaliseStrings
+              allDepsNames = lib.pipe ancestry.deps [
+                (utils.flatMap (d: d.lispSystems))
+                utils.normaliseStrings
               ];
-              allDepsHumanReadable = s.concatStringsSep ", " allDepsNames;
+              allDepsHumanReadable = lib.concatStringsSep ", " allDepsNames;
             in
             ''
               eval "$setAsdfPathPhase"
@@ -464,10 +469,10 @@ rec {
   # helper to define them.
   lispMultiDerivation =
     args:
-    a.mapAttrs (
+    lib.mapAttrs (
       name: system:
       let
-        namearg = a.optionalAttrs (!system ? lispSystems) { lispSystem = name; };
+        namearg = lib.optionalAttrs (!system ? lispSystems) { lispSystem = name; };
       in
       # Default system name is the derivation name in the containing ‘systems’
       # attrset, but can be overridden if the Lisp name is incompatible with Nix

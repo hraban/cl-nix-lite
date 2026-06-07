@@ -8,13 +8,12 @@
   withFlakes ? true,
 }:
 
-with pkgs.lib;
-
 let
+  inherit (pkgs) lib;
   pkgs' = pkgs.extend cl-nix-lite;
   lisps =
     builtins.filter
-      (drv: !drv.meta.broken && meta.availableOn { inherit (pkgs.stdenv.hostPlatform) system; } drv)
+      (drv: !drv.meta.broken && lib.meta.availableOn { inherit (pkgs.stdenv.hostPlatform) system; } drv)
       (
         with pkgs';
         [
@@ -29,13 +28,13 @@ let
   # Massage a test input into a list of derivations (for later flattening)
   allInputs =
     input:
-    if isDerivation input then
+    if lib.isDerivation input then
       [ input ]
-    else if isAttrs input then
+    else if lib.isAttrs input then
       allInputs (builtins.attrValues input)
     else
-      assert isList input;
-      builtins.filter isDerivation input;
+      assert lib.isList input;
+      builtins.filter lib.isDerivation input;
   # Simple paths which can just be imported directly
   channelTestPaths =
     lisp:
@@ -45,11 +44,11 @@ let
       ./channels/lisp-script
       ./channels/override-package
     ]
-    ++ optionals (lisp.pname != "abcl") [
+    ++ lib.optionals (lisp.pname != "abcl") [
       ./channels/external-dependency
       ./channels/hello-binary
     ]
-    ++ optionals (
+    ++ lib.optionals (
       !(builtins.elem lisp.pname [
         "abcl"
         "clisp"
@@ -68,7 +67,7 @@ let
   channelTests = [ (pkgs'.callPackage ./channels/override-lisp { }) ] ++ (map channelTestsFor lisps);
 
   # These need some more work
-  flakeTests = optionals withFlakes [
+  flakeTests = lib.optionals withFlakes [
     ./flakes/external-dependency
     ./flakes/lisp-script
     ./flakes/make-binary
@@ -76,7 +75,7 @@ let
   ];
   flakeToDerivs =
     f:
-    pipe f [
+    lib.pipe f [
       builtins.toString
       builtins.getFlake
       (x: x.packages.${pkgs.stdenv.hostPlatform.system})
@@ -88,4 +87,4 @@ in
 # to be /built/, on CI. That allows you to exclude anything that already exists
 # on cache. This is useful because otherwise it will redownload everything, just
 # to throw it away immediately again.
-flatten channelTests ++ (map flakeToDerivs flakeTests)
+lib.flatten channelTests ++ (map flakeToDerivs flakeTests)

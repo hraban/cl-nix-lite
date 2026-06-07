@@ -14,7 +14,9 @@
 
 { inputs, pkgs }:
 
-with { inherit (pkgs) lib; };
+let
+  inherit (pkgs) lib;
+in
 
 rec {
   lispPackagesLite = lispPackagesLiteFor pkgs.sbcl; # The King ❤️
@@ -27,11 +29,16 @@ rec {
       lib.makeScope pkgs.newScope (
         self:
         with self;
-        with callPackage ./utils.nix { };
-        with { lisp = makeLisp lisp'; };
-        with callPackage ./lisp-derivation.nix { inherit lisp; };
-
         let
+          utils = callPackage ./utils.nix { };
+          lisp = utils.makeLisp lisp';
+          lpl = callPackage ./lisp-derivation.nix { inherit lisp; };
+          inherit (lpl)
+            lispDerivation
+            lispMultiDerivation
+            lispScript
+            lispWithSystems
+            ;
           lispify =
             name: lispDependencies:
             lispDerivation {
@@ -96,7 +103,7 @@ rec {
             # Compiling this on CLISP hangs forever.
             # On ECL:
             # * The declaration (DECLARE (FTYPE (FUNCTION ((OR IVEC4 DVEC4 VEC4 IVEC3 DVEC3 VEC3 IVEC2 DVEC2 VEC2)) (VALUES (OR I32 F64 F32) &OPTIONAL)) VX)) was found in a bad place.
-            meta.broken = b.elem lisp.name [
+            meta.broken = builtins.elem lisp.name [
               "clisp"
               "ecl"
               "abcl"
@@ -297,7 +304,7 @@ rec {
             # If you think this is in error, and the implementation does expose
             # the necessary operators, please file an issue at
             #   https://github.com/shinmera/atomics/issues
-            meta.broken = b.elem lisp.name [
+            meta.broken = builtins.elem lisp.name [
               "abcl"
               "clisp"
             ];
@@ -406,21 +413,21 @@ rec {
               ];
               propagatedBuildInputs =
                 with pkgs;
-                l.optionals stdenv.isDarwin [
+                lib.optionals stdenv.isDarwin [
                   # On Darwin, osicat needed access to the libtool package. I have a
                   # feeling that’s because of CFFI, and CFFI should provide it, but
                   # honestly I don’t know if this is the right place. Maybe I should just
                   # make osicat define this as a nativeBuildInput?
                   xcbuild
                 ];
-              buildInputs = systems: l.optionals (b.elem "cffi" systems) [ pkgs.libffi ];
+              buildInputs = systems: lib.optionals (builtins.elem "cffi" systems) [ pkgs.libffi ];
               # This is broken on Darwin because libcffi rewrites the import path in a
               # way that’s incompatible with pkgconfig. It should be "if darwin AND (not
               # pkg-config)".
 
               setupHooks =
                 systems:
-                l.optionals (b.elem "cffi" systems) [
+                lib.optionals (builtins.elem "cffi" systems) [
                   (
                     if
                       pkgs.stdenv.hostPlatform.isDarwin
@@ -438,7 +445,7 @@ rec {
                 ];
               meta =
                 systems:
-                a.optionalAttrs (b.elem "cffi" systems) {
+                lib.optionalAttrs (builtins.elem "cffi" systems) {
                   # CFFI requires CLISP compiled with dynamic FFI support, which only
                   # enabled on Linux. And it’s supposed to work with ABCL but I don’t know
                   # how, so I’m marking this broken for now.
@@ -520,7 +527,7 @@ rec {
               # explicit about it for the sake of clarity.
               propagatedBuildInputs =
                 systems:
-                l.optionals (b.elem "coalton" systems) [
+                lib.optionals (builtins.elem "coalton" systems) [
                   # Actual dependencies
                   pkgs.mpfr
                   pkgs.libuv
@@ -640,7 +647,7 @@ rec {
 
               meta.broken = lisp.name == "clasp";
               propagatedBuildInputs =
-                systems: l.optionals (builtins.elem "cl-async-ssl" systems) [ pkgs.openssl ];
+                systems: lib.optionals (builtins.elem "cl-async-ssl" systems) [ pkgs.openssl ];
             })
             cl-async
             cl-async-repl
@@ -870,16 +877,16 @@ rec {
               makeFlags = [ "CC=cc" ];
               buildInputs =
                 systems:
-                (l.optional (b.elem "cl-libxml2" systems) pkgs.libxml2)
-                ++ (l.optional (b.elem "cl-libxslt" systems) pkgs.libxslt);
-              outputs = systems: [ "out" ] ++ l.optional (b.elem "cl-libxslt" systems) "lib";
+                (lib.optionals (builtins.elem "cl-libxml2" systems) [ pkgs.libxml2 ])
+                ++ (lib.optionals (builtins.elem "cl-libxslt" systems) [ pkgs.libxslt ]);
+              outputs = systems: [ "out" ] ++ lib.optionals (builtins.elem "cl-libxslt" systems) [ "lib" ];
               # This :force t isn’t necessary, and it breaks tests
               postUnpack = ''
                 (cd "$sourceRoot"; sed -i  -e "s/ :force t//" *.asd)
               '';
               preBuild =
                 systems:
-                s.optionalString (b.elem "cl-libxslt" systems) (
+                lib.optionalString (builtins.elem "cl-libxslt" systems) (
                   let
                     libname = "cllibxml2${pkgs.stdenv.hostPlatform.extensions.sharedLibrary}";
                   in
@@ -1166,8 +1173,8 @@ rec {
               };
               meta =
                 systems:
-                a.optionalAttrs (b.elem "cl-variates/with-metacopy" systems) {
-                  broken = b.elem lisp.name [
+                lib.optionalAttrs (builtins.elem "cl-variates/with-metacopy" systems) {
+                  broken = builtins.elem lisp.name [
                     # The function get-structure is not yet implemented for Armed Bear Common Lisp 1.9.2 on AARCH64.
                     "abcl"
                     # The function get-structure is not yet implemented for clasp cclasp-boehmprecise-2.7.0-cst on x86_64.
@@ -1421,7 +1428,7 @@ rec {
           dissect = lispDerivation {
             lispSystem = "dissect";
             src = inputs.dissect;
-            lispDependencies = l.optional (lisp.name == "clisp") cl-ppcre;
+            lispDependencies = lib.optionals (lisp.name == "clisp") [ cl-ppcre ];
           };
 
           djula = lispDerivation {
@@ -1702,7 +1709,7 @@ rec {
                 infix = { };
               };
               dontConfigure = true;
-              lispAsdPath = systems: l.optional (builtins.elem "infix" systems) "external/infix";
+              lispAsdPath = systems: lib.optionals (builtins.elem "infix" systems) [ "external/infix" ];
             })
             infix
             ;
@@ -1969,7 +1976,7 @@ rec {
           iterate = lispDerivation {
             lispSystem = "iterate";
             src = inputs.iterate;
-            lispCheckDependencies = l.optional ((lisp.pname or "") != "sbcl") rt;
+            lispCheckDependencies = lib.optionals ((lisp.pname or "") != "sbcl") [ rt ];
           };
 
           jonathan = lispDerivation {
@@ -2372,7 +2379,7 @@ rec {
                   };
                   mgl-pax-bootstrap = { };
                 };
-                lispAsdPath = systems: l.optionals (builtins.elem "dref" systems) [ "dref" ];
+                lispAsdPath = systems: lib.optionals (builtins.elem "dref" systems) [ "dref" ];
               }
             )
             dref
@@ -3167,7 +3174,7 @@ rec {
             preCheck = ''
               export CL_SOURCE_REGISTRY="$PWD/code/test-suite:$CL_SOURCE_REGISTRY"
             '';
-            meta.broken = b.elem lisp.name [
+            meta.broken = builtins.elem lisp.name [
               "ecl"
               "clisp"
             ];
@@ -3240,7 +3247,7 @@ rec {
             # Clisp packages ASDF v3.2, WPI requires ≥3.3, this is the easiest way to
             # remedy that. Of course you can byo-ASDF, at which point you can just
             # .overrideAttrs this flag back to false. Same for ECL.
-            meta.broken = b.elem lisp.name [
+            meta.broken = builtins.elem lisp.name [
               "clisp"
               "ecl"
             ];
