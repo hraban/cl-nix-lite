@@ -19,7 +19,8 @@ let
         with pkgs';
         [
           abcl
-          clasp-common-lisp
+          # Excluded because test suite is getting too heavy for now - 2026/06
+          # clasp-common-lisp
           clisp
           ecl
           sbcl

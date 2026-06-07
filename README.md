@@ -467,6 +467,7 @@ in
 The supported lisps are:
 
 - ABCL
+- [Clasp](https://clasp-developers.github.io/) (experimental)
 - CLISP
 - ECL
 - SBCL (default)
