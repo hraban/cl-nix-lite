@@ -260,7 +260,7 @@ rec {
           };
 
           asdf = lispDerivation {
-            # Sometimes a dependent project will try and build asdf/defsystems. I’m
+            # Sometimes a dependent project will try and build asdf/defsystem. I’m
             # not exactly clear on when this happens but it’s fixed by just always
             # precompiling it here.
             lispSystems = [
@@ -268,6 +268,9 @@ rec {
               "asdf/defsystem"
             ];
             src = inputs.asdf;
+            # Not exactly sure why, but clasp doesn’t seem happy rebuilding asdf
+            # from source?
+            meta.broken = lisp.name == "clasp";
           };
 
           asdf-flv = lispDerivation {
@@ -635,6 +638,7 @@ rec {
                 };
               };
 
+              meta.broken = lisp.name == "clasp";
               propagatedBuildInputs =
                 systems: l.optionals (builtins.elem "cl-async-ssl" systems) [ pkgs.openssl ];
             })
@@ -1166,6 +1170,8 @@ rec {
                   broken = b.elem lisp.name [
                     # The function get-structure is not yet implemented for Armed Bear Common Lisp 1.9.2 on AARCH64.
                     "abcl"
+                    # The function get-structure is not yet implemented for clasp cclasp-boehmprecise-2.7.0-cst on x86_64.
+                    "clasp"
                     # *** - The function get-structure is not yet implemented for CLISP 2.49.92
                     "clisp"
                     # ;;; The function get-structure is not yet implemented for ECL 21.2.1 on arm64.
@@ -2146,13 +2152,18 @@ rec {
           lift = lispDerivation {
             lispSystem = "lift";
             src = inputs.lift;
-            # There is a bug in lift which causes some silly pathname, ‘mkdir -p’
-            # style problem. Setting the broken flag here is the easiest way to
-            # disable all lift tests on clisp for now.  The bug looks like this:
-            #
-            #  > *** - PROBE-FILE: No file name given:
-            #  >       #P"/private/tmp/nix-build-system-metatilities-base.drv-1/source/test-results-2023-10-16-1/
-            meta.broken = lisp.name == "clisp";
+            meta.broken = builtins.elem lisp.name [
+              # Symbol named "BTCL" not found in the CORE package.
+              "clasp"
+              # There is a bug in lift which causes some silly pathname, ‘mkdir
+              # -p’ style problem. Setting the broken flag here is the easiest
+              # way to disable all lift tests on clisp for now.  The bug looks
+              # like this:
+              #
+              #  > *** - PROBE-FILE: No file name given:
+              #  >       #P"/private/tmp/nix-build-system-metatilities-base.drv-1/source/test-results-2023-10-16-1/
+              "clisp"
+            ];
           };
 
           lisp-namespace = lispDerivation {

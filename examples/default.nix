@@ -12,12 +12,20 @@ with pkgs.lib;
 
 let
   pkgs' = pkgs.extend cl-nix-lite;
-  lisps = with pkgs'; [
-    abcl
-    clisp
-    ecl
-    sbcl
-  ];
+  lisps =
+    builtins.filter
+      (drv: !drv.meta.broken && meta.availableOn { inherit (pkgs.hostPlatform) system; } drv)
+      (
+        with pkgs';
+        [
+          abcl
+          # Excluded because test suite is getting too heavy for now - 2026/06
+          # clasp-common-lisp
+          clisp
+          ecl
+          sbcl
+        ]
+      );
   # Massage a test input into a list of derivations (for later flattening)
   allInputs =
     input:
@@ -45,6 +53,7 @@ let
       !(builtins.elem lisp.pname [
         "abcl"
         "clisp"
+        "clasp"
       ])
     ) [ ./channels/with-cffi ];
   channelTestsFor =

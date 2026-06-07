@@ -267,6 +267,7 @@ rec {
           {
             abcl =
               file: "${lib.getExe lisp} --batch --noinform --noinit --nosystem --load ${wrapAbclToplevel file}";
+            clasp = file: "${lib.getExe lisp} --script ${lib.escapeShellArg file}";
             clisp = file: "${lib.getExe lisp} -E UTF-8 -norc ${lib.escapeShellArg file}";
             ecl = file: "${lib.getExe lisp} --shell ${lib.escapeShellArg file}";
             sbcl = file: "${lib.getExe lisp} --script ${lib.escapeShellArg file}";
