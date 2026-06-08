@@ -1324,6 +1324,7 @@ rec {
 
           concrete-syntax-tree = lispDerivation {
             lispDependencies = [ acclimation ];
+            lispCheckDependencies = [ fiveam ];
             src = inputs.concrete-syntax-tree;
             lispSystem = "concrete-syntax-tree";
             lispAsdPath = [ "Lambda-list" ];
@@ -2110,7 +2111,7 @@ rec {
           lass = lispDerivation {
             lispSystems = [
               "lass"
-              "binary-lass"
+              "lass-binary"
             ];
             lispDependencies = [
               trivial-indent
