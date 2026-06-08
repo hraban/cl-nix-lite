@@ -741,6 +741,7 @@ rec {
             lispCheckDependencies = [ prove ];
             lispDependencies = [
               alexandria
+              cl-json
               cl-ppcre
               dexador
               flexi-streams
@@ -1045,6 +1046,7 @@ rec {
             lispDependencies = [
               babel
               cl-ppcre
+              self."cl+ssl"
               flexi-streams
               rutils
               usocket
@@ -1054,6 +1056,8 @@ rec {
               should-test
             ];
             src = inputs.cl-redis;
+            # hard-codes sb-sys since 4c1e241e7fda1d93788fa9dfa2350507e5757d31
+            meta.broken = lisp.name != "sbcl";
           };
 
           cl-slice = lispDerivation {
@@ -1746,6 +1750,7 @@ rec {
 
           fset = lispDerivation {
             lispDependencies = [
+              alexandria
               misc-extensions
               mt19937
               named-readtables
@@ -1844,9 +1849,9 @@ rec {
               cl-utilities
               fast-http
               flexi-streams
-              jonathan
               quri
               trivial-gray-streams
+              yason
             ];
             lispCheckDependencies = [
               assoc-utils
@@ -2059,6 +2064,7 @@ rec {
               cl-redis
               dbi
               http-body
+              ironclad
               local-time
               marshal
               quri
@@ -2233,9 +2239,11 @@ rec {
             in
             lispify "lparallel" [
               alexandria
+              atomics
               # If anyone else in your entire family includes
               # bordeaux-threads-master, you’re dead.
               bordeaux-threads-v1
+              trivial-cltl2
             ]
           );
 
@@ -2326,27 +2334,14 @@ rec {
               let
                 lispCheckDependencies = [
                   self."mgl-pax/full"
-                  dref
                   try
                 ];
               in
               lispMultiDerivation {
                 src = inputs.mgl-pax;
                 systems = {
-                  dref = {
-                    lispDependencies = [
-                      mgl-pax-bootstrap
-                      named-readtables
-                      pythonic-string-reader
-                    ];
-                    lispCheckDependencies = lispCheckDependencies ++ [
-                      alexandria
-                      swank
-                    ];
-                  };
                   mgl-pax = {
                     lispDependencies = [
-                      dref
                       named-readtables
                       pythonic-string-reader
                       mgl-pax-bootstrap
@@ -2373,10 +2368,8 @@ rec {
                   };
                   mgl-pax-bootstrap = { };
                 };
-                lispAsdPath = systems: l.optionals (builtins.elem "dref" systems) [ "dref" ];
               }
             )
-            dref
             mgl-pax
             "mgl-pax/full"
             mgl-pax-bootstrap
@@ -3165,7 +3158,10 @@ rec {
               src = inputs.usocket;
               systems = {
                 usocket = {
-                  lispDependencies = [ split-sequence ];
+                  lispDependencies = [
+                    babel
+                    split-sequence
+                  ];
                   lispCheckDependencies = [
                     bordeaux-threads
                     rt
@@ -3264,10 +3260,15 @@ rec {
             src = inputs.yacc;
           };
 
-          yason = lispify "yason" [
-            alexandria
-            trivial-gray-streams
-          ];
+          yason = lispDerivation {
+            lispSystem = "yason";
+            src = inputs.yason;
+            lispDependencies = [
+              alexandria
+              trivial-gray-streams
+            ];
+            lispCheckDependencies = [ unit-test ];
+          };
 
           zip = lispify "zip" [
             trivial-gray-streams

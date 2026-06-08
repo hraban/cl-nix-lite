@@ -14,6 +14,7 @@
     "cl-redis"
     "common-doc"
     "commondoc-markdown" # I have no idea what’s happening here but I need to move on
+    "concrete-syntax-tree" # these tests take way too long. Absurd.
     "dbi"
     #"deflate" # https://github.com/pmai/Deflate/issues/3
     "dynamic-classes"
@@ -78,6 +79,7 @@
     "data-lens" # Tests fail
     "cl-markdown" # > The function LIFT::GET-BACKTRACE-AS-STRING is undefined..
     "cl-prevalence" # Tests fail
+    "hu_dwim_asdf" # No applicable method for HU.DWIM.ASDF:SYSTEM-TEST-SYSTEM-NAME with arguments of types SYSTEM..
     "legion" # hangs forever on ECL
     "trivial-custom-debugger" # An error occurred during initialization: #<a TRIVIAL-CUSTOM-DEBUGGER/TEST::MY-ERROR 0x105c49d80>.
     "type-i" # hangs forever on ECL

@@ -1913,15 +1913,16 @@
     "fset": {
       "flake": false,
       "locked": {
-        "lastModified": 1779416109,
-        "narHash": "sha256-zE+g3KEWqjsFYhq3Ez1I5I7TvmEyXwEiLMAVXAql6I4=",
+        "lastModified": 1780992174,
+        "narHash": "sha256-sXocY2zUOw26LKsLu0blXjW2YlBNycPQPkgbf/IgD+8=",
         "owner": "slburson",
         "repo": "fset",
-        "rev": "b29c39404a6f0ce0ac9f27e8cf7592993329b9bc",
+        "rev": "be976b44af9f97b5e79edd10849235594679d3ef",
         "type": "github"
       },
       "original": {
         "owner": "slburson",
+        "ref": "pull/117/merge",
         "repo": "fset",
         "type": "github"
       }

@@ -521,7 +521,7 @@
       flake = false;
     };
     fset = {
-      url = "github:slburson/fset";
+      url = "github:slburson/fset/pull/117/merge"; # NOMERGE -- PR pending
       flake = false;
     };
     garbage-pools = {
