@@ -2744,11 +2744,11 @@
     "named-readtables": {
       "flake": false,
       "locked": {
-        "lastModified": 1693231566,
-        "narHash": "sha256-93djY2gUeaK/LH1cocLE9+wNoyTFQVgLyMEDh0fQ3TI=",
+        "lastModified": 1777283594,
+        "narHash": "sha256-R0KsCXOYETCDSVl8dTeTuaimB9sbm0v0KZRSeev1MWQ=",
         "owner": "melisgl",
         "repo": "named-readtables",
-        "rev": "455fbaaf5aed25e296edb513fce8819c655977e8",
+        "rev": "609a591989927f30b9be76ed510bf1fbcdb53682",
         "type": "github"
       },
       "original": {
