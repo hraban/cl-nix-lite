@@ -44,7 +44,7 @@ jobs:
       run: |
         set -euo pipefail
         nix build --no-link --dry-run --impure --expr 'let f = builtins.getFlake "git+file://${toString ./.}"; in f.checks.${builtins.currentSystem}' 2>&1 | \
-          tee nix-build.out | \
+          tee /tmp/nix-build.out | \
           sed -ne '/will be built:$/ {
             # label
             :b
@@ -71,7 +71,7 @@ jobs:
         done
     - name: nix-build error output
       if: failure()
-      run: "cat examples/nix-build.out"
+      run: "cat /tmp/nix-build.out"
 
   nocommit:
     runs-on: ubuntu-latest
