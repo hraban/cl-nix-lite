@@ -994,7 +994,10 @@
       flake = false;
     };
     trivial-mimes = {
-      url = "git+https://codeberg.org/shinmera/trivial-mimes.git";
+      # Pin to parent of commit 01cb46b062d6804ce707352e3de593c104f1cdeb, which
+      # introduced a breaking change that I honestly don’t know how to fix.  I’d
+      # rather just stay on this version forever.
+      url = "git+https://codeberg.org/shinmera/trivial-mimes.git?rev=da5a19fd18176930caf27f5d10ad197210c91dd9";
       flake = false;
     };
     trivial-open-browser = {

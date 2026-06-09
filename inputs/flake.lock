@@ -4069,15 +4069,16 @@
     "trivial-mimes": {
       "flake": false,
       "locked": {
-        "lastModified": 1755787795,
-        "narHash": "sha256-GwztfpJzbWnqUWNV2lTcOfLMYDQeRW92x2yGAGXOGzY=",
+        "lastModified": 1737931206,
+        "narHash": "sha256-8xB2caTrBUjbRW0fKXKpBqyk1hmREwjkWOVLvkoupzs=",
         "ref": "refs/heads/master",
-        "rev": "8b1ea1291ef53d55730d2288332656a98068d7e5",
-        "revCount": 28,
+        "rev": "da5a19fd18176930caf27f5d10ad197210c91dd9",
+        "revCount": 25,
         "type": "git",
         "url": "https://codeberg.org/shinmera/trivial-mimes.git"
       },
       "original": {
+        "rev": "da5a19fd18176930caf27f5d10ad197210c91dd9",
         "type": "git",
         "url": "https://codeberg.org/shinmera/trivial-mimes.git"
       }
