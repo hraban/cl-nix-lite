@@ -3409,6 +3409,7 @@
         "salza2": "salza2",
         "serapeum": "serapeum",
         "sha1": "sha1",
+        "shasht": "shasht",
         "should-test": "should-test",
         "simple-date-time": "simple-date-time",
         "slime": "slime",
@@ -3429,6 +3430,7 @@
         "trivial-benchmark": "trivial-benchmark",
         "trivial-cltl2": "trivial-cltl2",
         "trivial-custom-debugger": "trivial-custom-debugger",
+        "trivial-do": "trivial-do",
         "trivial-extract": "trivial-extract",
         "trivial-features": "trivial-features",
         "trivial-file-size": "trivial-file-size",
@@ -3607,6 +3609,22 @@
       "original": {
         "owner": "massung",
         "repo": "sha1",
+        "type": "github"
+      }
+    },
+    "shasht": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1764031767,
+        "narHash": "sha256-rpSDlpzHgiVDLkLuibGnHzOK8B8NdYuY9YZfwOVGijU=",
+        "owner": "yitzchak",
+        "repo": "shasht",
+        "rev": "fb9706e710ccc68b77f6afd98c270590d22c2a08",
+        "type": "github"
+      },
+      "original": {
+        "owner": "yitzchak",
+        "repo": "shasht",
         "type": "github"
       }
     },
@@ -3923,6 +3941,22 @@
       "original": {
         "owner": "phoe",
         "repo": "trivial-custom-debugger",
+        "type": "github"
+      }
+    },
+    "trivial-do": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1646576848,
+        "narHash": "sha256-Tjd9VJan6pQpur292xtklvb28MDGGjq2+ub5T6o6FG8=",
+        "owner": "yitzchak",
+        "repo": "trivial-do",
+        "rev": "a19f93227cb80a6bec8846655ebcc7998020bd7e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "yitzchak",
+        "repo": "trivial-do",
         "type": "github"
       }
     },

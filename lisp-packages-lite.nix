@@ -2810,6 +2810,19 @@ rec {
 
           sha1 = lispify "sha1" [ ];
 
+          shasht = lispDerivation {
+            src = inputs.shasht;
+            lispSystem = "shasht";
+            lispDependencies = [
+              trivial-do
+              closer-mop
+            ];
+            lispCheckDependencies = [
+              alexandria
+              parachute
+            ];
+          };
+
           should-test = lispDerivation {
             lispSystem = "should-test";
             lispDependencies = [
@@ -3039,6 +3052,11 @@ rec {
               alexandria
             ];
             lispCheckDependencies = [ fiveam ];
+          };
+
+          trivial-do = lispDerivation {
+            src = inputs.trivial-do;
+            lispSystem = "trivial-do";
           };
 
           trivial-features = lispDerivation {
