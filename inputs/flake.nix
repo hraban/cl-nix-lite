@@ -885,6 +885,10 @@
       url = "github:massung/sha1";
       flake = false;
     };
+    shasht = {
+      url = "github:yitzchak/shasht";
+      flake = false;
+    };
     should-test = {
       url = "github:vseloved/should-test";
       flake = false;
@@ -963,6 +967,10 @@
     };
     trivial-custom-debugger = {
       url = "github:phoe/trivial-custom-debugger";
+      flake = false;
+    };
+    trivial-do = {
+      url =  "github:yitzchak/trivial-do";
       flake = false;
     };
     trivial-extract = {
