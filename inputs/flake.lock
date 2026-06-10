@@ -3979,11 +3979,11 @@
     "trivial-features": {
       "flake": false,
       "locked": {
-        "lastModified": 1686148063,
-        "narHash": "sha256-g50OSfrMRH5hTRy077C1kCln2vz0Qeb1oq9qHh7zY2Q=",
+        "lastModified": 1738142020,
+        "narHash": "sha256-2KxtbGtnlf6JgWDlX7LVdvaWCsPOUxb2aIZnrYvndGQ=",
         "owner": "trivial-features",
         "repo": "trivial-features",
-        "rev": "d249a62aaf022902398a7141ae17217251fc61db",
+        "rev": "18a5cfafa5ca2565f4297d1d986409facff68f00",
         "type": "github"
       },
       "original": {
