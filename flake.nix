@@ -45,7 +45,14 @@
                       i: d:
                       let
                         lispName = lib.optionalString (d ? lisp) "-${d.lisp.pname or d.lisp.name}";
-                        name = "${d.name}${lispName}-${toString i}";
+                        # Periods are valid names for nix flake check
+                        # attributes, but not if you pass the resulting attrset
+                        # to ‘nix build’.  I’m not sure whence the discrepancy,
+                        # but 🤷.  Passing the flake’s check attrset through a
+                        # --dry-run to avoid building what’s already in the
+                        # cache is a useful trick used on CI, so it’s worth
+                        # keeping compatibility.
+                        name = lib.replaceString "." "_" "${d.name}${lispName}-${toString i}";
                       in
                       lib.nameValuePair name d
                     ) (lib.flatten examples)
