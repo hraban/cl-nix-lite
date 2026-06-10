@@ -2588,11 +2588,11 @@
     "marshal": {
       "flake": false,
       "locked": {
-        "lastModified": 1700903855,
-        "narHash": "sha256-q+hfjzktcVrhgWqn2VeTk5ODluz4S4DZ7wW8Jt0TMiA=",
+        "lastModified": 1777020618,
+        "narHash": "sha256-Pd9rBpxFRBeHq+dhQGfhxfU0pE9ih1bYBVpPSJu3Nho=",
         "owner": "wlbr",
         "repo": "cl-marshal",
-        "rev": "f169abd3c7b1b6a950897335f46215e15dbacdff",
+        "rev": "1d07723a0ee0fb48d734bbf68db0000f1cd65440",
         "type": "github"
       },
       "original": {
