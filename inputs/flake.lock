@@ -3044,11 +3044,11 @@
     "punycode": {
       "flake": false,
       "locked": {
-        "lastModified": 1688403713,
-        "narHash": "sha256-sCcZ37w0Q/cJWEqTk5XkpAhcMlO69HLIwudrvIRU6Rw=",
+        "lastModified": 1755082553,
+        "narHash": "sha256-5qUtdP6JIql3TB2NDAXyp9i7953VbSxpPsjr09vvsUE=",
         "owner": "Shinmera",
         "repo": "punycode",
-        "rev": "4c38c1c6b8b48578535d58453590af7161dfd52f",
+        "rev": "2cfcecae6b61d08d9b99ddee7f58e4c4d9e82376",
         "type": "github"
       },
       "original": {
