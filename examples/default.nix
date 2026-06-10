@@ -14,7 +14,7 @@ let
   pkgs' = pkgs.extend cl-nix-lite;
   lisps =
     builtins.filter
-      (drv: !drv.meta.broken && meta.availableOn { inherit (pkgs.hostPlatform) system; } drv)
+      (drv: !drv.meta.broken && meta.availableOn { inherit (pkgs.stdenv.hostPlatform) system; } drv)
       (
         with pkgs';
         [
@@ -79,7 +79,7 @@ let
     pipe f [
       builtins.toString
       builtins.getFlake
-      (x: x.packages.${pkgs.system})
+      (x: x.packages.${pkgs.stdenv.hostPlatform.system})
       builtins.attrValues
     ];
 in

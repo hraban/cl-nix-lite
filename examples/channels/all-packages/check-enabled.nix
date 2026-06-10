@@ -45,8 +45,8 @@
     "dref"
     "mgl-pax"
   ]
-  ++ pkgs.lib.optionals pkgs.hostPlatform.isDarwin [ "flexi-streams" ]
-  ++ pkgs.lib.optionals (pkgs.hostPlatform.isLinux || (lisp.pname == "abcl")) [
+  ++ pkgs.lib.optionals pkgs.stdenv.hostPlatform.isDarwin [ "flexi-streams" ]
+  ++ pkgs.lib.optionals (pkgs.stdenv.hostPlatform.isLinux || (lisp.pname == "abcl")) [
     # Hangs forever on ABCL
     "usocket"
   ]
@@ -62,7 +62,7 @@
     "salza2"
     "trivial-custom-debugger" # #<MY-ERROR {354E970D}>
   ]
-  ++ pkgs.lib.optionals (lisp.pname == "abcl" && pkgs.hostPlatform.isDarwin) [
+  ++ pkgs.lib.optionals (lisp.pname == "abcl" && pkgs.stdenv.hostPlatform.isDarwin) [
     # Works locally but broken on Github Actions I don’t know why:
     #
     # Running test FIND-PORTS XThe following check failed: ((FIND-PORT:FIND-PORT))
@@ -87,7 +87,7 @@
     #   (AND (EQ (CTRAN-KIND START) INSIDE-BLOCK) (NOT (BLOCK-DELETE-P BLOCK)))
     "serapeum"
   ]
-  ++ pkgs.lib.optionals (lisp.pname == "clisp" && pkgs.hostPlatform.isLinux) [
+  ++ pkgs.lib.optionals (lisp.pname == "clisp" && pkgs.stdenv.hostPlatform.isLinux) [
     "3bmd-ext-code-blocks"
     # This fails on Github Actions, not in my local VM:
     # *** - handle_fault error2 ! address = 0x1fffffd6e640 not in [0x1000000c0000,0x10000058dd90) !
@@ -96,7 +96,7 @@
   ]
   ++
     pkgs.lib.optionals
-      ((lisp.pname == "ecl" && pkgs.hostPlatform.isLinux) || pkgs.hostPlatform.isDarwin)
+      ((lisp.pname == "ecl" && pkgs.stdenv.hostPlatform.isLinux) || pkgs.stdenv.hostPlatform.isDarwin)
       [
         # On ECL & Linux: ;;; Unknown keyword :HANDLED
         "lparallel"
@@ -117,7 +117,7 @@
           "ecl"
           "clisp"
         ])
-        && pkgs.system == "x86_64-darwin"
+        && pkgs.stdenv.hostPlatform.system == "x86_64-darwin"
       )
       [
         # Oddly specific failure: "https://github.com/fukamachi/anypool/issues/5".
@@ -130,7 +130,7 @@
           "ecl"
           "clisp"
         ])
-        && pkgs.system == "x86_64-linux"
+        && pkgs.stdenv.hostPlatform.system == "x86_64-linux"
       )
       [
         # https://github.com/edicl/flexi-streams/issues/51".  This technically only

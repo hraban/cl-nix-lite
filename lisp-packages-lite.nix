@@ -423,7 +423,7 @@ rec {
                 l.optionals (b.elem "cffi" systems) [
                   (
                     if
-                      pkgs.hostPlatform.isDarwin
+                      pkgs.stdenv.hostPlatform.isDarwin
                     # LD_.. only works with CFFI on Mac, but not with
                     # sb-alien:load-shared-object. DYLD_.. works with both.
                     then
@@ -1408,7 +1408,7 @@ rec {
               trivial-mimes
               usocket
             ]
-            ++ lib.optionals pkgs.hostPlatform.isWindows [ flexi-streams ];
+            ++ lib.optionals pkgs.stdenv.hostPlatform.isWindows [ flexi-streams ];
             lispCheckDependencies = [
               babel
               cl-cookie
@@ -2065,7 +2065,7 @@ rec {
               trivial-rfc-1123
               trivial-utf-8
             ]
-            ++ (if pkgs.hostPlatform.isWindows then [ ironclad ] else [ cl-isaac ]);
+            ++ (if pkgs.stdenv.hostPlatform.isWindows then [ ironclad ] else [ cl-isaac ]);
             # Extracted from the main asd file. This will probably grow out of date within 3 days.
             lispSystems = [
               "lack/app/directory"
