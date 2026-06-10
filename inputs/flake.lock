@@ -1091,11 +1091,11 @@
     "cl-tld": {
       "flake": false,
       "locked": {
-        "lastModified": 1645110505,
-        "narHash": "sha256-5jbUt+yTUz0OkWbLw+UZ6TSRH4cav84cecVGkW44pPY=",
+        "lastModified": 1743669924,
+        "narHash": "sha256-rAkpxFGyeq2LJijuhJuFbHu/PYkegLpRXRMS+cDQtv8=",
         "owner": "1u4nx",
         "repo": "cl-tld",
-        "rev": "b6b24d9c63da77052775992463f0bfac63383234",
+        "rev": "84c87f2c2546a091fa53a5116bd3b6208bdee16b",
         "type": "github"
       },
       "original": {
