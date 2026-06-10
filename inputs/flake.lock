@@ -3490,11 +3490,11 @@
     "rove": {
       "flake": false,
       "locked": {
-        "lastModified": 1718848187,
-        "narHash": "sha256-BTRahe/vQI1PET0KzUF/ZPitM0omuMXbz2jS7FArpbM=",
+        "lastModified": 1780982426,
+        "narHash": "sha256-+v0cn/JsrdDNxvyZ4cRuNDIDECISb3O8nVrAc6cfdQ4=",
         "owner": "fukamachi",
         "repo": "rove",
-        "rev": "cacea7331c10fe9d8398d104b2dfd579bf7ea353",
+        "rev": "52b04eaa4a079d753fdf49e793a52d5fe1f61836",
         "type": "github"
       },
       "original": {
