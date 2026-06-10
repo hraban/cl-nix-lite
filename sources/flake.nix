@@ -47,11 +47,11 @@
       flake = false;
     };
     "3d-math" = {
-      url = "github:Shinmera/3d-math";
+      url = "git+https://codeberg.org/shinmera/3d-math.git";
       flake = false;
     };
     "3d-vectors" = {
-      url = "github:Shinmera/3d-vectors";
+      url = "git+https://codeberg.org/shinmera/3d-vectors.git";
       flake = false;
     };
     "40ants-asdf-system" = {
@@ -95,7 +95,7 @@
       flake = false;
     };
     array-utils = {
-      url = "github:Shinmera/array-utils";
+      url = "git+https://codeberg.org/shinmera/array-utils.git";
       flake = false;
     };
     arrow-macros = {
@@ -353,7 +353,7 @@
       flake = false;
     };
     clss = {
-      url = "github:Shinmera/clss";
+      url = "git+https://codeberg.org/shinmera/clss.git";
       flake = false;
     };
     clunit = {
@@ -409,7 +409,7 @@
       flake = false;
     };
     dissect = {
-      url = "github:Shinmera/dissect";
+      url = "git+https://codeberg.org/shinmera/dissect.git";
       flake = false;
     };
     djula = {
@@ -417,7 +417,7 @@
       flake = false;
     };
     dns-client = {
-      url = "github:Shinmera/dns-client";
+      url = "git+https://codeberg.org/shinmera/dns-client.git";
       flake = false;
     };
     docs-builder = {
@@ -425,7 +425,7 @@
       flake = false;
     };
     documentation-utils = {
-      url = "github:Shinmera/documentation-utils";
+      url = "git+https://codeberg.org/shinmera/documentation-utils.git";
       flake = false;
     };
     drakma = {
@@ -513,11 +513,11 @@
       flake = false;
     };
     float-features = {
-      url = "github:Shinmera/float-features";
+      url = "git+https://codeberg.org/shinmera/float-features.git";
       flake = false;
     };
     form-fiddle = {
-      url = "github:Shinmera/form-fiddle";
+      url = "git+https://codeberg.org/shinmera/form-fiddle.git";
       flake = false;
     };
     fset = {
@@ -640,7 +640,7 @@
       flake = false;
     };
     lass = {
-      url = "github:Shinmera/LASS";
+      url = "git+https://codeberg.org/shinmera/LASS.git";
       flake = false;
     };
     legion = {
@@ -688,7 +688,7 @@
       flake = false;
     };
     lquery = {
-      url = "github:Shinmera/lquery";
+      url = "git+https://codeberg.org/shinmera/lquery.git";
       flake = false;
     };
     lw-compat = {
@@ -764,7 +764,7 @@
       flake = false;
     };
     parachute = {
-      url = "github:Shinmera/parachute";
+      url = "git+https://codeberg.org/shinmera/parachute.git";
       flake = false;
     };
     # TODO: Somehow create a versioned URL from this.
@@ -793,7 +793,7 @@
       flake = false;
     };
     plump = {
-      url = "github:Shinmera/plump";
+      url = "git+https://codeberg.org/shinmera/plump.git";
       flake = false;
     };
     proc-parse = {
@@ -809,7 +809,7 @@
       flake = false;
     };
     punycode = {
-      url = "github:Shinmera/punycode";
+      url = "git+https://codeberg.org/shinmera/punycode.git";
       flake = false;
     };
     puri = {
@@ -950,7 +950,7 @@
       flake = false;
     };
     trivial-arguments = {
-      url = "github:Shinmera/trivial-arguments";
+      url = "git+https://codeberg.org/shinmera/trivial-arguments.git";
       flake = false;
     };
     trivial-backtrace = {
@@ -958,7 +958,7 @@
       flake = false;
     };
     trivial-benchmark = {
-      url = "github:Shinmera/trivial-benchmark";
+      url = "git+https://codeberg.org/shinmera/trivial-benchmark.git";
       flake = false;
     };
     trivial-cltl2 = {
@@ -994,7 +994,7 @@
       flake = false;
     };
     trivial-indent = {
-      url = "github:Shinmera/trivial-indent";
+      url = "git+https://codeberg.org/shinmera/trivial-indent.git";
       flake = false;
     };
     trivial-macroexpand-all = {
@@ -1002,7 +1002,7 @@
       flake = false;
     };
     trivial-mimes = {
-      url = "github:Shinmera/trivial-mimes";
+      url = "git+https://codeberg.org/shinmera/trivial-mimes.git";
       flake = false;
     };
     trivial-open-browser = {
@@ -1050,7 +1050,7 @@
       flake = false;
     };
     type-templates = {
-      url = "github:Shinmera/type-templates";
+      url = "git+https://codeberg.org/shinmera/type-templates.git";
       flake = false;
     };
     typo = {

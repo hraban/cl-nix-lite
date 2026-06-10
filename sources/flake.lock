@@ -37,15 +37,14 @@
       "locked": {
         "lastModified": 1725367523,
         "narHash": "sha256-bfcyIJyT6RzSAYuUwhqltVDXLXfpZXz/9deb43/8tgc=",
-        "owner": "Shinmera",
-        "repo": "3d-math",
+        "ref": "refs/heads/main",
         "rev": "dca49b0f42cb35814b187ecee567b697239475cd",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/3d-math.git"
       },
       "original": {
-        "owner": "Shinmera",
-        "repo": "3d-math",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/3d-math.git"
       }
     },
     "3d-vectors": {
@@ -53,15 +52,14 @@
       "locked": {
         "lastModified": 1693388789,
         "narHash": "sha256-SMylb6XQMk2WVm4UZVONdMyQOm1xvKVfj8j1vcDicXg=",
-        "owner": "Shinmera",
-        "repo": "3d-vectors",
+        "ref": "refs/heads/master",
         "rev": "e5ab05d14ebd608cd4e6b7bb8ca45e81ebc07f1d",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/3d-vectors.git"
       },
       "original": {
-        "owner": "Shinmera",
-        "repo": "3d-vectors",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/3d-vectors.git"
       }
     },
     "40ants-asdf-system": {
@@ -227,15 +225,14 @@
       "locked": {
         "lastModified": 1717737377,
         "narHash": "sha256-GlagpkZbg/V7DGVzz+oFTmT9LvdcBJt3sdlfp9M8ymc=",
-        "owner": "Shinmera",
-        "repo": "array-utils",
+        "ref": "refs/heads/master",
         "rev": "873888d82f88389b6cc102fe0a4d105b2d40171d",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/array-utils.git"
       },
       "original": {
-        "owner": "Shinmera",
-        "repo": "array-utils",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/array-utils.git"
       }
     },
     "arrow-macros": {
@@ -1220,15 +1217,14 @@
       "locked": {
         "lastModified": 1725955433,
         "narHash": "sha256-bjVbFxSzLG6XbvjJSEJLzYtVx+qEG+8QPatyFLnBXtA=",
-        "owner": "Shinmera",
-        "repo": "clss",
+        "ref": "refs/heads/master",
         "rev": "59aa1cdd63292a764179465a3b50aa634ed29f5b",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/clss.git"
       },
       "original": {
-        "owner": "Shinmera",
-        "repo": "clss",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/clss.git"
       }
     },
     "clunit": {
@@ -1444,15 +1440,14 @@
       "locked": {
         "lastModified": 1711373972,
         "narHash": "sha256-WXv/jbokgKJTc47rBjvOF5npnqDlsyr8oSXIzN/7ofo=",
-        "owner": "Shinmera",
-        "repo": "dissect",
+        "ref": "refs/heads/master",
         "rev": "a70cabcd748cf7c041196efd711e2dcca2bbbb2c",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/dissect.git"
       },
       "original": {
-        "owner": "Shinmera",
-        "repo": "dissect",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/dissect.git"
       }
     },
     "djula": {
@@ -1476,15 +1471,14 @@
       "locked": {
         "lastModified": 1725020704,
         "narHash": "sha256-ozsRZZv5vXjLpOA1suGM3zd3E4ps/DxWBDF0CKLPfdE=",
-        "owner": "Shinmera",
-        "repo": "dns-client",
+        "ref": "refs/heads/master",
         "rev": "cc97ff5268a963ecb45be11aaeeee767a0d76c9f",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/dns-client.git"
       },
       "original": {
-        "owner": "Shinmera",
-        "repo": "dns-client",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/dns-client.git"
       }
     },
     "docs-builder": {
@@ -1508,15 +1502,14 @@
       "locked": {
         "lastModified": 1688403694,
         "narHash": "sha256-HmKsscTfU8O5JzaWtLmfa79NigvwhB+5FzREzPaX81s=",
-        "owner": "Shinmera",
-        "repo": "documentation-utils",
+        "ref": "refs/heads/master",
         "rev": "0196f6ce6828a745121374c238972491074f5eb1",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/documentation-utils.git"
       },
       "original": {
-        "owner": "Shinmera",
-        "repo": "documentation-utils",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/documentation-utils.git"
       }
     },
     "drakma": {
@@ -1873,15 +1866,14 @@
       "locked": {
         "lastModified": 1714546861,
         "narHash": "sha256-Tso2dn444B61zamh2qN+tyW1bxkVCAnvmLnEma/atu8=",
-        "owner": "Shinmera",
-        "repo": "float-features",
+        "ref": "refs/heads/master",
         "rev": "f10113a5b828aa32e501c4650dcf654832e32d25",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/float-features.git"
       },
       "original": {
-        "owner": "Shinmera",
-        "repo": "float-features",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/float-features.git"
       }
     },
     "form-fiddle": {
@@ -1889,15 +1881,14 @@
       "locked": {
         "lastModified": 1688403692,
         "narHash": "sha256-b/GZItaSyOlnamYzKLJGUCYFmxQCshXyS1EQ1RFGgm4=",
-        "owner": "Shinmera",
-        "repo": "form-fiddle",
+        "ref": "refs/heads/master",
         "rev": "3bd0dfdae8f83918fce6cb4a05826bd325da401d",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/form-fiddle.git"
       },
       "original": {
-        "owner": "Shinmera",
-        "repo": "form-fiddle",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/form-fiddle.git"
       }
     },
     "fset": {
@@ -2365,15 +2356,14 @@
       "locked": {
         "lastModified": 1718792398,
         "narHash": "sha256-H6BMEbtKiHZVQV+ZTyO541QCZyrNuc96Y67EYc4eyqw=",
-        "owner": "Shinmera",
-        "repo": "LASS",
+        "ref": "refs/heads/master",
         "rev": "946684e8480706970713b896ff6380b6218c42b6",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/LASS.git"
       },
       "original": {
-        "owner": "Shinmera",
-        "repo": "LASS",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/LASS.git"
       }
     },
     "legion": {
@@ -2558,15 +2548,14 @@
       "locked": {
         "lastModified": 1694014698,
         "narHash": "sha256-T1toRSTRnZQZ3rk1pQVKdX/PqBafZxRmY5GlpMiVjIg=",
-        "owner": "Shinmera",
-        "repo": "lquery",
+        "ref": "refs/heads/master",
         "rev": "ac0853d2b1af549fd2228d28249f539b1f081840",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/lquery.git"
       },
       "original": {
-        "owner": "Shinmera",
-        "repo": "lquery",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/lquery.git"
       }
     },
     "lw-compat": {
@@ -2874,15 +2863,14 @@
       "locked": {
         "lastModified": 1720463516,
         "narHash": "sha256-QQTOkwv6xPpvUyibU6cWVLK29kafQ3rEt4mXVnaW8ME=",
-        "owner": "Shinmera",
-        "repo": "parachute",
+        "ref": "refs/heads/master",
         "rev": "3c04273cc61b353d7f1a087f9ae144f6f3fe4121",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/parachute.git"
       },
       "original": {
-        "owner": "Shinmera",
-        "repo": "parachute",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/parachute.git"
       }
     },
     "parenscript": {
@@ -2981,15 +2969,14 @@
       "locked": {
         "lastModified": 1715845227,
         "narHash": "sha256-aTegaKXRJjYSD3D0Oy878REUgJFsX/CeQYGqn8wWnhM=",
-        "owner": "Shinmera",
-        "repo": "plump",
+        "ref": "refs/heads/master",
         "rev": "9e61fe787c979d02154519c907b7874d369fe8d5",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/plump.git"
       },
       "original": {
-        "owner": "Shinmera",
-        "repo": "plump",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/plump.git"
       }
     },
     "proc-parse": {
@@ -3046,15 +3033,14 @@
       "locked": {
         "lastModified": 1688403713,
         "narHash": "sha256-sCcZ37w0Q/cJWEqTk5XkpAhcMlO69HLIwudrvIRU6Rw=",
-        "owner": "Shinmera",
-        "repo": "punycode",
+        "ref": "refs/heads/main",
         "rev": "4c38c1c6b8b48578535d58453590af7161dfd52f",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/punycode.git"
       },
       "original": {
-        "owner": "Shinmera",
-        "repo": "punycode",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/punycode.git"
       }
     },
     "puri": {
@@ -3871,15 +3857,14 @@
       "locked": {
         "lastModified": 1715018297,
         "narHash": "sha256-8uSdQe3ivhnoKxsu+Hd/hOYWWLb/AEvXw95nwrOLMvQ=",
-        "owner": "Shinmera",
-        "repo": "trivial-arguments",
+        "ref": "refs/heads/master",
         "rev": "398829ba94085212559105b917e72c59051891cd",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/trivial-arguments.git"
       },
       "original": {
-        "owner": "Shinmera",
-        "repo": "trivial-arguments",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/trivial-arguments.git"
       }
     },
     "trivial-backtrace": {
@@ -3901,15 +3886,14 @@
       "locked": {
         "lastModified": 1717954453,
         "narHash": "sha256-UkMIkOIEeaHZwS9OpsweVVc43DDmZ8SGzXIjnWuUWpM=",
-        "owner": "Shinmera",
-        "repo": "trivial-benchmark",
+        "ref": "refs/heads/main",
         "rev": "7aac137963b8774224f6488e4538a46ab3d1140e",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/trivial-benchmark.git"
       },
       "original": {
-        "owner": "Shinmera",
-        "repo": "trivial-benchmark",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/trivial-benchmark.git"
       }
     },
     "trivial-cltl2": {
@@ -4045,15 +4029,14 @@
       "locked": {
         "lastModified": 1688403718,
         "narHash": "sha256-PF5GydkcbitFtDjSFYVwrVl/30IGW5M0/07d9cnoDyM=",
-        "owner": "Shinmera",
-        "repo": "trivial-indent",
+        "ref": "refs/heads/master",
         "rev": "b5d490f9c619a8e9ec9e43fe76892e27d3e0f9a8",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/trivial-indent.git"
       },
       "original": {
-        "owner": "Shinmera",
-        "repo": "trivial-indent",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/trivial-indent.git"
       }
     },
     "trivial-macroexpand-all": {
@@ -4077,15 +4060,14 @@
       "locked": {
         "lastModified": 1688403715,
         "narHash": "sha256-4aAZ20wHMj/d2s+LTM7qLehxCX8/73LMVikTuNJbmBU=",
-        "owner": "Shinmera",
-        "repo": "trivial-mimes",
+        "ref": "refs/heads/master",
         "rev": "1a801939594f1496fae097352033414590811b91",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/trivial-mimes.git"
       },
       "original": {
-        "owner": "Shinmera",
-        "repo": "trivial-mimes",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/trivial-mimes.git"
       }
     },
     "trivial-open-browser": {
@@ -4267,15 +4249,14 @@
       "locked": {
         "lastModified": 1733405845,
         "narHash": "sha256-bkWENHvtvxgt5f900WQcKl4mBw+oAWGKFsCecxcSkvo=",
-        "owner": "Shinmera",
-        "repo": "type-templates",
+        "ref": "refs/heads/master",
         "rev": "ade30b450e018c4e650f1e8bab16fa3f21d240d5",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/type-templates.git"
       },
       "original": {
-        "owner": "Shinmera",
-        "repo": "type-templates",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/type-templates.git"
       }
     },
     "typo": {
