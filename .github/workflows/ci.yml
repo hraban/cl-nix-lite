@@ -28,9 +28,6 @@ jobs:
       with:
         name: cl-nix-lite
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    # Use GH Actions cache /in addition to/ Cachix because my cachix allowance
-    # account is too small to cache a single run.
-    - uses: DeterminateSystems/magic-nix-cache-action@main
     # This avoids having to fetch an older nixpkgs just for tests and it helps
     # detect problems early.
     # Only bother actually building derivations that are not yet in the
