@@ -70,7 +70,7 @@ jobs:
           )
         done
     - name: nix-build error output
-      if: failure()
+      if: always()
       run: "cat /tmp/nix-build.out"
 
   nocommit:

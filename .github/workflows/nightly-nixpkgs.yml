@@ -74,7 +74,7 @@ jobs:
         set -euo pipefail
         cd examples && \
           nix-build --no-out-link --dry-run 2>&1 | \
-          tee nix-build.out | \
+          tee /tmp/nix-build.out | \
           sed -ne '/will be built:$/ {
             # label
             :b
@@ -91,5 +91,5 @@ jobs:
           sed -e 's/$/^*/' | \
           xargs -r nix build --keep-going --print-build-logs --no-link
     - name: nix-build error output
-      if: failure()
-      run: "cat examples/nix-build.out"
+      if: always()
+      run: "cat /tmp/nix-build.out"
