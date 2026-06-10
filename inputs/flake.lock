@@ -1170,11 +1170,11 @@
     "cl-who": {
       "flake": false,
       "locked": {
-        "lastModified": 1714180192,
-        "narHash": "sha256-TCJqLhQTtsAtUk1EBHJBGLs+L7M1TgXm4ecB3pLx180=",
+        "lastModified": 1763345235,
+        "narHash": "sha256-VNrWQ31r2mDhs2mfkJCMuh3P/YBfNcXq2neoQE+f8J4=",
         "owner": "edicl",
         "repo": "cl-who",
-        "rev": "819de0f9e250185ecef3511caf6aea6a25845a1c",
+        "rev": "7af0426c54f9c05e99be2fb6a398e0e06c5818ab",
         "type": "github"
       },
       "original": {
