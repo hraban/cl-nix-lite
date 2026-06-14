@@ -55,7 +55,7 @@
                         name = lib.replaceString "." "_" "${d.name}${lispName}-${toString i}";
                       in
                       lib.nameValuePair name d
-                    ) (lib.flatten examples)
+                    ) examples
                   )
                   // {
                     markdown-links =
