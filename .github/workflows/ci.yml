@@ -66,6 +66,12 @@ jobs:
                 --override-input cl-nix-lite "github:${{ github.repository }}/${{ github.sha }}"
           )
         done
+    - name: Get all sources
+      # Always build full sources, even if already present in the cache, to
+      # ensure sources are always refreshed and least likely to be cache evicted
+      # by LRU.  They are the most important derivations.
+      run: |
+        nix build -L --no-link .#sources
     - name: nix-build error output
       if: always()
       run: "cat /tmp/nix-build.out"

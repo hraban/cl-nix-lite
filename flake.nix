@@ -26,7 +26,7 @@
             flake.overlays.default = import ./.;
             perSystem =
               {
-                self,
+                self',
                 lib,
                 pkgs,
                 ...
@@ -55,11 +55,14 @@
                     lib.nameValuePair name d
                   ) examplesList
                 );
+                sources = import ./sources { inherit (pkgs) callPackage; };
               in
               {
                 treefmt = import ./treefmt.nix { };
                 packages.examples = pkgs.linkFarm "examples" examples;
+                packages.sources = pkgs.linkFarm "sources" sources;
                 checks = examples // {
+                  inherit (self'.packages) sources;
                   markdown-links =
                     pkgs.runCommand "mkdocs-linkcheck"
                       {
