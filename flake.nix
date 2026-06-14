@@ -17,7 +17,7 @@
   outputs =
     { flake-parts, ... }@inputs:
     flake-parts.lib.mkFlake { inherit inputs; } (
-      { config, ... }:
+      { lib, config, ... }:
       {
         systems = import inputs.systems;
         imports = [
@@ -31,46 +31,48 @@
                 pkgs,
                 ...
               }:
+              let
+                examplesList = builtins.filter lib.isDerivation (
+                  pkgs.callPackage ./examples {
+                    cl-nix-lite = config.flake.overlays.default;
+                    withFlakes = false;
+                  }
+                );
+                examples = builtins.listToAttrs (
+                  lib.imap0 (
+                    i: d:
+                    let
+                      lispName = lib.optionalString (d ? lisp) "-${d.lisp.pname or d.lisp.name}";
+                      # Periods are valid names for nix flake check
+                      # attributes, but not if you pass the resulting attrset
+                      # to ‘nix build’.  I’m not sure whence the discrepancy,
+                      # but 🤷.  Passing the flake’s check attrset through a
+                      # --dry-run to avoid building what’s already in the
+                      # cache is a useful trick used on CI, so it’s worth
+                      # keeping compatibility.
+                      name = lib.replaceString "." "_" "${d.name}${lispName}-${toString i}";
+                    in
+                    lib.nameValuePair name d
+                  ) examplesList
+                );
+              in
               {
                 treefmt = import ./treefmt.nix { };
-                checks =
-                  let
-                    examples = pkgs.callPackage ./examples {
-                      cl-nix-lite = config.flake.overlays.default;
-                      withFlakes = false;
-                    };
-                  in
-                  builtins.listToAttrs (
-                    lib.imap0 (
-                      i: d:
-                      let
-                        lispName = lib.optionalString (d ? lisp) "-${d.lisp.pname or d.lisp.name}";
-                        # Periods are valid names for nix flake check
-                        # attributes, but not if you pass the resulting attrset
-                        # to ‘nix build’.  I’m not sure whence the discrepancy,
-                        # but 🤷.  Passing the flake’s check attrset through a
-                        # --dry-run to avoid building what’s already in the
-                        # cache is a useful trick used on CI, so it’s worth
-                        # keeping compatibility.
-                        name = lib.replaceString "." "_" "${d.name}${lispName}-${toString i}";
-                      in
-                      lib.nameValuePair name d
-                    ) examples
-                  )
-                  // {
-                    markdown-links =
-                      pkgs.runCommand "mkdocs-linkcheck"
-                        {
-                          nativeBuildInputs = [ pkgs.markdown-link-check ];
-                          cfg = builtins.toFile "mlc-config.json" (
-                            builtins.toJSON { ignorePatterns = [ { pattern = "^http"; } ]; }
-                          );
-                        }
-                        ''
-                          markdown-link-check -c $cfg ${./.}
-                          touch $out
-                        '';
-                  };
+                packages.examples = pkgs.linkFarm "examples" examples;
+                checks = examples // {
+                  markdown-links =
+                    pkgs.runCommand "mkdocs-linkcheck"
+                      {
+                        nativeBuildInputs = [ pkgs.markdown-link-check ];
+                        cfg = builtins.toFile "mlc-config.json" (
+                          builtins.toJSON { ignorePatterns = [ { pattern = "^http"; } ]; }
+                        );
+                      }
+                      ''
+                        markdown-link-check -c $cfg ${./.}
+                        touch $out
+                      '';
+                };
               };
           })
         ];
