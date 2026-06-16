@@ -3031,10 +3031,11 @@
     "plump": {
       "flake": false,
       "locked": {
-        "lastModified": 1715845227,
-        "narHash": "sha256-aTegaKXRJjYSD3D0Oy878REUgJFsX/CeQYGqn8wWnhM=",
+        "lastModified": 1776429264,
+        "narHash": "sha256-leM0QPmheXG4F0rN+aVac/HHnz1uHLyqrWLIkVjaK8M=",
         "ref": "refs/heads/master",
-        "rev": "9e61fe787c979d02154519c907b7874d369fe8d5",
+        "rev": "45fb7ffd35640d02f54104d568b42a280ffe205c",
+        "revCount": 246,
         "type": "git",
         "url": "https://codeberg.org/shinmera/plump.git"
       },
