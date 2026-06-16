@@ -1355,6 +1355,22 @@
         "type": "github"
       }
     },
+    "computable-reals": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1690427560,
+        "narHash": "sha256-LP2/CkMMvEwtxibbriHH2dUpwjdnJezQ+x/QKH2bE/U=",
+        "owner": "stylewarning",
+        "repo": "computable-reals",
+        "rev": "607a5d5b95387c06f92a661aa5562a7be0f5cad8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "stylewarning",
+        "repo": "computable-reals",
+        "type": "github"
+      }
+    },
     "concrete-syntax-tree": {
       "flake": false,
       "locked": {
@@ -3318,6 +3334,7 @@
         "common-doc": "common-doc",
         "common-html": "common-html",
         "commondoc-markdown": "commondoc-markdown",
+        "computable-reals": "computable-reals",
         "concrete-syntax-tree": "concrete-syntax-tree",
         "contextl": "contextl",
         "data-lens": "data-lens",

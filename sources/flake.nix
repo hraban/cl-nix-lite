@@ -388,6 +388,10 @@
       url = "github:40ants/commondoc-markdown";
       flake = false;
     };
+    computable-reals = {
+      url = "github:stylewarning/computable-reals";
+      flake = false;
+    };
     concrete-syntax-tree = {
       url = "github:robert-strandh/Concrete-Syntax-Tree";
       flake = false;

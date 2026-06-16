@@ -1329,6 +1329,11 @@ rec {
             ];
           };
 
+          computable-reals = lispDerivation {
+            lispSystem = "computable-reals";
+            src = inputs.computable-reals;
+          };
+
           concrete-syntax-tree = lispDerivation {
             lispDependencies = [ acclimation ];
             src = inputs.concrete-syntax-tree;
