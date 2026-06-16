@@ -1703,11 +1703,11 @@
     "fare-quasiquote": {
       "flake": false,
       "locked": {
-        "lastModified": 1596318377,
-        "narHash": "sha256-9tCP0IqU4TDmt0sUb3oJgTVC2DlfI4y7LdhsCfrglQw=",
+        "lastModified": 1769391541,
+        "narHash": "sha256-rL5dZaWi5g52+6hQwUQxqKzoso7IkUqnH7jX8QUSfTY=",
         "owner": "fare",
         "repo": "fare-quasiquote",
-        "rev": "ccb0285b456c4d6bb09b9f931cf0ac5e72353ae5",
+        "rev": "6c368df0898d530dc39b1e00d84acbcc05c1339b",
         "type": "github"
       },
       "original": {
