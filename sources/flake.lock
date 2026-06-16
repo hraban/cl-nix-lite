@@ -2574,6 +2574,22 @@
         "url": "https://codeberg.org/pcostanza/lw-compat"
       }
     },
+    "map-set": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1466222569,
+        "narHash": "sha256-791Ybjk1l1LELhJr7weB8TlbvN+Gsd2L6YnsxLd/m8o=",
+        "owner": "stylewarning",
+        "repo": "map-set",
+        "rev": "62c23b6cc06cb41ddcc1d993e0a054458d163979",
+        "type": "github"
+      },
+      "original": {
+        "owner": "stylewarning",
+        "repo": "map-set",
+        "type": "github"
+      }
+    },
     "marshal": {
       "flake": false,
       "locked": {
@@ -2730,6 +2746,22 @@
         "url": "https://gitlab.common-lisp.net/nyxt/mt19937"
       }
     },
+    "myway": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1667513167,
+        "narHash": "sha256-TzXyS6MVYxjM06hHMYOz6hVYDXHzfyncKQRvtm5HTHU=",
+        "owner": "fukamachi",
+        "repo": "myway",
+        "rev": "1350b45e33ae49f2658236661f3e9cd2bccd9a02",
+        "type": "github"
+      },
+      "original": {
+        "owner": "fukamachi",
+        "repo": "myway",
+        "type": "github"
+      }
+    },
     "named-readtables": {
       "flake": false,
       "locked": {
@@ -2775,6 +2807,22 @@
       "original": {
         "owner": "atlas-engineer",
         "repo": "nfiles",
+        "type": "github"
+      }
+    },
+    "ningle": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1714436105,
+        "narHash": "sha256-DB6upcIlXAT1ys6i3mjpAE4vgPPpWULGwSS9dSO8pvo=",
+        "owner": "fukamachi",
+        "repo": "ningle",
+        "rev": "ae0c79bbd7c71633268fe3130ed4f12ca4be2f9a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "fukamachi",
+        "repo": "ningle",
         "type": "github"
       }
     },
@@ -3347,6 +3395,7 @@
         "lparallel": "lparallel",
         "lquery": "lquery",
         "lw-compat": "lw-compat",
+        "map-set": "map-set",
         "marshal": "marshal",
         "md5": "md5",
         "metabang-bind": "metabang-bind",
@@ -3357,9 +3406,11 @@
         "misc-extensions": "misc-extensions",
         "moptilities": "moptilities",
         "mt19937": "mt19937",
+        "myway": "myway",
         "named-readtables": "named-readtables",
         "nclasses": "nclasses",
         "nfiles": "nfiles",
+        "ningle": "ningle",
         "nixpkgs": "nixpkgs",
         "nst": "nst",
         "optima": "optima",
