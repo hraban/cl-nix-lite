@@ -2,6 +2,10 @@ name: "CI"
 on:
   pull_request:
   push:
+    branches-ignore:
+      # Dependabot already opens PRs, no need to double run.
+      - "dependabot/**"
+
 jobs:
   tests:
     # Leave some time for the post actions to run, particularly cachix to upload
