@@ -42,12 +42,9 @@ rec {
           lispSystem = name; # convention
           src = inputs.${name};
         };
-    in
-    lib.recurseIntoAttrs (
-      lib.makeScope pkgs.newScope (
-        self:
-        with self;
-        {
+      scope = lib.makeScope pkgs.newScope scopeFunc;
+      scopeFunc =
+        self: with self; {
           inherit
             lispDerivation
             lispMultiDerivation
@@ -3333,7 +3330,7 @@ rec {
           ];
 
           zpng = lispify "zpng" [ salza2 ];
-        }
-      )
-    );
+        };
+    in
+    lib.recurseIntoAttrs scope;
 }
