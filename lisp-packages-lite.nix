@@ -2450,7 +2450,10 @@ rec {
           ningle = lispDerivation {
             lispSystem = "ningle";
             src = inputs.ningle;
-            lispDependencies = [ myway lack ];
+            lispDependencies = [
+              myway
+              lack
+            ];
             lispCheckDependencies = [
               prove
               yason
