@@ -42,8 +42,17 @@ rec {
           lispSystem = name; # convention
           src = inputs.${name};
         };
-      scope = lib.makeScope pkgs.newScope scopeFunc;
-      scopeFunc =
+      scope = lib.makeScope pkgs.newScope (lib.extends packages scopeInit);
+      packages = final: prev: {
+        cl-difflib = final.callPackage (
+          { lispDerivation }:
+          lispDerivation {
+            lispSystem = "cl-difflib";
+            src = inputs.cl-difflib;
+          }
+        ) { };
+      };
+      scopeInit =
         self: with self; {
           inherit
             lispDerivation
@@ -169,17 +178,27 @@ rec {
             lispCheckDependencies = [ rove ];
           };
 
-          access = lispDerivation {
-            lispSystem = "access";
-            src = inputs.access;
-            lispDependencies = [
-              alexandria
-              closer-mop
-              iterate
-              cl-ppcre
-            ];
-            lispCheckDependencies = [ lisp-unit2 ];
-          };
+          access = self.callPackage (
+            {
+              alexandria,
+              closer-mop,
+              iterate,
+              cl-ppcre,
+              lisp-unit2,
+              lispDerivation,
+            }:
+            lispDerivation {
+              lispSystem = "access";
+              src = inputs.access;
+              lispDependencies = [
+                alexandria
+                closer-mop
+                iterate
+                cl-ppcre
+              ];
+              lispCheckDependencies = [ lisp-unit2 ];
+            }
+          ) { };
 
           acclimation = lispify "acclimation" [ ];
 
@@ -762,8 +781,6 @@ rec {
             lispCheckDependencies = [ hu_dwim_stefil ];
           };
 
-          cl-difflib = lispify "cl-difflib" [ ];
-
           cl-dot = lispDerivation {
             lispSystem = "cl-dot";
             src = inputs.cl-dot;
@@ -793,7 +810,14 @@ rec {
             quri
           ];
 
-          cl-html-diff = lispify "cl-html-diff" [ cl-difflib ];
+          cl-html-diff = self.callPackage (
+            { cl-difflib, lispDerivation }:
+            lispDerivation {
+              lispSystem = "cl-html-diff";
+              lispDependencies = [ cl-difflib ];
+              src = inputs.cl-html-diff;
+            }
+          ) { };
 
           cl-interpol = lispDerivation {
             lispSystem = "cl-interpol";
