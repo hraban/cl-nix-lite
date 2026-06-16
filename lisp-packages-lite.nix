@@ -2259,6 +2259,8 @@ rec {
 
           lw-compat = lispify "lw-compat" [ ];
 
+          map-set = lispify "map-set" [ ];
+
           marshal = lispDerivation {
             lispSystem = "marshal";
             lispCheckDependencies = [ xlunit ];
@@ -2399,6 +2401,19 @@ rec {
 
           mt19937 = lispify "mt19937" [ ];
 
+          myway = lispDerivation {
+            lispSystem = "myway";
+            lispDependencies = [
+              cl-ppcre
+              quri
+              map-set
+              alexandria
+              cl-utilities
+            ];
+            lispCheckDependencies = [ prove ];
+            src = inputs.myway;
+          };
+
           named-readtables = lispDerivation {
             lispSystem = "named-readtables";
             src = inputs.named-readtables;
@@ -2430,6 +2445,20 @@ rec {
               trivial-types
             ];
             lispCheckDependencies = [ lisp-unit2 ];
+          };
+
+          ningle = lispDerivation {
+            lispSystem = "ningle";
+            src = inputs.ningle;
+            lispDependencies = [
+              myway
+              lack
+            ];
+            lispCheckDependencies = [
+              prove
+              yason
+              babel
+            ];
           };
 
           nst = lispDerivation {

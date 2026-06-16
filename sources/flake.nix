@@ -695,6 +695,10 @@
       url = "git+https://codeberg.org/pcostanza/lw-compat";
       flake = false;
     };
+    map-set = {
+      url = "github:stylewarning/map-set";
+      flake = false;
+    };
     marshal = {
       url = "github:wlbr/cl-marshal";
       flake = false;
@@ -735,6 +739,10 @@
       url = "git+https://gitlab.common-lisp.net/nyxt/mt19937";
       flake = false;
     };
+    myway = {
+      url = "github:fukamachi/myway";
+      flake = false;
+    };
     named-readtables = {
       url = "github:melisgl/named-readtables";
       flake = false;
@@ -745,6 +753,10 @@
     };
     nfiles = {
       url = "github:atlas-engineer/nfiles";
+      flake = false;
+    };
+    ningle = {
+      url = "github:fukamachi/ningle";
       flake = false;
     };
     nst = {
