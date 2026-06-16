@@ -2453,8 +2453,6 @@ rec {
             lispDependencies = [ myway lack ];
             lispCheckDependencies = [
               prove
-              lack-test
-              lack-component
               yason
               babel
             ];
