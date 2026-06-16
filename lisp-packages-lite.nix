@@ -43,15 +43,7 @@ rec {
           src = inputs.${name};
         };
       scope = lib.makeScope pkgs.newScope (lib.extends packages scopeInit);
-      packages = final: prev: {
-        cl-difflib = final.callPackage (
-          { lispDerivation }:
-          lispDerivation {
-            lispSystem = "cl-difflib";
-            src = inputs.cl-difflib;
-          }
-        ) { };
-      };
+      packages = import ./packages.nix { inherit inputs; };
       scopeInit =
         self: with self; {
           inherit
@@ -60,8 +52,6 @@ rec {
             lispWithSystems
             lispScript
             ;
-
-          "1am" = lispify "1am" [ ];
 
           inherit
             (lispMultiDerivation {
