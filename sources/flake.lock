@@ -590,11 +590,11 @@
     "cl-colors2": {
       "flake": false,
       "locked": {
-        "lastModified": 1719057460,
-        "narHash": "sha256-AoxTz8s+2Of9ENQAHiDeDAz3kX8J4KbjLjt+vF6LaxQ=",
+        "lastModified": 1735124110,
+        "narHash": "sha256-IREC8D5xHdVSujLYcfXASILJl7y9U1TDtAwN7FKROnI=",
         "ref": "refs/heads/master",
-        "rev": "c4a6664a649869803698eff3e3af892090f50e3a",
-        "revCount": 113,
+        "rev": "0aedbea4c2531eb7a802f333bf6403c9b51e50b2",
+        "revCount": 117,
         "type": "git",
         "url": "https://codeberg.org/cage/cl-colors2.git"
       },
