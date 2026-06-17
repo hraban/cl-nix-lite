@@ -29,6 +29,7 @@ rec {
     let
       lisp = utils.makeLisp lisp';
       lpl = pkgs.callPackage ./lisp-derivation.nix { inherit lisp; };
+      packages = import ./packages.nix { inherit inputs lib lisp; };
       inherit (lpl)
         lispDerivation
         lispMultiDerivation
@@ -43,7 +44,6 @@ rec {
           src = inputs.${name};
         };
       scope = lib.makeScope pkgs.newScope (lib.extends packages scopeInit);
-      packages = import ./packages.nix { inherit inputs lib; };
       scopeInit =
         self: with self; {
           inherit
@@ -52,88 +52,6 @@ rec {
             lispWithSystems
             lispScript
             ;
-
-          "3d-math" = lispDerivation {
-            lispDependencies = [
-              documentation-utils
-              type-templates
-            ];
-            lispCheckDependencies = [ parachute ];
-            src = inputs."3d-math";
-            # For ABCL, if that would fix it: _JAVA_OPTIONS="-Xmx4g";
-            env = lib.optionalAttrs (lisp.name == "sbcl") { NIX_SBCL_DYNAMIC_SPACE_SIZE = "4gb"; };
-            lispSystem = "3d-math";
-            # Compiling this on CLISP hangs forever.
-            # On ECL:
-            # * The declaration (DECLARE (FTYPE (FUNCTION ((OR IVEC4 DVEC4 VEC4 IVEC3 DVEC3 VEC3 IVEC2 DVEC2 VEC2)) (VALUES (OR I32 F64 F32) &OPTIONAL)) VX)) was found in a bad place.
-            meta.broken = builtins.elem lisp.name [
-              "clisp"
-              "ecl"
-              "abcl"
-            ];
-          };
-
-          "3d-vectors" = lispDerivation {
-            lispDependencies = [ documentation-utils ];
-            lispCheckDependencies = [ parachute ];
-            src = inputs."3d-vectors";
-            lispSystem = "3d-vectors";
-          };
-
-          inherit
-            (lispMultiDerivation {
-              src = inputs."40ants-doc";
-              systems = {
-                "40ants-doc" = {
-                  lispDependencies = [
-                    cl-ppcre
-                    commondoc-markdown
-                    named-readtables
-                    pythonic-string-reader
-                    slynk
-                    str
-                    swank
-                  ];
-                  lispCheckDependencies = [
-                    rove
-                    self."40ants-doc-full"
-                  ];
-                };
-                "40ants-doc-full" = {
-                  lispDependencies = [
-                    self."40ants-doc"
-                    cl-fad
-                    commondoc-markdown
-                    dexador
-                    docs-builder
-                    fare-utils
-                    jonathan
-                    lass
-                    pythonic-string-reader
-                    slynk
-                    spinneret
-                    stem
-                    str
-                    swank
-                    tmpdir
-                    trivial-extract
-                    xml-emitter
-                  ];
-                };
-              };
-            })
-            "40ants-doc"
-            "40ants-doc-full"
-            ;
-
-          "40ants-asdf-system" = lispDerivation {
-            lispSystem = "40ants-asdf-system";
-            src = inputs."40ants-asdf-system";
-            # Depends on a modern ASDF. SBCL’s built-in ASDF crashes this. Explicitly
-            # listing self. here to avoid grabbing nixpkgs.asdf.
-            lispDependencies = [ self.asdf ];
-            lispCheckDependencies = [ rove ];
-          };
 
           access = self.callPackage (
             {

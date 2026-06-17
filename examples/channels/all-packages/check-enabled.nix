@@ -3,6 +3,8 @@
   pkgs ? import <nixpkgs> { overlays = [ cl-nix-lite ]; },
   lisp ? pkgs.sbcl,
   skip ? [
+    "_40ants-doc"
+    "_40ants-doc-full"
     "40ants-doc"
     "40ants-doc-full" # this one works in QL so it’s nix specific
     "arnesi"
