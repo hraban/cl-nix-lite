@@ -3,8 +3,6 @@
   pkgs ? import <nixpkgs> { overlays = [ cl-nix-lite ]; },
   lisp ? pkgs.sbcl,
   skip ? [
-    "_40ants-doc"
-    "_40ants-doc-full"
     "40ants-doc"
     "40ants-doc-full" # this one works in QL so it’s nix specific
     "arnesi"
@@ -56,9 +54,6 @@
     "3bmd"
     "3bmd-ext-code-blocks"
     "3bmd-ext-tables"
-    "_3bmd"
-    "_3bmd-ext-code-blocks"
-    "_3bmd-ext-tables"
     "cl-containers"
     "cl-containers/with-asdf-system-connections"
     # There is no applicable method for the generic function #<STANDARD-GENERIC-FUNCTION EXECUTE {39BBD1DE}> when called with arguments (NIL #<TRANSACTION TX-CREATE-PERSON (Kathryn Janeway) {290C186E}>)..
@@ -94,7 +89,6 @@
   ]
   ++ pkgs.lib.optionals (lisp.pname == "clisp" && pkgs.stdenv.hostPlatform.isLinux) [
     "3bmd-ext-code-blocks"
-    "_3bmd-ext-code-blocks"
     # This fails on Github Actions, not in my local VM:
     # *** - handle_fault error2 ! address = 0x1fffffd6e640 not in [0x1000000c0000,0x10000058dd90) !
     # SIGSEGV cannot be cured. Fault address = 0x1fffffd6e640.
