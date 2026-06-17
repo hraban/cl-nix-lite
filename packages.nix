@@ -299,6 +299,138 @@ let
         }
       ) { };
 
+      inherit
+        (callPackage (
+          {
+            arnesi,
+            cl-ppcre,
+            collectors,
+            fiveam,
+            lispMultiDerivation,
+            swank,
+          }:
+          lispMultiDerivation {
+            src = inputs.arnesi;
+            systems = {
+              arnesi = {
+                lispDependencies = [ collectors ];
+                lispCheckDependencies = [ fiveam ];
+              };
+              arnesi-cl-ppcre-extras = {
+                lispSystem = "arnesi/cl-ppcre-extras";
+                lispDependencies = [
+                  arnesi
+                  cl-ppcre
+                ];
+              };
+              arnesi-slime-extras = {
+                lispSystem = "arnesi/slime-extras";
+                lispDependencies = [
+                  arnesi
+                  swank
+                ];
+              };
+            };
+            # #<PACKAGE CHARSET> has no external symbol with name "UTF-16"
+            meta.broken = lisp.name == "clisp";
+          }
+        ) { })
+        arnesi
+        arnesi-cl-ppcre-extras
+        arnesi-slime-extras
+        ;
+
+      array-utils = callPackage (
+        { lispDerivation, parachute }:
+        lispDerivation {
+          lispSystem = "array-utils";
+          lispCheckDependencies = [ parachute ];
+          src = inputs.array-utils;
+        }
+      ) { };
+
+      arrow-macros = callPackage (
+        {
+          alexandria,
+          fiveam,
+          lispDerivation,
+        }:
+        lispDerivation {
+          lispSystem = "arrow-macros";
+
+          src = inputs.arrow-macros;
+
+          lispDependencies = [ alexandria ];
+          lispCheckDependencies = [ fiveam ];
+        }
+      ) { };
+
+      asdf = callPackage (
+        { lispDerivation }:
+        lispDerivation {
+          # Sometimes a dependent project will try and build asdf/defsystem. I’m
+          # not exactly clear on when this happens but it’s fixed by just always
+          # precompiling it here.
+          lispSystems = [
+            "asdf"
+            "asdf/defsystem"
+          ];
+          src = inputs.asdf;
+          # Not exactly sure why, but clasp doesn’t seem happy rebuilding asdf
+          # from source?
+          meta.broken = lisp.name == "clasp";
+        }
+      ) { };
+
+      asdf-flv = callPackage (
+        { lispDerivation }:
+        lispDerivation {
+          lispSystem = "net.didierverna.asdf-flv";
+          src = inputs.asdf-flv;
+        }
+      ) { };
+
+      asdf-system-connections = callPackage (
+        { lispDerivation }:
+        lispDerivation {
+          lispSystem = "asdf-system-connections";
+          src = inputs.asdf-system-connections;
+        }
+      ) { };
+
+      assoc-utils = callPackage (
+        { lispDerivation, rove }:
+        lispDerivation {
+          lispSystem = "assoc-utils";
+          src = inputs.assoc-utils;
+          lispCheckDependencies = [ rove ];
+        }
+      ) { };
+
+      atomics = callPackage (
+        {
+          documentation-utils,
+          lispDerivation,
+          parachute,
+        }:
+        lispDerivation {
+          lispSystem = "atomics";
+          src = inputs.atomics;
+          lispDependencies = [ documentation-utils ];
+          lispCheckDependencies = [ parachute ];
+          # CLISP is not supported by the Atomics library.
+          # The CAS operation is not supported by Armed Bear Common Lisp in Atomics.
+          # This is most likely due to lack of support by the implementation.
+          # If you think this is in error, and the implementation does expose
+          # the necessary operators, please file an issue at
+          #   https://github.com/shinmera/atomics/issues
+          meta.broken = builtins.elem lisp.name [
+            "abcl"
+            "clisp"
+          ];
+        }
+      ) { };
+
       cl-difflib = callPackage (
         { lispDerivation }:
         lispDerivation {
