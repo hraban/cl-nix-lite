@@ -25,7 +25,14 @@ let
     let
       lisp = utils.makeLisp lisp';
       lpl = pkgs.callPackage ./lisp-derivation.nix { inherit lisp; };
-      packages = pkgs.callPackage ./packages.nix { inherit inputs lisp; };
+      packages = import ./packages.nix {
+        inherit
+          pkgs
+          inputs
+          lib
+          lisp
+          ;
+      };
       scopeInit = self: {
         inherit (lpl)
           lispDerivation

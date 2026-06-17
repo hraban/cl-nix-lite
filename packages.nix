@@ -1,20 +1,8 @@
 {
-  enchant,
   inputs,
-  gcc,
-  graphviz,
   lib,
-  libffi,
-  libxml2,
-  libxslt,
-  libuv,
+  pkgs,
   lisp,
-  mpfr,
-  openssl,
-  pkg-config,
-  sqlite,
-  stdenv,
-  xcbuild,
 }:
 
 self: prev:
@@ -333,7 +321,7 @@ in
       trivial-garbage
     ];
     lispCheckDependencies = [ fiveam ];
-    buildInputs = [ libuv ];
+    buildInputs = [ pkgs.libuv ];
     lispSystem = "bordeaux-threads";
     src = inputs.bordeaux-threads;
     meta.broken = lisp.name == "clisp" || (lisp.name == "sbcl" && !lisp.deriv.threadSupport);
@@ -386,18 +374,18 @@ in
       # target. Not sure if this is the ideal way to “build” this package.
       # Note: Technically this will always be required because cffi-grovel
       # depends on cffi bare, but it’s a good litmus test for the system.
-      nativeBuildInputs = [
+      nativeBuildInputs = with pkgs; [
         pkg-config
         gcc
       ];
-      propagatedBuildInputs = lib.optionals stdenv.isDarwin [
+      propagatedBuildInputs = lib.optionals pkgs.stdenv.isDarwin [
         # On Darwin, osicat needed access to the libtool package. I have a
         # feeling that’s because of CFFI, and CFFI should provide it, but
         # honestly I don’t know if this is the right place. Maybe I should just
         # make osicat define this as a nativeBuildInput?
-        xcbuild
+        pkgs.xcbuild
       ];
-      buildInputs = systems: lib.optionals (builtins.elem "cffi" systems) [ libffi ];
+      buildInputs = systems: lib.optionals (builtins.elem "cffi" systems) [ pkgs.libffi ];
       # This is broken on Darwin because libcffi rewrites the import path in a
       # way that’s incompatible with pkgconfig. It should be "if darwin AND (not
       # pkg-config)".
@@ -407,7 +395,7 @@ in
         lib.optionals (builtins.elem "cffi" systems) [
           (
             if
-              stdenv.hostPlatform.isDarwin
+              pkgs.stdenv.hostPlatform.isDarwin
             # LD_.. only works with CFFI on Mac, but not with
             # sb-alien:load-shared-object. DYLD_.. works with both.
             then
@@ -426,7 +414,7 @@ in
           # CFFI requires CLISP compiled with dynamic FFI support, which only
           # enabled on Linux. And it’s supposed to work with ABCL but I don’t know
           # how, so I’m marking this broken for now.
-          broken = !(lisp.name == "clisp" -> stdenv.isLinux) || lisp.name == "abcl";
+          broken = !(lisp.name == "clisp" -> pkgs.stdenv.isLinux) || lisp.name == "abcl";
         };
     })
     cffi
@@ -506,8 +494,8 @@ in
         systems:
         lib.optionals (builtins.elem "coalton" systems) [
           # Actual dependencies
-          mpfr
-          libuv
+          pkgs.mpfr
+          pkgs.libuv
           # For the dynamic loading setup hook, even though we don’t even use
           # CFFI. Needs better UX.
           cffi
@@ -623,7 +611,8 @@ in
       };
 
       meta.broken = lisp.name == "clasp";
-      propagatedBuildInputs = systems: lib.optionals (builtins.elem "cl-async-ssl" systems) [ openssl ];
+      propagatedBuildInputs =
+        systems: lib.optionals (builtins.elem "cl-async-ssl" systems) [ pkgs.openssl ];
     })
     cl-async
     cl-async-repl
@@ -746,7 +735,7 @@ in
   cl-dot = lispDerivation {
     lispSystem = "cl-dot";
     src = inputs.cl-dot;
-    propagatedBuildInputs = [ graphviz ];
+    propagatedBuildInputs = [ pkgs.graphviz ];
     # https://github.com/michaelw/cl-dot/issues/42
     meta.broken = lisp.name == "clisp";
   };
@@ -821,7 +810,7 @@ in
       cffi
       cffi-grovel
     ];
-    propagatedBuildInputs = [ libuv ];
+    propagatedBuildInputs = [ pkgs.libuv ];
     lispSystem = "cl-libuv";
     src = inputs.cl-libuv;
   };
@@ -858,8 +847,8 @@ in
       makeFlags = [ "CC=cc" ];
       buildInputs =
         systems:
-        (lib.optionals (builtins.elem "cl-libxml2" systems) [ libxml2 ])
-        ++ (lib.optionals (builtins.elem "cl-libxslt" systems) [ libxslt ]);
+        (lib.optionals (builtins.elem "cl-libxml2" systems) [ pkgs.libxml2 ])
+        ++ (lib.optionals (builtins.elem "cl-libxslt" systems) [ pkgs.libxslt ]);
       outputs = systems: [ "out" ] ++ lib.optionals (builtins.elem "cl-libxslt" systems) [ "lib" ];
       # This :force t isn’t necessary, and it breaks tests
       postUnpack = ''
@@ -869,7 +858,7 @@ in
         systems:
         lib.optionalString (builtins.elem "cl-libxslt" systems) (
           let
-            libname = "cllibxml2${stdenv.hostPlatform.extensions.sharedLibrary}";
+            libname = "cllibxml2${pkgs.stdenv.hostPlatform.extensions.sharedLibrary}";
           in
           ''
             LIBNAME=${libname} make -C foreign
@@ -964,7 +953,7 @@ in
       trivial-sockets
       usocket
     ];
-    propagatedBuildInputs = [ openssl ];
+    propagatedBuildInputs = [ pkgs.openssl ];
   };
 
   inherit
@@ -1065,7 +1054,7 @@ in
       fiveam
       bordeaux-threads
     ];
-    propagatedBuildInputs = [ sqlite ];
+    propagatedBuildInputs = [ pkgs.sqlite ];
     lispSystem = "sqlite";
   };
 
@@ -1401,7 +1390,7 @@ in
       trivial-mimes
       usocket
     ]
-    ++ lib.optionals stdenv.hostPlatform.isWindows [ flexi-streams ];
+    ++ lib.optionals pkgs.stdenv.hostPlatform.isWindows [ flexi-streams ];
     lispCheckDependencies = [
       babel
       cl-cookie
@@ -1505,7 +1494,7 @@ in
     # got merged: https://github.com/NixOS/nixpkgs/pull/276506
     # No idea what’s wrong here, or even who’s wrong: ECL? eager-future2?
     # Update: now also broken on aarch64-darwin, not sure why or since when.
-    meta.broken = lisp.name == "ecl" && stdenv.isDarwin;
+    meta.broken = lisp.name == "ecl" && pkgs.stdenv.isDarwin;
   };
 
   inherit
@@ -1572,7 +1561,7 @@ in
   enchant = lispDerivation {
     lispDependencies = [ cffi ];
     lispSystem = "enchant";
-    propagatedBuildInputs = [ enchant ];
+    propagatedBuildInputs = [ pkgs.enchant ];
     src = inputs.enchant;
   };
 
@@ -2058,7 +2047,7 @@ in
       trivial-rfc-1123
       trivial-utf-8
     ]
-    ++ (if stdenv.hostPlatform.isWindows then [ ironclad ] else [ cl-isaac ]);
+    ++ (if pkgs.stdenv.hostPlatform.isWindows then [ ironclad ] else [ cl-isaac ]);
     # Extracted from the main asd file. This will probably grow out of date within 3 days.
     lispSystems = [
       "lack/app/directory"
