@@ -43,7 +43,7 @@ rec {
           src = inputs.${name};
         };
       scope = lib.makeScope pkgs.newScope (lib.extends packages scopeInit);
-      packages = import ./packages.nix { inherit inputs; };
+      packages = import ./packages.nix { inherit inputs lib; };
       scopeInit =
         self: with self; {
           inherit
@@ -51,39 +51,6 @@ rec {
             lispMultiDerivation
             lispWithSystems
             lispScript
-            ;
-
-          inherit
-            (lispMultiDerivation {
-              src = inputs."3bmd";
-              systems = {
-                "3bmd" = {
-                  lispDependencies = [
-                    alexandria
-                    esrap
-                    split-sequence
-                  ];
-                  lispCheckDependencies = [
-                    self."3bmd-ext-code-blocks"
-                    fiasco
-                  ];
-                };
-                "3bmd-ext-code-blocks" = {
-                  lispDependencies = [
-                    self."3bmd"
-                    alexandria
-                    colorize
-                    split-sequence
-                  ];
-                };
-                "3bmd-ext-tables" = {
-                  lispDependencies = [ self."3bmd" ];
-                };
-              };
-            })
-            "3bmd"
-            "3bmd-ext-code-blocks"
-            "3bmd-ext-tables"
             ;
 
           "3d-math" = lispDerivation {
