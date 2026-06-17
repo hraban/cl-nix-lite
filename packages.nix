@@ -199,6 +199,106 @@ let
         }
       ) { };
 
+      access = callPackage (
+        {
+          alexandria,
+          closer-mop,
+          iterate,
+          cl-ppcre,
+          lisp-unit2,
+          lispDerivation,
+        }:
+        lispDerivation {
+          lispSystem = "access";
+          src = inputs.access;
+          lispDependencies = [
+            alexandria
+            closer-mop
+            iterate
+            cl-ppcre
+          ];
+          lispCheckDependencies = [ lisp-unit2 ];
+        }
+      ) { };
+
+      acclimation = callPackage (
+        { lispDerivation }:
+        lispDerivation {
+          lispSystem = "acclimation";
+          src = inputs.acclimation;
+        }
+      ) { };
+
+      alexandria = callPackage (
+        { lispDerivation, rt }:
+        lispDerivation {
+          lispSystem = "alexandria";
+          src = inputs.alexandria;
+          # Contrary to what its .asd file suggests, Alexandria now requires rt even
+          # on SBCL. This is recent (introduced after v1.4).
+          lispCheckDependencies = [ rt ];
+        }
+      ) { };
+
+      alien-ring = callPackage (
+        {
+          lispDerivation,
+          cffi,
+          trivial-gray-streams,
+        }:
+        lispDerivation {
+          lispSystem = "alien-ring";
+          src = inputs.alien-ring;
+          lispDependencies = [
+            cffi
+            trivial-gray-streams
+          ];
+        }
+      ) { };
+
+      anaphora = callPackage (
+        { lispDerivation, rt }:
+        lispDerivation {
+          lispSystem = "anaphora";
+          lispCheckDependencies = [ rt ];
+          src = inputs.anaphora;
+        }
+      ) { };
+
+      anypool = callPackage (
+        {
+          lispDerivation,
+          bordeaux-threads,
+          cl-speedy-queue,
+          rove,
+        }:
+        lispDerivation {
+          src = inputs.anypool;
+          lispSystem = "anypool";
+          lispDependencies = [
+            bordeaux-threads
+            cl-speedy-queue
+          ];
+          lispCheckDependencies = [ rove ];
+        }
+      ) { };
+
+      archive = callPackage (
+        {
+          lispDerivation,
+          cl-fad,
+          trivial-gray-streams,
+        }:
+        lispDerivation {
+          lispSystem = "archive";
+          src = inputs.archive;
+          lispDependencies = [
+            cl-fad
+            trivial-gray-streams
+          ];
+        }
+      ) { };
+
       cl-difflib = callPackage (
         { lispDerivation }:
         lispDerivation {

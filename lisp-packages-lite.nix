@@ -53,64 +53,6 @@ rec {
             lispScript
             ;
 
-          access = self.callPackage (
-            {
-              alexandria,
-              closer-mop,
-              iterate,
-              cl-ppcre,
-              lisp-unit2,
-              lispDerivation,
-            }:
-            lispDerivation {
-              lispSystem = "access";
-              src = inputs.access;
-              lispDependencies = [
-                alexandria
-                closer-mop
-                iterate
-                cl-ppcre
-              ];
-              lispCheckDependencies = [ lisp-unit2 ];
-            }
-          ) { };
-
-          acclimation = lispify "acclimation" [ ];
-
-          alexandria = lispDerivation {
-            lispSystem = "alexandria";
-            src = inputs.alexandria;
-            # Contrary to what its .asd file suggests, Alexandria now requires rt even
-            # on SBCL. This is recent (introduced after v1.4).
-            lispCheckDependencies = [ rt ];
-          };
-
-          alien-ring = lispify "alien-ring" [
-            cffi
-            trivial-gray-streams
-          ];
-
-          anaphora = lispDerivation {
-            lispSystem = "anaphora";
-            lispCheckDependencies = [ rt ];
-            src = inputs.anaphora;
-          };
-
-          anypool = lispDerivation {
-            src = inputs.anypool;
-            lispSystem = "anypool";
-            lispDependencies = [
-              bordeaux-threads
-              cl-speedy-queue
-            ];
-            lispCheckDependencies = [ rove ];
-          };
-
-          archive = lispify "archive" [
-            trivial-gray-streams
-            cl-fad
-          ];
-
           inherit
             (lispMultiDerivation {
               src = inputs.arnesi;
