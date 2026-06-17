@@ -1485,10 +1485,11 @@
     "dns-client": {
       "flake": false,
       "locked": {
-        "lastModified": 1725020704,
-        "narHash": "sha256-ozsRZZv5vXjLpOA1suGM3zd3E4ps/DxWBDF0CKLPfdE=",
+        "lastModified": 1754940003,
+        "narHash": "sha256-1AHa99XNjZZtLOaEHImW9FJCUpmdmgM3kUsnmaYofMw=",
         "ref": "refs/heads/master",
-        "rev": "cc97ff5268a963ecb45be11aaeeee767a0d76c9f",
+        "rev": "5e861b2c98e6454895bc6ad4bd2f3e336ff711f5",
+        "revCount": 19,
         "type": "git",
         "url": "https://codeberg.org/shinmera/dns-client.git"
       },
