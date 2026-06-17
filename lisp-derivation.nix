@@ -13,13 +13,13 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 {
-  pkgs,
   callPackage,
+  pkgs,
+  lib,
   lisp,
 }:
 
 let
-  inherit (pkgs) lib;
   utils = callPackage ./utils.nix { };
 
   # Use strings to avoid interning keyword symbols and polluting the namespace

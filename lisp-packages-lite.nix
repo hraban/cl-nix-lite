@@ -16,6 +16,7 @@
 
 let
   inherit (pkgs) lib;
+  utils = pkgs.callPackage ./utils.nix { };
 in
 
 rec {
@@ -25,28 +26,27 @@ rec {
   # e.g. lisp = pkgs.sbcl.
   lispPackagesLiteFor =
     lisp':
+    let
+      lisp = utils.makeLisp lisp';
+      lpl = pkgs.callPackage ./lisp-derivation.nix { inherit lisp; };
+      inherit (lpl)
+        lispDerivation
+        lispMultiDerivation
+        lispScript
+        lispWithSystems
+        ;
+      lispify =
+        name: lispDependencies:
+        lispDerivation {
+          inherit lispDependencies;
+          lispSystem = name; # convention
+          src = inputs.${name};
+        };
+    in
     lib.recurseIntoAttrs (
       lib.makeScope pkgs.newScope (
         self:
         with self;
-        let
-          utils = callPackage ./utils.nix { };
-          lisp = utils.makeLisp lisp';
-          lpl = callPackage ./lisp-derivation.nix { inherit lisp; };
-          inherit (lpl)
-            lispDerivation
-            lispMultiDerivation
-            lispScript
-            lispWithSystems
-            ;
-          lispify =
-            name: lispDependencies:
-            lispDerivation {
-              inherit lispDependencies;
-              lispSystem = name; # convention
-              src = inputs.${name};
-            };
-        in
         {
           inherit
             lispDerivation
