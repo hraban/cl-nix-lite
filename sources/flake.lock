@@ -1881,10 +1881,11 @@
     "float-features": {
       "flake": false,
       "locked": {
-        "lastModified": 1714546861,
-        "narHash": "sha256-Tso2dn444B61zamh2qN+tyW1bxkVCAnvmLnEma/atu8=",
+        "lastModified": 1779261235,
+        "narHash": "sha256-VqE6ZW1i2cvOl8K+tP+3soQ1kpMNIXcPoCXbm4ZNt2c=",
         "ref": "refs/heads/master",
-        "rev": "f10113a5b828aa32e501c4650dcf654832e32d25",
+        "rev": "136a908ce060e04efb385473e884174217cf9baf",
+        "revCount": 83,
         "type": "git",
         "url": "https://codeberg.org/shinmera/float-features.git"
       },
