@@ -1,6 +1,7 @@
 {
   inputs,
   lib,
+  libuv,
   lisp,
 }:
 
@@ -428,6 +429,84 @@ let
             "abcl"
             "clisp"
           ];
+        }
+      ) { };
+
+      inherit
+        (callPackage (
+          {
+            alexandria,
+            babel,
+            hu_dwim_stefil,
+            lispMultiDerivation,
+            trivial-features,
+            trivial-gray-streams,
+          }:
+          lispMultiDerivation {
+            src = inputs.babel;
+
+            systems = {
+              babel = {
+                lispDependencies = [
+                  alexandria
+                  trivial-features
+                ];
+                lispCheckDependencies = [ hu_dwim_stefil ];
+              };
+              babel-streams = {
+                lispDependencies = [
+                  alexandria
+                  babel
+                  trivial-gray-streams
+                ];
+                lispCheckDependencies = [ hu_dwim_stefil ];
+              };
+            };
+          }
+        ) { })
+        babel
+        babel-streams
+        ;
+
+      blackbird = callPackage (
+        {
+          cl-async,
+          fiveam,
+          lispDerivation,
+          vom,
+        }:
+        lispDerivation {
+          lispSystem = "blackbird";
+          src = inputs.blackbird;
+          lispDependencies = [ vom ];
+          lispCheckDependencies = [
+            cl-async
+            fiveam
+          ];
+        }
+      ) { };
+
+      bordeaux-threads = callPackage (
+        {
+          alexandria,
+          fiveam,
+          global-vars,
+          lispDerivation,
+          trivial-features,
+          trivial-garbage,
+        }:
+        lispDerivation {
+          lispDependencies = [
+            alexandria
+            global-vars
+            trivial-features
+            trivial-garbage
+          ];
+          lispCheckDependencies = [ fiveam ];
+          buildInputs = [ libuv ];
+          lispSystem = "bordeaux-threads";
+          src = inputs.bordeaux-threads;
+          meta.broken = lisp.name == "clisp" || (lisp.name == "sbcl" && !lisp.deriv.threadSupport);
         }
       ) { };
 

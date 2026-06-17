@@ -29,7 +29,7 @@ rec {
     let
       lisp = utils.makeLisp lisp';
       lpl = pkgs.callPackage ./lisp-derivation.nix { inherit lisp; };
-      packages = import ./packages.nix { inherit inputs lib lisp; };
+      packages = pkgs.callPackage ./packages.nix { inherit inputs lisp; };
       inherit (lpl)
         lispDerivation
         lispMultiDerivation
@@ -52,56 +52,6 @@ rec {
             lispWithSystems
             lispScript
             ;
-
-          inherit
-            (lispMultiDerivation {
-              src = inputs.babel;
-
-              systems = {
-                babel = {
-                  lispDependencies = [
-                    alexandria
-                    trivial-features
-                  ];
-                  lispCheckDependencies = [ hu_dwim_stefil ];
-                };
-                babel-streams = {
-                  lispDependencies = [
-                    alexandria
-                    babel
-                    trivial-gray-streams
-                  ];
-                  lispCheckDependencies = [ hu_dwim_stefil ];
-                };
-              };
-            })
-            babel
-            babel-streams
-            ;
-
-          blackbird = lispDerivation {
-            lispSystem = "blackbird";
-            src = inputs.blackbird;
-            lispDependencies = [ vom ];
-            lispCheckDependencies = [
-              cl-async
-              fiveam
-            ];
-          };
-
-          bordeaux-threads = lispDerivation rec {
-            lispDependencies = [
-              alexandria
-              global-vars
-              trivial-features
-              trivial-garbage
-            ];
-            lispCheckDependencies = [ fiveam ];
-            buildInputs = [ pkgs.libuv ];
-            lispSystem = "bordeaux-threads";
-            src = inputs.bordeaux-threads;
-            meta.broken = lisp.name == "clisp" || (lisp.name == "sbcl" && !lisp.deriv.threadSupport);
-          };
 
           inherit
             (lispMultiDerivation rec {
