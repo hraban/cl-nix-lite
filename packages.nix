@@ -7,7 +7,6 @@
 self: prev:
 with self;
 let
-  lisp = self._lisp;
   lispify =
     name: lispDependencies:
     lispDerivation {
@@ -63,12 +62,12 @@ in
     lispCheckDependencies = [ parachute ];
     src = inputs."3d-math";
     # For ABCL, if that would fix it: _JAVA_OPTIONS="-Xmx4g";
-    env = lib.optionalAttrs (lisp.name == "sbcl") { NIX_SBCL_DYNAMIC_SPACE_SIZE = "4gb"; };
+    env = lib.optionalAttrs (self._lisp.name == "sbcl") { NIX_SBCL_DYNAMIC_SPACE_SIZE = "4gb"; };
     lispSystem = "3d-math";
     # Compiling this on CLISP hangs forever.
     # On ECL:
     # * The declaration (DECLARE (FTYPE (FUNCTION ((OR IVEC4 DVEC4 VEC4 IVEC3 DVEC3 VEC3 IVEC2 DVEC2 VEC2)) (VALUES (OR I32 F64 F32) &OPTIONAL)) VX)) was found in a bad place.
-    meta.broken = builtins.elem lisp.name [
+    meta.broken = builtins.elem self._lisp.name [
       "clisp"
       "ecl"
       "abcl"
@@ -211,7 +210,7 @@ in
         };
       };
       # #<PACKAGE CHARSET> has no external symbol with name "UTF-16"
-      meta.broken = lisp.name == "clisp";
+      meta.broken = self._lisp.name == "clisp";
     })
     arnesi
     arnesi-cl-ppcre-extras
@@ -244,7 +243,7 @@ in
     src = inputs.asdf;
     # Not exactly sure why, but clasp doesn’t seem happy rebuilding asdf
     # from source?
-    meta.broken = lisp.name == "clasp";
+    meta.broken = self._lisp.name == "clasp";
   };
 
   asdf-flv = lispDerivation {
@@ -271,7 +270,7 @@ in
     # If you think this is in error, and the implementation does expose
     # the necessary operators, please file an issue at
     #   https://github.com/shinmera/atomics/issues
-    meta.broken = builtins.elem lisp.name [
+    meta.broken = builtins.elem self._lisp.name [
       "abcl"
       "clisp"
     ];
@@ -324,7 +323,8 @@ in
     buildInputs = [ pkgs.libuv ];
     lispSystem = "bordeaux-threads";
     src = inputs.bordeaux-threads;
-    meta.broken = lisp.name == "clisp" || (lisp.name == "sbcl" && !lisp.deriv.threadSupport);
+    meta.broken =
+      self._lisp.name == "clisp" || (self._lisp.name == "sbcl" && !self._lisp.deriv.threadSupport);
   };
 
   inherit
@@ -414,7 +414,7 @@ in
           # CFFI requires CLISP compiled with dynamic FFI support, which only
           # enabled on Linux. And it’s supposed to work with ABCL but I don’t know
           # how, so I’m marking this broken for now.
-          broken = !(lisp.name == "clisp" -> pkgs.stdenv.isLinux) || lisp.name == "abcl";
+          broken = !(self._lisp.name == "clisp" -> pkgs.stdenv.isLinux) || self._lisp.name == "abcl";
         };
     })
     cffi
@@ -610,7 +610,7 @@ in
         };
       };
 
-      meta.broken = lisp.name == "clasp";
+      meta.broken = self._lisp.name == "clasp";
       propagatedBuildInputs =
         systems: lib.optionals (builtins.elem "cl-async-ssl" systems) [ pkgs.openssl ];
     })
@@ -737,7 +737,7 @@ in
     src = inputs.cl-dot;
     propagatedBuildInputs = [ pkgs.graphviz ];
     # https://github.com/michaelw/cl-dot/issues/42
-    meta.broken = lisp.name == "clisp";
+    meta.broken = self._lisp.name == "clisp";
   };
 
   cl-fad = lispDerivation {
@@ -908,7 +908,7 @@ in
       trivial-shell
     ];
     # “There is no class named ABSTRACT-CONTAINER.”
-    meta.broken = lisp.name == "abcl";
+    meta.broken = self._lisp.name == "abcl";
   };
 
   cl-mimeparse = lispDerivation {
@@ -1009,7 +1009,7 @@ in
       anaphora
     ];
     lispCheckDependencies = [ nst ];
-    meta.broken = builtins.elem lisp.name [
+    meta.broken = builtins.elem self._lisp.name [
       # Attempt to define a subclass of built-in-class FUNCTION.
       "abcl"
       # Class #<The BUILT-IN-CLASS FUNCTION> is not a valid superclass for #<The CLOS:FUNCALLABLE-STANDARD-CLASS CL-REACTIVE::SIGNAL-FUNCTION>
@@ -1144,7 +1144,7 @@ in
       meta =
         systems:
         lib.optionalAttrs (builtins.elem "cl-variates/with-metacopy" systems) {
-          broken = builtins.elem lisp.name [
+          broken = builtins.elem self._lisp.name [
             # The function get-structure is not yet implemented for Armed Bear Common Lisp 1.9.2 on AARCH64.
             "abcl"
             # The function get-structure is not yet implemented for clasp cclasp-boehmprecise-2.7.0-cst on x86_64.
@@ -1403,7 +1403,7 @@ in
   dissect = lispDerivation {
     lispSystem = "dissect";
     src = inputs.dissect;
-    lispDependencies = lib.optionals (lisp.name == "clisp") [ cl-ppcre ];
+    lispDependencies = lib.optionals (self._lisp.name == "clisp") [ cl-ppcre ];
   };
 
   djula = lispDerivation {
@@ -1447,7 +1447,7 @@ in
       self."40ants-doc"
     ];
     # Requires a modern version of ASDF
-    meta.broken = lisp.name == "ecl";
+    meta.broken = self._lisp.name == "ecl";
   };
 
   documentation-utils = lispDerivation {
@@ -1494,7 +1494,7 @@ in
     # got merged: https://github.com/NixOS/nixpkgs/pull/276506
     # No idea what’s wrong here, or even who’s wrong: ECL? eager-future2?
     # Update: now also broken on aarch64-darwin, not sure why or since when.
-    meta.broken = lisp.name == "ecl" && pkgs.stdenv.isDarwin;
+    meta.broken = self._lisp.name == "ecl" && pkgs.stdenv.isDarwin;
   };
 
   inherit
@@ -1632,7 +1632,7 @@ in
     # "https://gitlab.common-lisp.net/frideau/fare-utils/-/issues/1".  Getting
     # the version here from the derivation is very ugly and I hate it but is
     # there a better way?
-    meta.broken = lisp.name == "sbcl" && (lib.getVersion lisp.deriv) == "2.4.4";
+    meta.broken = self._lisp.name == "sbcl" && (lib.getVersion self._lisp.deriv) == "2.4.4";
   };
 
   fast-http = lispDerivation {
@@ -1733,7 +1733,7 @@ in
     ];
     src = inputs.fset;
     lispSystem = "fset";
-    meta.broken = builtins.elem lisp.name [
+    meta.broken = builtins.elem self._lisp.name [
       # The value FSET::IDENTITY-ORDERING-MIXIN-NEXT-SERIAL-NUMBER is not of type LIST.
       "abcl"
       # *** - CAR: IDENTITY-ORDERING-MIXIN-NEXT-SERIAL-NUMBER is not a list
@@ -1813,7 +1813,7 @@ in
     lispCheckDependencies = [ lisp-unit2 ];
     lispSystem = "history-tree";
     # *** - EVAL: undefined function EXT::ADD-PACKAGE-LOCAL-NICKNAME
-    meta.broken = lisp.name == "clisp";
+    meta.broken = self._lisp.name == "clisp";
   };
 
   http-body = lispDerivation {
@@ -1910,7 +1910,7 @@ in
     src = inputs.in-nomine;
     # Uses :local-nickname in defpackage. Ah, the state of CLISP...
     # https://gitlab.com/gnu-clisp/clisp/-/merge_requests/3
-    meta.broken = lisp.name == "clisp";
+    meta.broken = self._lisp.name == "clisp";
   };
 
   inferior-shell = lispDerivation {
@@ -1945,13 +1945,13 @@ in
     src = inputs.ironclad;
     lispDependencies = [ bordeaux-threads ];
     lispCheckDependencies = [ rt ];
-    env = lib.optionalAttrs (lisp.name == "sbcl") { NIX_SBCL_DYNAMIC_SPACE_SIZE = "2gb"; };
+    env = lib.optionalAttrs (self._lisp.name == "sbcl") { NIX_SBCL_DYNAMIC_SPACE_SIZE = "2gb"; };
   };
 
   iterate = lispDerivation {
     lispSystem = "iterate";
     src = inputs.iterate;
-    lispCheckDependencies = lib.optionals (lisp.name != "sbcl") [ rt ];
+    lispCheckDependencies = lib.optionals (self._lisp.name != "sbcl") [ rt ];
   };
 
   jonathan = lispDerivation {
@@ -2005,7 +2005,7 @@ in
       flexi-streams
       trivial-gray-streams
     ]
-    ++ lib.optionals (lisp.name != "ecl") [ float-features ];
+    ++ lib.optionals (self._lisp.name != "ecl") [ float-features ];
     lispAsdPath = [
       "src"
       "test"
@@ -2022,7 +2022,7 @@ in
     src = inputs.kmrcl;
     lispCheckDependencies = [ rt ];
     # > The symbol "MAKE-THREAD-LOCK" was not found in package EXT.
-    meta.broken = lisp.name == "abcl";
+    meta.broken = self._lisp.name == "abcl";
   };
 
   # I can’t be bothered sorting out this dependency jungle
@@ -2103,7 +2103,7 @@ in
     # This is kind of ridiculous, but there’s a file here called asdf.lisp
     # which trips up clisp: ‘(require "asdf")’ loads that file, rather than
     # actual asdf. Who’s at fault here?
-    meta.broken = lisp.name == "clisp";
+    meta.broken = self._lisp.name == "clisp";
   };
 
   legion = lispDerivation {
@@ -2134,7 +2134,7 @@ in
   lift = lispDerivation {
     lispSystem = "lift";
     src = inputs.lift;
-    meta.broken = builtins.elem lisp.name [
+    meta.broken = builtins.elem self._lisp.name [
       # Symbol named "BTCL" not found in the CORE package.
       "clasp"
       # There is a bug in lift which causes some silly pathname, ‘mkdir
@@ -2404,7 +2404,7 @@ in
     # Requires a new version of ASDF that I’m not sure how to load before
     # building the code. See
     # "https://gitlab.common-lisp.net/asdf/asdf/-/issues/145".
-    meta.broken = lisp.name == "ecl";
+    meta.broken = self._lisp.name == "ecl";
   };
 
   nfiles = lispDerivation {
@@ -2442,7 +2442,7 @@ in
     lispDependencies = [
       org-sampler
     ]
-    ++ lib.optionals (builtins.elem lisp.name [
+    ++ lib.optionals (builtins.elem self._lisp.name [
       "sbcl"
       "clisp"
     ]) [ closer-mop ];
@@ -2638,7 +2638,7 @@ in
     # moved to the store.  The dependent pacage will throw:
     #
     # The file #P"/private/tmp/nix-build-system-quri.drv-0/source/data/effective_tld_names.dat" does not exist.
-    meta.broken = lisp.name == "abcl";
+    meta.broken = self._lisp.name == "abcl";
   };
 
   reblocks = lispDerivation {
@@ -2816,7 +2816,7 @@ in
     # but downstream ASDF gets confused about whether or not this was loaded
     # and tries to rebuild serapeum because of it.  I don’t have the
     # inclination to fix it 🤷
-    meta.broken = lisp.name == "abcl";
+    meta.broken = self._lisp.name == "abcl";
   };
 
   sha1 = lispify "sha1" [ ];
@@ -2922,7 +2922,7 @@ in
       cffi-grovel
     ];
     lispCheckDependencies = [ fiveam ];
-    meta.broken = lisp.name == "clisp";
+    meta.broken = self._lisp.name == "clisp";
   };
 
   stefil = lispify "stefil" [
@@ -3117,7 +3117,7 @@ in
     lispSystem = "trivial-sockets";
     src = inputs.trivial-sockets;
     # Supported lisps: sbcl cmu clisp acl openmcl lispworks abcl mcl
-    meta.broken = lisp.name == "ecl";
+    meta.broken = self._lisp.name == "ecl";
   };
 
   trivial-timeout = lispDerivation {
@@ -3178,7 +3178,7 @@ in
     preCheck = ''
       export CL_SOURCE_REGISTRY="$PWD/code/test-suite:$CL_SOURCE_REGISTRY"
     '';
-    meta.broken = builtins.elem lisp.name [
+    meta.broken = builtins.elem self._lisp.name [
       "ecl"
       "clisp"
     ];
@@ -3251,7 +3251,7 @@ in
     # Clisp packages ASDF v3.2, WPI requires ≥3.3, this is the easiest way to
     # remedy that. Of course you can byo-ASDF, at which point you can just
     # .overrideAttrs this flag back to false. Same for ECL.
-    meta.broken = builtins.elem lisp.name [
+    meta.broken = builtins.elem self._lisp.name [
       "clisp"
       "ecl"
     ];
