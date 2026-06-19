@@ -18,8 +18,7 @@ let
         with pkgs';
         [
           abcl
-          # Excluded because test suite is getting too heavy for now - 2026/06
-          # clasp-common-lisp
+          clasp-common-lisp
           clisp
           ecl
           sbcl
@@ -44,7 +43,7 @@ let
       ./channels/lisp-script
       ./channels/override-package
     ]
-    ++ lib.optionals (lisp.pname != "abcl") [
+    ++ lib.optionals (lisp.pname != "abcl" && lisp.pname != "clasp") [
       ./channels/external-dependency
       ./channels/hello-binary
     ]

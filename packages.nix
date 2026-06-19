@@ -67,13 +67,14 @@ in
     # For ABCL, if that would fix it: _JAVA_OPTIONS="-Xmx4g";
     env = lib.optionalAttrs (self._lisp.name == "sbcl") { NIX_SBCL_DYNAMIC_SPACE_SIZE = "4gb"; };
     lispSystem = "3d-math";
-    # Compiling this on CLISP hangs forever.
-    # On ECL:
-    # * The declaration (DECLARE (FTYPE (FUNCTION ((OR IVEC4 DVEC4 VEC4 IVEC3 DVEC3 VEC3 IVEC2 DVEC2 VEC2)) (VALUES (OR I32 F64 F32) &OPTIONAL)) VX)) was found in a bad place.
     meta.broken = builtins.elem self._lisp.name [
-      "clisp"
-      "ecl"
       "abcl"
+      # BUG: Unknown packing-type SHORT-FLOAT
+      "clasp"
+      # Compilation hangs forever.
+      "clisp"
+      # * The declaration (DECLARE (FTYPE (FUNCTION ((OR IVEC4 DVEC4 VEC4 IVEC3 DVEC3 VEC3 IVEC2 DVEC2 VEC2)) (VALUES (OR I32 F64 F32) &OPTIONAL)) VX)) was found in a bad place.
+      "ecl"
     ];
   };
 
@@ -1015,6 +1016,8 @@ in
     meta.broken = builtins.elem self._lisp.name [
       # Attempt to define a subclass of built-in-class FUNCTION.
       "abcl"
+      # Class #<BUILT-IN-CLASS FUNCTION> is not a valid superclass for #<FUNCALLABLE-STANDARD-CLASS
+      "clasp"
       # Class #<The BUILT-IN-CLASS FUNCTION> is not a valid superclass for #<The CLOS:FUNCALLABLE-STANDARD-CLASS CL-REACTIVE::SIGNAL-FUNCTION>
       "ecl"
     ];
@@ -1335,6 +1338,8 @@ in
       # using overrides?
       # "dynamic-wind"
     ];
+    # The variable =LAYERED-FUNCTION-DEFINER-FOR-ADJOIN-LAYER-USING-CLASS= is unbound.
+    meta.broken = self._lisp.name == "clasp";
   };
 
   data-lens = lispDerivation {
@@ -2367,6 +2372,9 @@ in
           mgl-pax-bootstrap = { };
         };
         lispAsdPath = systems: lib.optionals (builtins.elem "dref" systems) [ "dref" ];
+        meta =
+          # The function PRINT-UNRESOLVABLE-REFLINK is undefined.
+          systems: { broken = (builtins.elem "mgl-pax/full" systems) && self._lisp.name == "clasp"; };
       }
     )
     dref
@@ -2810,23 +2818,28 @@ in
       trivial-macroexpand-all
       atomics
     ];
-    # Something rather benign seems going on with packages depending on
-    # Serapeum in ABCL:
-    #
-    # ; Caught DEPENDENCY-NOT-DONE:
-    # ;   Computing just-done stamp  for action (ASDF/LISP-ACTION:PREPARE-OP "serapeum"), but dependency (ASDF/LISP-ACTION:LOAD-OP "extensible-sequences") wasn't done yet!
+    meta.broken =
+      # Something rather benign seems going on with packages depending on
+      # Serapeum in ABCL:
+      #
+      # ; Caught DEPENDENCY-NOT-DONE:
+      # ;   Computing just-done stamp  for action (ASDF/LISP-ACTION:PREPARE-OP "serapeum"), but dependency (ASDF/LISP-ACTION:LOAD-OP "extensible-sequences") wasn't done yet!
 
-    # ; Compilation unit finished
-    # ;   Caught 1 WARNING condition
+      # ; Compilation unit finished
+      # ;   Caught 1 WARNING condition
 
-    # Unable to open #P"/nix/store/dg1am35c5dlfa1n7493kjhks86ibh3cz-system-serapeum/package-tmpCEA7HV6J.abcl".
-    #
-    # Looking at the serapeum source it seems to be because ABCL provides a
-    # native "extensible-sequences" feature, which serapeum includes somehow,
-    # but downstream ASDF gets confused about whether or not this was loaded
-    # and tries to rebuild serapeum because of it.  I don’t have the
-    # inclination to fix it 🤷
-    meta.broken = self._lisp.name == "abcl";
+      # Unable to open #P"/nix/store/dg1am35c5dlfa1n7493kjhks86ibh3cz-system-serapeum/package-tmpCEA7HV6J.abcl".
+      #
+      # Looking at the serapeum source it seems to be because ABCL provides a
+      # native "extensible-sequences" feature, which serapeum includes somehow,
+      # but downstream ASDF gets confused about whether or not this was loaded
+      # and tries to rebuild serapeum because of it.  I don’t have the
+      # inclination to fix it 🤷
+      self._lisp.name == "abcl"
+      # Condition of type: UNBOUND-SLOT
+      # The slot CLEAVIR-ENVIRONMENT::%TYPE in the object
+      # #<CLEAVIR-ENVIRONMENT:LEXICAL-VARIABLE-INFO @0xffffc69775d9> is unbound.
+      || self._lisp.name == "clasp";
   };
 
   sha1 = lispify "sha1" [ ];
@@ -3126,8 +3139,11 @@ in
   trivial-sockets = lispDerivation {
     lispSystem = "trivial-sockets";
     src = sources.trivial-sockets;
-    # Supported lisps: sbcl cmu clisp acl openmcl lispworks abcl mcl
-    meta.broken = self._lisp.name == "ecl";
+    meta.broken =
+      # Error while trying to load definition for system trivial-sockets from pathname /build/source/trivial-sockets.asd: keyword list is not a proper list
+      self._lisp.name == "clasp"
+      # Supported lisps: sbcl cmu clisp acl openmcl lispworks abcl mcl
+      || self._lisp.name == "ecl";
   };
 
   trivial-timeout = lispDerivation {
@@ -3190,6 +3206,7 @@ in
     '';
     meta.broken = builtins.elem self._lisp.name [
       "ecl"
+      "clasp"
       "clisp"
     ];
   };

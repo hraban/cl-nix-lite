@@ -67,6 +67,22 @@
     # Running test FIND-PORTS XThe following check failed: ((FIND-PORT:FIND-PORT))
     "find-port"
   ]
+  ++ pkgs.lib.optionals (lisp.pname == "clasp") [
+    "access" # The variable ACCESS-BASIC is unbound.
+    "collectors" # The variable MAKE-REDUCER-TEST is unbound.
+    "deflate" # The symbol STREAM-ELEMENT-TYPE is bound to an ordinary function and is not a valid name for a generic function
+    "fast-http" # lisp_instance_class for called on #<UNBOUND>
+    "history-tree" # The variable SINGLE-ENTRY is unbound.
+    "http-body" # Condition of type: SIMPLE-PROGRAM-ERROR: lisp_instance_class for called on #<UNBOUND>
+    "ironclad" # 50 out of 470 total tests failed
+    "lisp-unit2" # The variable COLLECT/DECOLLECT is unbound.
+    "lparallel" # When calling (COMMON-LISP::FLET CORE::TRANSFORM-KEYWORDS) with the lambda-list (COMMON-LISP::&KEY CORE::REPORT CORE::INTERACTIVE CORE::TEST) the bad keyword argument :HANDLED was passed
+    "nclasses" # The variable SIMPLE-CLASS is unbound.
+    "nst" # No such NST group NST-METHODS-META-SOURCES::METHOD-TESTS
+    "salza2" # The stream #<chipz::decompressing-stream @0x7fffd0c3a7b9> has no suitable method for #:stream-element-type.
+    "symbol-munger" # The variable TEST-BASIC is unbound.
+    "trivial-package-local-nicknames" # test hangs indefinitely
+  ]
   ++ pkgs.lib.optionals (lisp.pname == "clisp") [
     "float-features" # *** - APPLY: too few arguments given to FIND
     "kmrcl" # odd floating point error on clisp
