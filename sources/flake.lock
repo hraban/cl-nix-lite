@@ -1,6 +1,6 @@
 {
   "nodes": {
-    "1am": {
+    "_1am": {
       "flake": false,
       "locked": {
         "lastModified": 1415043526,
@@ -16,7 +16,7 @@
         "type": "github"
       }
     },
-    "3bmd": {
+    "_3bmd": {
       "flake": false,
       "locked": {
         "lastModified": 1715724069,
@@ -32,7 +32,7 @@
         "type": "github"
       }
     },
-    "3d-math": {
+    "_3d-math": {
       "flake": false,
       "locked": {
         "lastModified": 1725367523,
@@ -47,7 +47,7 @@
         "url": "https://codeberg.org/shinmera/3d-math.git"
       }
     },
-    "3d-vectors": {
+    "_3d-vectors": {
       "flake": false,
       "locked": {
         "lastModified": 1693388789,
@@ -62,7 +62,7 @@
         "url": "https://codeberg.org/shinmera/3d-vectors.git"
       }
     },
-    "40ants-asdf-system": {
+    "_40ants-asdf-system": {
       "flake": false,
       "locked": {
         "lastModified": 1711116506,
@@ -78,7 +78,7 @@
         "type": "github"
       }
     },
-    "40ants-doc": {
+    "_40ants-doc": {
       "flake": false,
       "locked": {
         "lastModified": 1724963675,
@@ -471,22 +471,6 @@
       "original": {
         "owner": "fukamachi",
         "repo": "circular-streams",
-        "type": "github"
-      }
-    },
-    "cl+ssl": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1690780289,
-        "narHash": "sha256-GuilXdN6jr0kHCuHYAVtm+bChkgfyAp1m7KUUaroE2w=",
-        "owner": "cl-plus-ssl",
-        "repo": "cl-plus-ssl",
-        "rev": "17d5cdd65405f1d26e26f3e875e70027d0c8eedb",
-        "type": "github"
-      },
-      "original": {
-        "owner": "cl-plus-ssl",
-        "repo": "cl-plus-ssl",
         "type": "github"
       }
     },
@@ -905,6 +889,22 @@
       "original": {
         "owner": "Ferada",
         "repo": "cl-mock",
+        "type": "github"
+      }
+    },
+    "cl-plus-ssl": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1690780289,
+        "narHash": "sha256-GuilXdN6jr0kHCuHYAVtm+bChkgfyAp1m7KUUaroE2w=",
+        "owner": "cl-plus-ssl",
+        "repo": "cl-plus-ssl",
+        "rev": "17d5cdd65405f1d26e26f3e875e70027d0c8eedb",
+        "type": "github"
+      },
+      "original": {
+        "owner": "cl-plus-ssl",
+        "repo": "cl-plus-ssl",
         "type": "github"
       }
     },
@@ -2051,7 +2051,7 @@
         "type": "github"
       }
     },
-    "hu.dwim.asdf": {
+    "hu_dwim_asdf": {
       "flake": false,
       "locked": {
         "lastModified": 1638529335,
@@ -2067,7 +2067,7 @@
         "type": "github"
       }
     },
-    "hu.dwim.stefil": {
+    "hu_dwim_stefil": {
       "flake": false,
       "locked": {
         "lastModified": 1639217173,
@@ -3253,12 +3253,12 @@
     },
     "root": {
       "inputs": {
-        "1am": "1am",
-        "3bmd": "3bmd",
-        "3d-math": "3d-math",
-        "3d-vectors": "3d-vectors",
-        "40ants-asdf-system": "40ants-asdf-system",
-        "40ants-doc": "40ants-doc",
+        "_1am": "_1am",
+        "_3bmd": "_3bmd",
+        "_3d-math": "_3d-math",
+        "_3d-vectors": "_3d-vectors",
+        "_40ants-asdf-system": "_40ants-asdf-system",
+        "_40ants-doc": "_40ants-doc",
         "access": "access",
         "acclimation": "acclimation",
         "alexandria": "alexandria",
@@ -3283,7 +3283,6 @@
         "chipz": "chipz",
         "chunga": "chunga",
         "circular-streams": "circular-streams",
-        "cl+ssl": "cl+ssl",
         "cl-annot": "cl-annot",
         "cl-ansi-text": "cl-ansi-text",
         "cl-async": "cl-async",
@@ -3310,6 +3309,7 @@
         "cl-markdown": "cl-markdown",
         "cl-mimeparse": "cl-mimeparse",
         "cl-mock": "cl-mock",
+        "cl-plus-ssl": "cl-plus-ssl",
         "cl-ppcre": "cl-ppcre",
         "cl-prevalence": "cl-prevalence",
         "cl-qrencode": "cl-qrencode",
@@ -3382,8 +3382,8 @@
         "html-encode": "html-encode",
         "html-entities": "html-entities",
         "http-body": "http-body",
-        "hu.dwim.asdf": "hu.dwim.asdf",
-        "hu.dwim.stefil": "hu.dwim.stefil",
+        "hu_dwim_asdf": "hu_dwim_asdf",
+        "hu_dwim_stefil": "hu_dwim_stefil",
         "hunchentoot": "hunchentoot",
         "hunchentoot-errors": "hunchentoot-errors",
         "idna": "idna",

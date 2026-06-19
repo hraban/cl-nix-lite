@@ -38,27 +38,27 @@
 
     # Lisp packages
 
-    "1am" = {
+    _1am = {
       url = "github:lmj/1am";
       flake = false;
     };
-    "3bmd" = {
+    _3bmd = {
       url = "github:3b/3bmd";
       flake = false;
     };
-    "3d-math" = {
+    _3d-math = {
       url = "git+https://codeberg.org/shinmera/3d-math.git";
       flake = false;
     };
-    "3d-vectors" = {
+    _3d-vectors = {
       url = "git+https://codeberg.org/shinmera/3d-vectors.git";
       flake = false;
     };
-    "40ants-asdf-system" = {
+    _40ants-asdf-system = {
       url = "github:40ants/40ants-asdf-system";
       flake = false;
     };
-    "40ants-doc" = {
+    _40ants-doc = {
       url = "github:40ants/doc";
       flake = false;
     };
@@ -270,7 +270,7 @@
       url = "github:Ferada/cl-mock";
       flake = false;
     };
-    "cl+ssl" = {
+    cl-plus-ssl = {
       url = "github:cl-plus-ssl/cl-plus-ssl";
       flake = false;
     };
@@ -560,11 +560,11 @@
       url = "github:fukamachi/http-body";
       flake = false;
     };
-    "hu.dwim.asdf" = {
+    hu_dwim_asdf = {
       url = "github:hu-dwim/hu.dwim.asdf";
       flake = false;
     };
-    "hu.dwim.stefil" = {
+    hu_dwim_stefil = {
       url = "github:hu-dwim/hu.dwim.stefil";
       flake = false;
     };

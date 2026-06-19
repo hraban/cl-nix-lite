@@ -16,11 +16,14 @@ let
     };
 in
 {
-  "1am" = lispify "1am" [ ];
+  "1am" = lispDerivation {
+    lispSystem = "1am";
+    src = sources._1am;
+  };
 
   inherit
     (lispMultiDerivation {
-      src = sources."3bmd";
+      src = sources._3bmd;
       systems = {
         "3bmd" = {
           lispSystem = "3bmd";
@@ -60,7 +63,7 @@ in
       type-templates
     ];
     lispCheckDependencies = [ parachute ];
-    src = sources."3d-math";
+    src = sources._3d-math;
     # For ABCL, if that would fix it: _JAVA_OPTIONS="-Xmx4g";
     env = lib.optionalAttrs (self._lisp.name == "sbcl") { NIX_SBCL_DYNAMIC_SPACE_SIZE = "4gb"; };
     lispSystem = "3d-math";
@@ -77,13 +80,13 @@ in
   "3d-vectors" = lispDerivation {
     lispDependencies = [ documentation-utils ];
     lispCheckDependencies = [ parachute ];
-    src = sources."3d-vectors";
+    src = sources._3d-vectors;
     lispSystem = "3d-vectors";
   };
 
   inherit
     (lispMultiDerivation {
-      src = sources."40ants-doc";
+      src = sources._40ants-doc;
       systems = {
         "40ants-doc" = {
           lispSystem = "40ants-doc";
@@ -131,7 +134,7 @@ in
 
   "40ants-asdf-system" = lispDerivation {
     lispSystem = "40ants-asdf-system";
-    src = sources."40ants-asdf-system";
+    src = sources._40ants-asdf-system;
     # Depends on a modern ASDF. SBCL’s built-in ASDF crashes this. Explicitly
     # listing self. here to avoid grabbing nixpkgs.asdf.
     lispDependencies = [ asdf ];
@@ -935,7 +938,7 @@ in
 
   "cl+ssl" = lispDerivation {
     lispSystem = "cl+ssl";
-    src = sources."cl+ssl";
+    src = sources.cl-plus-ssl;
     lispDependencies = [
       alexandria
       bordeaux-threads
@@ -1847,12 +1850,19 @@ in
     lispCheckDependencies = [ fiveam ];
   };
 
-  hu_dwim_asdf = lispify "hu.dwim.asdf" [ ];
+  hu_dwim_asdf = lispDerivation {
+    lispSystem = "hu.dwim.asdf";
+    src = sources.hu_dwim_asdf;
+  };
 
-  hu_dwim_stefil = lispify "hu.dwim.stefil" [
-    alexandria
-    hu_dwim_asdf
-  ];
+  hu_dwim_stefil = lispDerivation {
+    lispSystem = "hu.dwim.stefil";
+    src = sources.hu_dwim_stefil;
+    lispDependencies = [
+      alexandria
+      hu_dwim_asdf
+    ];
+  };
 
   hunchentoot = lispDerivation {
     lispSystem = "hunchentoot";
