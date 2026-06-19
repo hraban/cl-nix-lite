@@ -2,12 +2,12 @@
   inputs,
   lib,
   pkgs,
-  lisp,
 }:
 
 self: prev:
 with self;
 let
+  lisp = self._lisp;
   lispify =
     name: lispDependencies:
     lispDerivation {

@@ -12,40 +12,59 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-{ inputs, pkgs }:
-
 let
-  inherit (pkgs) lib;
-  utils = pkgs.callPackage ./utils.nix { };
   # The lisp is a function which takes a file and returns a shell invocation
   # calling that file, then exiting. Or just a derivation of a known Lisp,
   # e.g. lisp = pkgs.sbcl.
-  lispPackagesLiteFor =
-    lisp':
+  mkLispScope =
+    {
+      callPackage,
+      lisp,
+      newScope,
+      lib,
+    }:
     let
-      lisp = utils.makeLisp lisp';
-      lpl = pkgs.callPackage ./lisp-derivation.nix { inherit lisp; };
-      packages = import ./packages.nix {
-        inherit
-          pkgs
-          inputs
-          lib
-          lisp
-          ;
-      };
-      scopeInit = self: {
-        inherit (lpl)
-          lispDerivation
-          lispMultiDerivation
-          lispScript
-          lispWithSystems
-          ;
-      };
-      scope = lib.makeScope pkgs.newScope (lib.extends packages scopeInit);
+      utils = callPackage ./utils.nix { };
+      scopeInit =
+        self:
+        let
+          lpl = callPackage ./lisp-derivation.nix { lisp = self._lisp; };
+        in
+        {
+          # Experimental.  (Is it a good idea to expose the lisp on the scope?
+          # uv2nix doesn’t do this but it’s kind of useful...?  Should it be pre-
+          # or post-utils.makeLisp?  Is utils.makeLisp even a good idea?)
+          _lisp = utils.makeLisp lisp;
+
+          inherit (lpl)
+            lispDerivation
+            lispMultiDerivation
+            lispScript
+            lispWithSystems
+            ;
+        };
     in
-    lib.recurseIntoAttrs scope;
+    lib.makeScope newScope scopeInit;
 in
-{
-  inherit lispPackagesLiteFor;
+
+{ inputs, pkgs }:
+let
+  inherit (pkgs) lib;
+in
+rec {
+  lispPackagesLiteFor =
+    lisp:
+    let
+      scope = pkgs.callPackage _mkLispScope { inherit lisp; };
+      # There’s a difference between import and pkgs.callPackage, and I’m not
+      # 100% on what exactly it is.  Something about bootstrap packages?  TBD.
+      packages = _lispRegistry { inherit pkgs inputs lib; };
+      scope' = scope.overrideScope packages;
+    in
+    lib.recurseIntoAttrs scope';
   lispPackagesLite = lispPackagesLiteFor pkgs.sbcl;
+
+  # EXPERIMENTAL OPTIONS.  Exploring a more modular API.  Subject to change.
+  _mkLispScope = mkLispScope;
+  _lispRegistry = import ./packages.nix;
 }
