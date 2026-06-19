@@ -1979,7 +1979,7 @@ rec {
           iterate = lispDerivation {
             lispSystem = "iterate";
             src = inputs.iterate;
-            lispCheckDependencies = lib.optionals ((lisp.pname or "") != "sbcl") [ rt ];
+            lispCheckDependencies = lib.optionals (lisp.name != "sbcl") [ rt ];
           };
 
           jonathan = lispDerivation {
