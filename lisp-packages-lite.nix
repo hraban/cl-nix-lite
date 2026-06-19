@@ -786,8 +786,6 @@ rec {
               cl-ppcre
               unit-test
             ];
-            # The assertion (PATH:= (PATH:CATDIR #P"/a/" #P"/b/" #P"c/" #P"d/" #P"e" #P"f/") #P"/b/c/./d/f/") failed.
-            meta.broken = lisp.name == "abcl";
           };
 
           cl-gopher = lispify "cl-gopher" [
