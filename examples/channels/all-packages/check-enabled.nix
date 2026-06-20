@@ -15,7 +15,6 @@
     "common-doc"
     "commondoc-markdown" # I have no idea what’s happening here but I need to move on
     "dbi"
-    #"deflate" # https://github.com/pmai/Deflate/issues/3
     "dynamic-classes"
     "fare-quasiquote"
     "gettext" # I’m confused as to why this one is failing
