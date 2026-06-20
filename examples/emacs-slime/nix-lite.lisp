@@ -38,7 +38,7 @@
 
 (defvar *packages* '())
 
-(defvar *src-cl-nix-lite* "builtins.fetchTarball \"https://github.com/hraban/cl-nix-lite/archive/master.tar.gz\"")
+(defvar *src-cl-nix-lite* "builtins.fetchTarball \"https://github.com/hraban/cl-nix-lite/archive/v0.tar.gz\"")
 (defvar *src-nixpkgs* "<nixpkgs>")
 
 (require "asdf")
