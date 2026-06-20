@@ -1,7 +1,7 @@
 {
-  inputs,
   lib,
   pkgs,
+  sources,
 }:
 
 self: prev:
@@ -12,7 +12,7 @@ let
     lispDerivation {
       inherit lispDependencies;
       lispSystem = name; # convention
-      src = inputs.${name};
+      src = sources.${name};
     };
 in
 {
@@ -20,7 +20,7 @@ in
 
   inherit
     (lispMultiDerivation {
-      src = inputs."3bmd";
+      src = sources."3bmd";
       systems = {
         "3bmd" = {
           lispSystem = "3bmd";
@@ -60,7 +60,7 @@ in
       type-templates
     ];
     lispCheckDependencies = [ parachute ];
-    src = inputs."3d-math";
+    src = sources."3d-math";
     # For ABCL, if that would fix it: _JAVA_OPTIONS="-Xmx4g";
     env = lib.optionalAttrs (self._lisp.name == "sbcl") { NIX_SBCL_DYNAMIC_SPACE_SIZE = "4gb"; };
     lispSystem = "3d-math";
@@ -77,13 +77,13 @@ in
   "3d-vectors" = lispDerivation {
     lispDependencies = [ documentation-utils ];
     lispCheckDependencies = [ parachute ];
-    src = inputs."3d-vectors";
+    src = sources."3d-vectors";
     lispSystem = "3d-vectors";
   };
 
   inherit
     (lispMultiDerivation {
-      src = inputs."40ants-doc";
+      src = sources."40ants-doc";
       systems = {
         "40ants-doc" = {
           lispSystem = "40ants-doc";
@@ -131,7 +131,7 @@ in
 
   "40ants-asdf-system" = lispDerivation {
     lispSystem = "40ants-asdf-system";
-    src = inputs."40ants-asdf-system";
+    src = sources."40ants-asdf-system";
     # Depends on a modern ASDF. SBCL’s built-in ASDF crashes this. Explicitly
     # listing self. here to avoid grabbing nixpkgs.asdf.
     lispDependencies = [ asdf ];
@@ -140,7 +140,7 @@ in
 
   access = lispDerivation {
     lispSystem = "access";
-    src = inputs.access;
+    src = sources.access;
     lispDependencies = [
       alexandria
       closer-mop
@@ -154,7 +154,7 @@ in
 
   alexandria = lispDerivation {
     lispSystem = "alexandria";
-    src = inputs.alexandria;
+    src = sources.alexandria;
     # Contrary to what its .asd file suggests, Alexandria now requires rt even
     # on SBCL. This is recent (introduced after v1.4).
     lispCheckDependencies = [ rt ];
@@ -168,11 +168,11 @@ in
   anaphora = lispDerivation {
     lispSystem = "anaphora";
     lispCheckDependencies = [ rt ];
-    src = inputs.anaphora;
+    src = sources.anaphora;
   };
 
   anypool = lispDerivation {
-    src = inputs.anypool;
+    src = sources.anypool;
     lispSystem = "anypool";
     lispDependencies = [
       bordeaux-threads
@@ -188,7 +188,7 @@ in
 
   inherit
     (lispMultiDerivation {
-      src = inputs.arnesi;
+      src = sources.arnesi;
       systems = {
         arnesi = {
           lispDependencies = [ collectors ];
@@ -220,13 +220,13 @@ in
   array-utils = lispDerivation {
     lispSystem = "array-utils";
     lispCheckDependencies = [ parachute ];
-    src = inputs.array-utils;
+    src = sources.array-utils;
   };
 
   arrow-macros = lispDerivation {
     lispSystem = "arrow-macros";
 
-    src = inputs.arrow-macros;
+    src = sources.arrow-macros;
 
     lispDependencies = [ alexandria ];
     lispCheckDependencies = [ fiveam ];
@@ -240,7 +240,7 @@ in
       "asdf"
       "asdf/defsystem"
     ];
-    src = inputs.asdf;
+    src = sources.asdf;
     # Not exactly sure why, but clasp doesn’t seem happy rebuilding asdf
     # from source?
     meta.broken = self._lisp.name == "clasp";
@@ -248,20 +248,20 @@ in
 
   asdf-flv = lispDerivation {
     lispSystem = "net.didierverna.asdf-flv";
-    src = inputs.asdf-flv;
+    src = sources.asdf-flv;
   };
 
   asdf-system-connections = lispify "asdf-system-connections" [ ];
 
   assoc-utils = lispDerivation {
     lispSystem = "assoc-utils";
-    src = inputs.assoc-utils;
+    src = sources.assoc-utils;
     lispCheckDependencies = [ rove ];
   };
 
   atomics = lispDerivation {
     lispSystem = "atomics";
-    src = inputs.atomics;
+    src = sources.atomics;
     lispDependencies = [ documentation-utils ];
     lispCheckDependencies = [ parachute ];
     # CLISP is not supported by the Atomics library.
@@ -278,7 +278,7 @@ in
 
   inherit
     (lispMultiDerivation {
-      src = inputs.babel;
+      src = sources.babel;
 
       systems = {
         babel = {
@@ -304,7 +304,7 @@ in
 
   blackbird = lispDerivation {
     lispSystem = "blackbird";
-    src = inputs.blackbird;
+    src = sources.blackbird;
     lispDependencies = [ vom ];
     lispCheckDependencies = [
       cl-async
@@ -322,14 +322,14 @@ in
     lispCheckDependencies = [ fiveam ];
     buildInputs = [ pkgs.libuv ];
     lispSystem = "bordeaux-threads";
-    src = inputs.bordeaux-threads;
+    src = sources.bordeaux-threads;
     meta.broken =
       self._lisp.name == "clisp" || (self._lisp.name == "sbcl" && !self._lisp.deriv.threadSupport);
   };
 
   inherit
     (lispMultiDerivation rec {
-      src = inputs.cffi;
+      src = sources.cffi;
       patches = ./patches/clffi-libffi-no-darwin-carevout.patch;
       systems = {
         cffi = {
@@ -423,7 +423,7 @@ in
 
   calispel = lispDerivation {
     lispSystem = "calispel";
-    src = inputs.calispel;
+    src = sources.calispel;
     lispDependencies = [
       jpl-queues
       bordeaux-threads
@@ -437,7 +437,7 @@ in
 
   inherit
     (lispMultiDerivation {
-      src = inputs.coalton;
+      src = sources.coalton;
       systems = {
         coalton = {
           lispDependencies = [
@@ -526,7 +526,7 @@ in
 
   circular-streams = lispDerivation {
     lispSystem = "circular-streams";
-    src = inputs.circular-streams;
+    src = sources.circular-streams;
     lispDependencies = [
       fast-io
       trivial-gray-streams
@@ -539,14 +539,14 @@ in
 
   cl-annot = lispDerivation {
     lispSystem = "cl-annot";
-    src = inputs.cl-annot;
+    src = sources.cl-annot;
     lispDependencies = [ alexandria ];
     lispCheckDependencies = [ cl-test-more ];
   };
 
   cl-ansi-text = lispDerivation {
     lispSystem = "cl-ansi-text";
-    src = inputs.cl-ansi-text;
+    src = sources.cl-ansi-text;
     lispDependencies = [
       alexandria
       cl-colors2
@@ -558,7 +558,7 @@ in
     (lispMultiDerivation rec {
       name = "cl-async";
 
-      src = inputs.cl-async;
+      src = sources.cl-async;
 
       systems = {
         cl-async = {
@@ -622,7 +622,7 @@ in
   cl-base64 = lispDerivation rec {
     lispSystem = "cl-base64";
     version = "577683b18fd880b82274d99fc96a18a710e3987a";
-    src = inputs.cl-base64;
+    src = sources.cl-base64;
     lispCheckDependencies = [
       ptester
       kmrcl
@@ -631,7 +631,7 @@ in
 
   cl-change-case = lispDerivation {
     lispSystem = "cl-change-case";
-    src = inputs.cl-change-case;
+    src = sources.cl-change-case;
     lispDependencies = [
       cl-ppcre
       cl-ppcre-unicode
@@ -646,12 +646,12 @@ in
       alexandria
       let-plus
     ];
-    src = inputs.cl-colors;
+    src = sources.cl-colors;
   };
 
   cl-colors2 = lispDerivation {
     lispSystem = "cl-colors2";
-    src = inputs.cl-colors2;
+    src = sources.cl-colors2;
     lispDependencies = [
       alexandria
       cl-ppcre
@@ -662,7 +662,7 @@ in
 
   inherit
     (lispMultiDerivation {
-      src = inputs.cl-containers;
+      src = sources.cl-containers;
       systems = {
         cl-containers = {
           lispDependencies = [ metatilities-base ];
@@ -697,7 +697,7 @@ in
 
   cl-cookie = lispDerivation {
     lispSystem = "cl-cookie";
-    src = inputs.cl-cookie;
+    src = sources.cl-cookie;
     lispDependencies = [
       alexandria
       cl-ppcre
@@ -721,11 +721,11 @@ in
       lquery
       split-sequence
     ];
-    src = inputs.cl-coveralls;
+    src = sources.cl-coveralls;
   };
 
   cl-custom-hash-table = lispDerivation {
-    src = inputs.cl-custom-hash-table;
+    src = sources.cl-custom-hash-table;
     lispSystem = "cl-custom-hash-table";
     lispCheckDependencies = [ hu_dwim_stefil ];
   };
@@ -734,7 +734,7 @@ in
 
   cl-dot = lispDerivation {
     lispSystem = "cl-dot";
-    src = inputs.cl-dot;
+    src = sources.cl-dot;
     propagatedBuildInputs = [ pkgs.graphviz ];
     # https://github.com/michaelw/cl-dot/issues/42
     meta.broken = self._lisp.name == "clisp";
@@ -742,7 +742,7 @@ in
 
   cl-fad = lispDerivation {
     lispSystem = "cl-fad";
-    src = inputs.cl-fad;
+    src = sources.cl-fad;
     lispDependencies = [
       alexandria
       bordeaux-threads
@@ -766,13 +766,13 @@ in
     lispDerivation {
       lispSystem = "cl-html-diff";
       lispDependencies = [ cl-difflib ];
-      src = inputs.cl-html-diff;
+      src = sources.cl-html-diff;
     }
   ) { };
 
   cl-interpol = lispDerivation {
     lispSystem = "cl-interpol";
-    src = inputs.cl-interpol;
+    src = sources.cl-interpol;
     lispDependencies = [
       cl-unicode
       named-readtables
@@ -782,7 +782,7 @@ in
 
   cl-isaac = lispDerivation {
     lispSystem = "cl-isaac";
-    src = inputs.cl-isaac;
+    src = sources.cl-isaac;
     lispCheckDependencies = [
       parachute
       trivial-features
@@ -791,7 +791,7 @@ in
 
   cl-js = lispDerivation {
     lispSystem = "cl-js";
-    src = inputs.js;
+    src = sources.js;
     lispDependencies = [
       parse-js
       cl-ppcre
@@ -801,7 +801,7 @@ in
   cl-json = lispDerivation {
     lispSystem = "cl-json";
     lispCheckDependencies = [ fiveam ];
-    src = inputs.cl-json;
+    src = sources.cl-json;
   };
 
   cl-libuv = lispDerivation rec {
@@ -812,12 +812,12 @@ in
     ];
     propagatedBuildInputs = [ pkgs.libuv ];
     lispSystem = "cl-libuv";
-    src = inputs.cl-libuv;
+    src = sources.cl-libuv;
   };
 
   inherit
     (lispMultiDerivation {
-      src = inputs.cl-libxml2;
+      src = sources.cl-libxml2;
       systems = {
         cl-libxml2 = {
           lispSystems = [
@@ -876,7 +876,7 @@ in
     ;
 
   cl-locale = lispDerivation {
-    src = inputs.cl-locale;
+    src = sources.cl-locale;
     lispDependencies = [
       anaphora
       arnesi
@@ -893,7 +893,7 @@ in
 
   cl-markdown = lispDerivation {
     lispSystem = "cl-markdown";
-    src = inputs.cl-markdown;
+    src = sources.cl-markdown;
     lispDependencies = [
       asdf-system-connections
       anaphora
@@ -917,12 +917,12 @@ in
       parse-number
     ];
     lispCheckDependencies = [ rt ];
-    src = inputs.cl-mimeparse;
+    src = sources.cl-mimeparse;
     lispSystem = "cl-mimeparse";
   };
 
   cl-mock = lispDerivation {
-    src = inputs.cl-mock;
+    src = sources.cl-mock;
     lispSystem = "cl-mock";
     lispDependencies = [
       alexandria
@@ -935,7 +935,7 @@ in
 
   "cl+ssl" = lispDerivation {
     lispSystem = "cl+ssl";
-    src = inputs."cl+ssl";
+    src = sources."cl+ssl";
     lispDependencies = [
       alexandria
       bordeaux-threads
@@ -958,7 +958,7 @@ in
 
   inherit
     (lispMultiDerivation rec {
-      src = inputs.cl-ppcre;
+      src = sources.cl-ppcre;
       systems = {
         cl-ppcre = {
           lispCheckDependencies = [ flexi-streams ];
@@ -978,7 +978,7 @@ in
 
   cl-prevalence = lispDerivation {
     lispSystem = "cl-prevalence";
-    src = inputs.cl-prevalence;
+    src = sources.cl-prevalence;
     lispDependencies = [
       moptilities
       s-xml
@@ -992,7 +992,7 @@ in
 
   cl-qrencode = lispDerivation {
     lispSystem = "cl-qrencode";
-    src = inputs.cl-qrencode;
+    src = sources.cl-qrencode;
     lispDependencies = [ zpng ];
     lispCheckDependencies = [ lisp-unit ];
   };
@@ -1000,7 +1000,7 @@ in
   cl-quickcheck = lispify "cl-quickcheck" [ ];
 
   cl-reactive = lispDerivation {
-    src = inputs.cl-reactive;
+    src = sources.cl-reactive;
     lispSystem = "cl-reactive";
     lispDependencies = [
       bordeaux-threads
@@ -1030,12 +1030,12 @@ in
       bordeaux-threads
       should-test
     ];
-    src = inputs.cl-redis;
+    src = sources.cl-redis;
   };
 
   cl-slice = lispDerivation {
     lispSystem = "cl-slice";
-    src = inputs.cl-slice;
+    src = sources.cl-slice;
     lispDependencies = [
       alexandria
       anaphora
@@ -1045,7 +1045,7 @@ in
   };
 
   cl-sqlite = lispDerivation {
-    src = inputs.cl-sqlite;
+    src = sources.cl-sqlite;
     lispDependencies = [
       iterate
       cffi
@@ -1062,13 +1062,13 @@ in
 
   cl-strings = lispDerivation {
     lispSystem = "cl-strings";
-    src = inputs.cl-strings;
+    src = sources.cl-strings;
     lispCheckDependencies = [ prove ];
   };
 
   inherit
     (lispMultiDerivation {
-      src = inputs.cl-syntax;
+      src = sources.cl-syntax;
 
       systems = {
         cl-syntax = {
@@ -1109,7 +1109,7 @@ in
 
   cl-unicode = lispDerivation {
     lispSystem = "cl-unicode";
-    src = inputs.cl-unicode;
+    src = sources.cl-unicode;
     lispDependencies = [
       cl-ppcre
       flexi-streams
@@ -1123,12 +1123,12 @@ in
   # that is a better resource.
   cl-utilities = lispDerivation {
     lispSystem = "cl-utilities";
-    src = inputs.cl-utilities;
+    src = sources.cl-utilities;
   };
 
   inherit
     (lispMultiDerivation {
-      src = inputs.cl-variates;
+      src = sources.cl-variates;
       systems = {
         cl-variates = {
           lispCheckDependencies = [ lift ];
@@ -1162,13 +1162,13 @@ in
 
   cl-who = lispDerivation {
     lispSystem = "cl-who";
-    src = inputs.cl-who;
+    src = sources.cl-who;
     lispCheckDependencies = [ flexi-streams ];
   };
 
   inherit
     (lispMultiDerivation {
-      src = inputs.clack;
+      src = sources.clack;
 
       systems = {
         # TODO: This is a complex package with lots of derivations and check
@@ -1235,7 +1235,7 @@ in
       symbol-munger
     ];
     lispCheckDependencies = [ lisp-unit2 ];
-    src = inputs.collectors;
+    src = sources.collectors;
   };
 
   colorize = lispify "colorize" [
@@ -1245,7 +1245,7 @@ in
   ];
 
   common-doc = lispDerivation {
-    src = inputs.common-doc;
+    src = sources.common-doc;
     # These all use practically the same dependencies. Light-weight enough that
     # it’s not worth the hassle to split them up, IMO.
     lispSystems = [
@@ -1269,7 +1269,7 @@ in
   };
 
   common-html = lispDerivation {
-    src = inputs.common-html;
+    src = sources.common-html;
     lispSystems = [ "common-html" ];
     lispDependencies = [
       common-doc
@@ -1282,7 +1282,7 @@ in
 
   commondoc-markdown = lispDerivation {
     lispSystem = "commondoc-markdown";
-    src = inputs.commondoc-markdown;
+    src = sources.commondoc-markdown;
     lispDependencies = [
       self."3bmd"
       self."3bmd-ext-code-blocks"
@@ -1301,12 +1301,12 @@ in
 
   computable-reals = lispDerivation {
     lispSystem = "computable-reals";
-    src = inputs.computable-reals;
+    src = sources.computable-reals;
   };
 
   concrete-syntax-tree = lispDerivation {
     lispDependencies = [ acclimation ];
-    src = inputs.concrete-syntax-tree;
+    src = sources.concrete-syntax-tree;
     lispSystem = "concrete-syntax-tree";
     lispAsdPath = [ "Lambda-list" ];
     preBuild = ''
@@ -1321,7 +1321,7 @@ in
       closer-mop
       lw-compat
     ];
-    src = inputs.contextl;
+    src = sources.contextl;
     lispSystems = [
       "contextl"
 
@@ -1348,12 +1348,12 @@ in
       fiveam
       string-case
     ];
-    src = inputs.data-lens;
+    src = sources.data-lens;
   };
 
   dbi = lispDerivation {
     lispSystem = "dbi";
-    src = inputs.cl-dbi;
+    src = sources.cl-dbi;
     lispDependencies = [
       cl-ppcre
       bordeaux-threads
@@ -1371,7 +1371,7 @@ in
 
   dexador = lispDerivation {
     lispSystem = "dexador";
-    src = inputs.dexador;
+    src = sources.dexador;
     lispDependencies = [
       alexandria
       babel
@@ -1402,13 +1402,13 @@ in
 
   dissect = lispDerivation {
     lispSystem = "dissect";
-    src = inputs.dissect;
+    src = sources.dissect;
     lispDependencies = lib.optionals (self._lisp.name == "clisp") [ cl-ppcre ];
   };
 
   djula = lispDerivation {
     lispSystem = "djula";
-    src = inputs.djula;
+    src = sources.djula;
     lispDependencies = [
       access
       alexandria
@@ -1441,7 +1441,7 @@ in
       "docs-builder"
       "docs-config"
     ];
-    src = inputs.docs-builder;
+    src = sources.docs-builder;
     lispDependencies = [
       log4cl
       self."40ants-doc"
@@ -1452,13 +1452,13 @@ in
 
   documentation-utils = lispDerivation {
     lispSystem = "documentation-utils";
-    src = inputs.documentation-utils;
+    src = sources.documentation-utils;
     lispDependencies = [ trivial-indent ];
   };
 
   drakma = lispDerivation {
     lispSystem = "drakma";
-    src = inputs.drakma;
+    src = sources.drakma;
     lispDependencies = [
       chipz
       chunga
@@ -1478,7 +1478,7 @@ in
 
   dynamic-classes = lispDerivation {
     lispSystem = "dynamic-classes";
-    src = inputs.dynamic-classes;
+    src = sources.dynamic-classes;
     lispDependencies = [ metatilities-base ];
     lispCheckDependencies = [ lift ];
   };
@@ -1489,7 +1489,7 @@ in
       bordeaux-threads
       trivial-garbage
     ];
-    src = inputs.eager-future2;
+    src = sources.eager-future2;
     # Very specific deadlock: ECL & x86 & Macos, since ECL 21.2.1 -> 23.9.9
     # got merged: https://github.com/NixOS/nixpkgs/pull/276506
     # No idea what’s wrong here, or even who’s wrong: ECL? eager-future2?
@@ -1499,7 +1499,7 @@ in
 
   inherit
     (lispMultiDerivation {
-      src = inputs.easy-routes;
+      src = sources.easy-routes;
       systems = {
         easy-routes = {
           lispDependencies = [
@@ -1528,7 +1528,7 @@ in
 
   inherit
     (lispMultiDerivation {
-      src = inputs.eclector;
+      src = sources.eclector;
       systems = {
         eclector = {
           lispDependencies = [
@@ -1562,14 +1562,14 @@ in
     lispDependencies = [ cffi ];
     lispSystem = "enchant";
     propagatedBuildInputs = [ pkgs.enchant ];
-    src = inputs.enchant;
+    src = sources.enchant;
   };
 
   eos = lispify "eos" [ ];
 
   esrap = lispDerivation {
     lispSystem = "esrap";
-    src = inputs.esrap;
+    src = sources.esrap;
     lispDependencies = [
       alexandria
       trivial-with-current-source-form
@@ -1579,7 +1579,7 @@ in
 
   event-emitter = lispDerivation {
     lispSystem = "event-emitter";
-    src = inputs.event-emitter;
+    src = sources.event-emitter;
     lispCheckDependencies = [ prove ];
   };
 
@@ -1592,7 +1592,7 @@ in
 
   inherit
     (lispMultiDerivation {
-      src = inputs.fare-quasiquote;
+      src = sources.fare-quasiquote;
       systems = {
         fare-quasiquote = {
           lispDependencies = [ fare-utils ];
@@ -1627,7 +1627,7 @@ in
 
   fare-utils = lispDerivation {
     lispSystem = "fare-utils";
-    src = inputs.fare-utils;
+    src = sources.fare-utils;
     lispCheckDependencies = [ hu_dwim_stefil ];
     # "https://gitlab.common-lisp.net/frideau/fare-utils/-/issues/1".  Getting
     # the version here from the derivation is very ugly and I hate it but is
@@ -1636,7 +1636,7 @@ in
   };
 
   fast-http = lispDerivation {
-    src = inputs.fast-http;
+    src = sources.fast-http;
     lispSystem = "fast-http";
     lispDependencies = [
       alexandria
@@ -1663,7 +1663,7 @@ in
 
   fast-websocket = lispDerivation {
     lispSystem = "fast-websocket";
-    src = inputs.fast-websocket;
+    src = sources.fast-websocket;
     lispCheckDependencies = [
       prove
       trivial-utf-8
@@ -1679,7 +1679,7 @@ in
   # though I only use one at the moment, it’s likely to change in the future.
   inherit
     (lispMultiDerivation {
-      src = inputs.femlisp;
+      src = sources.femlisp;
       systems = {
         infix = { };
       };
@@ -1698,7 +1698,7 @@ in
     lispSystem = "find-port";
     lispCheckDependencies = [ fiveam ];
     lispDependencies = [ usocket ];
-    src = inputs.find-port;
+    src = sources.find-port;
   };
 
   fiveam = lispify "fiveam" [
@@ -1709,7 +1709,7 @@ in
 
   float-features = lispDerivation {
     lispSystem = "float-features";
-    src = inputs.float-features;
+    src = sources.float-features;
     lispDependencies = [
       documentation-utils
       trivial-features
@@ -1721,7 +1721,7 @@ in
 
   form-fiddle = lispDerivation {
     lispSystem = "form-fiddle";
-    src = inputs.form-fiddle;
+    src = sources.form-fiddle;
     lispDependencies = [ documentation-utils ];
   };
 
@@ -1731,7 +1731,7 @@ in
       mt19937
       named-readtables
     ];
-    src = inputs.fset;
+    src = sources.fset;
     lispSystem = "fset";
     meta.broken = builtins.elem self._lisp.name [
       # The value FSET::IDENTITY-ORDERING-MIXIN-NEXT-SERIAL-NUMBER is not of type LIST.
@@ -1749,13 +1749,13 @@ in
 
   garbage-pools = lispDerivation {
     lispSystem = "garbage-pools";
-    src = inputs.garbage-pools;
+    src = sources.garbage-pools;
     lispCheckDependencies = [ lift ];
   };
 
   gettext = lispDerivation {
     lispSystem = "gettext";
-    src = inputs.gettext;
+    src = sources.gettext;
     lispDependencies = [
       split-sequence
       yacc
@@ -1771,7 +1771,7 @@ in
 
   inherit
     (lispMultiDerivation {
-      src = inputs.hamcrest;
+      src = sources.hamcrest;
       systems = {
         hamcrest = {
           lispCheckDependencies = [
@@ -1809,7 +1809,7 @@ in
       nclasses
       trivial-package-local-nicknames
     ];
-    src = inputs.history-tree;
+    src = sources.history-tree;
     lispCheckDependencies = [ lisp-unit2 ];
     lispSystem = "history-tree";
     # *** - EVAL: undefined function EXT::ADD-PACKAGE-LOCAL-NICKNAME
@@ -1818,7 +1818,7 @@ in
 
   http-body = lispDerivation {
     lispSystem = "http-body";
-    src = inputs.http-body;
+    src = sources.http-body;
     lispDependencies = [
       babel
       cl-ppcre
@@ -1842,7 +1842,7 @@ in
 
   html-entities = lispDerivation {
     lispSystem = "html-entities";
-    src = inputs.html-entities;
+    src = sources.html-entities;
     lispDependencies = [ cl-ppcre ];
     lispCheckDependencies = [ fiveam ];
   };
@@ -1856,7 +1856,7 @@ in
 
   hunchentoot = lispDerivation {
     lispSystem = "hunchentoot";
-    src = inputs.hunchentoot;
+    src = sources.hunchentoot;
     lispDependencies = [
       alexandria
       chunga
@@ -1890,7 +1890,7 @@ in
 
   ieee-floats = lispDerivation {
     lispSystem = "ieee-floats";
-    src = inputs.ieee-floats;
+    src = sources.ieee-floats;
     lispCheckDependencies = [ fiveam ];
   };
 
@@ -1907,7 +1907,7 @@ in
       introspect-environment
       lisp-namespace
     ];
-    src = inputs.in-nomine;
+    src = sources.in-nomine;
     # Uses :local-nickname in defpackage. Ah, the state of CLISP...
     # https://gitlab.com/gnu-clisp/clisp/-/merge_requests/3
     meta.broken = self._lisp.name == "clisp";
@@ -1923,7 +1923,7 @@ in
       trivia
       self."trivia.quasiquote"
     ];
-    src = inputs.inferior-shell;
+    src = sources.inferior-shell;
     lispCheckDependencies = [ fiveam ];
   };
 
@@ -1937,12 +1937,12 @@ in
   introspect-environment = lispDerivation {
     lispSystem = "introspect-environment";
     lispCheckDependencies = [ fiveam ];
-    src = inputs.introspect-environment;
+    src = sources.introspect-environment;
   };
 
   ironclad = lispDerivation {
     lispSystem = "ironclad";
-    src = inputs.ironclad;
+    src = sources.ironclad;
     lispDependencies = [ bordeaux-threads ];
     lispCheckDependencies = [ rt ];
     env = lib.optionalAttrs (self._lisp.name == "sbcl") { NIX_SBCL_DYNAMIC_SPACE_SIZE = "2gb"; };
@@ -1950,13 +1950,13 @@ in
 
   iterate = lispDerivation {
     lispSystem = "iterate";
-    src = inputs.iterate;
+    src = sources.iterate;
     lispCheckDependencies = lib.optionals (self._lisp.name != "sbcl") [ rt ];
   };
 
   jonathan = lispDerivation {
     lispSystem = "jonathan";
-    src = inputs.jonathan;
+    src = sources.jonathan;
     lispDependencies = [
       babel
       cl-annot
@@ -1980,16 +1980,16 @@ in
       jpl-util
     ];
     pname = "jpl-queues";
-    src = inputs.jpl-queues;
+    src = sources.jpl-queues;
   };
 
   jpl-util = lispDerivation {
-    src = inputs.jpl-util;
+    src = sources.jpl-util;
     lispSystem = "jpl-util";
   };
 
   json-streams = lispDerivation {
-    src = inputs.json-streams;
+    src = sources.json-streams;
     lispSystem = "json-streams";
     lispCheckDependencies = [
       cl-quickcheck
@@ -1998,7 +1998,7 @@ in
   };
 
   jzon = lispDerivation {
-    src = inputs.jzon;
+    src = sources.jzon;
     lispSystem = "com.inuoe.jzon";
     lispDependencies = [
       closer-mop
@@ -2019,7 +2019,7 @@ in
   kmrcl = lispDerivation {
     lispSystem = "kmrcl";
     version = "4a27407aad9deb607ffb8847630cde3d041ea25a";
-    src = inputs.kmrcl;
+    src = sources.kmrcl;
     lispCheckDependencies = [ rt ];
     # > The symbol "MAKE-THREAD-LOCK" was not found in package EXT.
     meta.broken = self._lisp.name == "abcl";
@@ -2027,7 +2027,7 @@ in
 
   # I can’t be bothered sorting out this dependency jungle
   lack = lispDerivation {
-    src = inputs.lack;
+    src = sources.lack;
     # Kitchen sink dependencies In an ideal world this would be unnecessary:
     # every individual lack system would be listed explicitly in Nix, with its
     # dependencies. I just can’t be bothered to do that right now.
@@ -2099,7 +2099,7 @@ in
       trivial-mimes
       cl-base64
     ];
-    src = inputs.lass;
+    src = sources.lass;
     # This is kind of ridiculous, but there’s a file here called asdf.lisp
     # which trips up clisp: ‘(require "asdf")’ loads that file, rather than
     # actual asdf. Who’s at fault here?
@@ -2108,7 +2108,7 @@ in
 
   legion = lispDerivation {
     lispSystem = "legion";
-    src = inputs.legion;
+    src = sources.legion;
     lispDependencies = [
       vom
       # Not listed in the .asd but these are required
@@ -2128,12 +2128,12 @@ in
       alexandria
       anaphora
     ];
-    src = inputs.let-plus;
+    src = sources.let-plus;
   };
 
   lift = lispDerivation {
     lispSystem = "lift";
-    src = inputs.lift;
+    src = sources.lift;
     meta.broken = builtins.elem self._lisp.name [
       # Symbol named "BTCL" not found in the CORE package.
       "clasp"
@@ -2152,7 +2152,7 @@ in
     lispSystem = "lisp-namespace";
     lispDependencies = [ alexandria ];
     lispCheckDependencies = [ fiveam ];
-    src = inputs.lisp-namespace;
+    src = sources.lisp-namespace;
   };
 
   lisp-unit = lispify "lisp-unit" [ ];
@@ -2168,18 +2168,18 @@ in
     lispDependencies = [ kmrcl ];
     lispCheckDependencies = [ rt ];
     lispSystem = "lml2";
-    src = inputs.lml2;
+    src = sources.lml2;
   };
 
   local-time = lispDerivation {
     lispSystem = "local-time";
-    src = inputs.local-time;
+    src = sources.local-time;
     lispCheckDependencies = [ fiasco ];
   };
 
   log4cl = lispDerivation {
     lispSystem = "log4cl";
-    src = inputs.log4cl;
+    src = sources.log4cl;
     lispDependencies = [ bordeaux-threads ];
     lispCheckDependencies = [ stefil ];
   };
@@ -2200,7 +2200,7 @@ in
       pythonic-string-reader
       with-output-to-stream
     ];
-    src = inputs.log4cl-extras;
+    src = sources.log4cl-extras;
   };
 
   # Technically this package also contains a benchmark system with different
@@ -2209,7 +2209,7 @@ in
     let
       # Please don’t use this anywhere else
       bordeaux-threads-v1 = bordeaux-threads.overrideAttrs (_: {
-        src = inputs.bordeaux-threads-v1;
+        src = sources.bordeaux-threads-v1;
       });
     in
     lispify "lparallel" [
@@ -2222,7 +2222,7 @@ in
 
   lquery = lispDerivation {
     lispSystem = "lquery";
-    src = inputs.lquery;
+    src = sources.lquery;
     lispCheckDependencies = [ fiveam ];
     lispDependencies = [
       array-utils
@@ -2239,20 +2239,20 @@ in
   marshal = lispDerivation {
     lispSystem = "marshal";
     lispCheckDependencies = [ xlunit ];
-    src = inputs.marshal;
+    src = sources.marshal;
   };
 
   md5 = lispify "md5" [ flexi-streams ];
 
   metabang-bind = lispDerivation {
     lispSystem = "metabang-bind";
-    src = inputs.metabang-bind;
+    src = sources.metabang-bind;
     lispCheckDependencies = [ lift ];
   };
 
   inherit
     (lispMultiDerivation {
-      src = inputs.metacopy;
+      src = sources.metacopy;
       systems = {
         metacopy = {
           lispDependencies = [ moptilities ];
@@ -2273,7 +2273,7 @@ in
 
   inherit
     (lispMultiDerivation {
-      src = inputs.metatilities;
+      src = sources.metatilities;
       systems = {
         metatilities = {
           lispDependencies = [
@@ -2300,7 +2300,7 @@ in
 
   metatilities-base = lispDerivation {
     lispSystem = "metatilities-base";
-    src = inputs.metatilities-base;
+    src = sources.metatilities-base;
     lispCheckDependencies = [ lift ];
   };
 
@@ -2314,7 +2314,7 @@ in
         ];
       in
       lispMultiDerivation {
-        src = inputs.mgl-pax;
+        src = sources.mgl-pax;
         systems = {
           dref = {
             lispDependencies = [
@@ -2371,7 +2371,7 @@ in
     lispSystem = "moptilities";
     lispDependencies = [ closer-mop ];
     lispCheckDependencies = [ lift ];
-    src = inputs.moptilities;
+    src = sources.moptilities;
   };
 
   mt19937 = lispify "mt19937" [ ];
@@ -2386,19 +2386,19 @@ in
       cl-utilities
     ];
     lispCheckDependencies = [ prove ];
-    src = inputs.myway;
+    src = sources.myway;
   };
 
   named-readtables = lispDerivation {
     lispSystem = "named-readtables";
-    src = inputs.named-readtables;
+    src = sources.named-readtables;
     lispDependencies = [ mgl-pax-bootstrap ];
     lispCheckDependencies = [ try ];
   };
 
   nclasses = lispDerivation {
     lispDependencies = [ moptilities ];
-    src = inputs.nclasses;
+    src = sources.nclasses;
     lispCheckDependencies = [ lisp-unit2 ];
     lispSystem = "nclasses";
     # Requires a new version of ASDF that I’m not sure how to load before
@@ -2409,7 +2409,7 @@ in
 
   nfiles = lispDerivation {
     lispSystem = "nfiles";
-    src = inputs.nfiles;
+    src = sources.nfiles;
     lispDependencies = [
       alexandria
       nclasses
@@ -2424,7 +2424,7 @@ in
 
   ningle = lispDerivation {
     lispSystem = "ningle";
-    src = inputs.ningle;
+    src = sources.ningle;
     lispDependencies = [
       myway
       lack
@@ -2438,7 +2438,7 @@ in
 
   nst = lispDerivation {
     lispSystem = "nst";
-    src = inputs.nst;
+    src = sources.nst;
     lispDependencies = [
       org-sampler
     ]
@@ -2453,7 +2453,7 @@ in
 
   inherit
     (lispMultiDerivation {
-      src = inputs.optima;
+      src = sources.optima;
       systems = {
         optima = {
           lispCheckDependencies = [
@@ -2483,7 +2483,7 @@ in
 
   osicat = lispDerivation {
     lispSystem = "osicat";
-    src = inputs.osicat;
+    src = sources.osicat;
     postCheck = ''
       rm -rf tests
     '';
@@ -2511,7 +2511,7 @@ in
   parenscript = lispDerivation {
     lispSystem = "parenscript";
     version = "2.7.1";
-    src = inputs.parenscript;
+    src = sources.parenscript;
     lispDependencies = [
       anaphora
       cl-ppcre
@@ -2525,7 +2525,7 @@ in
 
   parse-declarations = lispDerivation {
     lispSystem = "parse-declarations-1.0";
-    src = inputs.parse-declarations;
+    src = sources.parse-declarations;
   };
 
   parse-js = lispify "parse-js" [ ];
@@ -2534,7 +2534,7 @@ in
 
   inherit
     (lispMultiDerivation {
-      src = inputs.parser-combinators;
+      src = sources.parser-combinators;
       systems = {
         parser-combinators = {
           lispDependencies = [
@@ -2562,7 +2562,7 @@ in
     lispSystem = "path-parse";
     lispCheckDependencies = [ fiveam ];
     lispDependencies = [ split-sequence ];
-    src = inputs.path-parse;
+    src = sources.path-parse;
   };
 
   plump = lispify "plump" [
@@ -2577,7 +2577,7 @@ in
       babel
     ];
     lispCheckDependencies = [ prove ];
-    src = inputs.proc-parse;
+    src = sources.proc-parse;
   };
 
   prove = lispDerivation {
@@ -2586,7 +2586,7 @@ in
       "prove"
       "cl-test-more"
     ];
-    src = inputs.prove;
+    src = sources.prove;
     lispDependencies = [
       alexandria
       cl-ansi-text
@@ -2601,18 +2601,18 @@ in
 
   ptester = lispDerivation rec {
     lispSystem = "ptester";
-    src = inputs.ptester;
+    src = sources.ptester;
   };
 
   punycode = lispDerivation {
     lispSystem = "punycode";
-    src = inputs.punycode;
+    src = sources.punycode;
     lispCheckDependencies = [ parachute ];
   };
 
   puri = lispDerivation {
     lispSystem = "puri";
-    src = inputs.puri;
+    src = sources.puri;
     lispCheckDependencies = [ ptester ];
   };
 
@@ -2633,7 +2633,7 @@ in
       split-sequence
     ];
     lispCheckDependencies = [ prove ];
-    src = inputs.quri;
+    src = sources.quri;
     # On ABCL this hard-codes a build path which isn’t available once it’s
     # moved to the store.  The dependent pacage will throw:
     #
@@ -2643,7 +2643,7 @@ in
 
   reblocks = lispDerivation {
     lispSystem = "reblocks";
-    src = inputs.reblocks;
+    src = sources.reblocks;
     lispCheckDependencies = [
       cl-mock
       self."hamcrest/rove"
@@ -2686,12 +2686,12 @@ in
       reblocks
     ];
     lispCheckDependencies = [ rove ];
-    src = inputs.reblocks-parenscript;
+    src = sources.reblocks-parenscript;
   };
 
   reblocks-ui = lispDerivation {
     lispSystem = "reblocks-ui";
-    src = inputs.reblocks-ui;
+    src = sources.reblocks-ui;
     lispDependencies = [
       self."40ants-doc"
       log4cl
@@ -2702,7 +2702,7 @@ in
 
   reblocks-websocket = lispDerivation {
     lispSystem = "reblocks-websocket";
-    src = inputs.reblocks-websocket;
+    src = sources.reblocks-websocket;
     lispDependencies = [
       alexandria
       bordeaux-threads
@@ -2720,7 +2720,7 @@ in
 
   routes = lispDerivation {
     lispSystem = "routes";
-    src = inputs.routes;
+    src = sources.routes;
     lispDependencies = [
       puri
       iterate
@@ -2739,7 +2739,7 @@ in
 
   rt = lispDerivation rec {
     lispSystem = "rt";
-    src = inputs.rt;
+    src = sources.rt;
   };
 
   # rutils and rutilsx have the same dependencies etc, it’s not worth the hassle
@@ -2749,7 +2749,7 @@ in
       "rutils"
       "rutilsx"
     ];
-    src = inputs.rutils;
+    src = sources.rutils;
     lispDependencies = [
       named-readtables
       closer-mop
@@ -2767,7 +2767,7 @@ in
 
   salza2 = lispDerivation {
     lispSystem = "salza2";
-    src = inputs.salza2;
+    src = sources.salza2;
     lispDependencies = [ trivial-gray-streams ];
     lispCheckDependencies = [
       chipz
@@ -2777,7 +2777,7 @@ in
   };
 
   serapeum = lispDerivation {
-    src = inputs.serapeum;
+    src = sources.serapeum;
     lispSystem = "serapeum";
     lispDependencies = [
       alexandria
@@ -2822,7 +2822,7 @@ in
   sha1 = lispify "sha1" [ ];
 
   shasht = lispDerivation {
-    src = inputs.shasht;
+    src = sources.shasht;
     lispSystem = "shasht";
     lispDependencies = [
       trivial-do
@@ -2848,20 +2848,20 @@ in
       export LD_LIBRARY_PATH=''${LD_LIBRARY_PATH+$LD_LIBRARY_PATH:}${osicat}/lib
     '';
     buildInputs = [ osicat ];
-    src = inputs.should-test;
+    src = sources.should-test;
   };
 
   simple-date-time = lispify "simple-date-time" [ cl-ppcre ];
 
   slynk = lispDerivation {
     lispSystem = "slynk";
-    src = inputs.sly;
+    src = sources.sly;
     lispAsdPath = [ "slynk" ];
   };
 
   smart-buffer = lispDerivation {
     lispSystem = "smart-buffer";
-    src = inputs.smart-buffer;
+    src = sources.smart-buffer;
     lispCheckDependencies = [
       babel
       prove
@@ -2874,7 +2874,7 @@ in
 
   inherit
     (lispMultiDerivation {
-      src = inputs.spinneret;
+      src = sources.spinneret;
       lispCheckDependencies = [
         fiveam
         parenscript
@@ -2909,13 +2909,13 @@ in
   split-sequence = lispDerivation {
     lispSystem = "split-sequence";
     lispCheckDependencies = [ fiveam ];
-    src = inputs.split-sequence;
+    src = sources.split-sequence;
   };
 
   # N.B.: Soon won’t depend on cffi-grovel
   static-vectors = lispDerivation {
     lispSystem = "static-vectors";
-    src = inputs.static-vectors;
+    src = sources.static-vectors;
     lispDependencies = [
       alexandria
       cffi
@@ -2936,7 +2936,7 @@ in
 
   str = lispDerivation {
     lispSystem = "str";
-    src = inputs.str;
+    src = sources.str;
     lispDependencies = [
       cl-change-case
       cl-ppcre
@@ -2950,12 +2950,12 @@ in
   swank = lispDerivation {
     lispSystem = "swank";
     # The Swank Lisp system is bundled with SLIME
-    src = inputs.slime;
+    src = sources.slime;
     patches = ./patches/slime-fix-swank-loader-fasl-cache-pwd.diff;
   };
 
   symbol-munger = lispDerivation {
-    src = inputs.symbol-munger;
+    src = sources.symbol-munger;
     lispSystem = "symbol-munger";
     lispDependencies = [
       alexandria
@@ -2968,7 +2968,7 @@ in
 
   inherit
     (lispMultiDerivation {
-      src = inputs.trivia;
+      src = sources.trivia;
 
       systems = {
         trivia = {
@@ -3042,17 +3042,17 @@ in
 
   trivial-cltl2 = lispDerivation {
     lispSystem = "trivial-cltl2";
-    src = inputs.trivial-cltl2;
+    src = sources.trivial-cltl2;
   };
 
   trivial-custom-debugger = lispDerivation {
-    src = inputs.trivial-custom-debugger;
+    src = sources.trivial-custom-debugger;
     lispSystem = "trivial-custom-debugger";
     lispCheckDependencies = [ parachute ];
   };
 
   trivial-extract = lispDerivation {
-    src = inputs.trivial-extract;
+    src = sources.trivial-extract;
     lispSystem = "trivial-extract";
     lispDependencies = [
       archive
@@ -3066,12 +3066,12 @@ in
   };
 
   trivial-do = lispDerivation {
-    src = inputs.trivial-do;
+    src = sources.trivial-do;
     lispSystem = "trivial-do";
   };
 
   trivial-features = lispDerivation {
-    src = inputs.trivial-features;
+    src = sources.trivial-features;
     lispSystem = "trivial-features";
     lispCheckDependencies = [
       rt
@@ -3082,13 +3082,13 @@ in
   };
 
   trivial-file-size = lispDerivation {
-    src = inputs.trivial-file-size;
+    src = sources.trivial-file-size;
     lispCheckDependencies = [ fiveam ];
     lispSystem = "trivial-file-size";
   };
 
   trivial-garbage = lispDerivation {
-    src = inputs.trivial-garbage;
+    src = sources.trivial-garbage;
     lispSystem = "trivial-garbage";
     lispCheckDependencies = [ rt ];
   };
@@ -3109,13 +3109,13 @@ in
 
   trivial-shell = lispDerivation {
     lispSystem = "trivial-shell";
-    src = inputs.trivial-shell;
+    src = sources.trivial-shell;
     lispCheckDependencies = [ lift ];
   };
 
   trivial-sockets = lispDerivation {
     lispSystem = "trivial-sockets";
-    src = inputs.trivial-sockets;
+    src = sources.trivial-sockets;
     # Supported lisps: sbcl cmu clisp acl openmcl lispworks abcl mcl
     meta.broken = self._lisp.name == "ecl";
   };
@@ -3123,7 +3123,7 @@ in
   trivial-timeout = lispDerivation {
     lispSystem = "trivial-timeout";
     lispCheckDependencies = [ lift ];
-    src = inputs.trivial-timeout;
+    src = sources.trivial-timeout;
   };
 
   trivial-types = lispify "trivial-types" [ ];
@@ -3143,7 +3143,7 @@ in
 
   type-i = lispDerivation {
     lispSystem = "type-i";
-    src = inputs.type-i;
+    src = sources.type-i;
     lispDependencies = [
       alexandria
       introspect-environment
@@ -3160,7 +3160,7 @@ in
       documentation-utils
     ];
     lispSystem = "type-templates";
-    src = inputs.type-templates;
+    src = sources.type-templates;
   };
 
   typo = lispDerivation {
@@ -3173,7 +3173,7 @@ in
       trivial-arguments
       trivial-garbage
     ];
-    src = inputs.typo;
+    src = sources.typo;
     lispAsdPath = [ "code" ];
     preCheck = ''
       export CL_SOURCE_REGISTRY="$PWD/code/test-suite:$CL_SOURCE_REGISTRY"
@@ -3190,7 +3190,7 @@ in
 
   inherit
     (lispMultiDerivation {
-      src = inputs.usocket;
+      src = sources.usocket;
       systems = {
         usocket = {
           lispDependencies = [ split-sequence ];
@@ -3236,7 +3236,7 @@ in
 
   which = lispDerivation {
     lispSystem = "which";
-    src = inputs.which;
+    src = sources.which;
     lispCheckDependencies = [ fiveam ];
     lispDependencies = [
       path-parse
@@ -3247,7 +3247,7 @@ in
   wild-package-inferred-system = lispDerivation {
     lispCheckDependencies = [ fiveam ];
     lispSystem = "wild-package-inferred-system";
-    src = inputs.wild-package-inferred-system;
+    src = sources.wild-package-inferred-system;
     # Clisp packages ASDF v3.2, WPI requires ≥3.3, this is the easiest way to
     # remedy that. Of course you can byo-ASDF, at which point you can just
     # .overrideAttrs this flag back to false. Same for ECL.
@@ -3260,13 +3260,13 @@ in
   with-output-to-stream = lispDerivation {
     lispSystem = "with-output-to-stream";
     version = "1.0";
-    src = inputs.with-output-to-stream;
+    src = sources.with-output-to-stream;
   };
 
   wu-decimal = lispify "wu-decimal" [ ];
 
   xml-emitter = lispDerivation {
-    src = inputs.xml-emitter;
+    src = sources.xml-emitter;
     lispSystem = "xml-emitter";
     lispDependencies = [ cl-utilities ];
     lispCheckDependencies = [ self."1am" ];
@@ -3275,11 +3275,11 @@ in
   xlunit = lispDerivation rec {
     lispSystem = "xlunit";
     version = "3805d34b1d8dc77f7e0ee527a2490194292dd0fc";
-    src = inputs.xlunit;
+    src = sources.xlunit;
   };
 
   xsubseq = lispDerivation {
-    src = inputs.xsubseq;
+    src = sources.xsubseq;
     lispSystem = "xsubseq";
     lispCheckDependencies = [ prove ];
   };
@@ -3289,7 +3289,7 @@ in
   # name is.
   yacc = lispDerivation {
     lispSystem = "yacc";
-    src = inputs.yacc;
+    src = sources.yacc;
   };
 
   yason = lispify "yason" [

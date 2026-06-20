@@ -47,7 +47,7 @@ let
     lib.makeScope newScope scopeInit;
 in
 
-{ inputs, pkgs }:
+{ sources, pkgs }:
 let
   inherit (pkgs) lib;
 in
@@ -58,7 +58,7 @@ rec {
       scope = pkgs.callPackage _mkLispScope { inherit lisp; };
       # There’s a difference between import and pkgs.callPackage, and I’m not
       # 100% on what exactly it is.  Something about bootstrap packages?  TBD.
-      packages = _lispRegistry { inherit pkgs inputs lib; };
+      packages = _lispRegistry { inherit pkgs sources lib; };
       scope' = scope.overrideScope packages;
     in
     lib.recurseIntoAttrs scope';
