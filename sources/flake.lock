@@ -1897,10 +1897,11 @@
     "form-fiddle": {
       "flake": false,
       "locked": {
-        "lastModified": 1688403692,
-        "narHash": "sha256-b/GZItaSyOlnamYzKLJGUCYFmxQCshXyS1EQ1RFGgm4=",
+        "lastModified": 1755786832,
+        "narHash": "sha256-KC32rltpGwKJsMnCDWjr2Je9woVckq0ztMxOYrkrRwo=",
         "ref": "refs/heads/master",
-        "rev": "3bd0dfdae8f83918fce6cb4a05826bd325da401d",
+        "rev": "a4481ccd10a01bcc89bcc66c2e7c9b260332a82b",
+        "revCount": 24,
         "type": "git",
         "url": "https://codeberg.org/shinmera/form-fiddle.git"
       },
