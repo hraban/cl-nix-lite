@@ -1,6 +1,6 @@
-# Export an overlay
+# nixpkgs overlay
 final: prev:
 import ./lisp-packages-lite.nix {
-  inputs = import ./sources { inherit (prev) callPackage; };
+  sources = import ./sources { inherit (prev) callPackage; };
   pkgs = prev;
 }
