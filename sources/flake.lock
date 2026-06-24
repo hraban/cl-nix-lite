@@ -911,11 +911,11 @@
     "cl-ppcre": {
       "flake": false,
       "locked": {
-        "lastModified": 1714179971,
-        "narHash": "sha256-SDOwNJ4V9HOnq0FSk9zZiOaIumg1iV0OQ8E+ng6khys=",
+        "lastModified": 1749240799,
+        "narHash": "sha256-tk+BJyCeLOmrayCMGfo9EgdxJYYakdFAd/MGlK+A+jg=",
         "owner": "edicl",
         "repo": "cl-ppcre",
-        "rev": "80fb19d104647a2c4efd5f66f65811948bf8156b",
+        "rev": "a2ea581c23fdc184168423adbd4b4c1f48d42743",
         "type": "github"
       },
       "original": {
