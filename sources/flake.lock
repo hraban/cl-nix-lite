@@ -1438,11 +1438,11 @@
     "dexador": {
       "flake": false,
       "locked": {
-        "lastModified": 1727247785,
-        "narHash": "sha256-uVBKBRX8Mju9mk+HnReB7kyOM4Gwr3c828WYINAsyac=",
+        "lastModified": 1775472932,
+        "narHash": "sha256-59Oq6VwW+c4AcAU2ZjeA5UzbHxYC2UdqFtL/ngTRm+M=",
         "owner": "fukamachi",
         "repo": "dexador",
-        "rev": "d7ac217819e9156abe10cd28ba7a2d548be03cad",
+        "rev": "f068b40bfed2e67b09e06603ef9cbe07d2cdef0d",
         "type": "github"
       },
       "original": {
