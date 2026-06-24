@@ -316,11 +316,11 @@
     "atomics": {
       "flake": false,
       "locked": {
-        "lastModified": 1703877472,
-        "narHash": "sha256-aUikKTR3cRAbSmnbC6cLhHv5jMfhaiKh7Qqo7fZzBqo=",
+        "lastModified": 1755077199,
+        "narHash": "sha256-2KSv3jRuKKbM8huPZe5j5Aa8Zydb+eqodJ4nqZRnxaQ=",
         "owner": "shinmera",
         "repo": "atomics",
-        "rev": "b7477024894e322bff9c85e6d81e5e8d1d4eae59",
+        "rev": "bf0e2619ebead47a2d7989a468f90ecc410883bc",
         "type": "github"
       },
       "original": {
