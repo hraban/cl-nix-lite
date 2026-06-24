@@ -2,5 +2,10 @@ version: 2
 updates:
   - package-ecosystem: "nix"
     directory: "/sources"
+    # Every time a PR merges, all other pending PRs need a rebase, so a weekly
+    # blast of PRs ends up wasting more resources than just drip feeding a
+    # single PR at a time.  It’s all merged automatically anyway so I’m fine
+    # with it either way.
+    open-pull-requests-limit: 1
     schedule:
-      interval: "weekly"
+      interval: "daily"
