@@ -2912,11 +2912,11 @@
     "osicat": {
       "flake": false,
       "locked": {
-        "lastModified": 1696318379,
-        "narHash": "sha256-Quzifk/Xih83oR/tflyvLoTaOPEgYGCQiuXuDKdrAYM=",
+        "lastModified": 1759864857,
+        "narHash": "sha256-STCMqybWFxS/z4Fap3j3NDQQJVLKkBX6rYhmCG4sLL4=",
         "owner": "osicat",
         "repo": "osicat",
-        "rev": "982327905b8980ff3173344ca87282e046565732",
+        "rev": "68732bd7ac69744303ac805e1bfbbbc02e49c0a3",
         "type": "github"
       },
       "original": {
