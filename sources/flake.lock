@@ -3721,11 +3721,11 @@
     "slime": {
       "flake": false,
       "locked": {
-        "lastModified": 1727524266,
-        "narHash": "sha256-4hcR+cFPScdHxJc5rlDFSZQalu1uQahc7eUc3isXMxM=",
+        "lastModified": 1781305787,
+        "narHash": "sha256-1g+6fvx9UBt88HjK3Z1n7o1uH8B9385jPcC9f1kffjE=",
         "owner": "slime",
         "repo": "slime",
-        "rev": "8b5bbccf178717a63c053f6c74c8f1288dce9b8b",
+        "rev": "b38be925a128dc3d6524121692988cb900fbcbf8",
         "type": "github"
       },
       "original": {
