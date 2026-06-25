@@ -4271,11 +4271,11 @@
     "trivial-with-current-source-form": {
       "flake": false,
       "locked": {
-        "lastModified": 1685966810,
-        "narHash": "sha256-YCS+ehlB4+M+yWQlU6KMwqKuozkSwGEuoOixSoaopqA=",
+        "lastModified": 1762911714,
+        "narHash": "sha256-fObonQsjD1YeJNlqHESnE7B2WDShYmvyTcb0y9arL3g=",
         "owner": "scymtym",
         "repo": "trivial-with-current-source-form",
-        "rev": "dc3fff9d4e04f1613227c25a290c8f34e9f8a311",
+        "rev": "d00f7abcbb127969884ea639a334827c3b5a0ad2",
         "type": "github"
       },
       "original": {
