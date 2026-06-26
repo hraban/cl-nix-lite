@@ -2373,10 +2373,11 @@
     "lass": {
       "flake": false,
       "locked": {
-        "lastModified": 1718792398,
-        "narHash": "sha256-H6BMEbtKiHZVQV+ZTyO541QCZyrNuc96Y67EYc4eyqw=",
+        "lastModified": 1779038014,
+        "narHash": "sha256-mBDPQ66Ye4m/qbKnIefNXfBluTxFhdVAbx8eTWp2RyE=",
         "ref": "refs/heads/master",
-        "rev": "946684e8480706970713b896ff6380b6218c42b6",
+        "rev": "f3d8831959f63f79e0c7534b86537b100c35e4fd",
+        "revCount": 108,
         "type": "git",
         "url": "https://codeberg.org/shinmera/LASS.git"
       },
