@@ -2324,11 +2324,11 @@
     "jzon": {
       "flake": false,
       "locked": {
-        "lastModified": 1711494326,
-        "narHash": "sha256-b3zsB927vRgTMsDZJq4KyX4Fyb+450TInyqj6am//Xw=",
+        "lastModified": 1772549057,
+        "narHash": "sha256-+ctVGWd+/Cel0neTI3FKD0lVCJomtXYGQvscrJH79Wk=",
         "owner": "Zulu-Inuoe",
         "repo": "jzon",
-        "rev": "a4dc6a009f335c5e72487dda729283636811e321",
+        "rev": "18959fbef1af5dde022f45f91c24f94e99e6abcb",
         "type": "github"
       },
       "original": {
