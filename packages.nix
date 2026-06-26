@@ -2107,7 +2107,7 @@ in
   lass = lispDerivation {
     lispSystems = [
       "lass"
-      "binary-lass"
+      "lass-binary"
     ];
     lispDependencies = [
       trivial-indent
