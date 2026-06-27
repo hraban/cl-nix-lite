@@ -194,7 +194,7 @@ rec {
       #
       # Either way, the solution is the same: create an entirely new derivation
       # that unions the two dependencies.
-      allDepsIncMyself = nestedUnion (reduce (x: x.ancestry.merge)) 1 (map depsFor dependencies);
+      allDepsIncMyself = nestedUnion (reduce (x: x.passthru.ancestry.merge)) 1 (map depsFor dependencies);
       depsMap = removeAttrs allDepsIncMyself [ (key me) ];
     in
     # The resulting ancestry object. This must be assigned to the output
