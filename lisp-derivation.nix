@@ -42,9 +42,7 @@ let
           map lispAsdfOp (lib.cartesianProduct { inherit operation system; })
         )}
       '';
-in
 
-rec {
   # Build a lisp derivation from this source, for the specific given
   # systems. When two separate packages include the same src, but both for a
   # different system, it resolves to the same derivation.
@@ -570,4 +568,12 @@ rec {
       }
       // (builtins.removeAttrs args [ "dependencies" ])
     );
+in
+{
+  inherit
+    lispDerivation
+    lispMultiDerivation
+    lispWithSystems
+    lispScript
+    ;
 }
