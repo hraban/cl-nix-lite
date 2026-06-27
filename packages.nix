@@ -1,8 +1,4 @@
-{
-  lib,
-  pkgs,
-  sources,
-}:
+{ lib, pkgs }:
 
 self: prev:
 with self;
@@ -14,6 +10,7 @@ let
       lispSystem = name; # convention
       src = sources.${name};
     };
+  sources = self._sources;
 in
 {
   "1am" = lispDerivation {
