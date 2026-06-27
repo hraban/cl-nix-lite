@@ -38,27 +38,28 @@
 
     # Lisp packages
 
-    _1am = {
+    # Awkward: flake input names must start with a letter.
+    x_1am = {
       url = "github:lmj/1am";
       flake = false;
     };
-    _3bmd = {
+    x_3bmd = {
       url = "github:3b/3bmd";
       flake = false;
     };
-    _3d-math = {
+    x_3d-math = {
       url = "git+https://codeberg.org/shinmera/3d-math.git";
       flake = false;
     };
-    _3d-vectors = {
+    x_3d-vectors = {
       url = "git+https://codeberg.org/shinmera/3d-vectors.git";
       flake = false;
     };
-    _40ants-asdf-system = {
+    x_40ants-asdf-system = {
       url = "github:40ants/40ants-asdf-system";
       flake = false;
     };
-    _40ants-doc = {
+    x_40ants-doc = {
       url = "github:40ants/doc";
       flake = false;
     };

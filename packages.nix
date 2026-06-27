@@ -18,12 +18,12 @@ in
 {
   "1am" = lispDerivation {
     lispSystem = "1am";
-    src = sources._1am;
+    src = sources.x_1am;
   };
 
   inherit
     (lispMultiDerivation {
-      src = sources._3bmd;
+      src = sources.x_3bmd;
       systems = {
         "3bmd" = {
           lispSystem = "3bmd";
@@ -63,7 +63,7 @@ in
       type-templates
     ];
     lispCheckDependencies = [ parachute ];
-    src = sources._3d-math;
+    src = sources.x_3d-math;
     # For ABCL, if that would fix it: _JAVA_OPTIONS="-Xmx4g";
     env = lib.optionalAttrs (self._lisp.name == "sbcl") { NIX_SBCL_DYNAMIC_SPACE_SIZE = "4gb"; };
     lispSystem = "3d-math";
@@ -81,13 +81,13 @@ in
   "3d-vectors" = lispDerivation {
     lispDependencies = [ documentation-utils ];
     lispCheckDependencies = [ parachute ];
-    src = sources._3d-vectors;
+    src = sources.x_3d-vectors;
     lispSystem = "3d-vectors";
   };
 
   inherit
     (lispMultiDerivation {
-      src = sources._40ants-doc;
+      src = sources.x_40ants-doc;
       systems = {
         "40ants-doc" = {
           lispSystem = "40ants-doc";
@@ -135,7 +135,7 @@ in
 
   "40ants-asdf-system" = lispDerivation {
     lispSystem = "40ants-asdf-system";
-    src = sources._40ants-asdf-system;
+    src = sources.x_40ants-asdf-system;
     # Depends on a modern ASDF. SBCL’s built-in ASDF crashes this. Explicitly
     # listing self. here to avoid grabbing nixpkgs.asdf.
     lispDependencies = [ asdf ];

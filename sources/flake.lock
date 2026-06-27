@@ -1,99 +1,5 @@
 {
   "nodes": {
-    "_1am": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1415043526,
-        "narHash": "sha256-T+y6Bc/i6jF0/Eg6XZOQrHBhlkCkJGHSWTMtGb4lWhc=",
-        "owner": "lmj",
-        "repo": "1am",
-        "rev": "8b1da94eca4613fd8a20bdf63f0e609e379b0ba5",
-        "type": "github"
-      },
-      "original": {
-        "owner": "lmj",
-        "repo": "1am",
-        "type": "github"
-      }
-    },
-    "_3bmd": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1715724069,
-        "narHash": "sha256-+6eAt+zhzAp3dbCQ7t5683ivhKXVqXHMCGVYlLGx15g=",
-        "owner": "3b",
-        "repo": "3bmd",
-        "rev": "0a54e65e13f2eb174d47d3d2d21ae46ff29c547d",
-        "type": "github"
-      },
-      "original": {
-        "owner": "3b",
-        "repo": "3bmd",
-        "type": "github"
-      }
-    },
-    "_3d-math": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1725367523,
-        "narHash": "sha256-bfcyIJyT6RzSAYuUwhqltVDXLXfpZXz/9deb43/8tgc=",
-        "ref": "refs/heads/main",
-        "rev": "dca49b0f42cb35814b187ecee567b697239475cd",
-        "type": "git",
-        "url": "https://codeberg.org/shinmera/3d-math.git"
-      },
-      "original": {
-        "type": "git",
-        "url": "https://codeberg.org/shinmera/3d-math.git"
-      }
-    },
-    "_3d-vectors": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1693388789,
-        "narHash": "sha256-SMylb6XQMk2WVm4UZVONdMyQOm1xvKVfj8j1vcDicXg=",
-        "ref": "refs/heads/master",
-        "rev": "e5ab05d14ebd608cd4e6b7bb8ca45e81ebc07f1d",
-        "type": "git",
-        "url": "https://codeberg.org/shinmera/3d-vectors.git"
-      },
-      "original": {
-        "type": "git",
-        "url": "https://codeberg.org/shinmera/3d-vectors.git"
-      }
-    },
-    "_40ants-asdf-system": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1711116506,
-        "narHash": "sha256-fCItGc8HOaHNxGOY8E1QNBwHzFGveB7udkkBDWo5JXI=",
-        "owner": "40ants",
-        "repo": "40ants-asdf-system",
-        "rev": "91ed8a4430552f58563d84182b97b25e9e1e8dbe",
-        "type": "github"
-      },
-      "original": {
-        "owner": "40ants",
-        "repo": "40ants-asdf-system",
-        "type": "github"
-      }
-    },
-    "_40ants-doc": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1724963675,
-        "narHash": "sha256-QoHAH88vPFo1kBmDEWg8f3E/QWG7f1nWry2815j7bO4=",
-        "owner": "40ants",
-        "repo": "doc",
-        "rev": "e59784d5581c18c8cc8c5c7021d1014eb0714b45",
-        "type": "github"
-      },
-      "original": {
-        "owner": "40ants",
-        "repo": "doc",
-        "type": "github"
-      }
-    },
     "access": {
       "flake": false,
       "locked": {
@@ -3254,12 +3160,6 @@
     },
     "root": {
       "inputs": {
-        "_1am": "_1am",
-        "_3bmd": "_3bmd",
-        "_3d-math": "_3d-math",
-        "_3d-vectors": "_3d-vectors",
-        "_40ants-asdf-system": "_40ants-asdf-system",
-        "_40ants-doc": "_40ants-doc",
         "access": "access",
         "acclimation": "acclimation",
         "alexandria": "alexandria",
@@ -3521,6 +3421,12 @@
         "wild-package-inferred-system": "wild-package-inferred-system",
         "with-output-to-stream": "with-output-to-stream",
         "wu-decimal": "wu-decimal",
+        "x_1am": "x_1am",
+        "x_3bmd": "x_3bmd",
+        "x_3d-math": "x_3d-math",
+        "x_3d-vectors": "x_3d-vectors",
+        "x_40ants-asdf-system": "x_40ants-asdf-system",
+        "x_40ants-doc": "x_40ants-doc",
         "xlunit": "xlunit",
         "xml-emitter": "xml-emitter",
         "xsubseq": "xsubseq",
@@ -4502,6 +4408,100 @@
       "original": {
         "owner": "Wukix",
         "repo": "wu-decimal",
+        "type": "github"
+      }
+    },
+    "x_1am": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1415043526,
+        "narHash": "sha256-T+y6Bc/i6jF0/Eg6XZOQrHBhlkCkJGHSWTMtGb4lWhc=",
+        "owner": "lmj",
+        "repo": "1am",
+        "rev": "8b1da94eca4613fd8a20bdf63f0e609e379b0ba5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lmj",
+        "repo": "1am",
+        "type": "github"
+      }
+    },
+    "x_3bmd": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1715724069,
+        "narHash": "sha256-+6eAt+zhzAp3dbCQ7t5683ivhKXVqXHMCGVYlLGx15g=",
+        "owner": "3b",
+        "repo": "3bmd",
+        "rev": "0a54e65e13f2eb174d47d3d2d21ae46ff29c547d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "3b",
+        "repo": "3bmd",
+        "type": "github"
+      }
+    },
+    "x_3d-math": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1725367523,
+        "narHash": "sha256-bfcyIJyT6RzSAYuUwhqltVDXLXfpZXz/9deb43/8tgc=",
+        "ref": "refs/heads/main",
+        "rev": "dca49b0f42cb35814b187ecee567b697239475cd",
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/3d-math.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/3d-math.git"
+      }
+    },
+    "x_3d-vectors": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1693388789,
+        "narHash": "sha256-SMylb6XQMk2WVm4UZVONdMyQOm1xvKVfj8j1vcDicXg=",
+        "ref": "refs/heads/master",
+        "rev": "e5ab05d14ebd608cd4e6b7bb8ca45e81ebc07f1d",
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/3d-vectors.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/3d-vectors.git"
+      }
+    },
+    "x_40ants-asdf-system": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1711116506,
+        "narHash": "sha256-fCItGc8HOaHNxGOY8E1QNBwHzFGveB7udkkBDWo5JXI=",
+        "owner": "40ants",
+        "repo": "40ants-asdf-system",
+        "rev": "91ed8a4430552f58563d84182b97b25e9e1e8dbe",
+        "type": "github"
+      },
+      "original": {
+        "owner": "40ants",
+        "repo": "40ants-asdf-system",
+        "type": "github"
+      }
+    },
+    "x_40ants-doc": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1724963675,
+        "narHash": "sha256-QoHAH88vPFo1kBmDEWg8f3E/QWG7f1nWry2815j7bO4=",
+        "owner": "40ants",
+        "repo": "doc",
+        "rev": "e59784d5581c18c8cc8c5c7021d1014eb0714b45",
+        "type": "github"
+      },
+      "original": {
+        "owner": "40ants",
+        "repo": "doc",
         "type": "github"
       }
     },
