@@ -29,9 +29,6 @@ rec {
     lib.foldr (a: b: if b == null then a else (op a b)) null seq
   );
 
-  # Create an empty string with the same context as the given string
-  emptyCopyWithContext = str: lib.addContextFrom str "";
-
   # Turn a derivation path into a context-less string. I suspect this isn’t in
   # the stdlib because this is a perversion of a low-level feature, not intended
   # for casual access in regular derivations.
