@@ -4164,9 +4164,11 @@
     "trivial-utf-8": {
       "flake": false,
       "locked": {
-        "lastModified": 1693231710,
-        "narHash": "sha256-OmES85S9e4h+iAYF99S1YYf/vMsjZk9jL9Q5wxs9Tl0=",
-        "rev": "718e74506ca02ec1d46c1f424a7881fed6373349",
+        "lastModified": 1782558051,
+        "narHash": "sha256-vjsqAJg2rmc3ejNzLYuM52xF1kJu7A8Uu8iJ/qWYb04=",
+        "ref": "refs/heads/master",
+        "rev": "489153bc932555cea99012df39b8d926f7c9fa4b",
+        "revCount": 37,
         "type": "git",
         "url": "https://gitlab.common-lisp.net/trivial-utf-8/trivial-utf-8"
       },
