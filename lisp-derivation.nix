@@ -110,7 +110,7 @@ rec {
 
       ancestry = utils.ancestryWalker {
         inherit me;
-        key = drv: utils.derivPath drv.origSrc;
+        key = drv: utils.derivPath drv.passthru.origSrc;
         dependencies = lispDependencies ++ (lib.optionals doCheck lispCheckDependencies);
         # (There is probably a neater, more idiomatic way to do this overriding
         # business.)
@@ -122,7 +122,7 @@ rec {
           # evaluated.
           # Not technically necessary but it makes for slightly cleaner API.
           assert utils.isLispDeriv other;
-          assert utils.derivPath _lispOrigSrc == utils.derivPath other.origSrc;
+          assert utils.derivPath _lispOrigSrc == utils.derivPath other.passthru.origSrc;
           let
             # The new arguments that define this merged derivation: which
             # systems do you build, and are you in check mode y/n? The
@@ -132,7 +132,7 @@ rec {
             # know what the final, real collection of lisp system names was
             # that was used for this derivation.
             newLispSystems = utils.normaliseStrings (lispSystems' ++ other.lispSystems);
-            newDoCheck = doCheck || other.args.doCheck or false;
+            newDoCheck = doCheck || other.passthru._selfArgs.doCheck or false;
           in
           # Only build a new one if it improves on both existing derivations.
           if newDoCheck == other.doCheck && newLispSystems == other.lispSystems then
@@ -178,9 +178,11 @@ rec {
                 # invocation of lispDerivation. These args are safe across
                 # deduplication.
                 inherit _lispOrigSystems _lispOrigSrc;
-                lispDependencies = lib.unique (lispDependencies ++ other.args.lispDependencies or [ ]);
+                lispDependencies = lib.unique (
+                  lispDependencies ++ other.passthru._selfArgs.lispDependencies or [ ]
+                );
                 lispCheckDependencies = lib.unique (
-                  lispCheckDependencies ++ other.args.lispCheckDependencies or [ ]
+                  lispCheckDependencies ++ other.passthru._selfArgs.lispCheckDependencies or [ ]
                 );
                 doCheck = newDoCheck;
                 lispSystems = newLispSystems;
@@ -334,11 +336,9 @@ rec {
           passthru =
             (derivArgs.passthru or { })
             // {
-              inherit
-                ancestry
-                # Give others access to the args with which I was built
-                args
-                ;
+              inherit ancestry;
+              # Give others access to the args with which I was built
+              _selfArgs = args;
               # The original, non-deduplicated src we were called with
               origSrc = _lispOrigSrc;
               enableCheck = if doCheck then me else lispDerivation (args // { doCheck = true; });

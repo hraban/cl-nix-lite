@@ -177,7 +177,7 @@ rec {
       # Given a lispDerivation, get all its dependencies in the { src-drv =>
       # lisp-drv } format. The invariant for ancestry._depsMap is that it
       # can’t contain itself, so this is a non-destructive operation.
-      depsFor = drv: drv.ancestry._depsMap // (entryFor drv);
+      depsFor = drv: drv.passthru.ancestry._depsMap // (entryFor drv);
       # Always order dependencies deterministically.  If either of the two is not
       # a lisp deriv, we’re basically in the foo-b situation. This situation only
       # happens when we are in a derivation that has itself as a dependency. It
