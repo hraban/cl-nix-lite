@@ -15,11 +15,6 @@
 { pkgs, lib }:
 
 rec {
-  # The obvious signature for pipe. Who wants ltr? (Clarification: putting the
-  # function pipeline first and the value second allows using rpipe in
-  # point-free context. See other uses in this file.)
-  rpipe = lib.flip lib.pipe;
-
   # Like foldr but without a nul-value. Doesn’t support actual ‘null’ in the
   # list because I don’t know how to make singletons (is that even possible in
   # Nix?) and because I don’t care.
@@ -32,12 +27,7 @@ rec {
   # Turn a derivation path into a context-less string. I suspect this isn’t in
   # the stdlib because this is a perversion of a low-level feature, not intended
   # for casual access in regular derivations.
-  drvStrWithoutContext = rpipe [
-    toString
-    builtins.getContext
-    builtins.attrNames
-    builtins.head
-  ];
+  drvStrWithoutContext = x: builtins.head (builtins.attrNames (builtins.getContext (toString x)));
 
   # optionalKeys [ "a" "b" ] { a = 1; b = 2; c = 3; }
   # => { a = 1; b = 2; }
@@ -58,17 +48,9 @@ rec {
   # through.
   callIfFunc = val: f: if lib.isFunction f then f val else f;
 
-  flatMap =
-    f:
-    rpipe [
-      (map f)
-      lib.flatten
-    ];
+  flatMap = f: xs: lib.flatten (map f xs);
 
-  normaliseStrings = rpipe [
-    lib.unique
-    lib.naturalSort
-  ];
+  normaliseStrings = s: lib.unique (lib.naturalSort s);
 
   # This is a /nested/ union operation on attrsets: if you have e.g. a 2-layer
   # deep set (so a set of sets, so [ { String => { String => T } } ]), you can
@@ -219,12 +201,7 @@ rec {
     # purposes which is a tiny fraction of actual use. But it’s just such a nice
     # feature to have the correct lisp right there in your shell that I’m loath
     # to remove this until it’s absolutely necessary.
-    lib.pipe "sentinel" [
-      lisp
-      builtins.getContext
-      builtins.attrNames
-      (map (d: import d))
-    ];
+    map (d: import d) (builtins.attrNames (builtins.getContext (lisp "sentinel")));
 
   # Normalize the external lisp argument (see API of scope) to an easy-to-use
   # attrset.
