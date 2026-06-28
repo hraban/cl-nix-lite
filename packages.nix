@@ -1,7 +1,7 @@
 { lib, pkgs }:
 
-self: prev:
-with self;
+final: prev:
+with final;
 let
   lispify =
     name: lispDependencies:
@@ -10,7 +10,7 @@ let
       lispSystem = name; # convention
       src = sources.${name};
     };
-  sources = self._sources;
+  sources = final._sources;
 in
 {
   "1am" = lispDerivation {
@@ -30,14 +30,14 @@ in
             split-sequence
           ];
           lispCheckDependencies = [
-            self."3bmd-ext-code-blocks"
+            final."3bmd-ext-code-blocks"
             fiasco
           ];
         };
         "3bmd-ext-code-blocks" = {
           lispSystem = "3bmd-ext-code-blocks";
           lispDependencies = [
-            self."3bmd"
+            final."3bmd"
             alexandria
             colorize
             split-sequence
@@ -45,7 +45,7 @@ in
         };
         "3bmd-ext-tables" = {
           lispSystem = "3bmd-ext-tables";
-          lispDependencies = [ self."3bmd" ];
+          lispDependencies = [ final."3bmd" ];
         };
       };
     })
@@ -62,9 +62,9 @@ in
     lispCheckDependencies = [ parachute ];
     src = sources.x_3d-math;
     # For ABCL, if that would fix it: _JAVA_OPTIONS="-Xmx6g";
-    env = lib.optionalAttrs (self._lisp.name == "sbcl") { NIX_SBCL_DYNAMIC_SPACE_SIZE = "6gb"; };
+    env = lib.optionalAttrs (final._lisp.name == "sbcl") { NIX_SBCL_DYNAMIC_SPACE_SIZE = "6gb"; };
     lispSystem = "3d-math";
-    meta.broken = builtins.elem self._lisp.name [
+    meta.broken = builtins.elem final._lisp.name [
       "abcl"
       # BUG: Unknown packing-type SHORT-FLOAT
       "clasp"
@@ -99,13 +99,13 @@ in
           ];
           lispCheckDependencies = [
             rove
-            self."40ants-doc-full"
+            final."40ants-doc-full"
           ];
         };
         "40ants-doc-full" = {
           lispSystem = "40ants-doc-full";
           lispDependencies = [
-            self."40ants-doc"
+            final."40ants-doc"
             cl-fad
             commondoc-markdown
             dexador
@@ -134,7 +134,7 @@ in
     lispSystem = "40ants-asdf-system";
     src = sources.x_40ants-asdf-system;
     # Depends on a modern ASDF. SBCL’s built-in ASDF crashes this. Explicitly
-    # listing self. here to avoid grabbing nixpkgs.asdf.
+    # listing final. here to avoid grabbing nixpkgs.asdf.
     lispDependencies = [ asdf ];
     lispCheckDependencies = [ rove ];
   };
@@ -211,7 +211,7 @@ in
         };
       };
       # #<PACKAGE CHARSET> has no external symbol with name "UTF-16"
-      meta.broken = self._lisp.name == "clisp";
+      meta.broken = final._lisp.name == "clisp";
     })
     arnesi
     arnesi-cl-ppcre-extras
@@ -244,7 +244,7 @@ in
     src = sources.asdf;
     # Not exactly sure why, but clasp doesn’t seem happy rebuilding asdf
     # from source?
-    meta.broken = self._lisp.name == "clasp";
+    meta.broken = final._lisp.name == "clasp";
   };
 
   asdf-flv = lispDerivation {
@@ -271,7 +271,7 @@ in
     # If you think this is in error, and the implementation does expose
     # the necessary operators, please file an issue at
     #   https://github.com/shinmera/atomics/issues
-    meta.broken = builtins.elem self._lisp.name [
+    meta.broken = builtins.elem final._lisp.name [
       "abcl"
       "clisp"
     ];
@@ -325,7 +325,7 @@ in
     lispSystem = "bordeaux-threads";
     src = sources.bordeaux-threads;
     meta.broken =
-      self._lisp.name == "clisp" || (self._lisp.name == "sbcl" && !self._lisp.deriv.threadSupport);
+      final._lisp.name == "clisp" || (final._lisp.name == "sbcl" && !final._lisp.deriv.threadSupport);
   };
 
   inherit
@@ -415,7 +415,7 @@ in
           # CFFI requires CLISP compiled with dynamic FFI support, which only
           # enabled on Linux. And it’s supposed to work with ABCL but I don’t know
           # how, so I’m marking this broken for now.
-          broken = !(self._lisp.name == "clisp" -> pkgs.stdenv.isLinux) || self._lisp.name == "abcl";
+          broken = !(final._lisp.name == "clisp" -> pkgs.stdenv.isLinux) || final._lisp.name == "abcl";
         };
     })
     cffi
@@ -611,7 +611,7 @@ in
         };
       };
 
-      meta.broken = self._lisp.name == "clasp";
+      meta.broken = final._lisp.name == "clasp";
       propagatedBuildInputs =
         systems: lib.optionals (builtins.elem "cl-async-ssl" systems) [ pkgs.openssl ];
     })
@@ -738,7 +738,7 @@ in
     src = sources.cl-dot;
     propagatedBuildInputs = [ pkgs.graphviz ];
     # https://github.com/michaelw/cl-dot/issues/42
-    meta.broken = self._lisp.name == "clisp";
+    meta.broken = final._lisp.name == "clisp";
   };
 
   cl-fad = lispDerivation {
@@ -762,7 +762,7 @@ in
     quri
   ];
 
-  cl-html-diff = self.callPackage (
+  cl-html-diff = final.callPackage (
     { cl-difflib, lispDerivation }:
     lispDerivation {
       lispSystem = "cl-html-diff";
@@ -899,7 +899,7 @@ in
     lispDependencies = [
       asdf-system-connections
       anaphora
-      self."cl-containers/with-asdf-system-connections"
+      final."cl-containers/with-asdf-system-connections"
       cl-ppcre
       dynamic-classes
       metabang-bind
@@ -910,7 +910,7 @@ in
       trivial-shell
     ];
     # “There is no class named ABSTRACT-CONTAINER.”
-    meta.broken = self._lisp.name == "abcl";
+    meta.broken = final._lisp.name == "abcl";
   };
 
   cl-mimeparse = lispDerivation {
@@ -1018,7 +1018,7 @@ in
       anaphora
     ];
     lispCheckDependencies = [ nst ];
-    meta.broken = builtins.elem self._lisp.name [
+    meta.broken = builtins.elem final._lisp.name [
       # Attempt to define a subclass of built-in-class FUNCTION.
       "abcl"
       # Class #<BUILT-IN-CLASS FUNCTION> is not a valid superclass for #<FUNCALLABLE-STANDARD-CLASS
@@ -1155,7 +1155,7 @@ in
       meta =
         systems:
         lib.optionalAttrs (builtins.elem "cl-variates/with-metacopy" systems) {
-          broken = builtins.elem self._lisp.name [
+          broken = builtins.elem final._lisp.name [
             # The function get-structure is not yet implemented for Armed Bear Common Lisp 1.9.2 on AARCH64.
             "abcl"
             # The function get-structure is not yet implemented for clasp cclasp-boehmprecise-2.7.0-cst on x86_64.
@@ -1298,9 +1298,9 @@ in
     lispSystem = "commondoc-markdown";
     src = sources.commondoc-markdown;
     lispDependencies = [
-      self."3bmd"
-      self."3bmd-ext-code-blocks"
-      self."3bmd-ext-tables"
+      final."3bmd"
+      final."3bmd-ext-code-blocks"
+      final."3bmd-ext-tables"
       common-doc
       common-html
       str
@@ -1348,7 +1348,7 @@ in
       # "dynamic-wind"
     ];
     # The variable =LAYERED-FUNCTION-DEFINER-FOR-ADJOIN-LAYER-USING-CLASS= is unbound.
-    meta.broken = self._lisp.name == "clasp";
+    meta.broken = final._lisp.name == "clasp";
   };
 
   data-lens = lispDerivation {
@@ -1398,7 +1398,7 @@ in
       chunga
       cl-base64
       cl-cookie
-      self."cl+ssl"
+      final."cl+ssl"
       cl-ppcre
       fast-http
       fast-io
@@ -1421,7 +1421,7 @@ in
   dissect = lispDerivation {
     lispSystem = "dissect";
     src = sources.dissect;
-    lispDependencies = lib.optionals (self._lisp.name == "clisp") [ cl-ppcre ];
+    lispDependencies = lib.optionals (final._lisp.name == "clisp") [ cl-ppcre ];
   };
 
   djula = lispDerivation {
@@ -1444,7 +1444,7 @@ in
     ];
     lispCheckDependencies = [ fiveam ];
     # ARGS is not of type LIST.
-    meta.broken = self._lisp.name == "clasp";
+    meta.broken = final._lisp.name == "clasp";
   };
 
   dns-client = lispify "dns-client" [
@@ -1464,10 +1464,10 @@ in
     src = sources.docs-builder;
     lispDependencies = [
       log4cl
-      self."40ants-doc"
+      final."40ants-doc"
     ];
     # Requires a modern version of ASDF
-    meta.broken = self._lisp.name == "ecl";
+    meta.broken = final._lisp.name == "ecl";
   };
 
   documentation-utils = lispDerivation {
@@ -1483,7 +1483,7 @@ in
       chipz
       chunga
       cl-base64
-      self."cl+ssl"
+      final."cl+ssl"
       cl-ppcre
       flexi-streams
       puri
@@ -1514,7 +1514,7 @@ in
     # got merged: https://github.com/NixOS/nixpkgs/pull/276506
     # No idea what’s wrong here, or even who’s wrong: ECL? eager-future2?
     # Update: now also broken on aarch64-darwin, not sure why or since when.
-    meta.broken = self._lisp.name == "ecl" && pkgs.stdenv.isDarwin;
+    meta.broken = final._lisp.name == "ecl" && pkgs.stdenv.isDarwin;
   };
 
   inherit
@@ -1635,7 +1635,7 @@ in
           ];
         };
         fare-quasiquote-optima = {
-          lispDependencies = [ self."trivia.quasiquote" ];
+          lispDependencies = [ final."trivia.quasiquote" ];
         };
         fare-quasiquote-readtable = {
           lispDependencies = [
@@ -1658,7 +1658,7 @@ in
     # "https://gitlab.common-lisp.net/frideau/fare-utils/-/issues/1".  Getting
     # the version here from the derivation is very ugly and I hate it but is
     # there a better way?
-    meta.broken = self._lisp.name == "sbcl" && (lib.getVersion self._lisp.deriv) == "2.4.4";
+    meta.broken = final._lisp.name == "sbcl" && (lib.getVersion final._lisp.deriv) == "2.4.4";
   };
 
   fast-http = lispDerivation {
@@ -1759,7 +1759,7 @@ in
     ];
     src = sources.fset;
     lispSystem = "fset";
-    meta.broken = builtins.elem self._lisp.name [
+    meta.broken = builtins.elem final._lisp.name [
       # The value FSET::IDENTITY-ORDERING-MIXIN-NEXT-SERIAL-NUMBER is not of type LIST.
       "abcl"
       # *** - CAR: IDENTITY-ORDERING-MIXIN-NEXT-SERIAL-NUMBER is not a list
@@ -1788,7 +1788,7 @@ in
 
     meta.broken =
       # Supported lisps: sbcl clozure
-      self._lisp.name != "sbcl" && self._lisp.name != "ccl";
+      final._lisp.name != "sbcl" && final._lisp.name != "ccl";
 
   };
 
@@ -1824,7 +1824,7 @@ in
             rove
           ];
           lispDependencies = [
-            self."40ants-asdf-system"
+            final."40ants-asdf-system"
             alexandria
             iterate
             cl-ppcre
@@ -1858,7 +1858,7 @@ in
     lispCheckDependencies = [ lisp-unit2 ];
     lispSystem = "history-tree";
     # *** - EVAL: undefined function EXT::ADD-PACKAGE-LOCAL-NICKNAME
-    meta.broken = self._lisp.name == "clisp";
+    meta.broken = final._lisp.name == "clisp";
   };
 
   http-body = lispDerivation {
@@ -1920,7 +1920,7 @@ in
       rfc2388
       trivial-backtrace
       # TODO: Per-lisp selection (these are not necessary on lispworks)
-      self."cl+ssl"
+      final."cl+ssl"
       usocket
       bordeaux-threads
     ];
@@ -1962,7 +1962,7 @@ in
     src = sources.in-nomine;
     # Uses :local-nickname in defpackage. Ah, the state of CLISP...
     # https://gitlab.com/gnu-clisp/clisp/-/merge_requests/3
-    meta.broken = self._lisp.name == "clisp";
+    meta.broken = final._lisp.name == "clisp";
   };
 
   inferior-shell = lispDerivation {
@@ -1973,7 +1973,7 @@ in
       fare-quasiquote-extras
       fare-mop
       trivia
-      self."trivia.quasiquote"
+      final."trivia.quasiquote"
     ];
     src = sources.inferior-shell;
     lispCheckDependencies = [ fiveam ];
@@ -1997,13 +1997,13 @@ in
     src = sources.ironclad;
     lispDependencies = [ bordeaux-threads ];
     lispCheckDependencies = [ rt ];
-    env = lib.optionalAttrs (self._lisp.name == "sbcl") { NIX_SBCL_DYNAMIC_SPACE_SIZE = "2gb"; };
+    env = lib.optionalAttrs (final._lisp.name == "sbcl") { NIX_SBCL_DYNAMIC_SPACE_SIZE = "2gb"; };
   };
 
   iterate = lispDerivation {
     lispSystem = "iterate";
     src = sources.iterate;
-    lispCheckDependencies = lib.optionals (self._lisp.name != "sbcl") [ rt ];
+    lispCheckDependencies = lib.optionals (final._lisp.name != "sbcl") [ rt ];
   };
 
   jonathan = lispDerivation {
@@ -2057,7 +2057,7 @@ in
       flexi-streams
       trivial-gray-streams
     ]
-    ++ lib.optionals (self._lisp.name != "ecl") [ float-features ];
+    ++ lib.optionals (final._lisp.name != "ecl") [ float-features ];
     lispAsdPath = [
       "src"
       "test"
@@ -2074,7 +2074,7 @@ in
     src = sources.kmrcl;
     lispCheckDependencies = [ rt ];
     # > The symbol "MAKE-THREAD-LOCK" was not found in package EXT.
-    meta.broken = self._lisp.name == "abcl";
+    meta.broken = final._lisp.name == "abcl";
   };
 
   # I can’t be bothered sorting out this dependency jungle
@@ -2160,7 +2160,7 @@ in
     # This is kind of ridiculous, but there’s a file here called asdf.lisp
     # which trips up clisp: ‘(require "asdf")’ loads that file, rather than
     # actual asdf. Who’s at fault here?
-    meta.broken = self._lisp.name == "clisp";
+    meta.broken = final._lisp.name == "clisp";
   };
 
   legion = lispDerivation {
@@ -2191,7 +2191,7 @@ in
   lift = lispDerivation {
     lispSystem = "lift";
     src = sources.lift;
-    meta.broken = builtins.elem self._lisp.name [
+    meta.broken = builtins.elem final._lisp.name [
       # Symbol named "BTCL" not found in the CORE package.
       "clasp"
       # There is a bug in lift which causes some silly pathname, ‘mkdir
@@ -2245,8 +2245,8 @@ in
     lispSystem = "log4cl-extras";
     lispCheckDependencies = [ hamcrest ];
     lispDependencies = [
-      self."40ants-doc"
-      self."40ants-asdf-system"
+      final."40ants-doc"
+      final."40ants-asdf-system"
       alexandria
       cl-strings
       dissect
@@ -2345,7 +2345,7 @@ in
           lispDependencies = [
             metatilities
             asdf-system-connections
-            self."cl-containers/with-asdf-system-connections"
+            final."cl-containers/with-asdf-system-connections"
             lift
           ];
         };
@@ -2365,7 +2365,7 @@ in
     (
       let
         lispCheckDependencies = [
-          self."mgl-pax/full"
+          final."mgl-pax/full"
           dref
           try
         ];
@@ -2399,8 +2399,8 @@ in
             lispDependencies = [
               mgl-pax
               # mgl-pax/document
-              self."3bmd"
-              self."3bmd-ext-code-blocks"
+              final."3bmd"
+              final."3bmd-ext-code-blocks"
               colorize
               md5
               trivial-utf-8
@@ -2416,7 +2416,7 @@ in
         lispAsdPath = systems: lib.optionals (builtins.elem "dref" systems) [ "dref" ];
         meta =
           # The function PRINT-UNRESOLVABLE-REFLINK is undefined.
-          systems: { broken = (builtins.elem "mgl-pax/full" systems) && self._lisp.name == "clasp"; };
+          systems: { broken = (builtins.elem "mgl-pax/full" systems) && final._lisp.name == "clasp"; };
       }
     )
     dref
@@ -2464,7 +2464,7 @@ in
     # Requires a new version of ASDF that I’m not sure how to load before
     # building the code. See
     # "https://gitlab.common-lisp.net/asdf/asdf/-/issues/145".
-    meta.broken = self._lisp.name == "ecl";
+    meta.broken = final._lisp.name == "ecl";
   };
 
   nfiles = lispDerivation {
@@ -2502,7 +2502,7 @@ in
     lispDependencies = [
       org-sampler
     ]
-    ++ lib.optionals (builtins.elem self._lisp.name [
+    ++ lib.optionals (builtins.elem final._lisp.name [
       "sbcl"
       "clisp"
     ]) [ closer-mop ];
@@ -2679,7 +2679,7 @@ in
   pythonic-string-reader = lispify "pythonic-string-reader" [ named-readtables ];
 
   quickhull = lispify "quickhull" [
-    self."3d-math"
+    final."3d-math"
     documentation-utils
   ];
 
@@ -2698,7 +2698,7 @@ in
     # moved to the store.  The dependent pacage will throw:
     #
     # The file #P"/private/tmp/nix-build-system-quri.drv-0/source/data/effective_tld_names.dat" does not exist.
-    meta.broken = self._lisp.name == "abcl";
+    meta.broken = final._lisp.name == "abcl";
   };
 
   reblocks = lispDerivation {
@@ -2706,11 +2706,11 @@ in
     src = sources.reblocks;
     lispCheckDependencies = [
       cl-mock
-      self."hamcrest/rove"
+      final."hamcrest/rove"
       rove
     ];
     lispDependencies = [
-      self."40ants-doc"
+      final."40ants-doc"
       circular-streams
       cl-cookie
       cl-fad
@@ -2729,7 +2729,7 @@ in
       routes
       salza2
       serapeum
-      self."spinneret/cl-markdown"
+      final."spinneret/cl-markdown"
       trivial-open-browser
       trivial-timeout
       uuid
@@ -2753,7 +2753,7 @@ in
     lispSystem = "reblocks-ui";
     src = sources.reblocks-ui;
     lispDependencies = [
-      self."40ants-doc"
+      final."40ants-doc"
       log4cl
       reblocks
       reblocks-parenscript
@@ -2877,11 +2877,11 @@ in
       # but downstream ASDF gets confused about whether or not this was loaded
       # and tries to rebuild serapeum because of it.  I don’t have the
       # inclination to fix it 🤷
-      self._lisp.name == "abcl"
+      final._lisp.name == "abcl"
       # Condition of type: UNBOUND-SLOT
       # The slot CLEAVIR-ENVIRONMENT::%TYPE in the object
       # #<CLEAVIR-ENVIRONMENT:LEXICAL-VARIABLE-INFO @0xffffc69775d9> is unbound.
-      || self._lisp.name == "clasp";
+      || final._lisp.name == "clasp";
   };
 
   sha1 = lispify "sha1" [ ];
@@ -2987,7 +2987,7 @@ in
       cffi-grovel
     ];
     lispCheckDependencies = [ fiveam ];
-    meta.broken = self._lisp.name == "clisp";
+    meta.broken = final._lisp.name == "clisp";
   };
 
   stefil = lispify "stefil" [
@@ -3040,37 +3040,37 @@ in
           lispDependencies = [
             alexandria
             iterate
-            self."trivia.trivial"
+            final."trivia.trivial"
             type-i
           ];
           lispCheckDependencies = [
             fiveam
             optima
-            self."trivia.cffi"
-            self."trivia.fset"
-            self."trivia.ppcre"
-            self."trivia.quasiquote"
+            final."trivia.cffi"
+            final."trivia.fset"
+            final."trivia.ppcre"
+            final."trivia.quasiquote"
           ];
         };
 
         "trivia.cffi" = {
           lispDependencies = [
             cffi
-            self."trivia.trivial"
+            final."trivia.trivial"
           ];
         };
 
         "trivia.fset" = {
           lispDependencies = [
             fset
-            self."trivia.trivial"
+            final."trivia.trivial"
           ];
         };
 
         "trivia.ppcre" = {
           lispDependencies = [
             cl-ppcre
-            self."trivia.trivial"
+            final."trivia.trivial"
           ];
         };
 
@@ -3125,7 +3125,7 @@ in
     lispSystem = "trivial-extract";
     lispDependencies = [
       archive
-      self.zip
+      final.zip
       deflate
       which
       cl-fad
@@ -3187,9 +3187,9 @@ in
     src = sources.trivial-sockets;
     meta.broken =
       # Error while trying to load definition for system trivial-sockets from pathname /build/source/trivial-sockets.asd: keyword list is not a proper list
-      self._lisp.name == "clasp"
+      final._lisp.name == "clasp"
       # Supported lisps: sbcl cmu clisp acl openmcl lispworks abcl mcl
-      || self._lisp.name == "ecl";
+      || final._lisp.name == "ecl";
   };
 
   trivial-timeout = lispDerivation {
@@ -3219,7 +3219,7 @@ in
     lispDependencies = [
       alexandria
       introspect-environment
-      self."trivia.trivial"
+      final."trivia.trivial"
       lisp-namespace
     ];
     lispCheckDependencies = [ fiveam ];
@@ -3250,7 +3250,7 @@ in
     preCheck = ''
       export CL_SOURCE_REGISTRY="$PWD/code/test-suite:$CL_SOURCE_REGISTRY"
     '';
-    meta.broken = builtins.elem self._lisp.name [
+    meta.broken = builtins.elem final._lisp.name [
       "ecl"
       "clasp"
       "clisp"
@@ -3297,7 +3297,7 @@ in
   websocket-driver = lispify "websocket-driver" [
     babel
     bordeaux-threads
-    self."cl+ssl"
+    final."cl+ssl"
     cl-base64
     clack-socket
     event-emitter
@@ -3327,7 +3327,7 @@ in
     # Clisp packages ASDF v3.2, WPI requires ≥3.3, this is the easiest way to
     # remedy that. Of course you can byo-ASDF, at which point you can just
     # .overrideAttrs this flag back to false. Same for ECL.
-    meta.broken = builtins.elem self._lisp.name [
+    meta.broken = builtins.elem final._lisp.name [
       "clisp"
       "ecl"
     ];
@@ -3345,7 +3345,7 @@ in
     src = sources.xml-emitter;
     lispSystem = "xml-emitter";
     lispDependencies = [ cl-utilities ];
-    lispCheckDependencies = [ self."1am" ];
+    lispCheckDependencies = [ final."1am" ];
   };
 
   xlunit = lispDerivation rec {
