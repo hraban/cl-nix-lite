@@ -4291,11 +4291,11 @@
     "usocket": {
       "flake": false,
       "locked": {
-        "lastModified": 1721695402,
-        "narHash": "sha256-T+0FKuHPhUHVIKKxRh674Iq4RuNgpAEhotsAeaiHQo4=",
+        "lastModified": 1777986821,
+        "narHash": "sha256-HngihzkJ0qtyD11VJ1Kb+jZYNlMX1iVseVRSfc1CV44=",
         "owner": "usocket",
         "repo": "usocket",
-        "rev": "6a317b7b9d56045f503d3fc2a279d8a254a4ecb6",
+        "rev": "d492f746d33fed32283143394c7ead1cce59ba37",
         "type": "github"
       },
       "original": {

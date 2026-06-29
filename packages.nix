@@ -3217,7 +3217,10 @@ in
       src = sources.usocket;
       systems = {
         usocket = {
-          lispDependencies = [ split-sequence ];
+          lispDependencies = [
+            babel
+            split-sequence
+          ];
           lispCheckDependencies = [
             bordeaux-threads
             rt
