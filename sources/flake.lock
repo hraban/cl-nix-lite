@@ -1200,11 +1200,11 @@
     "colorize": {
       "flake": false,
       "locked": {
-        "lastModified": 1672673853,
-        "narHash": "sha256-zrtxCmLEAz0xclLaxXo4T7O8vbHYGEbsmCoSDV8Ib70=",
+        "lastModified": 1731172233,
+        "narHash": "sha256-xVSSUuL1crmfiyrN4unqgsE+8n3UxoPcZt38ZN2t9nE=",
         "owner": "kingcons",
         "repo": "colorize",
-        "rev": "f5ed4b342c40257178ebe176108792c01d2e1187",
+        "rev": "c41fcc5833ebcf184f48aaf31ab89a9a1c230464",
         "type": "github"
       },
       "original": {
