@@ -2551,11 +2551,11 @@
     "metabang-bind": {
       "flake": false,
       "locked": {
-        "lastModified": 1683577158,
-        "narHash": "sha256-7RAc1zaqyMpqVGPgCB0tuwUcDSy1Fqb1Mo2hCv+Y55E=",
+        "lastModified": 1781995265,
+        "narHash": "sha256-jkMQUiZqikJ2m36G3uYWCr9fXQq9hZMEZ/cEXoBcaSk=",
         "owner": "hraban",
         "repo": "metabang-bind",
-        "rev": "08196426cb099db0623e6cae2aeca566e0b788b2",
+        "rev": "af3f67d7decc15a36faf64170c5ff940ddc1b9c7",
         "type": "github"
       },
       "original": {
