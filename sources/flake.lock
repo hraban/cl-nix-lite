@@ -2056,11 +2056,11 @@
     "in-nomine": {
       "flake": false,
       "locked": {
-        "lastModified": 1700986122,
-        "narHash": "sha256-ZGfQMqMb42dpjpbO2pllkUfEfdVWfJtJerO6ViTujvE=",
+        "lastModified": 1757243164,
+        "narHash": "sha256-RFvcYVVooNKxLX77FimDo0hw1pSiggE/rmEGt03T8yU=",
         "owner": "phoe",
         "repo": "in-nomine",
-        "rev": "03524bab99309848d8a18de0673f055192058f0a",
+        "rev": "24bb48d9397344ca9cc66180f828a4e805bfd9f2",
         "type": "github"
       },
       "original": {
