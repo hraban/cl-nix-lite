@@ -3153,7 +3153,7 @@ in
 
   trivial-utf-8 = lispify "trivial-utf-8" [ mgl-pax-bootstrap ];
 
-  trivial-with-current-source-form = lispify "trivial-with-current-source-form" [ alexandria ];
+  trivial-with-current-source-form = lispify "trivial-with-current-source-form" [ ];
 
   try = lispify "try" [
     alexandria
