@@ -1642,11 +1642,11 @@
     "fast-http": {
       "flake": false,
       "locked": {
-        "lastModified": 1701152297,
-        "narHash": "sha256-AD4fOVh5dlLJGYLlO16prkkpNhJF95zV9zDRQISAnRE=",
+        "lastModified": 1775473762,
+        "narHash": "sha256-kRxrFSsih4wf23Y3XgB9jMOm/ZWlRzE3SorJCKUy6og=",
         "owner": "fukamachi",
         "repo": "fast-http",
-        "rev": "2232fc9b1e03313f9357824125b4a5327ec7b84b",
+        "rev": "03d440dbf5aca1c791be6c3ee15b30f0e75d6968",
         "type": "github"
       },
       "original": {
