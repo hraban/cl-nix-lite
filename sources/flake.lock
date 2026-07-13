@@ -399,11 +399,11 @@
     "cl-ansi-text": {
       "flake": false,
       "locked": {
-        "lastModified": 1630176311,
-        "narHash": "sha256-JChf6zT7JPpm50RjVkB1ziO+pDTI/+Fj4Gck5bBUZ1o=",
+        "lastModified": 1757825119,
+        "narHash": "sha256-5DshuH1o2dYq/aFLlJ/iqIFbA09gO+AUqLL+gs8+afc=",
         "owner": "pnathan",
         "repo": "cl-ansi-text",
-        "rev": "8b129d83c7511b54cdd9d4123825a2d06349b25c",
+        "rev": "406e12c37d07aff3bc75f66900db30bf38d60af4",
         "type": "github"
       },
       "original": {
