@@ -801,11 +801,11 @@
     "cl-plus-ssl": {
       "flake": false,
       "locked": {
-        "lastModified": 1690780289,
-        "narHash": "sha256-GuilXdN6jr0kHCuHYAVtm+bChkgfyAp1m7KUUaroE2w=",
+        "lastModified": 1766199632,
+        "narHash": "sha256-w5lUwPwxE7ro+jkrH63pbLPFzRNZc6lwTM8qdy7urQU=",
         "owner": "cl-plus-ssl",
         "repo": "cl-plus-ssl",
-        "rev": "17d5cdd65405f1d26e26f3e875e70027d0c8eedb",
+        "rev": "e9de2ca650137bc92d1ac32224165354b3bd820d",
         "type": "github"
       },
       "original": {
