@@ -3115,11 +3115,11 @@
     "reblocks-ui": {
       "flake": false,
       "locked": {
-        "lastModified": 1722239832,
-        "narHash": "sha256-xQ8W/O1p5sxSolCFNlzQ93OE3rcBmUYGx1FnoJYwmMc=",
+        "lastModified": 1747565484,
+        "narHash": "sha256-gv/Rm2oiqvMLHD1ERY241wBROtrfE6YTvPEBV3ipgJQ=",
         "owner": "40ants",
         "repo": "reblocks-ui",
-        "rev": "4ab5b3a33b8b66b87ecf4dcc3212b0058ce2a454",
+        "rev": "a9779313def0d362840e0fab990034cd999b6b07",
         "type": "github"
       },
       "original": {
