@@ -3958,11 +3958,11 @@
     "trivial-file-size": {
       "flake": false,
       "locked": {
-        "lastModified": 1713121164,
-        "narHash": "sha256-P5y4YGblakmgIN6QBBsEYvmMjwSY3TFpKoTu/XL2qyE=",
+        "lastModified": 1745707136,
+        "narHash": "sha256-+IYmNEUGXpWoDwlyKabMglaGey2gnfN8f+PgxqquXZw=",
         "owner": "ruricolist",
         "repo": "trivial-file-size",
-        "rev": "341a502349b8f556adc63ed45070121282640fa2",
+        "rev": "60fd1bf8c573c733a775580cb96abdaaa7413ba8",
         "type": "github"
       },
       "original": {
