@@ -319,11 +319,11 @@
     "cffi": {
       "flake": false,
       "locked": {
-        "lastModified": 1723389361,
-        "narHash": "sha256-p5KOru1kJ05LBKlOqPfRTaaOMpqi6lSPzYi/q7IYUqw=",
+        "lastModified": 1784216749,
+        "narHash": "sha256-7yM5dWnshIVtaiRCnUWkVtLjauWjkBhrfPEeka1tS6A=",
         "owner": "cffi",
         "repo": "cffi",
-        "rev": "32c90d4a9a01e809f591276c058e5b3c7f39b154",
+        "rev": "7910d7e0c529e36453e97aa605ac4ffd19e7b415",
         "type": "github"
       },
       "original": {
