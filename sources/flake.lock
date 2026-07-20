@@ -415,11 +415,11 @@
     "cl-async": {
       "flake": false,
       "locked": {
-        "lastModified": 1699946883,
-        "narHash": "sha256-uTEKQWH0FjOU9THL0lFCGX1fJ7jq7yrX7Zk6sBy3D3w=",
+        "lastModified": 1730739784,
+        "narHash": "sha256-eybMnDzEJG/rrL8vzTtCS4JCRQKRh+1En+WCuBtaP3w=",
         "owner": "orthecreedence",
         "repo": "cl-async",
-        "rev": "289aac99a701341e487cd548cd65b4c01271a739",
+        "rev": "a2fa3d65a520d9b0cc6f5e5c294a68776d0c4e8b",
         "type": "github"
       },
       "original": {
