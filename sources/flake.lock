@@ -1280,11 +1280,11 @@
     "concrete-syntax-tree": {
       "flake": false,
       "locked": {
-        "lastModified": 1678931653,
-        "narHash": "sha256-+2XSZ/UTTB9ddqWfIOaJTEgGCGLI1xRpEOkLqLGXCZc=",
+        "lastModified": 1755864448,
+        "narHash": "sha256-Fjd0/ngggjjtCprPc8ux0D+zc+fsFzNHtvYODJLnZB8=",
         "owner": "robert-strandh",
         "repo": "Concrete-Syntax-Tree",
-        "rev": "37291727196a3bc88a7be67c1427c52078d4b82c",
+        "rev": "f79dab6b6d14000259449c169b501cc6398b3f54",
         "type": "github"
       },
       "original": {
