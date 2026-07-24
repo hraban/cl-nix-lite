@@ -1759,6 +1759,25 @@ in
     ];
   };
 
+  function-cache = lispDerivation {
+    lispSystems = [ "function-cache" ];
+    src = sources.function-cache;
+    lispDependencies = [
+      alexandria
+      cl-interpol
+      iterate
+      symbol-munger
+      closer-mop
+    ];
+
+    lispCheckDependencies = [ lisp-unit2 ];
+
+    meta.broken =
+      # Supported lisps: sbcl clozure
+      self._lisp.name != "sbcl" && self._lisp.name != "ccl";
+
+  };
+
   garbage-pools = lispDerivation {
     lispSystem = "garbage-pools";
     src = sources.garbage-pools;

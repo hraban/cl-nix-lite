@@ -533,6 +533,10 @@
       url = "github:slburson/fset";
       flake = false;
     };
+    function-cache = {
+      url = "github:AccelerationNet/function-cache";
+      flake = false;
+    };
     garbage-pools = {
       url = "github:archimag/garbage-pools";
       flake = false;
