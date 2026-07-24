@@ -14,6 +14,7 @@
     "cl-redis"
     "common-doc"
     "commondoc-markdown" # I have no idea what’s happening here but I need to move on
+    "concrete-syntax-tree" # These checks take too long on any reasonable machine.
     "dbi"
     "dynamic-classes"
     "fare-quasiquote"

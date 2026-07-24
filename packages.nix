@@ -1309,6 +1309,7 @@ in
 
   concrete-syntax-tree = lispDerivation {
     lispDependencies = [ acclimation ];
+    lispCheckDependencies = [ fiveam ];
     src = sources.concrete-syntax-tree;
     lispSystem = "concrete-syntax-tree";
     lispAsdPath = [ "Lambda-list" ];
