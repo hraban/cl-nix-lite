@@ -1591,6 +1591,12 @@ in
 
   f-underscore = lispify "f-underscore" [ ];
 
+  fare-memoization = lispDerivation {
+    lispSystem = "fare-memoization";
+    src = sources.fare-memoization;
+    lispCheckDependencies = [ hu_dwim_stefil ];
+  };
+
   fare-mop = lispify "fare-mop" [
     closer-mop
     fare-utils

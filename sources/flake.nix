@@ -473,6 +473,10 @@
       url = "git+https://gitlab.common-lisp.net/bpm/f-underscore";
       flake = false;
     };
+    fare-memoization = {
+      url = "github:fare/fare-memoization";
+      flake = false;
+    };
     fare-mop = {
       url = "github:fare/fare-mop";
       flake = false;

@@ -1591,6 +1591,22 @@
         "url": "https://gitlab.common-lisp.net/bpm/f-underscore"
       }
     },
+    "fare-memoization": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1522604022,
+        "narHash": "sha256-Dq2ll8l7cB08kN07RLLgoSWOdPjkfKYPkl2/xMjKla4=",
+        "owner": "fare",
+        "repo": "fare-memoization",
+        "rev": "8b43ac6bcc0057d1a92052e39b6d34c05c2eb7e4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "fare",
+        "repo": "fare-memoization",
+        "type": "github"
+      }
+    },
     "fare-mop": {
       "flake": false,
       "locked": {
@@ -3260,6 +3276,7 @@
         "esrap": "esrap",
         "event-emitter": "event-emitter",
         "f-underscore": "f-underscore",
+        "fare-memoization": "fare-memoization",
         "fare-mop": "fare-mop",
         "fare-quasiquote": "fare-quasiquote",
         "fare-utils": "fare-utils",
