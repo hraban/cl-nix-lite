@@ -1760,7 +1760,7 @@ in
   };
 
   function-cache = lispDerivation {
-    lispSystems = [ "function-cache" ];
+    lispSystem = "function-cache";
     src = sources.function-cache;
     lispDependencies = [
       alexandria
