@@ -1848,6 +1848,22 @@
         "type": "github"
       }
     },
+    "function-cache": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1687269629,
+        "narHash": "sha256-3IxAh/VrvoahiV8yT5gCduk5668chX1/6tPwf5orY+o=",
+        "owner": "AccelerationNet",
+        "repo": "function-cache",
+        "rev": "f20e3cd2a24420d7a999747183cb573d14ebc36f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AccelerationNet",
+        "repo": "function-cache",
+        "type": "github"
+      }
+    },
     "garbage-pools": {
       "flake": false,
       "locked": {
@@ -3292,6 +3308,7 @@
         "float-features": "float-features",
         "form-fiddle": "form-fiddle",
         "fset": "fset",
+        "function-cache": "function-cache",
         "garbage-pools": "garbage-pools",
         "gettext": "gettext",
         "global-vars": "global-vars",
