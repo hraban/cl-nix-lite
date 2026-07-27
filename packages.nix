@@ -61,8 +61,8 @@ in
     ];
     lispCheckDependencies = [ parachute ];
     src = sources.x_3d-math;
-    # For ABCL, if that would fix it: _JAVA_OPTIONS="-Xmx4g";
-    env = lib.optionalAttrs (self._lisp.name == "sbcl") { NIX_SBCL_DYNAMIC_SPACE_SIZE = "4gb"; };
+    # For ABCL, if that would fix it: _JAVA_OPTIONS="-Xmx6g";
+    env = lib.optionalAttrs (self._lisp.name == "sbcl") { NIX_SBCL_DYNAMIC_SPACE_SIZE = "6gb"; };
     lispSystem = "3d-math";
     meta.broken = builtins.elem self._lisp.name [
       "abcl"
