@@ -4482,10 +4482,11 @@
     "x_3d-math": {
       "flake": false,
       "locked": {
-        "lastModified": 1725367523,
-        "narHash": "sha256-bfcyIJyT6RzSAYuUwhqltVDXLXfpZXz/9deb43/8tgc=",
+        "lastModified": 1761567036,
+        "narHash": "sha256-rL4D7COvWxCUK/ZY6XYeEejydrhgrY/rk5TFQKVfiDo=",
         "ref": "refs/heads/main",
-        "rev": "dca49b0f42cb35814b187ecee567b697239475cd",
+        "rev": "00527bb4d44c89a378eda740ef4a39c01d0b47d2",
+        "revCount": 267,
         "type": "git",
         "url": "https://codeberg.org/shinmera/3d-math.git"
       },
