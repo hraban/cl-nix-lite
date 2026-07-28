@@ -4466,15 +4466,16 @@
     "x_3bmd": {
       "flake": false,
       "locked": {
-        "lastModified": 1715724069,
-        "narHash": "sha256-+6eAt+zhzAp3dbCQ7t5683ivhKXVqXHMCGVYlLGx15g=",
+        "lastModified": 1782464831,
+        "narHash": "sha256-H8BP6FEIxIl4yPFphcrykDVziWepgLavnjc4VVmbeX4=",
         "owner": "3b",
         "repo": "3bmd",
-        "rev": "0a54e65e13f2eb174d47d3d2d21ae46ff29c547d",
+        "rev": "30b6ba59f0068dd1185d9115b1c09893cfefff4b",
         "type": "github"
       },
       "original": {
         "owner": "3b",
+        "ref": "pull/79/head",
         "repo": "3bmd",
         "type": "github"
       }
