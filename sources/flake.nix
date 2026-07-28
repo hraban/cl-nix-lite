@@ -44,7 +44,7 @@
       flake = false;
     };
     x_3bmd = {
-      url = "github:3b/3bmd";
+      url = "github:3b/3bmd/pull/79/head"; # gabor fixed a bug in the tests
       flake = false;
     };
     x_3d-math = {
