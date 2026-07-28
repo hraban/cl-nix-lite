@@ -158,6 +158,8 @@ let
           _origLispDependencies = lispDependencies;
           _origLispSystems = lispSystems;
           _origSrc = myOrigSrc;
+          # Legacy, will be removed in next version
+          enableCheck = finalAttrs.finalPackage.overrideAttrs { doCheck = true; };
         }
         // args.passthru or { };
         # Store .fasl files next to the respective .lisp file

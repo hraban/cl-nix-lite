@@ -40,6 +40,7 @@ let
     [
       ./channels/all-packages
       ./channels/all-packages-wrapped
+      ./channels/legacy-enablecheck.nix
       ./channels/lisp-script
       ./channels/override-package
     ]

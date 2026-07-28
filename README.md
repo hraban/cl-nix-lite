@@ -517,15 +517,14 @@ A third way to deliver your final output is as a lisp interpreter itself, which 
 
 Make sure your ASDF defines tests as per the standard ASDF conventions, see [ASDF best practices][ASDF best practices].
 
-To enable a derivation’s checks, get its `enableCheck` property:
+To enable a derivation’s checks, set doCheck to true:
 
 ```
-$ nix-build -A alexandria.enableCheck
+lispDerivation {
+  lispSystem = "foo";
+  doCheck = true;
+}
 ```
-
-This isn’t quite as elegant as `overrideAttrs (_: { doCheck = true; } )`, mostly because my Nix-fu isn’t at that level yet. WIP.
-
-To test all packages, see [examples/channels/all-packages/check-enabled.nix](examples/channels/all-packages/check-enabled.nix).
 
 ## Technical Detail: Recursive Dependency Deduplicator
 
