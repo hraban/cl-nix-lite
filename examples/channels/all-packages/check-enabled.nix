@@ -2,166 +2,11 @@
   cl-nix-lite ? import ../../..,
   pkgs ? import <nixpkgs> { overlays = [ cl-nix-lite ]; },
   lisp ? pkgs.sbcl,
-  skip ? [
-    "40ants-doc"
-    "40ants-doc-full" # this one works in QL so it’s nix specific
-    "arnesi"
-    "bordeaux-threads" # There’s a deadlock heisenbug in these tests
-    "cffi"
-    "cl-libxslt" # Broken since nixpkgs 91594d11a2248ebe00f45f6b9be63fe264bb74e1
-    "cl-libxml2" # Broken since nixpkgs a5b2fe73740c3b1a1835bb1335d30b88c276924c
-    "cl-prevalence" # Stateful in /tmp/ and crashes when different users run the tests
-    "cl-redis"
-    "commondoc-markdown" # I have no idea what’s happening here but I need to move on
-    "concrete-syntax-tree" # These checks take too long on any reasonable machine.
-    "dbi"
-    "dynamic-classes"
-    "hunchentoot" # https://github.com/edicl/hunchentoot/issues/217
-    "lack" # broken test configuration in asdf declarations
-    "lift"
-    "log4cl"
-    "log4cl-extras"
-    "moptilities"
-    "reblocks"
-    "reblocks-ui" # The test definition in the .asd looks broken
-    "routes"
-    "rutils"
-    "spinneret"
-    "str"
-    "trivial-backtrace"
-    "trivial-timeout"
-    "try"
-    "typo"
-    "with-output-to-stream"
-    "xlunit"
-
-    # This dependency tree has surfaced a bug in cl-nix-lite dependency resolution
-    # and must be fixed, but this PR is growing out of control already so let’s
-    # disable the tests for now and pick this up ASAP.
-    "dref"
-    "mgl-pax"
-  ]
-  ++ pkgs.lib.optionals pkgs.stdenv.hostPlatform.isDarwin [ "flexi-streams" ]
-  ++ pkgs.lib.optionals (pkgs.stdenv.hostPlatform.isLinux || (lisp.pname == "abcl")) [
-    # Hangs forever on ABCL
-    "usocket"
-  ]
-  ++ pkgs.lib.optionals (lisp.pname == "abcl") [
-    "3bmd"
-    "3bmd-ext-code-blocks"
-    "3bmd-ext-tables"
-    "cl-containers"
-    "cl-containers/with-asdf-system-connections"
-    # There is no applicable method for the generic function #<STANDARD-GENERIC-FUNCTION EXECUTE {39BBD1DE}> when called with arguments (NIL #<TRANSACTION TX-CREATE-PERSON (Kathryn Janeway) {290C186E}>)..
-    "cl-prevalence"
-    "local-time"
-    "salza2"
-    "trivial-custom-debugger" # #<MY-ERROR {354E970D}>
-  ]
-  ++ pkgs.lib.optionals (lisp.pname == "abcl" && pkgs.stdenv.hostPlatform.isDarwin) [
-    # Works locally but broken on Github Actions I don’t know why:
-    #
-    # Running test FIND-PORTS XThe following check failed: ((FIND-PORT:FIND-PORT))
-    "find-port"
-  ]
-  ++ pkgs.lib.optionals (lisp.pname == "clasp") [
-    "access" # The variable ACCESS-BASIC is unbound.
-    "collectors" # The variable MAKE-REDUCER-TEST is unbound.
-    "deflate" # The symbol STREAM-ELEMENT-TYPE is bound to an ordinary function and is not a valid name for a generic function
-    "drakma" # Running test GET-GOOGLE Condition of type: TRY-AGAIN-ERROR
-    "fast-http" # lisp_instance_class for called on #<UNBOUND>
-    "history-tree" # The variable SINGLE-ENTRY is unbound.
-    "http-body" # Condition of type: SIMPLE-PROGRAM-ERROR: lisp_instance_class for called on #<UNBOUND>
-    "introspect-environment" # The slot CLEAVIR-ENVIRONMENT::%TYPE in the object #<CLEAVIR-ENVIRONMENT:LEXICAL-VARIABLE-INFO @0xffffc851ff99> is unbound.
-    "ironclad" # 50 out of 470 total tests failed
-    "lisp-unit2" # The variable COLLECT/DECOLLECT is unbound.
-    "lparallel" # When calling (COMMON-LISP::FLET CORE::TRANSFORM-KEYWORDS) with the lambda-list (COMMON-LISP::&KEY CORE::REPORT CORE::INTERACTIVE CORE::TEST) the bad keyword argument :HANDLED was passed
-    "nclasses" # The variable SIMPLE-CLASS is unbound.
-    "nst" # No such NST group NST-METHODS-META-SOURCES::METHOD-TESTS
-    "salza2" # The stream #<chipz::decompressing-stream @0x7fffd0c3a7b9> has no suitable method for #:stream-element-type.
-    "symbol-munger" # The variable TEST-BASIC is unbound.
-    "trivial-package-local-nicknames" # test hangs indefinitely
-  ]
-  ++ pkgs.lib.optionals (lisp.pname == "clisp") [
-    "float-features" # *** - APPLY: too few arguments given to FIND
-    "ieee-floats" # SYSTEM::LPAR-READER: floating point underflow
-    "kmrcl" # odd floating point error on clisp
-    "local-time" # *** - Invalid pathname designator T
-    "trivial-custom-debugger" # *** - Condition of type TRIVIAL-CUSTOM-DEBUGGER/TEST::MY-ERROR.
-  ]
-  ++ pkgs.lib.optionals (lisp.pname == "ecl") [
-    "data-lens" # Tests fail
-    "cl-markdown" # > The function LIFT::GET-BACKTRACE-AS-STRING is undefined..
-    "cl-prevalence" # Tests fail
-    "legion" # hangs forever on ECL
-    "trivial-custom-debugger" # An error occurred during initialization: #<a TRIVIAL-CUSTOM-DEBUGGER/TEST::MY-ERROR 0x105c49d80>.
-  ]
-  ++ pkgs.lib.optionals (lisp.pname == "ecl" || lisp.pname == "clasp") [
-    "type-i" # hangs forever
-  ]
-  ++ pkgs.lib.optionals (lisp.pname == "sbcl") [
-    # failed AVER:
-    #   (AND (EQ (CTRAN-KIND START) INSIDE-BLOCK) (NOT (BLOCK-DELETE-P BLOCK)))
-    "serapeum"
-  ]
-  ++ pkgs.lib.optionals (lisp.pname == "clisp" && pkgs.stdenv.hostPlatform.isLinux) [
-    "3bmd-ext-code-blocks"
-    # This fails on Github Actions, not in my local VM:
-    # *** - handle_fault error2 ! address = 0x1fffffd6e640 not in [0x1000000c0000,0x10000058dd90) !
-    # SIGSEGV cannot be cured. Fault address = 0x1fffffd6e640.
-    "event-emitter"
-    # Running test COMPRESS-STREAM /nix/store/3ksq0i8va221l9pp8nv606yygjc4dpkf-stdenv-linux/setup: line 1758:    47 Segmentation fault         (core dumped) /nix/store/0h4832w4mlgs49fvg2v8bzw7gq47rd2p-clisp-2.49.95-unstable-2024-12-28/bin/clisp -E UTF-8 -norc /nix/store/syjfqm6spf4xl168fw3nly0dn9c1nkb6-asdf-build-zstd.lisp
-    "zstd"
-  ]
-  ++
-    pkgs.lib.optionals
-      ((lisp.pname == "ecl" && pkgs.stdenv.hostPlatform.isLinux) || pkgs.stdenv.hostPlatform.isDarwin)
-      [
-        # On ECL & Linux: ;;; Unknown keyword :HANDLED
-        "lparallel"
-      ]
-  ++
-    pkgs.lib.optionals
-      (builtins.elem lisp.pname [
-        "ecl"
-        "clisp"
-      ])
-      [
-        "fset" # https://github.com/slburson/fset/issues/42
-      ]
-  ++
-    pkgs.lib.optionals
-      (
-        !(builtins.elem lisp.pname [
-          "ecl"
-          "clisp"
-        ])
-        && pkgs.stdenv.hostPlatform.system == "x86_64-darwin"
-      )
-      [
-        # Oddly specific failure: "https://github.com/fukamachi/anypool/issues/5".
-        "anypool"
-      ]
-  ++
-    pkgs.lib.optionals
-      (
-        !(builtins.elem lisp.pname [
-          "ecl"
-          "clisp"
-        ])
-        && pkgs.stdenv.hostPlatform.system == "x86_64-linux"
-      )
-      [
-        # https://github.com/edicl/flexi-streams/issues/51".  This technically only
-        # affects SBCL 2.4.4 but I can’t check the SBCL version here.  Oh well.
-        "flexi-streams"
-      ],
 }@args:
 
 let
   inherit (pkgs) lib;
   lispPackagesLite = pkgs.lispPackagesLiteFor lisp;
-  shouldTest = name: !builtins.elem name skip;
 in
 
 lib.pipe lispPackagesLite [
@@ -170,9 +15,9 @@ lib.pipe lispPackagesLite [
     let
       ev = builtins.tryEval (
         let
-          d = value.enableCheck;
+          d = value.overrideAttrs { doCheck = true; };
         in
-        if shouldTest name && lib.isDerivation value && !(d.meta.broken or false) then d else null
+        if lib.isDerivation value && !(d.meta.broken or false) then d else null
       );
     in
     if ev.success then ev.value else null

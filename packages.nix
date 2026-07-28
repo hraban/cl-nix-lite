@@ -3,6 +3,9 @@
 final: prev:
 with final;
 let
+  hasSystem =
+    drv: sys:
+    if builtins.isList sys then builtins.any (hasSystem drv) sys else builtins.elem sys drv.lispSystems;
   lispify =
     name: lispDependencies:
     lispDerivation {
@@ -18,41 +21,44 @@ in
     src = sources.x_1am;
   };
 
-  inherit
-    (lispMultiDerivation {
-      src = sources.x_3bmd;
-      systems = {
-        "3bmd" = {
-          lispSystem = "3bmd";
-          lispDependencies = [
-            alexandria
-            esrap
-            split-sequence
-          ];
-          lispCheckDependencies = [
-            final."3bmd-ext-code-blocks"
-            fiasco
-          ];
-        };
-        "3bmd-ext-code-blocks" = {
-          lispSystem = "3bmd-ext-code-blocks";
-          lispDependencies = [
-            final."3bmd"
-            alexandria
-            colorize
-            split-sequence
-          ];
-        };
-        "3bmd-ext-tables" = {
-          lispSystem = "3bmd-ext-tables";
-          lispDependencies = [ final."3bmd" ];
-        };
-      };
-    })
-    "3bmd"
-    "3bmd-ext-code-blocks"
-    "3bmd-ext-tables"
-    ;
+  "3bmd" = lispDerivation (self: {
+    src = sources.x_3bmd;
+    lispSystem = "3bmd";
+    lispDependencies = [
+      alexandria
+      esrap
+      split-sequence
+    ]
+    ++ lib.optionals (hasSystem self "3bmd-ext-code-blocks") [ colorize ];
+    lispCheckDependencies = [
+      final."3bmd-ext-code-blocks"
+      fiasco
+    ];
+    meta.broken =
+      (self.doCheck or false)
+      && (
+        (final._lisp.name == "abcl")
+        || (
+          (hasSystem self "3bmd-ext-code-blocks")
+          && (final._lisp.name == "clisp")
+          && pkgs.stdenv.hostPlatform.isLinux
+        )
+      );
+  });
+
+  "3bmd-ext-code-blocks" = final."3bmd".overrideAttrs (old: {
+    lispSystems = [
+      "3bmd"
+      "3bmd-ext-code-blocks"
+    ];
+  });
+
+  "3bmd-ext-tables" = final."3bmd".overrideAttrs (old: {
+    lispSystems = [
+      "3bmd"
+      "3bmd-ext-tables"
+    ];
+  });
 
   "3d-math" = lispDerivation {
     lispDependencies = [
@@ -82,53 +88,48 @@ in
     lispSystem = "3d-vectors";
   };
 
-  inherit
-    (lispMultiDerivation {
-      src = sources.x_40ants-doc;
-      systems = {
-        "40ants-doc" = {
-          lispSystem = "40ants-doc";
-          lispDependencies = [
-            cl-ppcre
-            commondoc-markdown
-            named-readtables
-            pythonic-string-reader
-            slynk
-            str
-            swank
-          ];
-          lispCheckDependencies = [
-            rove
-            final."40ants-doc-full"
-          ];
-        };
-        "40ants-doc-full" = {
-          lispSystem = "40ants-doc-full";
-          lispDependencies = [
-            final."40ants-doc"
-            cl-fad
-            commondoc-markdown
-            dexador
-            docs-builder
-            fare-utils
-            jonathan
-            lass
-            pythonic-string-reader
-            slynk
-            spinneret
-            stem
-            str
-            swank
-            tmpdir
-            trivial-extract
-            xml-emitter
-          ];
-        };
-      };
-    })
-    "40ants-doc"
-    "40ants-doc-full"
-    ;
+  "40ants-doc" = lispDerivation (self: {
+    src = sources.x_40ants-doc;
+    lispSystems = [ "40ants-doc" ] ++ lib.optionals (self.doCheck or false) [ "40ants-doc-full" ];
+    lispDependencies =
+      lib.optionals (hasSystem self "40ants-doc") [
+        cl-ppcre
+        commondoc-markdown
+        named-readtables
+        pythonic-string-reader
+        slynk
+        str
+        swank
+      ]
+      ++ lib.optionals (hasSystem self "40ants-doc-full") [
+        cl-fad
+        commondoc-markdown
+        dexador
+        docs-builder
+        fare-utils
+        jonathan
+        lass
+        pythonic-string-reader
+        slynk
+        spinneret
+        stem
+        str
+        swank
+        tmpdir
+        trivial-extract
+        xml-emitter
+      ];
+    lispCheckDependencies = lib.optionals (hasSystem self "40ants-doc") [ rove ];
+    # this one works in QL so it’s nix specific
+    meta.broken = self.doCheck or false;
+  });
+
+  "40ants-doc-full" = final."40ants-doc".overrideAttrs {
+    lispSystems = [
+      "40ants-doc"
+      "40ants-doc-full"
+    ];
+  };
 
   "40ants-asdf-system" = lispDerivation {
     lispSystem = "40ants-asdf-system";
@@ -139,7 +140,7 @@ in
     lispCheckDependencies = [ rove ];
   };
 
-  access = lispDerivation {
+  access = lispDerivation (self: {
     lispSystem = "access";
     src = sources.access;
     lispDependencies = [
@@ -149,7 +150,9 @@ in
       cl-ppcre
     ];
     lispCheckDependencies = [ lisp-unit2 ];
-  };
+    # The variable ACCESS-BASIC is unbound.
+    meta.broken = (self.doCheck or false) && (final._lisp.name == "clasp");
+  });
 
   acclimation = lispify "acclimation" [ ];
 
@@ -172,7 +175,7 @@ in
     src = sources.anaphora;
   };
 
-  anypool = lispDerivation {
+  anypool = lispDerivation (self: {
     src = sources.anypool;
     lispSystem = "anypool";
     lispDependencies = [
@@ -180,43 +183,50 @@ in
       cl-speedy-queue
     ];
     lispCheckDependencies = [ rove ];
-  };
+    # Oddly specific failure: "https://github.com/fukamachi/anypool/issues/5".
+    meta.broken =
+      (self.doCheck or false)
+      && (
+        !(builtins.elem final._lisp.name [
+          "ecl"
+          "clisp"
+        ])
+      )
+      && (pkgs.stdenv.hostPlatform.system == "x86_64-darwin");
+  });
 
   archive = lispify "archive" [
     cl-fad
     trivial-gray-streams
   ];
 
-  inherit
-    (lispMultiDerivation {
-      src = sources.arnesi;
-      systems = {
-        arnesi = {
-          lispDependencies = [ collectors ];
-          lispCheckDependencies = [ fiveam ];
-        };
-        arnesi-cl-ppcre-extras = {
-          lispSystem = "arnesi/cl-ppcre-extras";
-          lispDependencies = [
-            arnesi
-            cl-ppcre
-          ];
-        };
-        arnesi-slime-extras = {
-          lispSystem = "arnesi/slime-extras";
-          lispDependencies = [
-            arnesi
-            swank
-          ];
-        };
-      };
-      # #<PACKAGE CHARSET> has no external symbol with name "UTF-16"
-      meta.broken = final._lisp.name == "clisp";
-    })
-    arnesi
-    arnesi-cl-ppcre-extras
-    arnesi-slime-extras
-    ;
+  arnesi = lispDerivation (self: {
+    src = sources.arnesi;
+    lispSystem = "arnesi";
+    lispDependencies =
+      lib.optionals (hasSystem self "arnesi") [ collectors ]
+      ++ lib.optionals (hasSystem self "arnesi/cl-ppcre-extras") [ cl-ppcre ]
+      ++ lib.optionals (hasSystem self "arnesi/slime-extras") [ swank ];
+    lispCheckDependencies = lib.optionals (hasSystem self "arnesi") [ fiveam ];
+    # #<PACKAGE CHARSET> has no external symbol with name "UTF-16"
+    meta.broken = final._lisp.name == "clisp" || (self.doCheck or false);
+  });
+
+  arnesi-cl-ppcre-extras = arnesi.overrideAttrs {
+    name = "arnesi-cl-ppcre-extras";
+    lispSystems = [
+      "arnesi"
+      "arnesi/cl-ppcre-extras"
+    ];
+  };
+
+  arnesi-slime-extras = arnesi.overrideAttrs {
+    name = "arnesi-slime-extras";
+    lispSystems = [
+      "arnesi"
+      "arnesi/slime-extras"
+    ];
+  };
 
   array-utils = lispDerivation {
     lispSystem = "array-utils";
@@ -277,31 +287,25 @@ in
     ];
   };
 
-  inherit
-    (lispMultiDerivation {
-      src = sources.babel;
+  babel = lispDerivation (self: {
+    src = sources.babel;
+    lispSystem = "babel";
+    lispDependencies =
+      lib.optionals (hasSystem self "babel") [
+        alexandria
+        trivial-features
+      ]
+      ++ lib.optionals (hasSystem self "babel-streams") [ trivial-gray-streams ];
+    lispCheckDependencies = [ hu_dwim_stefil ];
+  });
 
-      systems = {
-        babel = {
-          lispDependencies = [
-            alexandria
-            trivial-features
-          ];
-          lispCheckDependencies = [ hu_dwim_stefil ];
-        };
-        babel-streams = {
-          lispDependencies = [
-            alexandria
-            babel
-            trivial-gray-streams
-          ];
-          lispCheckDependencies = [ hu_dwim_stefil ];
-        };
-      };
-    })
-    babel
-    babel-streams
-    ;
+  babel-streams = babel.overrideAttrs {
+    name = "babel-streams";
+    lispSystems = [
+      "babel"
+      "babel-streams"
+    ];
+  };
 
   blackbird = lispDerivation {
     lispSystem = "blackbird";
@@ -313,7 +317,7 @@ in
     ];
   };
 
-  bordeaux-threads = lispDerivation {
+  bordeaux-threads = lispDerivation (self: {
     lispDependencies = [
       alexandria
       global-vars
@@ -325,102 +329,90 @@ in
     lispSystem = "bordeaux-threads";
     src = sources.bordeaux-threads;
     meta.broken =
-      final._lisp.name == "clisp" || (final._lisp.name == "sbcl" && !final._lisp.deriv.threadSupport);
-  };
-
-  inherit
-    (lispMultiDerivation rec {
-      src = sources.cffi;
-      patches = ./patches/clffi-libffi-no-darwin-carevout.patch;
-      systems = {
-        cffi = {
-          lispDependencies = [
-            alexandria
-            babel
-            trivial-features
-          ];
-          lispCheckDependencies = [
-            cffi-grovel
-            bordeaux-threads
-            rt
-          ];
-          # I don’t know if cffi-libffi is external but it doesn’t seem to be
-          # so just leave it for now.
-        };
-        cffi-grovel = {
-          # cffi-grovel depends on cffi-toolchain. Just specifying it as an
-          # exported system works because cffi-toolchain is specified in this
-          # same source derivation.
-          lispSystems = [
-            "cffi-grovel"
-            "cffi-toolchain"
-          ];
-          lispDependencies = [
-            alexandria
-            cffi
-            trivial-features
-          ];
-          lispCheckDependencies = [
-            bordeaux-threads
-            rt
-          ];
-        };
-      };
-      # lisp-modules-new doesn’t specify GCC and somehow it works fine. Is
-      # there an accidental transitive dependency, there? Is that because GCC is
-      # included through mkDerivation, and its setupHook is automatically
-      # triggered? Or how is this solved? Additionally, this only seems to be
-      # used by a pretty incidental make call, because the only rule that uses
-      # GCC just happens to be at the top, making it the default make
-      # target. Not sure if this is the ideal way to “build” this package.
-      # Note: Technically this will always be required because cffi-grovel
-      # depends on cffi bare, but it’s a good litmus test for the system.
-      nativeBuildInputs = with pkgs; [
-        pkg-config
-        gcc
-      ];
-      propagatedBuildInputs = lib.optionals pkgs.stdenv.isDarwin [
-        # On Darwin, osicat needed access to the libtool package. I have a
-        # feeling that’s because of CFFI, and CFFI should provide it, but
-        # honestly I don’t know if this is the right place. Maybe I should just
-        # make osicat define this as a nativeBuildInput?
-        pkgs.xcbuild
-      ];
-      buildInputs = systems: lib.optionals (builtins.elem "cffi" systems) [ pkgs.libffi ];
-      # This is broken on Darwin because libcffi rewrites the import path in a
-      # way that’s incompatible with pkgconfig. It should be "if darwin AND (not
-      # pkg-config)".
-
-      setupHooks =
-        systems:
-        lib.optionals (builtins.elem "cffi" systems) [
-          (
-            if
-              pkgs.stdenv.hostPlatform.isDarwin
-            # LD_.. only works with CFFI on Mac, but not with
-            # sb-alien:load-shared-object. DYLD_.. works with both.
-            then
-              builtins.toFile "cffi-setup-hook-darwin.sh" (
-                builtins.replaceStrings [ "LD_LIBRARY_PATH" ] [ "DYLD_LIBRARY_PATH" ] (
-                  builtins.readFile ./cffi-setup-hook.sh
-                )
-              )
-            else
-              ./cffi-setup-hook.sh
-          )
-        ];
-      meta =
-        systems:
-        lib.optionalAttrs (builtins.elem "cffi" systems) {
-          # CFFI requires CLISP compiled with dynamic FFI support, which only
-          # enabled on Linux. And it’s supposed to work with ABCL but I don’t know
-          # how, so I’m marking this broken for now.
-          broken = !(final._lisp.name == "clisp" -> pkgs.stdenv.isLinux) || final._lisp.name == "abcl";
-        };
-    })
-    cffi
-    cffi-grovel
+      (final._lisp.name == "clisp" || (final._lisp.name == "sbcl" && !final._lisp.deriv.threadSupport))
+      || (self.doCheck or false) # There’s a deadlock heisenbug in these tests
     ;
+  });
+
+  cffi = lispDerivation (self: {
+    name = "cffi";
+    src = sources.cffi;
+    patches = ./patches/clffi-libffi-no-darwin-carevout.patch;
+    lispSystems = [ "cffi" ] ++ lib.optionals (self.doCheck or false) [ "cffi-grovel" ];
+    # I don’t know if cffi-libffi is external but it doesn’t seem to be
+    # so just leave it for now.
+    lispDependencies = lib.optionals (hasSystem self "cffi") [
+      alexandria
+      babel
+      trivial-features
+    ];
+    lispCheckDependencies = [
+      bordeaux-threads
+      rt
+    ];
+    # lisp-modules-new doesn’t specify GCC and somehow it works fine. Is
+    # there an accidental transitive dependency, there? Is that because GCC is
+    # included through mkDerivation, and its setupHook is automatically
+    # triggered? Or how is this solved? Additionally, this only seems to be
+    # used by a pretty incidental make call, because the only rule that uses
+    # GCC just happens to be at the top, making it the default make
+    # target. Not sure if this is the ideal way to “build” this package.
+    # Note: Technically this will always be required because cffi-grovel
+    # depends on cffi bare, but it’s a good litmus test for the system.
+    nativeBuildInputs = with pkgs; [
+      pkg-config
+      gcc
+    ];
+    propagatedBuildInputs = lib.optionals pkgs.stdenv.isDarwin [
+      # On Darwin, osicat needed access to the libtool package. I have a
+      # feeling that’s because of CFFI, and CFFI should provide it, but
+      # honestly I don’t know if this is the right place. Maybe I should just
+      # make osicat define this as a nativeBuildInput?
+      pkgs.xcbuild
+    ];
+    buildInputs = lib.optionals (hasSystem self "cffi") [ pkgs.libffi ];
+    # This is broken on Darwin because libcffi rewrites the import path in a
+    # way that’s incompatible with pkgconfig. It should be "if darwin AND (not
+    # pkg-config)".
+
+    setupHooks = lib.optionals (hasSystem self "cffi") [
+      (
+        if
+          pkgs.stdenv.hostPlatform.isDarwin
+        # LD_.. only works with CFFI on Mac, but not with
+        # sb-alien:load-shared-object. DYLD_.. works with both.
+        then
+          builtins.toFile "cffi-setup-hook-darwin.sh" (
+            builtins.replaceStrings [ "LD_LIBRARY_PATH" ] [ "DYLD_LIBRARY_PATH" ] (
+              builtins.readFile ./cffi-setup-hook.sh
+            )
+          )
+        else
+          ./cffi-setup-hook.sh
+      )
+    ];
+    # CFFI requires CLISP compiled with dynamic FFI support, which only
+    # enabled on Linux. And it’s supposed to work with ABCL but I don’t know
+    # how, so I’m marking this broken for now.
+    meta.broken =
+      (self.doCheck or false)
+      || (
+        (hasSystem self "cffi")
+        && (!(final._lisp.name == "clisp" -> pkgs.stdenv.isLinux) || final._lisp.name == "abcl")
+      );
+  });
+
+  cffi-grovel = cffi.overrideAttrs {
+    name = "cffi-grovel";
+    # cffi-grovel depends on cffi-toolchain. Just specifying it as an
+    # exported system works because cffi-toolchain is specified in this
+    # same source derivation.
+    lispSystems = [
+      "cffi"
+      "cffi-grovel"
+      "cffi-toolchain"
+    ];
+  };
 
   calispel = lispDerivation {
     lispSystem = "calispel";
@@ -436,94 +428,95 @@ in
 
   chunga = lispify "chunga" [ trivial-gray-streams ];
 
-  inherit
-    (lispMultiDerivation {
-      src = sources.coalton;
-      systems = {
-        coalton = {
-          lispDependencies = [
-            alexandria
-            concrete-syntax-tree
-            eclector
-            eclector-concrete-syntax-tree
-            float-features
-            fset
-            named-readtables
-            split-sequence
-            trivia
-            trivial-garbage
-          ];
-          lispCheckDependencies = [
-            fiasco
-            coalton-examples
-          ];
-        };
-        coalton-examples = {
-          lispSystems = [
+  coalton = lispDerivation (self: {
+    lispSystem = "coalton";
+    src = sources.coalton;
+    lispDependencies =
+      lib.optionals (hasSystem self "coalton") [
+        alexandria
+        concrete-syntax-tree
+        eclector
+        eclector-concrete-syntax-tree
+        float-features
+        fset
+        named-readtables
+        split-sequence
+        trivia
+        trivial-garbage
+      ]
+      ++
+        lib.optionals
+          (hasSystem self [
             "coalton-json"
             "quil-coalton"
             "small-coalton-programs"
             "thih-coalton"
-          ];
-          lispDependencies = [
+          ])
+          [
             coalton
             json-streams
-          ];
-          lispCheckDependencies = [ fiasco ];
-        };
-        coalton-benchmarks = {
-          lispSystem = "coalton/benchmarks";
-          lispDependencies = [
-            coalton
-            trivial-benchmark
-            yason
-          ];
-        };
-        coalton-doc = {
-          lispSystem = "coalton/doc";
-          lispDependencies = [
-            coalton
-            html-entities
-            yason
-          ];
-        };
-      };
-      # Technically coalton is always a dependency so any derivation will always
-      # include coalton so this could just hard-code the list, but I like to be
-      # explicit about it for the sake of clarity.
-      propagatedBuildInputs =
-        systems:
-        lib.optionals (builtins.elem "coalton" systems) [
-          # Actual dependencies
-          pkgs.mpfr
-          pkgs.libuv
-          # For the dynamic loading setup hook, even though we don’t even use
-          # CFFI. Needs better UX.
-          cffi
+          ]
+      ++ lib.optionals (hasSystem self "coalton/benchmarks") [
+        coalton
+        trivial-benchmark
+        yason
+      ]
+      ++ lib.optionals (hasSystem self "coalton/doc") [
+        coalton
+        html-entities
+        yason
+      ];
+    lispCheckDependencies =
+      lib.optionals (hasSystem self "coalton") [
+        fiasco
+        coalton-examples
+      ]
+      ++ lib.optionals (hasSystem self [
+        "coalton-json"
+        "quil-coalton"
+        "small-coalton-programs"
+        "thih-coalton"
+      ]) [ fiasco ];
+    # Technically coalton is always a dependency so any derivation will always
+    # include coalton so this could just hard-code the list, but I like to be
+    # explicit about it for the sake of clarity.
+    propagatedBuildInputs = lib.optionals (hasSystem self "coalton") [
+      # Actual dependencies
+      pkgs.mpfr
+      pkgs.libuv
+      # For the dynamic loading setup hook, even though we don’t even use
+      # CFFI. Needs better UX.
+      cffi
+    ];
+    preBuild =
+      let
+        testDirectories = [
+          "$PWD/examples/coalton-json"
+          "$PWD/examples/quil-coalton"
+          "$PWD/examples/small-coalton-programs"
+          "$PWD/examples/thih"
         ];
-      preBuild =
-        let
-          testDirectories = [
-            "$PWD/examples/coalton-json"
-            "$PWD/examples/quil-coalton"
-            "$PWD/examples/small-coalton-programs"
-            "$PWD/examples/thih"
-          ];
-          testPaths = b.concatStringsSep ":" testDirectories;
-        in
-        ''
-          export CL_SOURCE_REGISTRY="${testPaths}:$CL_SOURCE_REGISTRY"
-        '';
-      meta = {
-        # Broken since the last update and I can’t exactly figure out why.
-        broken = true;
-      };
-    })
-    coalton
-    coalton-benchmarks
-    coalton-doc
-    coalton-examples
-    ;
+        testPaths = b.concatStringsSep ":" testDirectories;
+      in
+      ''
+        export CL_SOURCE_REGISTRY="${testPaths}:$CL_SOURCE_REGISTRY"
+      '';
+    # Broken since the last update and I can’t exactly figure out why.
+    meta.broken = true;
+  });
+
+  coalton-examples = coalton.overrideAttrs {
+    lispSystems = [
+      "coalton-json"
+      "quil-coalton"
+      "small-coalton-programs"
+      "thih-coalton"
+    ];
+  };
+
+  coalton-benchmarks = coalton.overrideAttrs { lispSystems = [ "coalton/benchmarks" ]; };
+
+  coalton-doc = coalton.overrideAttrs { lispSystems = [ "coalton/doc" ]; };
 
   circular-streams = lispDerivation {
     lispSystem = "circular-streams";
@@ -555,70 +548,62 @@ in
     lispCheckDependencies = [ fiveam ];
   };
 
-  inherit
-    (lispMultiDerivation rec {
+  cl-async = lispDerivation (
+    self:
+    let
+      baseSystems = [
+        "cl-async"
+        "cl-async-base"
+        "cl-async-util"
+      ];
+    in
+    rec {
       name = "cl-async";
-
       src = sources.cl-async;
-
-      systems = {
-        cl-async = {
-          # ECL wants an archive file (.a) for every dependent /system/ (not
-          # just source derivation) when it creates a binary for an
-          # application. Since cl-async has this cl-async-base system
-          # internally, if it doesn’t exist ECL will create a cl-async-base.a
-          # file at build time of a dependent system, which obviously leads to a
-          # nix store read-only violation. What I hate about this: it’s a
-          # violation of the entire cl-nix-lite premise of “you don’t have to
-          # declare internal systems, just external ones”, only for the sake of
-          # ECL. Am I going to have to do this for every package now? I’m not
-          # looking forward to it. On the other hand: who cares? As always, I’ll
-          # just fix it here for now and see where this takes me further down
-          # the road. - hraban 2023-10
-          lispSystems = [
-            "cl-async"
-            "cl-async-base"
-            "cl-async-util"
-          ];
-          lispDependencies = [
-            babel
-            bordeaux-threads
-            cffi
-            cffi-grovel
-            cl-libuv
-            cl-ppcre
-            fast-io
-            static-vectors
-            trivial-features
-            trivial-gray-streams
-            vom
-          ];
-        };
-
-        cl-async-repl = {
-          lispDependencies = [
-            bordeaux-threads
-            cl-async
-          ];
-        };
-
-        cl-async-ssl = {
-          lispDependencies = [
-            cffi
-            cl-async
-            vom
-          ];
-        };
-      };
+      # ECL wants an archive file (.a) for every dependent /system/ (not just
+      # source derivation) when it creates a binary for an application. Since
+      # cl-async has this cl-async-base system internally, if it doesn’t exist
+      # ECL will create a cl-async-base.a file at build time of a dependent
+      # system, which obviously leads to a nix store read-only violation. What I
+      # hate about this: it’s a violation of the entire cl-nix-lite premise of
+      # “you don’t have to declare internal systems, just external ones”, only
+      # for the sake of ECL. Am I going to have to do this for every package
+      # now? I’m not looking forward to it. On the other hand: who cares? As
+      # always, I’ll just fix it here for now and see where this takes me
+      # further down the road. - hraban 2023-10
+      lispSystems = baseSystems;
+      lispDependencies =
+        lib.optionals (hasSystem self baseSystems) [
+          babel
+          bordeaux-threads
+          cffi
+          cffi-grovel
+          cl-libuv
+          cl-ppcre
+          fast-io
+          static-vectors
+          trivial-features
+          trivial-gray-streams
+          vom
+        ]
+        ++ lib.optionals (hasSystem self "cl-async-repl") [
+          bordeaux-threads
+          cl-async
+        ]
+        ++ lib.optionals (hasSystem self "cl-async-ssl") [
+          cffi
+          cl-async
+          vom
+        ];
 
       meta.broken = final._lisp.name == "clasp";
-      propagatedBuildInputs =
-        systems: lib.optionals (builtins.elem "cl-async-ssl" systems) [ pkgs.openssl ];
-    })
-    cl-async
-    cl-async-repl
-    cl-async-ssl
-    ;
+      propagatedBuildInputs = lib.optionals (hasSystem self "cl-async-ssl") [ pkgs.openssl ];
+    }
+  );
+
+  cl-async-repl = cl-async.overrideAttrs { lispSystems = [ "cl-async-repl" ]; };
+
+  cl-async-ssl = cl-async.overrideAttrs { lispSystems = [ "cl-async-ssl" ]; };
 
   cl-base64 = lispDerivation rec {
     lispSystem = "cl-base64";
@@ -661,40 +646,46 @@ in
     lispCheckDependencies = [ clunit2 ];
   };
 
-  inherit
-    (lispMultiDerivation {
+  cl-containers = lispDerivation (
+    self:
+    let
+      extendedSystems = [
+        "cl-containers/with-moptilities"
+        "cl-containers/with-utilities"
+        "cl-containers/with-variates"
+      ];
+    in
+    {
+      lispSystem = "cl-containers";
       src = sources.cl-containers;
-      systems = {
-        cl-containers = {
-          lispDependencies = [ metatilities-base ];
-          lispCheckDependencies = [ lift ];
-        };
-        # This is an infectious dependency which, if available on the search
-        # path at all, will cause cl-containers to start compiling some extra of
-        # its files. This must of course happen at build time of cl-containers,
-        # otherwise it happens in the nix store which will fail. So if if you
-        # are a dependent of cl-containers and you, or any of your dependencies,
-        # depend on asdf-system-connections, you must include this version of
-        # cl-containers lest you get a build error.
-        "cl-containers/with-asdf-system-connections" = {
-          lispSystems = [
-            "cl-containers/with-moptilities"
-            "cl-containers/with-utilities"
-            "cl-containers/with-variates"
-          ];
-          lispDependencies = [
-            cl-containers
-            asdf-system-connections
-            moptilities
-            metatilities-base
-            cl-variates
-          ];
-        };
-      };
-    })
-    cl-containers
-    "cl-containers/with-asdf-system-connections"
-    ;
+      lispDependencies =
+        lib.optionals (hasSystem self "cl-containers") [ metatilities-base ]
+        ++ lib.optionals (hasSystem self extendedSystems) [
+          cl-containers
+          # This is an infectious dependency which, if available on the search
+          # path at all, will cause cl-containers to start compiling some extra
+          # of its files. This must of course happen at build time of
+          # cl-containers, otherwise it happens in the nix store which will
+          # fail. So if if you are a dependent of cl-containers and you, or any
+          # of your dependencies, depend on asdf-system-connections, you must
+          # include this version of cl-containers lest you get a build error.
+          asdf-system-connections
+          moptilities
+          metatilities-base
+          cl-variates
+        ];
+      lispCheckDependencies = lib.optionals (hasSystem self "cl-containers") [ lift ];
+      meta.broken = (self.doCheck or false) && (final._lisp.name == "abcl");
+    }
+  );
+
+  "cl-containers/with-asdf-system-connections" = cl-containers.overrideAttrs {
+    lispSystems = [
+      "cl-containers/with-moptilities"
+      "cl-containers/with-utilities"
+      "cl-containers/with-variates"
+    ];
+  };
 
   cl-cookie = lispDerivation {
     lispSystem = "cl-cookie";
@@ -816,66 +807,71 @@ in
     src = sources.cl-libuv;
   };
 
-  inherit
-    (lispMultiDerivation {
+  cl-libxml2 = lispDerivation (
+    self:
+    let
+      baseSystems = [
+        "cl-libxml2"
+        "xfactory"
+        "xoverlay"
+      ];
+    in
+    {
+      name = "cl-libxml2";
       src = sources.cl-libxml2;
-      systems = {
-        cl-libxml2 = {
-          lispSystems = [
-            "cl-libxml2"
-            "xfactory"
-            "xoverlay"
-          ];
-          lispDependencies = [
-            iterate
-            cffi
-            puri
-            flexi-streams
-            alexandria
-            garbage-pools
-            metabang-bind
-          ];
-          lispCheckDependencies = [ lift ];
-        };
-        # Defined as a separate Nix derivation because it has complicated and
-        # fragile build steps, and as far as I can tell QL doesn’t even export
-        # this at all. Consider this derivation experimental for now. It’d be nice
-        # if it actually worked, of course.
-        cl-libxslt = {
-          lispDependencies = [ cl-libxml2 ];
-          lispCheckDependencies = [ lift ];
-        };
-      };
+      lispSystems = baseSystems;
+      lispDependencies =
+        lib.optionals (hasSystem self baseSystems) [
+          iterate
+          cffi
+          puri
+          flexi-streams
+          alexandria
+          garbage-pools
+          metabang-bind
+        ]
+        ++ lib.optionals (hasSystem self "cl-libxslt") [ cl-libxml2 ];
+      lispCheckDependencies = lib.optionals (hasSystem self (baseSystems ++ [ "cl-libxslt" ])) [ lift ];
       makeFlags = [ "CC=cc" ];
       buildInputs =
-        systems:
-        (lib.optionals (builtins.elem "cl-libxml2" systems) [ pkgs.libxml2 ])
-        ++ (lib.optionals (builtins.elem "cl-libxslt" systems) [ pkgs.libxslt ]);
-      outputs = systems: [ "out" ] ++ lib.optionals (builtins.elem "cl-libxslt" systems) [ "lib" ];
+        (lib.optionals (hasSystem self "cl-libxml2") [ pkgs.libxml2 ])
+        ++ (lib.optionals (hasSystem self "cl-libxslt") [ pkgs.libxslt ]);
+      outputs = [ "out" ] ++ lib.optionals (hasSystem self "cl-libxslt") [ "lib" ];
       # This :force t isn’t necessary, and it breaks tests
       postUnpack = ''
         (cd "$sourceRoot"; sed -i  -e "s/ :force t//" *.asd)
       '';
-      preBuild =
-        systems:
-        lib.optionalString (builtins.elem "cl-libxslt" systems) (
-          let
-            libname = "cllibxml2${pkgs.stdenv.hostPlatform.extensions.sharedLibrary}";
-          in
-          ''
-            LIBNAME=${libname} make -C foreign
-            mkdir -p $lib
-            cp -r foreign/${libname} $lib/
-            # No need to special case this for Darwin (DYLD_..) because
-            # we're using cffi which picks up LD_ on both Linux and
-            # Darwin.
-            addToSearchPath "LD_LIBRARY_PATH" "$lib"
-          ''
-        );
-    })
-    cl-libxml2
-    cl-libxslt
-    ;
+      meta.broken =
+        (self.doCheck or false)
+        && (hasSystem self [
+          "cl-libxslt" # Broken since nixpkgs 91594d11a2248ebe00f45f6b9be63fe264bb74e1
+          "cl-libxml2" # Broken since nixpkgs a5b2fe73740c3b1a1835bb1335d30b88c276924c
+        ]);
+      preBuild = lib.optionalString (hasSystem self "cl-libxslt") (
+        let
+          libname = "cllibxml2${pkgs.stdenv.hostPlatform.extensions.sharedLibrary}";
+        in
+        ''
+          LIBNAME=${libname} make -C foreign
+          mkdir -p $lib
+          cp -r foreign/${libname} $lib/
+          # No need to special case this for Darwin (DYLD_..) because
+          # we're using cffi which picks up LD_ on both Linux and
+          # Darwin.
+          addToSearchPath "LD_LIBRARY_PATH" "$lib"
+        ''
+      );
+    }
+  );
+
+  # Defined as a separate Nix derivation because it has complicated and fragile
+  # build steps, and as far as I can tell QL doesn’t even export this at
+  # all. Consider this derivation experimental for now. It’d be nice if it
+  # actually worked, of course.
+  cl-libxslt = cl-libxml2.overrideAttrs (old: {
+    name = "cl-libxslt";
+    lispSystems = old.lispSystems ++ [ "cl-libxslt" ];
+  });
 
   cl-locale = lispDerivation {
     src = sources.cl-locale;
@@ -893,7 +889,7 @@ in
     lispSystem = "cl-locale";
   };
 
-  cl-markdown = lispDerivation {
+  cl-markdown = lispDerivation (self: {
     lispSystem = "cl-markdown";
     src = sources.cl-markdown;
     lispDependencies = [
@@ -909,9 +905,13 @@ in
       lift
       trivial-shell
     ];
-    # “There is no class named ABSTRACT-CONTAINER.”
-    meta.broken = final._lisp.name == "abcl";
-  };
+    meta.broken =
+      # “There is no class named ABSTRACT-CONTAINER.”
+      (final._lisp.name == "abcl")
+      ||
+        # > The function LIFT::GET-BACKTRACE-AS-STRING is undefined..
+        ((self.doCheck or false) && (final._lisp.name == "ecl"));
+  });
 
   cl-mimeparse = lispDerivation {
     lispDependencies = [
@@ -965,27 +965,25 @@ in
     propagatedBuildInputs = [ pkgs.openssl ];
   };
 
-  inherit
-    (lispMultiDerivation rec {
-      src = sources.cl-ppcre;
-      systems = {
-        cl-ppcre = {
-          lispCheckDependencies = [ flexi-streams ];
-        };
-        cl-ppcre-unicode = {
-          lispDependencies = [
-            cl-ppcre
-            cl-unicode
-          ];
-          lispCheckDependencies = [ flexi-streams ];
-        };
-      };
-    })
-    cl-ppcre
-    cl-ppcre-unicode
-    ;
+  cl-ppcre = lispDerivation (self: {
+    lispSystem = "cl-ppcre";
+    src = sources.cl-ppcre;
+    lispCheckDependencies = [ flexi-streams ];
+    lispDependencies = lib.optionals (hasSystem self "cl-ppcre-unicode") [
+      cl-ppcre
+      cl-unicode
+    ];
+  });
 
-  cl-prevalence = lispDerivation {
+  cl-ppcre-unicode = cl-ppcre.overrideAttrs {
+    name = "cl-ppcre-unicode";
+    lispSystems = [
+      "cl-ppcre"
+      "cl-ppcre-unicode"
+    ];
+  };
+
+  cl-prevalence = lispDerivation (self: {
     lispSystem = "cl-prevalence";
     src = sources.cl-prevalence;
     lispDependencies = [
@@ -997,7 +995,9 @@ in
       fiveam
       find-port
     ];
-  };
+    # Stateful in /tmp/ and crashes when different users run the tests
+    meta.broken = self.doCheck or false;
+  });
 
   cl-qrencode = lispDerivation {
     lispSystem = "cl-qrencode";
@@ -1028,7 +1028,7 @@ in
     ];
   };
 
-  cl-redis = lispDerivation {
+  cl-redis = lispDerivation (self: {
     lispSystem = "cl-redis";
     lispDependencies = [
       babel
@@ -1042,7 +1042,8 @@ in
       should-test
     ];
     src = sources.cl-redis;
-  };
+    meta.broken = self.doCheck or false;
+  });
 
   cl-slice = lispDerivation {
     lispSystem = "cl-slice";
@@ -1077,35 +1078,31 @@ in
     lispCheckDependencies = [ prove ];
   };
 
-  inherit
-    (lispMultiDerivation {
-      src = sources.cl-syntax;
+  cl-syntax = lispDerivation (self: {
+    src = sources.cl-syntax;
+    lispSystem = "cl-syntax";
+    lispDependencies =
+      lib.optionals (hasSystem self "cl-syntax") [
+        named-readtables
+        trivial-types
+      ]
+      ++ lib.optionals (hasSystem self "cl-syntax-annot") [ cl-annot ]
+      ++ lib.optionals (hasSystem self "cl-syntax-interpol") [ cl-interpol ];
+  });
 
-      systems = {
-        cl-syntax = {
-          lispDependencies = [
-            named-readtables
-            trivial-types
-          ];
-        };
-        cl-syntax-annot = {
-          lispDependencies = [
-            cl-syntax
-            cl-annot
-          ];
-        };
-        cl-syntax-interpol = {
-          lispDependencies = [
-            cl-syntax
-            cl-interpol
-          ];
-        };
-      };
-    })
-    cl-syntax
-    cl-syntax-annot
-    cl-syntax-interpol
-    ;
+  cl-syntax-annot = cl-syntax.overrideAttrs {
+    lispSystems = [
+      "cl-syntax"
+      "cl-syntax-annot"
+    ];
+  };
+
+  cl-syntax-interpol = cl-syntax.overrideAttrs {
+    lispSystems = [
+      "cl-syntax"
+      "cl-syntax-interpol"
+    ];
+  };
 
   cl-test-more = prove;
 
@@ -1137,39 +1134,32 @@ in
     src = sources.cl-utilities;
   };
 
-  inherit
-    (lispMultiDerivation {
-      src = sources.cl-variates;
-      systems = {
-        cl-variates = {
-          lispCheckDependencies = [ lift ];
-        };
-        "cl-variates/with-metacopy" = {
-          lispDependencies = [
-            cl-variates
-            asdf-system-connections
-            metacopy
-          ];
-        };
-      };
-      meta =
-        systems:
-        lib.optionalAttrs (builtins.elem "cl-variates/with-metacopy" systems) {
-          broken = builtins.elem final._lisp.name [
-            # The function get-structure is not yet implemented for Armed Bear Common Lisp 1.9.2 on AARCH64.
-            "abcl"
-            # The function get-structure is not yet implemented for clasp cclasp-boehmprecise-2.7.0-cst on x86_64.
-            "clasp"
-            # *** - The function get-structure is not yet implemented for CLISP 2.49.92
-            "clisp"
-            # ;;; The function get-structure is not yet implemented for ECL 21.2.1 on arm64.
-            "ecl"
-          ];
-        };
-    })
-    cl-variates
-    "cl-variates/with-metacopy"
-    ;
+  cl-variates = lispDerivation (self: {
+    lispSystem = "cl-variates";
+    src = sources.cl-variates;
+    lispCheckDependencies = lib.optionals (hasSystem self "cl-variates") [ lift ];
+    lispDependencies = lib.optionals (hasSystem self "cl-variates/with-metacopy") [
+      cl-variates
+      asdf-system-connections
+      metacopy
+    ];
+    meta.broken =
+      (hasSystem self "cl-variates/with-metacopy")
+      && (builtins.elem final._lisp.name [
+        # The function get-structure is not yet implemented for Armed Bear Common Lisp 1.9.2 on AARCH64.
+        "abcl"
+        # The function get-structure is not yet implemented for clasp cclasp-boehmprecise-2.7.0-cst on x86_64.
+        "clasp"
+        # *** - The function get-structure is not yet implemented for CLISP 2.49.92
+        "clisp"
+        # ;;; The function get-structure is not yet implemented for ECL 21.2.1 on arm64.
+        "ecl"
+      ]);
+  });
+
+  "cl-variates/with-metacopy" = cl-variates.overrideAttrs {
+    lispSystems = [ "cl-variates/with-metacopy" ];
+  };
 
   cl-who = lispDerivation {
     lispSystem = "cl-who";
@@ -1177,55 +1167,56 @@ in
     lispCheckDependencies = [ flexi-streams ];
   };
 
-  inherit
-    (lispMultiDerivation {
-      src = sources.clack;
+  clack = lispDerivation (self: {
+    src = sources.clack;
+    lispSystem = "clack";
+    # TODO: This is a complex package with lots of derivations and check
+    # dependencies. Fill in as necessary. I’ve only filled in what I need
+    # right now.
+    lispDependencies =
+      lib.optionals (hasSystem self "clack") [
+        alexandria
+        bordeaux-threads
+        lack
+        swank
+        usocket
+      ]
+      ++ lib.optionals (hasSystem self "clack-handler-hunchentoot") [
+        alexandria
+        bordeaux-threads
+        flexi-streams
+        hunchentoot
+        split-sequence
+      ]
+      ++ lib.optionals (hasSystem self "clack-test") [
+        bordeaux-threads
+        dexador
+        flexi-streams
+        http-body
+        ironclad
+        rove
+      ];
+    lispCheckDependencies = lib.optionals (hasSystem self "clack-handler-hunchentoot") [ clack-test ];
+  });
 
-      systems = {
-        # TODO: This is a complex package with lots of derivations and check
-        # dependencies. Fill in as necessary. I’ve only filled in what I need
-        # right now.
-        clack = {
-          lispDependencies = [
-            alexandria
-            bordeaux-threads
-            lack
-            swank
-            usocket
-          ];
-        };
-        clack-handler-hunchentoot = {
-          lispDependencies = [
-            alexandria
-            bordeaux-threads
-            clack-socket
-            flexi-streams
-            hunchentoot
-            split-sequence
-          ];
-          lispCheckDependencies = [ clack-test ];
-        };
-        clack-socket = { };
-        clack-test = {
-          lispDependencies = [
-            bordeaux-threads
-            clack
-            clack-handler-hunchentoot
-            dexador
-            flexi-streams
-            http-body
-            ironclad
-            rove
-            usocket
-          ];
-        };
-      };
-    })
-    clack
-    clack-handler-hunchentoot
-    clack-socket
-    clack-test
-    ;
+  clack-handler-hunchentoot = clack.overrideAttrs {
+    name = "clack-handler-hunchentoot";
+    lispSystems = [
+      "clack-handler-hunchentoot"
+      "clack-socket"
+    ];
+  };
+
+  clack-socket = clack.overrideAttrs { lispSystems = [ "clack-socket" ]; };
+
+  clack-test = clack.overrideAttrs {
+    name = "clack-test";
+    lispSystems = [
+      "clack"
+      "clack-handler-hunchentoot"
+      "clack-test"
+    ];
+  };
 
   closer-mop = lispify "closer-mop" [ ];
 
@@ -1238,7 +1229,7 @@ in
 
   clunit2 = lispify "clunit2" [ ];
 
-  collectors = lispDerivation {
+  collectors = lispDerivation (self: {
     lispSystem = "collectors";
     lispDependencies = [
       alexandria
@@ -1247,7 +1238,9 @@ in
     ];
     lispCheckDependencies = [ lisp-unit2 ];
     src = sources.collectors;
-  };
+    # The variable MAKE-REDUCER-TEST is unbound.
+    meta.broken = (self.doCheck or false) && (final._lisp.name == "clasp");
+  });
 
   colorize = lispify "colorize" [
     alexandria
@@ -1257,6 +1250,7 @@ in
 
   common-doc = lispDerivation {
     src = sources.common-doc;
+    name = "common-doc";
     # These all use practically the same dependencies. Light-weight enough that
     # it’s not worth the hassle to split them up, IMO.
     lispSystems = [
@@ -1284,7 +1278,7 @@ in
 
   common-html = lispDerivation {
     src = sources.common-html;
-    lispSystems = [ "common-html" ];
+    lispSystem = "common-html";
     lispDependencies = [
       common-doc
       plump
@@ -1294,7 +1288,7 @@ in
     lispCheckDependencies = [ fiveam ];
   };
 
-  commondoc-markdown = lispDerivation {
+  commondoc-markdown = lispDerivation (self: {
     lispSystem = "commondoc-markdown";
     src = sources.commondoc-markdown;
     lispDependencies = [
@@ -1311,14 +1305,16 @@ in
       hamcrest
       rove
     ];
-  };
+    # I have no idea what’s happening here but I need to move on
+    meta.broken = self.doCheck or false;
+  });
 
   computable-reals = lispDerivation {
     lispSystem = "computable-reals";
     src = sources.computable-reals;
   };
 
-  concrete-syntax-tree = lispDerivation {
+  concrete-syntax-tree = lispDerivation (self: {
     lispDependencies = [ acclimation ];
     lispCheckDependencies = [ fiveam ];
     src = sources.concrete-syntax-tree;
@@ -1329,7 +1325,9 @@ in
       find . -name '*.asd' -exec printf '"%s" ' {} \; >> .cl-source-registry.cache
       echo ')' >> .cl-source-registry.cache
     '';
-  };
+    # These checks take too long on any reasonable machine.
+    meta.broken = self.doCheck or false;
+  });
 
   contextl = lispDerivation {
     lispDependencies = [
@@ -1351,7 +1349,7 @@ in
     meta.broken = final._lisp.name == "clasp";
   };
 
-  data-lens = lispDerivation {
+  data-lens = lispDerivation (self: {
     lispDependencies = [
       cl-ppcre
       alexandria
@@ -1366,9 +1364,10 @@ in
       string-case
     ];
     src = sources.data-lens;
-  };
+    meta.broken = (self.doCheck or false) && (final._lisp.name == "ecl");
+  });
 
-  dbi = lispDerivation {
+  dbi = lispDerivation (self: {
     lispSystem = "dbi";
     src = sources.cl-dbi;
     lispDependencies = [
@@ -1383,9 +1382,16 @@ in
       rove
       trivial-types
     ];
-  };
+    # depends on mysql, which isn’t available in cl-nix-lite
+    meta.broken = self.doCheck or false;
+  });
 
-  deflate = lispify "deflate" [ ];
+  deflate = lispDerivation (self: {
+    lispSystem = "deflate";
+    src = sources.deflate;
+    # The symbol STREAM-ELEMENT-TYPE is bound to an ordinary function and is not a valid name for a generic function
+    meta.broken = (self.doCheck or false) && (final._lisp.name == "clasp");
+  });
 
   dexador = lispDerivation {
     lispSystem = "dexador";
@@ -1476,7 +1482,7 @@ in
     lispDependencies = [ trivial-indent ];
   };
 
-  drakma = lispDerivation {
+  drakma = lispDerivation (self: {
     lispSystem = "drakma";
     src = sources.drakma;
     lispDependencies = [
@@ -1494,14 +1500,20 @@ in
       fiveam
       hunchentoot
     ];
-  };
+    # Running test GET-GOOGLE Condition of type: TRY-AGAIN-ERROR
+    #
+    # Not sure why this isn’t failing on other lisps... shouldn’t nix sandboxing
+    # break this test?
+    meta.broken = (self.doCheck or false) && (final._lisp.name == "clasp");
+  });
 
-  dynamic-classes = lispDerivation {
+  dynamic-classes = lispDerivation (self: {
     lispSystem = "dynamic-classes";
     src = sources.dynamic-classes;
     lispDependencies = [ metatilities-base ];
     lispCheckDependencies = [ lift ];
-  };
+    meta.broken = self.doCheck or false;
+  });
 
   eager-future2 = lispDerivation {
     lispSystem = "eager-future2";
@@ -1517,66 +1529,58 @@ in
     meta.broken = final._lisp.name == "ecl" && pkgs.stdenv.isDarwin;
   };
 
-  inherit
-    (lispMultiDerivation {
-      src = sources.easy-routes;
-      systems = {
-        easy-routes = {
-          lispDependencies = [
-            hunchentoot
-            routes
-          ];
-        };
-        "easy-routes+errors" = {
-          lispDependencies = [
-            easy-routes
-            hunchentoot-errors
-          ];
-        };
-        "easy-routes+djula" = {
-          lispDependencies = [
-            easy-routes
-            djula
-          ];
-        };
-      };
-    })
-    easy-routes
-    "easy-routes+djula"
-    "easy-routes+errors"
-    ;
+  easy-routes = lispDerivation (self: {
+    src = sources.easy-routes;
+    lispSystem = "easy-routes";
+    lispDependencies =
+      lib.optionals (hasSystem self "easy-routes") [
+        hunchentoot
+        routes
+      ]
+      ++ lib.optionals (hasSystem self "easy-routes+errors") [ hunchentoot-errors ]
+      ++ lib.optionals (hasSystem self "easy-routes+djula") [ djula ];
+  });
 
-  inherit
-    (lispMultiDerivation {
-      src = sources.eclector;
-      systems = {
-        eclector = {
-          lispDependencies = [
-            alexandria
-            closer-mop
-            acclimation
-          ];
-          lispCheckDependencies = [
-            alexandria
-            fiveam
-          ];
-        };
-        eclector-concrete-syntax-tree = {
-          lispDependencies = [
-            eclector
-            concrete-syntax-tree
-            alexandria
-          ];
-          lispCheckDependencies = [ fiveam ];
-        };
-      };
-      # This directory is unneeded and it messes up some shebang filtering
-      # autodetectiong stuff on linux builds.
-      preBuild = "rm -rf tools-for-build";
-    })
-    eclector
-    eclector-concrete-syntax-tree
-    ;
+  "easy-routes+errors" = easy-routes.overrideAttrs {
+    lispSystems = [
+      "easy-routes"
+      "easy-routes+errors"
+    ];
+  };
+
+  "easy-routes+djula" = easy-routes.overrideAttrs {
+    lispSystems = [
+      "easy-routes"
+      "easy-routes+djula"
+    ];
+  };
+
+  eclector = lispDerivation (self: {
+    lispSystem = "eclector";
+    src = sources.eclector;
+    lispDependencies =
+      lib.optionals (hasSystem self "eclector") [
+        alexandria
+        closer-mop
+        acclimation
+      ]
+      ++ lib.optionals (hasSystem self "eclector-concrete-syntax-tree") [ concrete-syntax-tree ];
+    lispCheckDependencies = [
+      alexandria
+      fiveam
+    ];
+    # This directory is unneeded and it messes up some shebang filtering
+    # autodetectiong stuff on linux builds.
+    preBuild = "rm -rf tools-for-build";
+  });
+
+  eclector-concrete-syntax-tree = eclector.overrideAttrs {
+    lispSystems = [
+      "eclector"
+      "eclector-concrete-syntax-tree"
+    ];
+    name = "eclector-concrete-syntax-tree";
+  };
 
   enchant = lispDerivation {
     lispDependencies = [ cffi ];
@@ -1597,11 +1601,16 @@ in
     lispCheckDependencies = [ fiveam ];
   };
 
-  event-emitter = lispDerivation {
+  event-emitter = lispDerivation (self: {
     lispSystem = "event-emitter";
     src = sources.event-emitter;
     lispCheckDependencies = [ prove ];
-  };
+    # This fails on Github Actions, not in my local VM:
+    # *** - handle_fault error2 ! address = 0x1fffffd6e640 not in [0x1000000c0000,0x10000058dd90) !
+    # SIGSEGV cannot be cured. Fault address = 0x1fffffd6e640.
+    meta.broken =
+      (self.doCheck or false) && (final._lisp.name == "clisp") && pkgs.stdenv.hostPlatform.isLinux;
+  });
 
   f-underscore = lispify "f-underscore" [ ];
 
@@ -1616,40 +1625,44 @@ in
     fare-utils
   ];
 
-  inherit
-    (lispMultiDerivation {
-      src = sources.fare-quasiquote;
-      systems = {
-        fare-quasiquote = {
-          lispDependencies = [ fare-utils ];
-          lispCheckDependencies = [
-            fare-quasiquote-extras
-            hu_dwim_stefil
-            optima
-          ];
-        };
-        fare-quasiquote-extras = {
-          lispDependencies = [
-            fare-quasiquote-optima
-            fare-quasiquote-readtable
-          ];
-        };
-        fare-quasiquote-optima = {
-          lispDependencies = [ final."trivia.quasiquote" ];
-        };
-        fare-quasiquote-readtable = {
-          lispDependencies = [
-            fare-quasiquote
-            named-readtables
-          ];
-        };
-      };
-    })
-    fare-quasiquote
-    fare-quasiquote-extras
-    fare-quasiquote-optima
-    fare-quasiquote-readtable
-    ;
+  fare-quasiquote = lispDerivation (self: {
+    src = sources.fare-quasiquote;
+    lispSystem = "fare-quasiquote";
+    lispDependencies =
+      lib.optionals (hasSystem self "fare-quasiquote") [ fare-utils ]
+      ++ lib.optionals (hasSystem self "fare-quasiquote-optima") [ final."trivia.quasiquote" ]
+      ++ lib.optionals (hasSystem self "fare-quasiquote-readtable") [ named-readtables ];
+    lispCheckDependencies = [
+      fare-quasiquote-extras
+      hu_dwim_stefil
+      optima
+    ];
+  });
+
+  fare-quasiquote-extras = fare-quasiquote.overrideAttrs {
+    name = "fare-quasiquote-extras";
+    lispSystems = [
+      "fare-quasiquote"
+      "fare-quasiquote-optima"
+      "fare-quasiquote-readtable"
+    ];
+  };
+
+  fare-quasiquote-optima = fare-quasiquote.overrideAttrs {
+    name = "fare-quasiquote-optima";
+    lispSystems = [
+      "fare-quasiquote"
+      "fare-quasiquote-optima"
+    ];
+  };
+
+  fare-quasiquote-readtable = fare-quasiquote.overrideAttrs {
+    name = "fare-quasiquote-readtable";
+    lispSystems = [
+      "fare-quasiquote"
+      "fare-quasiquote-readtable"
+    ];
+  };
 
   fare-utils = lispDerivation {
     lispSystem = "fare-utils";
@@ -1661,7 +1674,7 @@ in
     meta.broken = final._lisp.name == "sbcl" && (lib.getVersion final._lisp.deriv) == "2.4.4";
   };
 
-  fast-http = lispDerivation {
+  fast-http = lispDerivation (self: {
     src = sources.fast-http;
     lispSystem = "fast-http";
     lispDependencies = [
@@ -1679,7 +1692,9 @@ in
       prove
       xsubseq
     ];
-  };
+    # lisp_instance_class for called on #<UNBOUND>
+    meta.broken = (self.doCheck or false) && (final._lisp.name == "clasp");
+  });
 
   fast-io = lispify "fast-io" [
     alexandria
@@ -1701,31 +1716,29 @@ in
     ];
   };
 
-  # I’m defining this as a multideriv because it exposes lots of derivs. Even
-  # though I only use one at the moment, it’s likely to change in the future.
-  inherit
-    (lispMultiDerivation {
-      src = sources.femlisp;
-      systems = {
-        infix = { };
-      };
-      dontConfigure = true;
-      lispAsdPath = systems: lib.optionals (builtins.elem "infix" systems) [ "external/infix" ];
-    })
-    infix
-    ;
+  infix = lispDerivation (self: {
+    src = sources.femlisp;
+    lispSystem = "infix";
+    dontConfigure = true;
+    lispAsdPath = lib.optionals (hasSystem self "infix") [ "external/infix" ];
+  });
 
   fiasco = lispify "fiasco" [
     alexandria
     trivial-gray-streams
   ];
 
-  find-port = lispDerivation {
+  find-port = lispDerivation (self: {
     lispSystem = "find-port";
     lispCheckDependencies = [ fiveam ];
     lispDependencies = [ usocket ];
     src = sources.find-port;
-  };
+    # Works locally but broken on Github Actions I don’t know why:
+    #
+    # Running test FIND-PORTS XThe following check failed: ((FIND-PORT:FIND-PORT))
+    meta.broken =
+      (self.doCheck or false) && (final._lisp.name == "abcl") && pkgs.stdenv.hostPlatform.isDarwin;
+  });
 
   fiveam = lispify "fiveam" [
     alexandria
@@ -1733,7 +1746,7 @@ in
     trivial-backtrace
   ];
 
-  float-features = lispDerivation {
+  float-features = lispDerivation (self: {
     lispSystem = "float-features";
     src = sources.float-features;
     lispDependencies = [
@@ -1741,9 +1754,29 @@ in
       trivial-features
     ];
     lispCheckDependencies = [ parachute ];
-  };
+    # *** - APPLY: too few arguments given to FIND
+    meta.broken = (self.doCheck or false) && (final._lisp.name == "clisp");
+  });
 
-  flexi-streams = lispify "flexi-streams" [ trivial-gray-streams ];
+  flexi-streams = lispDerivation (self: {
+    lispSystem = "flexi-streams";
+    src = sources.flexi-streams;
+    lispDependencies = [ trivial-gray-streams ];
+    meta.broken =
+      (self.doCheck or false)
+      && (
+        pkgs.stdenv.hostPlatform.isDarwin
+        # https://github.com/edicl/flexi-streams/issues/51".  This technically only
+        # affects SBCL 2.4.4 but I can’t check the SBCL version here.  Oh well.
+        || (
+          (pkgs.stdenv.hostPlatform.system == "x86_64-linux")
+          && !(builtins.elem final._lisp.name [
+            "ecl"
+            "clisp"
+          ])
+        )
+      );
+  });
 
   form-fiddle = lispDerivation {
     lispSystem = "form-fiddle";
@@ -1751,7 +1784,7 @@ in
     lispDependencies = [ documentation-utils ];
   };
 
-  fset = lispDerivation {
+  fset = lispDerivation (self: {
     lispDependencies = [
       misc-extensions
       mt19937
@@ -1771,7 +1804,7 @@ in
       # which is not of the expected type LIST
       "ecl"
     ];
-  };
+  });
 
   function-cache = lispDerivation {
     lispSystem = "function-cache";
@@ -1814,39 +1847,35 @@ in
 
   global-vars = lispify "global-vars" [ ];
 
-  inherit
-    (lispMultiDerivation {
-      src = sources.hamcrest;
-      systems = {
-        hamcrest = {
-          lispCheckDependencies = [
-            prove
-            rove
-          ];
-          lispDependencies = [
-            final."40ants-asdf-system"
-            alexandria
-            iterate
-            cl-ppcre
-            split-sequence
-          ];
-        };
-        # I’m not 100% on how this system is exported exactly, but it is,
-        # somehow. Apparently ASDFv3 automatically recognizes this? Reblocks
-        # seems to use it.
-        "hamcrest/rove" = {
-          lispDependencies = [
-            hamcrest
-            rove
-          ];
-        };
-      };
-    })
-    hamcrest
-    "hamcrest/rove"
-    ;
+  hamcrest = lispDerivation (self: {
+    src = sources.hamcrest;
+    lispSystem = "hamcrest";
+    lispCheckDependencies = [
+      prove
+      rove
+    ];
+    lispDependencies = [
+      final."40ants-asdf-system"
+      alexandria
+      iterate
+      cl-ppcre
+      split-sequence
+    ]
+    ++ lib.optionals (hasSystem self "hamcrest/rove") [ rove ];
+  });
 
-  history-tree = lispDerivation {
+  "hamcrest/rove" = hamcrest.overrideAttrs {
+    name = "hamcrest/rove";
+    lispSystems = [
+      "hamcrest"
+      # I’m not 100% on how this system is exported exactly, but it is,
+      # somehow. Apparently ASDFv3 automatically recognizes this? Reblocks seems
+      # to use it.
+      "hamcrest/rove"
+    ];
+  };
+
+  history-tree = lispDerivation (self: {
     lispDependencies = [
       alexandria
       cl-custom-hash-table
@@ -1857,11 +1886,15 @@ in
     src = sources.history-tree;
     lispCheckDependencies = [ lisp-unit2 ];
     lispSystem = "history-tree";
-    # *** - EVAL: undefined function EXT::ADD-PACKAGE-LOCAL-NICKNAME
-    meta.broken = final._lisp.name == "clisp";
-  };
+    meta.broken =
+      # *** - EVAL: undefined function EXT::ADD-PACKAGE-LOCAL-NICKNAME
+      (final._lisp.name == "clisp")
+      ||
+        # The variable SINGLE-ENTRY is unbound.
+        ((self.doCheck or false) && (final._lisp.name == "clasp"));
+  });
 
-  http-body = lispDerivation {
+  http-body = lispDerivation (self: {
     lispSystem = "http-body";
     src = sources.http-body;
     lispDependencies = [
@@ -1881,7 +1914,9 @@ in
       prove
       trivial-utf-8
     ];
-  };
+    # Condition of type: SIMPLE-PROGRAM-ERROR: lisp_instance_class for called on #<UNBOUND>
+    meta.broken = (self.doCheck or false) && (final._lisp.name == "clasp");
+  });
 
   html-encode = lispify "html-encode" [ ];
 
@@ -1906,7 +1941,7 @@ in
     ];
   };
 
-  hunchentoot = lispDerivation {
+  hunchentoot = lispDerivation (self: {
     lispSystem = "hunchentoot";
     src = sources.hunchentoot;
     lispDependencies = [
@@ -1929,7 +1964,9 @@ in
       cl-who
       drakma
     ];
-  };
+    # https://github.com/edicl/hunchentoot/issues/217
+    meta.broken = self.doCheck or false;
+  });
 
   hunchentoot-errors = lispify "hunchentoot-errors" [
     cl-mimeparse
@@ -1940,11 +1977,13 @@ in
 
   idna = lispify "idna" [ split-sequence ];
 
-  ieee-floats = lispDerivation {
+  ieee-floats = lispDerivation (self: {
     lispSystem = "ieee-floats";
     src = sources.ieee-floats;
     lispCheckDependencies = [ fiveam ];
-  };
+    # SYSTEM::LPAR-READER: floating point underflow
+    meta.broken = (self.doCheck or false) && (final._lisp.name == "clisp");
+  });
 
   in-nomine = lispDerivation {
     lispSystem = "in-nomine";
@@ -1986,19 +2025,24 @@ in
     parse-number
   ];
 
-  introspect-environment = lispDerivation {
+  introspect-environment = lispDerivation (self: {
     lispSystem = "introspect-environment";
     lispCheckDependencies = [ fiveam ];
     src = sources.introspect-environment;
-  };
+    # The slot CLEAVIR-ENVIRONMENT::%TYPE in the object
+    # #<CLEAVIR-ENVIRONMENT:LEXICAL-VARIABLE-INFO @0xffffc851ff99> is unbound.
+    meta.broken = (self.doCheck or false) && (final._lisp.name == "clasp");
+  });
 
-  ironclad = lispDerivation {
+  ironclad = lispDerivation (self: {
     lispSystem = "ironclad";
     src = sources.ironclad;
     lispDependencies = [ bordeaux-threads ];
     lispCheckDependencies = [ rt ];
     env = lib.optionalAttrs (final._lisp.name == "sbcl") { NIX_SBCL_DYNAMIC_SPACE_SIZE = "2gb"; };
-  };
+    # 50 out of 470 total tests failed
+    meta.broken = (self.doCheck or false) && (final._lisp.name == "clasp");
+  });
 
   iterate = lispDerivation {
     lispSystem = "iterate";
@@ -2068,17 +2112,22 @@ in
     ];
   };
 
-  kmrcl = lispDerivation {
+  kmrcl = lispDerivation (self: {
     lispSystem = "kmrcl";
     version = "4a27407aad9deb607ffb8847630cde3d041ea25a";
     src = sources.kmrcl;
     lispCheckDependencies = [ rt ];
-    # > The symbol "MAKE-THREAD-LOCK" was not found in package EXT.
-    meta.broken = final._lisp.name == "abcl";
-  };
+    meta.broken =
+      # > The symbol "MAKE-THREAD-LOCK" was not found in package EXT.
+      (final._lisp.name == "abcl")
+      ||
+        # odd floating point error on clisp
+        ((self.doCheck or false) && (final._lisp.name == "clisp"));
+  });
 
   # I can’t be bothered sorting out this dependency jungle
-  lack = lispDerivation {
+  lack = lispDerivation (self: {
+    name = "lack";
     src = sources.lack;
     # Kitchen sink dependencies. In an ideal world this would be unnecessary:
     # every individual lack system would be listed explicitly in Nix, with its
@@ -2144,7 +2193,9 @@ in
       "lack/util"
       "lack-util"
     ];
-  };
+    # broken test configuration in asdf declarations
+    meta.broken = self.doCheck or false;
+  });
 
   lass = lispDerivation {
     lispSystems = [
@@ -2163,7 +2214,7 @@ in
     meta.broken = final._lisp.name == "clisp";
   };
 
-  legion = lispDerivation {
+  legion = lispDerivation (self: {
     lispSystem = "legion";
     src = sources.legion;
     lispDependencies = [
@@ -2176,7 +2227,9 @@ in
       local-time
       prove
     ];
-  };
+    # hangs forever on ECL
+    meta.broken = (self.doCheck or false) && (final._lisp.name == "ecl");
+  });
 
   let-plus = lispDerivation {
     lispSystem = "let-plus";
@@ -2188,22 +2241,24 @@ in
     src = sources.let-plus;
   };
 
-  lift = lispDerivation {
+  lift = lispDerivation (self: {
     lispSystem = "lift";
     src = sources.lift;
-    meta.broken = builtins.elem final._lisp.name [
-      # Symbol named "BTCL" not found in the CORE package.
-      "clasp"
-      # There is a bug in lift which causes some silly pathname, ‘mkdir
-      # -p’ style problem. Setting the broken flag here is the easiest
-      # way to disable all lift tests on clisp for now.  The bug looks
-      # like this:
-      #
-      #  > *** - PROBE-FILE: No file name given:
-      #  >       #P"/private/tmp/nix-build-system-metatilities-base.drv-1/source/test-results-2023-10-16-1/
-      "clisp"
-    ];
-  };
+    meta.broken =
+      (builtins.elem final._lisp.name [
+        # Symbol named "BTCL" not found in the CORE package.
+        "clasp"
+        # There is a bug in lift which causes some silly pathname, ‘mkdir
+        # -p’ style problem. Setting the broken flag here is the easiest
+        # way to disable all lift tests on clisp for now.  The bug looks
+        # like this:
+        #
+        #  > *** - PROBE-FILE: No file name given:
+        #  >       #P"/private/tmp/nix-build-system-metatilities-base.drv-1/source/test-results-2023-10-16-1/
+        "clisp"
+      ])
+      || (self.doCheck or false);
+  });
 
   lisp-namespace = lispDerivation {
     lispSystem = "lisp-namespace";
@@ -2214,12 +2269,18 @@ in
 
   lisp-unit = lispify "lisp-unit" [ ];
 
-  lisp-unit2 = lispify "lisp-unit2" [
-    alexandria
-    cl-interpol
-    iterate
-    symbol-munger
-  ];
+  lisp-unit2 = lispDerivation (self: {
+    lispSystem = "lisp-unit2";
+    src = sources.lisp-unit2;
+    lispDependencies = [
+      alexandria
+      cl-interpol
+      iterate
+      symbol-munger
+    ];
+    # The variable COLLECT/DECOLLECT is unbound.
+    meta.broken = (self.doCheck or false) && (final._lisp.name == "clasp");
+  });
 
   lml2 = lispDerivation {
     lispDependencies = [ kmrcl ];
@@ -2228,20 +2289,29 @@ in
     src = sources.lml2;
   };
 
-  local-time = lispDerivation {
+  local-time = lispDerivation (self: {
     lispSystem = "local-time";
     src = sources.local-time;
     lispCheckDependencies = [ fiasco ];
-  };
+    meta.broken =
+      (self.doCheck or false)
+      && (
+        (final._lisp.name == "abcl")
+        ||
+          # *** - Invalid pathname designator T
+          (final._lisp.name == "clisp")
+      );
+  });
 
-  log4cl = lispDerivation {
+  log4cl = lispDerivation (self: {
     lispSystem = "log4cl";
     src = sources.log4cl;
     lispDependencies = [ bordeaux-threads ];
     lispCheckDependencies = [ stefil ];
-  };
+    meta.broken = self.doCheck or false;
+  });
 
-  log4cl-extras = lispDerivation {
+  log4cl-extras = lispDerivation (self: {
     lispSystem = "log4cl-extras";
     lispCheckDependencies = [ hamcrest ];
     lispDependencies = [
@@ -2258,7 +2328,8 @@ in
       with-output-to-stream
     ];
     src = sources.log4cl-extras;
-  };
+    meta.broken = self.doCheck or false;
+  });
 
   # Technically this package also contains a benchmark system with different
   # dependencies but I’m not going to bother exposing that to this scope.
@@ -2269,12 +2340,25 @@ in
         src = sources.bordeaux-threads-v1;
       });
     in
-    lispify "lparallel" [
-      alexandria
-      # If anyone else in your entire family includes
-      # bordeaux-threads-master, you’re dead.
-      bordeaux-threads-v1
-    ]
+    lispDerivation (self: {
+      lispSystem = "lparallel";
+      src = sources.lparallel;
+      lispDependencies = [
+        alexandria
+        # If anyone else in your entire family includes
+        # bordeaux-threads-master, you’re dead.
+        bordeaux-threads-v1
+      ];
+      meta.broken =
+        (self.doCheck or false)
+        && (
+          # When calling (COMMON-LISP::FLET CORE::TRANSFORM-KEYWORDS) with the lambda-list (COMMON-LISP::&KEY CORE::REPORT CORE::INTERACTIVE CORE::TEST) the bad keyword argument :HANDLED was passed
+          (final._lisp.name == "clasp")
+          # ;;; Unknown keyword :HANDLED
+          || ((final._lisp.name == "ecl") && pkgs.stdenv.isLinux)
+          || pkgs.stdenv.hostPlatform.isDarwin
+        );
+    })
   );
 
   lquery = lispDerivation {
@@ -2307,53 +2391,48 @@ in
     lispCheckDependencies = [ lift ];
   };
 
-  inherit
-    (lispMultiDerivation {
-      src = sources.metacopy;
-      systems = {
-        metacopy = {
-          lispDependencies = [ moptilities ];
-          lispCheckDependencies = [ lift ];
-        };
-        metacopy-with-contextl = {
-          lispDependencies = [
-            moptilities
-            contextl
-          ];
-          lispCheckDependencies = [ lift ];
-        };
-      };
-    })
-    metacopy
-    metacopy-with-contextl
-    ;
+  metacopy = lispDerivation (self: {
+    lispSystem = "metacopy";
+    src = sources.metacopy;
+    lispDependencies =
+      lib.optionals (hasSystem self "metacopy") [ moptilities ]
+      ++ lib.optionals (hasSystem self "metacopy-with-contextl") [ contextl ];
+    lispCheckDependencies = [ lift ];
+  });
 
-  inherit
-    (lispMultiDerivation {
-      src = sources.metatilities;
-      systems = {
-        metatilities = {
-          lispDependencies = [
-            moptilities
-            cl-containers
-            metabang-bind
-            metatilities-base
-          ];
-          lispCheckDependencies = [ lift ];
-        };
-        "metatilities/with-lift" = {
-          lispDependencies = [
-            metatilities
-            asdf-system-connections
-            final."cl-containers/with-asdf-system-connections"
-            lift
-          ];
-        };
-      };
-    })
-    metatilities
-    "metatilities/with-lift"
-    ;
+  metacopy-with-contextl = metacopy.overrideAttrs {
+    name = "metacopy-with-contextl";
+    lispSystems = [
+      "metacopy"
+      "metacopy-with-contextl"
+    ];
+  };
+
+  metatilities = lispDerivation (self: {
+    src = sources.metatilities;
+    lispSystem = "metatilities";
+    lispDependencies =
+      lib.optionals (hasSystem self "metatilities") [
+        moptilities
+        cl-containers
+        metabang-bind
+        metatilities-base
+      ]
+      ++ lib.optionals (hasSystem self "metatilities/with-lift") [
+        asdf-system-connections
+        final."cl-containers/with-asdf-system-connections"
+        lift
+      ];
+    lispCheckDependencies = [ lift ];
+  });
+
+  "metatilities/with-lift" = metatilities.overrideAttrs {
+    name = "metatilities/with-lift";
+    lispSystems = [
+      "metatilities"
+      "metatilities/with-lift"
+    ];
+  };
 
   metatilities-base = lispDerivation {
     lispSystem = "metatilities-base";
@@ -2361,78 +2440,90 @@ in
     lispCheckDependencies = [ lift ];
   };
 
-  inherit
-    (
-      let
-        lispCheckDependencies = [
-          final."mgl-pax/full"
-          dref
-          try
-        ];
-      in
-      lispMultiDerivation {
-        src = sources.mgl-pax;
-        systems = {
-          dref = {
-            lispDependencies = [
-              mgl-pax-bootstrap
-              named-readtables
-              pythonic-string-reader
-            ];
-            lispCheckDependencies = lispCheckDependencies ++ [
-              alexandria
-              swank
-            ];
-          };
-          mgl-pax = {
-            lispDependencies = [
-              dref
-              named-readtables
-              pythonic-string-reader
-              mgl-pax-bootstrap
-            ];
-            inherit lispCheckDependencies;
-          };
-          "mgl-pax/full" = {
-            # I don’t use the individual packages so I’ve just lumped them all
-            # together.
-            lispDependencies = [
-              mgl-pax
-              # mgl-pax/document
-              final."3bmd"
-              final."3bmd-ext-code-blocks"
-              colorize
-              md5
-              trivial-utf-8
-              # mgl-pax/navigate
-              swank
-              # mgl-pax/transcribe
-              alexandria
-            ];
-            inherit lispCheckDependencies;
-          };
-          mgl-pax-bootstrap = { };
-        };
-        lispAsdPath = systems: lib.optionals (builtins.elem "dref" systems) [ "dref" ];
-        meta =
-          # The function PRINT-UNRESOLVABLE-REFLINK is undefined.
-          systems: { broken = (builtins.elem "mgl-pax/full" systems) && final._lisp.name == "clasp"; };
-      }
-    )
-    dref
-    mgl-pax
-    "mgl-pax/full"
-    mgl-pax-bootstrap
-    ;
+  dref = lispDerivation (self: {
+    src = sources.mgl-pax;
+    lispSystems = [
+      "dref"
+      "mgl-pax-bootstrap"
+    ]
+    ++ lib.optionals (self.doCheck or false) [
+      "mgl-pax"
+      "mgl-pax/full"
+    ];
+    lispDependencies =
+      lib.optionals (hasSystem self "dref") [
+        named-readtables
+        pythonic-string-reader
+      ]
+      ++ lib.optionals (hasSystem self "mgl-pax") [
+        dref
+        named-readtables
+        pythonic-string-reader
+      ]
+      ++ lib.optionals (hasSystem self "mgl-pax/full") [
+        # I don’t use the individual packages so I’ve just lumped them all
+        # together.
+        # mgl-pax/document
+        final."3bmd"
+        final."3bmd-ext-code-blocks"
+        colorize
+        md5
+        trivial-utf-8
+        # mgl-pax/navigate
+        swank
+        # mgl-pax/transcribe
+        alexandria
+      ];
+    lispCheckDependencies =
+      lib.optionals (hasSystem self [
+        "dref"
+        "mgl-pax"
+        "mgl-pax/full"
+      ]) [ try ]
+      ++ lib.optionals (hasSystem self "dref") [
+        alexandria
+        swank
+      ];
+    lispAsdPath = lib.optionals (hasSystem self "dref") [ "dref" ];
+    # The function PRINT-UNRESOLVABLE-REFLINK is undefined.
+    meta.broken =
+      ((hasSystem self "mgl-pax/full") && final._lisp.name == "clasp")
+      || ((hasSystem self "mgl-pax") && final._lisp.name == "abcl");
+  });
+
+  mgl-pax = dref.overrideAttrs (old: {
+    name = "mgl-pax";
+    lispSystems = lib.uniqueStrings (
+      old.lispSystems
+      ++ [
+        "dref"
+        "mgl-pax-bootstrap"
+        "mgl-pax"
+      ]
+    );
+  });
+
+  "mgl-pax/full" = dref.overrideAttrs {
+    name = "mgl-pax/full";
+    lispSystems = [
+      "dref"
+      "mgl-pax"
+      "mgl-pax-bootstrap"
+      "mgl-pax/full"
+    ];
+  };
+
+  mgl-pax-bootstrap = dref.overrideAttrs { lispSystems = [ "mgl-pax-bootstrap" ]; };
 
   misc-extensions = lispify "misc-extensions" [ ];
 
-  moptilities = lispDerivation {
+  moptilities = lispDerivation (self: {
     lispSystem = "moptilities";
     lispDependencies = [ closer-mop ];
     lispCheckDependencies = [ lift ];
     src = sources.moptilities;
-  };
+    meta.broken = self.doCheck or false;
+  });
 
   mt19937 = lispify "mt19937" [ ];
 
@@ -2456,16 +2547,20 @@ in
     lispCheckDependencies = [ try ];
   };
 
-  nclasses = lispDerivation {
+  nclasses = lispDerivation (self: {
     lispDependencies = [ moptilities ];
     src = sources.nclasses;
     lispCheckDependencies = [ lisp-unit2 ];
     lispSystem = "nclasses";
-    # Requires a new version of ASDF that I’m not sure how to load before
-    # building the code. See
-    # "https://gitlab.common-lisp.net/asdf/asdf/-/issues/145".
-    meta.broken = final._lisp.name == "ecl";
-  };
+    meta.broken =
+      # Requires a new version of ASDF that I’m not sure how to load before
+      # building the code. See
+      # "https://gitlab.common-lisp.net/asdf/asdf/-/issues/145".
+      (final._lisp.name == "ecl")
+      ||
+        # The variable SIMPLE-CLASS is unbound.
+        ((self.doCheck or false) && (final._lisp.name == "clasp"));
+  });
 
   nfiles = lispDerivation {
     lispSystem = "nfiles";
@@ -2496,7 +2591,7 @@ in
     ];
   };
 
-  nst = lispDerivation {
+  nst = lispDerivation (self: {
     lispSystem = "nst";
     src = sources.nst;
     lispDependencies = [
@@ -2509,35 +2604,30 @@ in
     preCheck = ''
       export CL_SOURCE_REGISTRY="$PWD/test//:$CL_SOURCE_REGISTRY"
     '';
-  };
+    # No such NST group NST-METHODS-META-SOURCES::METHOD-TESTS
+    meta.broken = (self.doCheck or false) && (final._lisp.name == "clasp");
+  });
 
-  inherit
-    (lispMultiDerivation {
-      src = sources.optima;
-      systems = {
-        optima = {
-          lispCheckDependencies = [
-            eos
-            optima-ppcre
-          ];
-          lispDependencies = [
-            alexandria
-            closer-mop
-          ];
-        };
-        optima-ppcre = {
-          lispSystem = "optima.ppcre";
-          lispDependencies = [
-            optima
-            alexandria
-            cl-ppcre
-          ];
-        };
-      };
-    })
-    optima
-    optima-ppcre
-    ;
+  optima = lispDerivation (self: {
+    name = "optima";
+    src = sources.optima;
+    lispSystems = [ "optima" ] ++ lib.optionals (self.doCheck or false) [ "optima.ppcre" ];
+    lispCheckDependencies = [ eos ];
+    lispDependencies =
+      lib.optionals (hasSystem self "optima") [
+        alexandria
+        closer-mop
+      ]
+      ++ lib.optionals (hasSystem self "optima.ppcre") [ cl-ppcre ];
+  });
+
+  optima-ppcre = optima.overrideAttrs {
+    name = "optima.ppcre";
+    lispsystems = [
+      "optima"
+      "optima.ppcre"
+    ];
+  };
 
   org-sampler = lispify "org-sampler" [ iterate ];
 
@@ -2592,31 +2682,28 @@ in
 
   parse-number = lispify "parse-number" [ ];
 
-  inherit
-    (lispMultiDerivation {
-      src = sources.parser-combinators;
-      systems = {
-        parser-combinators = {
-          lispDependencies = [
-            iterate
-            alexandria
-          ];
-          lispCheckDependencies = [
-            stefil
-            infix
-          ];
-        };
-        parser-combinators-cl-ppcre = {
-          lispDependencies = [
-            parser-combinators
-            cl-ppcre
-          ];
-        };
-      };
-    })
-    parser-combinators
-    parser-combinators-cl-ppcre
-    ;
+  parser-combinators = lispDerivation (self: {
+    src = sources.parser-combinators;
+    lispSystem = "parser-combinators";
+    lispDependencies =
+      lib.optionals (hasSystem self "parser-combinators") [
+        iterate
+        alexandria
+      ]
+      ++ lib.optionals (hasSystem self "parser-combinators-cl-ppcre") [ cl-ppcre ];
+    lispCheckDependencies = [
+      stefil
+      infix
+    ];
+  });
+
+  parser-combinators-cl-ppcre = parser-combinators.overrideAttrs {
+    name = "parser-combinators-cl-ppcre";
+    lispSystem = [
+      "parser-combinators"
+      "parser-combinators-cl-ppcre"
+    ];
+  };
 
   path-parse = lispDerivation {
     lispSystem = "path-parse";
@@ -2701,7 +2788,7 @@ in
     meta.broken = final._lisp.name == "abcl";
   };
 
-  reblocks = lispDerivation {
+  reblocks = lispDerivation (self: {
     lispSystem = "reblocks";
     src = sources.reblocks;
     lispCheckDependencies = [
@@ -2735,7 +2822,9 @@ in
       uuid
       yason
     ];
-  };
+    # Stateful tests in /tmp which break when run by different users
+    meta.broken = self.doCheck or false;
+  });
 
   reblocks-parenscript = lispDerivation {
     lispSystem = "reblocks-parenscript";
@@ -2749,7 +2838,7 @@ in
     src = sources.reblocks-parenscript;
   };
 
-  reblocks-ui = lispDerivation {
+  reblocks-ui = lispDerivation (self: {
     lispSystem = "reblocks-ui";
     src = sources.reblocks-ui;
     lispDependencies = [
@@ -2758,7 +2847,10 @@ in
       reblocks
       reblocks-parenscript
     ];
-  };
+    # Build definition refers to non-existant test system as of
+    # a9779313def0d362840e0fab990034cd999b6b07
+    meta.broken = self.doCheck or false;
+  });
 
   reblocks-websocket = lispDerivation {
     lispSystem = "reblocks-websocket";
@@ -2778,7 +2870,7 @@ in
 
   rfc2388 = lispify "rfc2388" [ ];
 
-  routes = lispDerivation {
+  routes = lispDerivation (self: {
     lispSystem = "routes";
     src = sources.routes;
     lispDependencies = [
@@ -2787,7 +2879,8 @@ in
       split-sequence
     ];
     lispCheckDependencies = [ lift ];
-  };
+    meta.broken = self.doCheck or false;
+  });
 
   # For some reason none of these dependencies are specified in the .asd
   rove = lispify "rove" [
@@ -2804,7 +2897,7 @@ in
 
   # rutils and rutilsx have the same dependencies etc, it’s not worth the hassle
   # creating separate derivations for them.
-  rutils = lispDerivation {
+  rutils = lispDerivation (self: {
     lispSystems = [
       "rutils"
       "rutilsx"
@@ -2815,7 +2908,8 @@ in
       closer-mop
     ];
     lispCheckDependencies = [ should-test ];
-  };
+    meta.broken = self.doCheck or false;
+  });
 
   s-sysdeps = lispify "s-sysdeps" [
     usocket
@@ -2825,7 +2919,7 @@ in
 
   s-xml = lispify "s-xml" [ ];
 
-  salza2 = lispDerivation {
+  salza2 = lispDerivation (self: {
     lispSystem = "salza2";
     src = sources.salza2;
     lispDependencies = [ trivial-gray-streams ];
@@ -2834,9 +2928,17 @@ in
       flexi-streams
       parachute
     ];
-  };
+    meta.broken =
+      (self.doCheck or false)
+      && (
+        (final._lisp.name == "abcl")
+        ||
+          # The stream #<chipz::decompressing-stream @0x7fffd0c3a7b9> has no suitable method for #:stream-element-type.
+          (final._lisp.name == "clasp")
+      );
+  });
 
-  serapeum = lispDerivation {
+  serapeum = lispDerivation (self: {
     src = sources.serapeum;
     lispSystem = "serapeum";
     lispDependencies = [
@@ -2877,12 +2979,15 @@ in
       # but downstream ASDF gets confused about whether or not this was loaded
       # and tries to rebuild serapeum because of it.  I don’t have the
       # inclination to fix it 🤷
-      final._lisp.name == "abcl"
+      (final._lisp.name == "abcl")
       # Condition of type: UNBOUND-SLOT
       # The slot CLEAVIR-ENVIRONMENT::%TYPE in the object
       # #<CLEAVIR-ENVIRONMENT:LEXICAL-VARIABLE-INFO @0xffffc69775d9> is unbound.
-      || final._lisp.name == "clasp";
-  };
+      || (final._lisp.name == "clasp")
+      # failed AVER:
+      #   (AND (EQ (CTRAN-KIND START) INSIDE-BLOCK) (NOT (BLOCK-DELETE-P BLOCK)))
+      || ((self.doCheck or false) && (final._lisp.name == "sbcl"));
+  });
 
   sha1 = lispify "sha1" [ ];
 
@@ -2937,39 +3042,35 @@ in
     ];
   };
 
-  inherit
-    (lispMultiDerivation {
-      src = sources.spinneret;
-      lispCheckDependencies = [
-        fiveam
-        parenscript
-      ];
+  spinneret = lispDerivation (self: {
+    src = sources.spinneret;
+    lispSystem = "spinneret";
+    lispCheckDependencies = [
+      fiveam
+      parenscript
+    ];
 
-      systems = {
-        spinneret = {
-          lispDependencies = [
-            alexandria
-            cl-ppcre
-            global-vars
-            in-nomine
-            parenscript
-            serapeum
-            trivia
-            trivial-gray-streams
-          ];
-        };
-        "spinneret/cl-markdown" = {
-          lispSystem = "spinneret/cl-markdown";
-          lispDependencies = [
-            spinneret
-            cl-markdown
-          ];
-        };
-      };
-    })
-    spinneret
-    "spinneret/cl-markdown"
-    ;
+    lispDependencies = [
+      alexandria
+      cl-ppcre
+      global-vars
+      in-nomine
+      parenscript
+      serapeum
+      trivia
+      trivial-gray-streams
+    ]
+    ++ lib.optionals (hasSystem self "spinneret/cl-markdown") [ cl-markdown ];
+    meta.broken = self.doCheck or false;
+  });
+
+  "spinneret/cl-markdown" = spinneret.overrideAttrs {
+    name = "spinneret/cl-markdown";
+    lispSystems = [
+      "spinneret"
+      "spinneret/cl-markdown"
+    ];
+  };
 
   split-sequence = lispDerivation {
     lispSystem = "split-sequence";
@@ -2999,7 +3100,7 @@ in
 
   stem = lispify "stem" [ ];
 
-  str = lispDerivation {
+  str = lispDerivation (self: {
     lispSystem = "str";
     src = sources.str;
     lispDependencies = [
@@ -3008,7 +3109,8 @@ in
       cl-ppcre-unicode
     ];
     lispCheckDependencies = [ prove ];
-  };
+    meta.broken = self.doCheck or false;
+  });
 
   string-case = lispify "string-case" [ ];
 
@@ -3019,7 +3121,7 @@ in
     patches = ./patches/slime-fix-swank-loader-fasl-cache-pwd.diff;
   };
 
-  symbol-munger = lispDerivation {
+  symbol-munger = lispDerivation (self: {
     src = sources.symbol-munger;
     lispSystem = "symbol-munger";
     lispDependencies = [
@@ -3027,85 +3129,84 @@ in
       iterate
     ];
     lispCheckDependencies = [ lisp-unit2 ];
-  };
+    # The variable TEST-BASIC is unbound.
+    meta.broken = (self.doCheck or false) && (final._lisp.name == "clasp");
+  });
 
   tmpdir = lispify "tmpdir" [ cl-fad ];
 
-  inherit
-    (lispMultiDerivation {
-      src = sources.trivia;
+  trivia = lispDerivation (self: {
+    src = sources.trivia;
+    lispSystems = [
+      "trivia.trivial"
+      "trivia"
+    ];
+    lispDependencies =
+      lib.optionals (hasSystem self "trivia.trivial") [
+        alexandria
+        closer-mop
+        lisp-namespace
+        trivial-cltl2
+      ]
+      ++ lib.optionals (hasSystem self "trivia") [
+        alexandria
+        iterate
+        type-i
+      ]
+      ++ lib.optionals (hasSystem self "trivia.cffi") [ cffi ]
+      ++ lib.optionals (hasSystem self "trivia.fset") [ fset ]
+      ++ lib.optionals (hasSystem self "trivia.ppcre") [ cl-ppcre ]
+      ++ lib.optionals (hasSystem self "trivia.quasiquote") [ fare-quasiquote-readtable ];
+    lispCheckDependencies = lib.optionals (hasSystem self "trivia") [
+      fiveam
+      optima
+      final."trivia.cffi"
+      final."trivia.fset"
+      final."trivia.ppcre"
+      final."trivia.quasiquote"
+    ];
+  });
 
-      systems = {
-        trivia = {
-          lispDependencies = [
-            alexandria
-            iterate
-            final."trivia.trivial"
-            type-i
-          ];
-          lispCheckDependencies = [
-            fiveam
-            optima
-            final."trivia.cffi"
-            final."trivia.fset"
-            final."trivia.ppcre"
-            final."trivia.quasiquote"
-          ];
-        };
+  "trivia.cffi" = trivia.overrideAttrs (old: {
+    lispSystems = [
+      "trivia.trivial"
+      "trivia.cffi"
+    ];
+  });
 
-        "trivia.cffi" = {
-          lispDependencies = [
-            cffi
-            final."trivia.trivial"
-          ];
-        };
+  "trivia.fset" = trivia.overrideAttrs (old: {
+    lispSystems = [
+      "trivia.trivial"
+      "trivia.fset"
+    ];
+  });
 
-        "trivia.fset" = {
-          lispDependencies = [
-            fset
-            final."trivia.trivial"
-          ];
-        };
+  "trivia.ppcre" = trivia.overrideAttrs (old: {
+    lispSystems = [
+      "trivia.trivial"
+      "trivia.ppcre"
+    ];
+  });
 
-        "trivia.ppcre" = {
-          lispDependencies = [
-            cl-ppcre
-            final."trivia.trivial"
-          ];
-        };
+  "trivia.quasiquote" = trivia.overrideAttrs (old: {
+    lispSystems = [
+      "trivia"
+      "trivia.quasiquote"
+    ];
+  });
 
-        "trivia.quasiquote" = {
-          lispDependencies = [
-            fare-quasiquote-readtable
-            trivia
-          ];
-        };
-
-        "trivia.trivial" = {
-          lispDependencies = [
-            alexandria
-            closer-mop
-            lisp-namespace
-            trivial-cltl2
-          ];
-        };
-      };
-    })
-    trivia
-    "trivia.cffi"
-    "trivia.fset"
-    "trivia.ppcre"
-    "trivia.quasiquote"
-    "trivia.trivial"
-    ;
+  "trivia.trivial" = trivia.overrideAttrs (old: {
+    lispSystems = [ "trivia.trivial" ];
+  });
 
   trivial-arguments = lispify "trivial-arguments" [ ];
 
-  trivial-backtrace = lispDerivation {
+  trivial-backtrace = lispDerivation (self: {
     lispSystem = "trivial-backtrace";
     lispCheckDependencies = [ lift ];
     src = sources.trivial-backtrace;
-  };
+    meta.broken = self.doCheck or false;
+  });
 
   trivial-benchmark = lispify "trivial-benchmark" [ documentation-utils ];
 
@@ -3114,11 +3215,23 @@ in
     src = sources.trivial-cltl2;
   };
 
-  trivial-custom-debugger = lispDerivation {
+  trivial-custom-debugger = lispDerivation (self: {
     src = sources.trivial-custom-debugger;
     lispSystem = "trivial-custom-debugger";
     lispCheckDependencies = [ parachute ];
-  };
+    meta.broken =
+      (self.doCheck or false)
+      && (
+        # #<MY-ERROR {354E970D}>
+        (final._lisp.name == "abcl")
+        ||
+          # *** - Condition of type TRIVIAL-CUSTOM-DEBUGGER/TEST::MY-ERROR.
+          (final._lisp.name == "clisp")
+        ||
+          # An error occurred during initialization: #<a TRIVIAL-CUSTOM-DEBUGGER/TEST::MY-ERROR 0x105c49d80>.
+          (final._lisp.name == "ecl")
+      );
+  });
 
   trivial-extract = lispDerivation {
     src = sources.trivial-extract;
@@ -3172,7 +3285,12 @@ in
 
   trivial-open-browser = lispify "trivial-open-browser" [ ];
 
-  trivial-package-local-nicknames = lispify "trivial-package-local-nicknames" [ ];
+  trivial-package-local-nicknames = lispDerivation (self: {
+    lispSystem = "trivial-package-local-nicknames";
+    src = sources.trivial-package-local-nicknames;
+    # test hangs indefinitely
+    meta.broken = (self.doCheck or false) && (final._lisp.name == "clasp");
+  });
 
   trivial-rfc-1123 = lispify "trivial-rfc-1123" [ cl-ppcre ];
 
@@ -3192,11 +3310,12 @@ in
       || final._lisp.name == "ecl";
   };
 
-  trivial-timeout = lispDerivation {
+  trivial-timeout = lispDerivation (self: {
     lispSystem = "trivial-timeout";
     lispCheckDependencies = [ lift ];
     src = sources.trivial-timeout;
-  };
+    meta.broken = self.doCheck or false;
+  });
 
   trivial-types = lispify "trivial-types" [ ];
 
@@ -3204,16 +3323,21 @@ in
 
   trivial-with-current-source-form = lispify "trivial-with-current-source-form" [ ];
 
-  try = lispify "try" [
-    alexandria
-    cl-ppcre
-    closer-mop
-    ieee-floats
-    mgl-pax
-    trivial-gray-streams
-  ];
+  try = lispDerivation (self: {
+    lispSystem = "try";
+    src = sources.try;
+    lispDependencies = [
+      alexandria
+      cl-ppcre
+      closer-mop
+      ieee-floats
+      mgl-pax
+      trivial-gray-streams
+    ];
+    meta.broken = self.doCheck or false;
+  });
 
-  type-i = lispDerivation {
+  type-i = lispDerivation (self: {
     lispSystem = "type-i";
     src = sources.type-i;
     lispDependencies = [
@@ -3223,7 +3347,14 @@ in
       lisp-namespace
     ];
     lispCheckDependencies = [ fiveam ];
-  };
+    # hangs forever
+    meta.broken =
+      (self.doCheck or false)
+      && (builtins.elem final._lisp.name [
+        "clasp"
+        "ecl"
+      ]);
+  });
 
   type-templates = lispDerivation {
     lispDependencies = [
@@ -3235,7 +3366,7 @@ in
     src = sources.type-templates;
   };
 
-  typo = lispDerivation {
+  typo = lispDerivation (self: {
     lispSystem = "typo";
     lispDependencies = [
       alexandria
@@ -3250,42 +3381,41 @@ in
     preCheck = ''
       export CL_SOURCE_REGISTRY="$PWD/code/test-suite:$CL_SOURCE_REGISTRY"
     '';
-    meta.broken = builtins.elem final._lisp.name [
-      "ecl"
-      "clasp"
-      "clisp"
-    ];
-  };
+    meta.broken =
+      (builtins.elem final._lisp.name [
+        "ecl"
+        "clasp"
+        "clisp"
+      ])
+      || (self.doCheck or false);
+  });
 
   unit-test = lispify "unit-test" [ ];
 
   unix-options = lispify "unix-options" [ ];
 
-  inherit
-    (lispMultiDerivation {
-      src = sources.usocket;
-      systems = {
-        usocket = {
-          lispDependencies = [
-            babel
-            split-sequence
-          ];
-          lispCheckDependencies = [
-            bordeaux-threads
-            rt
-          ];
-        };
-        usocket-server = {
-          lispDependencies = [
-            usocket
-            bordeaux-threads
-          ];
-        };
-      };
-    })
-    usocket
-    usocket-server
-    ;
+  usocket = lispDerivation (self: {
+    lispSystem = "usocket";
+    src = sources.usocket;
+    lispDependencies =
+      lib.optionals (hasSystem self "usocket") [
+        babel
+        split-sequence
+      ]
+      ++ lib.optionals (hasSystem self "usocket-server") [
+        usocket
+        bordeaux-threads
+      ];
+    lispCheckDependencies = lib.optionals (hasSystem self "usocket") [
+      bordeaux-threads
+      rt
+    ];
+    # Hangs forever on ABCL
+    meta.broken =
+      (self.doCheck or false) && (pkgs.stdenv.hostPlatform.isLinux || (final._lisp.name == "abcl"));
+  });
+
+  usocket-server = usocket.overrideAttrs { lispSystems = [ "usocket-server" ]; };
 
   uuid = lispify "uuid" [
     ironclad
@@ -3333,11 +3463,12 @@ in
     ];
   };
 
-  with-output-to-stream = lispDerivation {
+  with-output-to-stream = lispDerivation (self: {
     lispSystem = "with-output-to-stream";
     version = "1.0";
     src = sources.with-output-to-stream;
-  };
+    meta.broken = self.doCheck or false;
+  });
 
   wu-decimal = lispify "wu-decimal" [ ];
 
@@ -3348,11 +3479,12 @@ in
     lispCheckDependencies = [ final."1am" ];
   };
 
-  xlunit = lispDerivation rec {
+  xlunit = lispDerivation (self: {
     lispSystem = "xlunit";
     version = "3805d34b1d8dc77f7e0ee527a2490194292dd0fc";
     src = sources.xlunit;
-  };
+    meta.broken = self.doCheck or false;
+  });
 
   xsubseq = lispDerivation {
     src = sources.xsubseq;
@@ -3382,7 +3514,7 @@ in
 
   zpng = lispify "zpng" [ salza2 ];
 
-  zstd = lispDerivation {
+  zstd = lispDerivation (self: {
     lispDependencies = [
       cffi
       cl-octet-streams
@@ -3392,5 +3524,7 @@ in
     lispSystem = "zstd";
     propagatedBuildInputs = [ pkgs.zstd ];
     src = sources.cl-zstd;
-  };
+    meta.broken =
+      (self.doCheck or false) && (final._lisp.name == "clisp") && pkgs.stdenv.hostPlatform.isLinux;
+  });
 }
