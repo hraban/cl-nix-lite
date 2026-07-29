@@ -1379,6 +1379,7 @@ in
     ];
     lispCheckDependencies = [
       alexandria
+      cl-sqlite
       rove
       trivial-types
     ];
