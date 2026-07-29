@@ -213,7 +213,7 @@
       flake = false;
     };
     cl-difflib = {
-      url = "github:wiseman/cl-difflib";
+      url = "github:wiseman/cl-difflib/pull/1/head";
       flake = false;
     };
     cl-dot = {

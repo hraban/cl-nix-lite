@@ -576,15 +576,16 @@
     "cl-difflib": {
       "flake": false,
       "locked": {
-        "lastModified": 1243899085,
-        "narHash": "sha256-iOB6ichf4umGIByi+7m2oWCsHNr96PRZDyk8DJcCLiI=",
+        "lastModified": 1685736774,
+        "narHash": "sha256-DgwgNs0iDCW5E7eXKDkSh9qX8PvAXimESXU/QZb0rIA=",
         "owner": "wiseman",
         "repo": "cl-difflib",
-        "rev": "98eb335c693f1881584b83ca7be4a0fe05355c4e",
+        "rev": "682e9e1d7d1af903a9e6d9864c8418a5f2dd5b1e",
         "type": "github"
       },
       "original": {
         "owner": "wiseman",
+        "ref": "pull/1/head",
         "repo": "cl-difflib",
         "type": "github"
       }
