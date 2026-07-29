@@ -11,6 +11,7 @@
     "cl-difflib" # see https://github.com/wiseman/cl-difflib/pull/1
     "cl-libxslt" # Broken since nixpkgs 91594d11a2248ebe00f45f6b9be63fe264bb74e1
     "cl-libxml2" # Broken since nixpkgs a5b2fe73740c3b1a1835bb1335d30b88c276924c
+    "cl-prevalence" # Stateful in /tmp/ and crashes when different users run the tests
     "cl-redis"
     "common-doc"
     "commondoc-markdown" # I have no idea what’s happening here but I need to move on
