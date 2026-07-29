@@ -1105,11 +1105,11 @@
     "closer-mop": {
       "flake": false,
       "locked": {
-        "lastModified": 1727689796,
-        "narHash": "sha256-GbvMHjTNkuiI46wUf5nUeqlkHFxbBIWNhjdUDSBWzqk=",
+        "lastModified": 1782676613,
+        "narHash": "sha256-wXlfddnBfd/Y+W4tElbm5IGBd4/xBIXYVOjYny04aMc=",
         "ref": "refs/heads/master",
-        "rev": "8a7177721e86f6f95d2f3f85cf9806d84f4abbe0",
-        "revCount": 224,
+        "rev": "b58c2bee46a7304bdc4fbd373f93766e88b4d9b3",
+        "revCount": 225,
         "type": "git",
         "url": "https://codeberg.org/pcostanza/closer-mop"
       },
