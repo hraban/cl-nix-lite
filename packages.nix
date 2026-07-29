@@ -843,6 +843,7 @@ in
         # if it actually worked, of course.
         cl-libxslt = {
           lispDependencies = [ cl-libxml2 ];
+          lispCheckDependencies = [ lift ];
         };
       };
       makeFlags = [ "CC=cc" ];
