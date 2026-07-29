@@ -32,6 +32,7 @@
                 ...
               }:
               let
+                cl-nix-lite = import ./.;
                 examplesList = builtins.filter lib.isDerivation (
                   pkgs.callPackage ./examples {
                     cl-nix-lite = config.flake.overlays.default;
@@ -61,6 +62,26 @@
                 treefmt = import ./treefmt.nix { };
                 packages.examples = pkgs.linkFarm "examples" examples;
                 packages.sources = pkgs.linkFarm "sources" sources;
+                legacyPackages =
+                  let
+                    lisps = {
+                      inherit (pkgs)
+                        abcl
+                        clisp
+                        ecl
+                        sbcl
+                        ;
+                      clasp = pkgs.clasp-common-lisp;
+                    };
+                    pkgs' = pkgs.extend cl-nix-lite;
+                  in
+                  builtins.mapAttrs (
+                    _: lisp:
+                    let
+                      lpl = pkgs'.lispPackagesLiteFor lisp;
+                    in
+                    lpl
+                  ) lisps;
                 checks = examples // {
                   inherit (self'.packages) sources;
                   markdown-links =
