@@ -1948,11 +1948,11 @@
     "hamcrest": {
       "flake": false,
       "locked": {
-        "lastModified": 1740403804,
-        "narHash": "sha256-1sl7cyejMfu5vJ3jhHj28LbEyM0bvfZ73QEZV3PaJzU=",
+        "lastModified": 1785328688,
+        "narHash": "sha256-BwMCP6RSy20jpPQtGU043bs19jDeAPa4nVRfJtpmEnE=",
         "owner": "40ants",
         "repo": "cl-hamcrest",
-        "rev": "35d065160ef2ef5b73716689fa868c41ff44f8d4",
+        "rev": "0b7288669f1d8502bf27eb65cf8203ab5a861a5f",
         "type": "github"
       },
       "original": {

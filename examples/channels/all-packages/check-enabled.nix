@@ -17,7 +17,6 @@
     "dbi"
     "dynamic-classes"
     "fare-quasiquote"
-    "hamcrest"
     "hunchentoot" # https://github.com/edicl/hunchentoot/issues/217
     "lack" # broken test configuration in asdf declarations
     "lift"
