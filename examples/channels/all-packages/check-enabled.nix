@@ -16,7 +16,6 @@
     "concrete-syntax-tree" # These checks take too long on any reasonable machine.
     "dbi"
     "dynamic-classes"
-    "fare-quasiquote"
     "hunchentoot" # https://github.com/edicl/hunchentoot/issues/217
     "lack" # broken test configuration in asdf declarations
     "lift"
