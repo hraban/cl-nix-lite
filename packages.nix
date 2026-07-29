@@ -1276,7 +1276,10 @@ in
       trivial-shell
       trivial-types
     ];
-    lispCheckDependencies = [ fiveam ];
+    lispCheckDependencies = [
+      cl-ppcre
+      fiveam
+    ];
   };
 
   common-html = lispDerivation {
