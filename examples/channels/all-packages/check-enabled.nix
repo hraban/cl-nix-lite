@@ -175,7 +175,7 @@ lib.pipe lispPackagesLite [
         if shouldTest name && lib.isDerivation value && !(d.meta.broken or false) then d else null
       );
     in
-    if ev.success && ev.value != null then ev.value else null
+    if ev.success then ev.value else null
   ))
   (lib.filterAttrs (n: d: d != null))
 ]
