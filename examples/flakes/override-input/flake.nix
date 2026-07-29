@@ -1,6 +1,7 @@
 {
   description = "Demo cl-nix-lite app using flakes input overriding";
   inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     cl-nix-lite.url = "github:hraban/cl-nix-lite/v0";
     fauxlexandria = {
       url = "github:hraban/fauxlexandria";

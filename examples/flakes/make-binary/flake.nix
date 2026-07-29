@@ -1,6 +1,7 @@
 {
   description = "Demo lispPackagesLite app using flakes";
   inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     cl-nix-lite.url = "github:hraban/cl-nix-lite/v0";
   };
   outputs =
