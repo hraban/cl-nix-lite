@@ -17,7 +17,6 @@
     "dbi"
     "dynamic-classes"
     "fare-quasiquote"
-    "gettext" # I’m confused as to why this one is failing
     "hamcrest"
     "hunchentoot" # https://github.com/edicl/hunchentoot/issues/217
     "lack" # broken test configuration in asdf declarations
