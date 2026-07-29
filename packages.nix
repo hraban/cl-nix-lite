@@ -1438,6 +1438,8 @@ in
       trivial-backtrace
     ];
     lispCheckDependencies = [ fiveam ];
+    # ARGS is not of type LIST.
+    meta.broken = self._lisp.name == "clasp";
   };
 
   dns-client = lispify "dns-client" [
@@ -3094,7 +3096,11 @@ in
 
   trivial-arguments = lispify "trivial-arguments" [ ];
 
-  trivial-backtrace = lispify "trivial-backtrace" [ lift ];
+  trivial-backtrace = lispDerivation {
+    lispSystem = "trivial-backtrace";
+    lispCheckDependencies = [ lift ];
+    src = sources.trivial-backtrace;
+  };
 
   trivial-benchmark = lispify "trivial-benchmark" [ documentation-utils ];
 

@@ -73,9 +73,11 @@
     "access" # The variable ACCESS-BASIC is unbound.
     "collectors" # The variable MAKE-REDUCER-TEST is unbound.
     "deflate" # The symbol STREAM-ELEMENT-TYPE is bound to an ordinary function and is not a valid name for a generic function
+    "drakma" # Running test GET-GOOGLE Condition of type: TRY-AGAIN-ERROR
     "fast-http" # lisp_instance_class for called on #<UNBOUND>
     "history-tree" # The variable SINGLE-ENTRY is unbound.
     "http-body" # Condition of type: SIMPLE-PROGRAM-ERROR: lisp_instance_class for called on #<UNBOUND>
+    "introspect-environment" # The slot CLEAVIR-ENVIRONMENT::%TYPE in the object #<CLEAVIR-ENVIRONMENT:LEXICAL-VARIABLE-INFO @0xffffc851ff99> is unbound.
     "ironclad" # 50 out of 470 total tests failed
     "lisp-unit2" # The variable COLLECT/DECOLLECT is unbound.
     "lparallel" # When calling (COMMON-LISP::FLET CORE::TRANSFORM-KEYWORDS) with the lambda-list (COMMON-LISP::&KEY CORE::REPORT CORE::INTERACTIVE CORE::TEST) the bad keyword argument :HANDLED was passed
@@ -87,6 +89,7 @@
   ]
   ++ pkgs.lib.optionals (lisp.pname == "clisp") [
     "float-features" # *** - APPLY: too few arguments given to FIND
+    "ieee-floats" # SYSTEM::LPAR-READER: floating point underflow
     "kmrcl" # odd floating point error on clisp
     "local-time" # *** - Invalid pathname designator T
     "trivial-custom-debugger" # *** - Condition of type TRIVIAL-CUSTOM-DEBUGGER/TEST::MY-ERROR.
@@ -97,7 +100,9 @@
     "cl-prevalence" # Tests fail
     "legion" # hangs forever on ECL
     "trivial-custom-debugger" # An error occurred during initialization: #<a TRIVIAL-CUSTOM-DEBUGGER/TEST::MY-ERROR 0x105c49d80>.
-    "type-i" # hangs forever on ECL
+  ]
+  ++ pkgs.lib.optionals (lisp.pname == "ecl" || lisp.pname == "clasp") [
+    "type-i" # hangs forever
   ]
   ++ pkgs.lib.optionals (lisp.pname == "sbcl") [
     # failed AVER:
@@ -110,6 +115,8 @@
     # *** - handle_fault error2 ! address = 0x1fffffd6e640 not in [0x1000000c0000,0x10000058dd90) !
     # SIGSEGV cannot be cured. Fault address = 0x1fffffd6e640.
     "event-emitter"
+    # Running test COMPRESS-STREAM /nix/store/3ksq0i8va221l9pp8nv606yygjc4dpkf-stdenv-linux/setup: line 1758:    47 Segmentation fault         (core dumped) /nix/store/0h4832w4mlgs49fvg2v8bzw7gq47rd2p-clisp-2.49.95-unstable-2024-12-28/bin/clisp -E UTF-8 -norc /nix/store/syjfqm6spf4xl168fw3nly0dn9c1nkb6-asdf-build-zstd.lisp
+    "zstd"
   ]
   ++
     pkgs.lib.optionals
