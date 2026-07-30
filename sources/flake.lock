@@ -798,6 +798,22 @@
         "type": "github"
       }
     },
+    "cl-octet-streams": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1608396802,
+        "narHash": "sha256-yInZRMkZbu8nUfPwfcchV7RBWMb8PwVZ9oWTvVCCzsE=",
+        "ref": "refs/heads/master",
+        "rev": "f461922999ba022325aab6f157234b926514e720",
+        "revCount": 26,
+        "type": "git",
+        "url": "https://codeberg.org/glv/cl-octet-streams"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://codeberg.org/glv/cl-octet-streams"
+      }
+    },
     "cl-plus-ssl": {
       "flake": false,
       "locked": {
@@ -1084,6 +1100,22 @@
         "owner": "edicl",
         "repo": "cl-who",
         "type": "github"
+      }
+    },
+    "cl-zstd": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1679422386,
+        "narHash": "sha256-8aRJXtpkkRzHeqSR85wvukxQkC5Lbm00qzoRtEN+8Qw=",
+        "ref": "refs/heads/master",
+        "rev": "2e45f4043ee872635bc92d35d35bbe96e2faf587",
+        "revCount": 11,
+        "type": "git",
+        "url": "https://codeberg.org/glv/cl-zstd"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://codeberg.org/glv/cl-zstd"
       }
     },
     "clack": {
@@ -3242,6 +3274,7 @@
         "cl-markdown": "cl-markdown",
         "cl-mimeparse": "cl-mimeparse",
         "cl-mock": "cl-mock",
+        "cl-octet-streams": "cl-octet-streams",
         "cl-plus-ssl": "cl-plus-ssl",
         "cl-ppcre": "cl-ppcre",
         "cl-prevalence": "cl-prevalence",
@@ -3260,6 +3293,7 @@
         "cl-utilities": "cl-utilities",
         "cl-variates": "cl-variates",
         "cl-who": "cl-who",
+        "cl-zstd": "cl-zstd",
         "clack": "clack",
         "closer-mop": "closer-mop",
         "clss": "clss",

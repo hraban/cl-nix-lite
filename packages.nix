@@ -934,6 +934,13 @@ in
     lispCheckDependencies = [ fiveam ];
   };
 
+  cl-octet-streams = lispDerivation {
+    src = sources.cl-octet-streams;
+    lispSystem = "cl-octet-streams";
+    lispDependencies = [ trivial-gray-streams ];
+    lispCheckDependencies = [ fiveam ];
+  };
+
   "cl+ssl" = lispDerivation {
     lispSystem = "cl+ssl";
     src = sources.cl-plus-ssl;
@@ -3358,4 +3365,16 @@ in
   ];
 
   zpng = lispify "zpng" [ salza2 ];
+
+  zstd = lispDerivation {
+    lispDependencies = [
+      cffi
+      cl-octet-streams
+      trivial-gray-streams
+    ];
+    lispCheckDependencies = [ fiveam ];
+    lispSystem = "zstd";
+    propagatedBuildInputs = [ pkgs.zstd ];
+    src = sources.cl-zstd;
+  };
 }

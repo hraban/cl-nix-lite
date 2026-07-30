@@ -271,6 +271,10 @@
       url = "github:Ferada/cl-mock";
       flake = false;
     };
+    cl-octet-streams = {
+      url = "git+https://codeberg.org/glv/cl-octet-streams";
+      flake = false;
+    };
     cl-plus-ssl = {
       url = "github:cl-plus-ssl/cl-plus-ssl";
       flake = false;
@@ -343,6 +347,10 @@
     };
     cl-who = {
       url = "github:edicl/cl-who";
+      flake = false;
+    };
+    cl-zstd = {
+      url = "git+https://codeberg.org/glv/cl-zstd";
       flake = false;
     };
     clack = {
