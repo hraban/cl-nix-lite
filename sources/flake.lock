@@ -2211,9 +2211,11 @@
     "iterate": {
       "flake": false,
       "locked": {
-        "lastModified": 1703814168,
-        "narHash": "sha256-1qkaZbghNAHj7/FsuJXNqREjJdsGXEDu4WHMclz7oWU=",
-        "rev": "26cf129a03b45d6dd7d2a659622244d20a9ab6f5",
+        "lastModified": 1751572348,
+        "narHash": "sha256-6bYX+Al8x2zBngRUw63vUPaVNP0lLXnzaJYZFP52bEw=",
+        "ref": "refs/heads/master",
+        "rev": "d27d7ff4821b9d8b011afaaa866d7993942430f4",
+        "revCount": 90,
         "type": "git",
         "url": "https://gitlab.common-lisp.net/iterate/iterate"
       },
