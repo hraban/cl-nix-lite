@@ -722,6 +722,31 @@ in
     lispCheckDependencies = [ hu_dwim_stefil ];
   };
 
+  cl-csv = lispDerivation (self: {
+    lispSystem = "cl-csv";
+    src = sources.cl-csv;
+    lispDependencies =
+      lib.optionals (hasSystem self "cl-csv") [
+        alexandria
+        cl-interpol
+        iterate
+      ]
+      ++ lib.optionals (hasSystem self "cl-csv-data-table") [ data-table ];
+    lispCheckDependencies = [ lisp-unit2 ];
+    # The variable PARSING-1 is unbound.
+    meta.broken = final._lisp.name == "clasp";
+  });
+
+  cl-csv-data-table = cl-csv.overrideAttrs {
+    name = "cl-csv-data-table";
+    lispSystems = [
+      "cl-csv"
+      "cl-csv-data-table"
+    ];
+  };
+
+  # There is also a cl-csv-clsql but I don’t feel like adding clsql right now
+
   cl-difflib = lispify "cl-difflib" [ ];
 
   cl-dot = lispDerivation {

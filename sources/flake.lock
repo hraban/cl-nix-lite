@@ -545,6 +545,22 @@
         "type": "github"
       }
     },
+    "cl-csv": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1773668052,
+        "narHash": "sha256-qn+8Q2elXZwfOJGl2sOWO1dURRyc9vHGVeiRzTUWxBA=",
+        "owner": "AccelerationNet",
+        "repo": "cl-csv",
+        "rev": "e25712189f4075f97574174d1aaf515776d450d9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AccelerationNet",
+        "repo": "cl-csv",
+        "type": "github"
+      }
+    },
     "cl-custom-hash-table": {
       "flake": false,
       "locked": {
@@ -3297,6 +3313,7 @@
         "cl-containers": "cl-containers",
         "cl-cookie": "cl-cookie",
         "cl-coveralls": "cl-coveralls",
+        "cl-csv": "cl-csv",
         "cl-custom-hash-table": "cl-custom-hash-table",
         "cl-dbi": "cl-dbi",
         "cl-difflib": "cl-difflib",
