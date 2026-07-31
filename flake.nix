@@ -57,6 +57,7 @@
                   ) examplesList
                 );
                 sources = import ./sources { inherit (pkgs) callPackage; };
+                pkgs' = pkgs.extend cl-nix-lite;
               in
               {
                 treefmt = import ./treefmt.nix { };
@@ -73,7 +74,6 @@
                         ;
                       clasp = pkgs.clasp-common-lisp;
                     };
-                    pkgs' = pkgs.extend cl-nix-lite;
                   in
                   builtins.mapAttrs (
                     _: lisp:
@@ -84,6 +84,7 @@
                   ) lisps;
                 checks = examples // {
                   inherit (self'.packages) sources;
+                  unit-tests = (pkgs'.callPackage ./tests.nix { }).deriv;
                   markdown-links =
                     pkgs.runCommand "mkdocs-linkcheck"
                       {
