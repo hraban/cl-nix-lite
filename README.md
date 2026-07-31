@@ -234,7 +234,7 @@ Think NPM / Pip for Common Lisp. It is built on top of ASDF. It is a de facto st
 
 ---
 
-Now, back to this project, lisp-packages-lite...
+Now, back to this project, cl-nix-lite...
 
 </details>
 
@@ -278,7 +278,7 @@ The trade-off is in favour of robustness, at the cost of more human work in mana
 This is the easiest way to get started:
 
 ```nix
-with pkgs.lispPackagesLite; lispScript rec {
+with pkgs.lispPackagesLite; lispScript {
   name = "json-format";
   src = ./main.lisp;
   dependencies = [ yason ];
@@ -333,92 +333,59 @@ Example for when you *don’t* need this: if your main system includes various "
 
 Real project using this: [git-hly](https://github.com/hraban/git-hly).
 
-### Code: `lispMultiDerivation`: Multiple Systems in One
-
-> [!NOTE]
-> This is only supported in the big package scope as of now. It’s an advanced API which doesn’t work and has very limited benefits. Concrete advice: do not use this, unless you are stubborn and don’t need my advice.
+### Code: `lispDerivation`: Multiple Systems in One
 
 Does your Lisp project expose multiple separate, different systems, each with different functionality and (in particular) different dependencies?
 
 You have two options:
 
 - "just include all of them" in a single derivation (easiest solution of course), or
-- specify separate systems entirely:
+- make the derivation "overridable", using the fixed point of the derivation to toggle dependencies
+
+Example of the first strategy, all-in-one:
 
 ```nix
-lispMultiDerivation {
-  systems = {
-    foo = {};
-    foo-b = {
-      lispDependencies = [ alexandria ];
-    };
-    foo-c = {
-      lispSystem = "foo/c";
-      lispDependencies = [ foo-b fiveam ];
-    };
-  };
-  src = pkgs.lib.cleanSource ./.;
-}
+arnesi = lispDerivation (self: {
+  src = ...;
+  lispSystems = [ "arnesi" "arnesi/cl-ppcre-extras" "arnesi/slime-extras" ];
+  lispDependencies = [ collectors cl-ppcre swank ]
+  lispCheckDependencies = [ fiveam ];
+});
 ```
 
-Note:
-- This evaluates to an attrset with one entry for each system defined in the `systems` set.
-- The system name is automatically derived from the attribute key name in the `systems` set.
-- You can override it using a `lispSystem` key, as per.
-- You can omit `lispDependencies` entirely if you have none.
-- You can include other systems defined in the same block, as long as there is no circular dependency chain.
-- This is only useful if your separate systems have different lispDependencies. If they don’t, just create a regular `lispDerivation` with `lispSystems = [ "foo-a" "foo-b" ]`.
-- You don’t need this for your “internal” packages (see similar note in the previous chapter).
-- This is only worth it if the different systems have different dependencies. I use this heavily in [the pre-defined list of packages](lisp-packages-lite.nix), because those are libraries and they’re intended for inclusion by other projects. For them, being light-weight matters. But for a personal project, I recommend keeping it all in a single `lispDerivation` and merging all dependencies into a single `lispDependencies`. Far easier.
+Simple, clear, makes sense.  If you’re looking for advice: I recommend this.  But you might not always need `cl-ppcre`, and maybe you want to reuse the same derivation definition, without needing to include the extra dependency when unused.
 
-If this is a dependency in your own project, you’ll want to use it as follows:
-
-foo.nix:
-```nix
-{ pkgs
-, lispPackagesLite
-}:
-
-with lispPackagesLite;
-
-lispMultiDerivation {
-  systems = {
-    foo = {};
-    foo-b = {
-      lispDependencies = [ alexandria ];
-    };
-    foo-c = {
-      lispSystem = "foo/c";
-      lispDependencies = [ foo-b fiveam ];
-    };
-  };
-  src = pkgs.lib.cleanSource ./.;
-}
-```
-
-bar.nix:
+You’ll need to use the fixed point of the derivation to selectively include dependencies:
 
 ```nix
-{
-  pkgs ? import <nixpkgs> {},
-}:
+arnesi = lispDerivation (self: {
+  src = ...;
+  lispSystem = [ "arnesi" ];
+  lispDependencies =
+    [ collectors ]
+    ++ lib.optionals (builtins.elem "arnesi/cl-ppcre-extras" self.lispSystems) [ cl-ppcre ]
+    ++ lib.optionals (builtins.elem "arnesi/slime-extras" self.lispSystems) [ swank ];
+  lispCheckDependencies = [ fiveam ];
+});
 
-with rec {
-  cl-nix-lite = pkgs.fetchFromGitHub { ... };
-  lispPackagesLite = import cl-nix-lite { inherit pkgs; };
-  foo = import ./foo.nix { inherit pkgs lispPackagesLite; };
+arnesi-cl-ppcre-extras = arnesi.overrideAttrs {
+  name = "arnesi-cl-ppcre-extras";
+  lispSystems = [
+    "arnesi"
+    "arnesi/cl-ppcre-extras"
+  ];
 };
 
-with lispPackagesLite;
-
-lispDerivation {
-  lispSystem = "bar";
-  src = pkgs.lib.cleanSource ./.;
-  lispDependencies = [ foo.foo-b ];
-}
+arnesi-slime-extras = arnesi.overrideAttrs {
+  name = "arnesi-slime-extras";
+  lispSystems = [
+    "arnesi"
+    "arnesi/slime-extras"
+  ];
+};
 ```
 
-For real-world examples, peruse [`lisp-packages-lite.nix`](lisp-packages-lite.nix).
+Clearly, this gets more complicated, fast.  But it looks cool.  If you know what you’re doing you can use this.  If it’s confusing: avoid.
 
 ### Missing Dependency
 
