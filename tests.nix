@@ -50,6 +50,27 @@ let
         post = "override";
       };
     };
+    testFixpoint = {
+      expr =
+        let
+          d =
+            with lispPackagesLite;
+            lispDerivation (self: {
+              lispSystem = "test";
+              src = emptyDir;
+              installPhase = "foo" + lib.optionalString (self.doCheck or false) "bar";
+            });
+          d' = d.overrideAttrs { doCheck = true; };
+        in
+        {
+          pre = d.installPhase;
+          post = d'.installPhase;
+        };
+      expected = {
+        pre = "foo";
+        post = "foobar";
+      };
+    };
   };
   deriv = runCommand "tests" {
     result = builtins.toJSON ([ ] == (builtins.deepSeq (map (x: lib.traceValSeq x) results) results));
