@@ -7,7 +7,7 @@
 let
   emptyDir = runCommand "empty" { } "mkdir $out";
   results = lib.runTests {
-    testInstallPhase = {
+    testPhases = {
       expr =
         let
           d =
@@ -15,11 +15,19 @@ let
             lispDerivation {
               lispSystem = "test";
               src = emptyDir;
-              installPhase = "foobar";
+              buildPhase = "build";
+              checkPhase = "check";
+              installPhase = "install";
             };
         in
-        d.installPhase;
-      expected = "foobar";
+        {
+          inherit (d) buildPhase checkPhase installPhase;
+        };
+      expected = {
+        buildPhase = "build";
+        checkPhase = "check";
+        installPhase = "install";
+      };
     };
   };
   deriv = runCommand "tests" {
