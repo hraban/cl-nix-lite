@@ -35,9 +35,11 @@
     "alexandria": {
       "flake": false,
       "locked": {
-        "lastModified": 1706204274,
-        "narHash": "sha256-vPHp/dXX24zUPF1t7EdBryzqlG33A0fOoD5loFOxAEs=",
-        "rev": "8514d8e68ed0c733abf7f96f9e91b24912686dc4",
+        "lastModified": 1778573507,
+        "narHash": "sha256-Dwov2hB1y2T2WUTvDEbEOUuytgxez5d7FtlB3y7bPhg=",
+        "ref": "refs/heads/master",
+        "rev": "f283e25efbe9f4323419a138b22ad2fc027f6641",
+        "revCount": 309,
         "type": "git",
         "url": "https://gitlab.common-lisp.net/alexandria/alexandria"
       },
