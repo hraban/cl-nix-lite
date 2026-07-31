@@ -2473,11 +2473,11 @@
     "local-time": {
       "flake": false,
       "locked": {
-        "lastModified": 1723901652,
-        "narHash": "sha256-YspH906winwfvOHtequrBpkfLL3wy4+gij4T/cuqYUk=",
+        "lastModified": 1777664432,
+        "narHash": "sha256-si1Os0T8Z/Q9tu97nEaH0nemFh5HNGNxSIeN37XtrF8=",
         "owner": "dlowe-net",
         "repo": "local-time",
-        "rev": "5a0955283b6ac585a8f13229bbda9f9193c59903",
+        "rev": "59d93f7fdaa45b7cad6c26ac4494e8efb9e16e02",
         "type": "github"
       },
       "original": {
