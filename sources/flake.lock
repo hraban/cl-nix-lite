@@ -1364,6 +1364,22 @@
         "type": "github"
       }
     },
+    "data-table": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1688397905,
+        "narHash": "sha256-zSOrukD3XihtnvQbOrH7SlQFUixAVOdOfxyJK/LQxPQ=",
+        "owner": "AccelerationNet",
+        "repo": "data-table",
+        "rev": "fe3a9e66e0105c97002ccb4ec6e82f606f54760b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AccelerationNet",
+        "repo": "data-table",
+        "type": "github"
+      }
+    },
     "deflate": {
       "flake": false,
       "locked": {
@@ -3332,6 +3348,7 @@
         "concrete-syntax-tree": "concrete-syntax-tree",
         "contextl": "contextl",
         "data-lens": "data-lens",
+        "data-table": "data-table",
         "deflate": "deflate",
         "dexador": "dexador",
         "dissect": "dissect",

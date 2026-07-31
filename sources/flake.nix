@@ -413,6 +413,10 @@
       url = "github:fiddlerwoaroof/data-lens";
       flake = false;
     };
+    data-table = {
+      url = "github:AccelerationNet/data-table";
+      flake = false;
+    };
     deflate = {
       url = "github:pmai/Deflate";
       flake = false;

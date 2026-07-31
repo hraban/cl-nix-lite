@@ -1367,6 +1367,25 @@ in
     meta.broken = (self.doCheck or false) && (final._lisp.name == "ecl");
   });
 
+  data-table = lispDerivation (self: {
+    # There is also data-table-clsql but I don’t feel like adding clsql right
+    # now
+    lispSystem = "data-table";
+    src = sources.data-table;
+    lispDependencies = [
+      alexandria
+      cl-interpol
+      iterate
+      symbol-munger
+    ];
+    lispCheckDependencies = [ lisp-unit2 ];
+    meta.broken =
+      # * Wrong number of arguments for function COLUMN-TYPEAn error occurred during initialization:
+      final._lisp.name == "ecl"
+      # The variable DATA-TABLE-TYPES is unbound.
+      || ((self.doCheck or false) && final._lisp.name == "clasp");
+  });
+
   dbi = lispDerivation (self: {
     lispSystem = "dbi";
     src = sources.cl-dbi;
