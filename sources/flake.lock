@@ -162,9 +162,11 @@
     "asdf": {
       "flake": false,
       "locked": {
-        "lastModified": 1727371251,
-        "narHash": "sha256-lZO71rwI0WkJRQJts3JD9NbZ5ITEvDQesHD1+wfFFCk=",
-        "rev": "9d1e1fa761215c2f833b072b227fded31b137881",
+        "lastModified": 1777570018,
+        "narHash": "sha256-BgFW+MKrHZt59j5Obeh8APvv9lYbLm3LMBif9K+lEjI=",
+        "ref": "refs/heads/master",
+        "rev": "3d75071894f40f0a11e15aa83c431d2667e9ebfb",
+        "revCount": 4108,
         "type": "git",
         "url": "https://gitlab.common-lisp.net/asdf/asdf"
       },
