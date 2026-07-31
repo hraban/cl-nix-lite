@@ -1061,7 +1061,9 @@
       "locked": {
         "lastModified": 1146621435,
         "narHash": "sha256-XHAFEE2/6kqewbyQyZqWsaLZ0E0ek5vJUFThoHKyup4=",
+        "ref": "refs/heads/master",
         "rev": "dce2d2f6387091ea90357a130fa6d13a6776884b",
+        "revCount": 39,
         "type": "git",
         "url": "https://gitlab.common-lisp.net/cl-utilities/cl-utilities"
       },
@@ -1505,7 +1507,9 @@
       "locked": {
         "lastModified": 1530742488,
         "narHash": "sha256-jeaCSUn0gszAGmqo9FJLWQjoM+vUafhZoShOUMdeQeM=",
+        "ref": "refs/heads/master",
         "rev": "54df8effd9d9eccac917509590286b5ac5f9cb30",
+        "revCount": 29,
         "type": "git",
         "url": "https://gitlab.common-lisp.net/vsedach/eager-future2"
       },
@@ -1615,7 +1619,9 @@
       "locked": {
         "lastModified": 1215093865,
         "narHash": "sha256-ZVkb87TCDSRU4fXg7gRAYrwY3EO3aiPpAR4B1bNYG1c=",
+        "ref": "refs/heads/master",
         "rev": "7988171194cd259e12469dd7c30000be6ef1b31a",
+        "revCount": 2,
         "type": "git",
         "url": "https://gitlab.common-lisp.net/bpm/f-underscore"
       },
@@ -2728,7 +2734,9 @@
       "locked": {
         "lastModified": 1627032295,
         "narHash": "sha256-j3YzNAJODcJR4nsp7Myl1K7889Kg3ojMAuYwZq3WAkA=",
+        "ref": "refs/heads/master",
         "rev": "831284f0c7fbda54ddfd135eee1e80afad7cc16e",
+        "revCount": 1,
         "type": "git",
         "url": "https://gitlab.common-lisp.net/nyxt/mt19937"
       },
@@ -2930,7 +2938,9 @@
       "locked": {
         "lastModified": 1252391499,
         "narHash": "sha256-rd//Wwn0pmpua9KYgixE8BzoZqd6XURUrzYVRvTE5Q0=",
+        "ref": "refs/heads/master",
         "rev": "549aebbfb9403a7fe948654126b9c814f443f4f2",
+        "revCount": 45,
         "type": "git",
         "url": "https://gitlab.common-lisp.net/parse-declarations/parse-declarations"
       },
@@ -3088,7 +3098,9 @@
       "locked": {
         "lastModified": 1601488469,
         "narHash": "sha256-rV5ViV0082r3PQlmUdYo+GtCW934kw3EBxpGBbLOAj8=",
+        "ref": "refs/heads/master",
         "rev": "4bbab89d9ccbb26346899d1f496c97604fec567b",
+        "revCount": 57,
         "type": "git",
         "url": "https://gitlab.common-lisp.net/clpm/puri"
       },
@@ -3214,7 +3226,9 @@
       "locked": {
         "lastModified": 1374148329,
         "narHash": "sha256-RqFzdYyAEvJZKcSjSNXHog2KYxxFmyHupiX2DphUV4U=",
+        "ref": "refs/heads/master",
         "rev": "51bf93e91cb6c2d515c7674db19cc87d4550fd0b",
+        "revCount": 30,
         "type": "git",
         "url": "https://gitlab.common-lisp.net/rfc2388/rfc2388"
       },
@@ -3592,7 +3606,9 @@
       "locked": {
         "lastModified": 1203083697,
         "narHash": "sha256-wcXT9OGaCdEbkwWPYV4JA6FNGlppTXAuK+8QR/MvTv8=",
+        "ref": "refs/heads/master",
         "rev": "194cceaf90fb1a268d63f25f9b36e570af07cfb1",
+        "revCount": 34,
         "type": "git",
         "url": "https://gitlab.common-lisp.net/s-xml/s-xml"
       },
@@ -3795,7 +3811,9 @@
       "locked": {
         "lastModified": 1541161636,
         "narHash": "sha256-kLKFBG6ZD3cRQAHoLAgxqp2fd9XaY/9DcvB/LTAxHy8=",
+        "ref": "refs/heads/master",
         "rev": "0398548ec95dceb50fc2c2c03e5fb0ce49b86c7a",
+        "revCount": 134,
         "type": "git",
         "url": "https://gitlab.common-lisp.net/stefil/stefil"
       },
@@ -3920,7 +3938,9 @@
       "locked": {
         "lastModified": 1337170046,
         "narHash": "sha256-0enXFClfULa7iPagwD9x5ueaJPBcLURp1vuhGMyPZUs=",
+        "ref": "refs/heads/master",
         "rev": "43ef7d947f4b4de767d0f91f28b50d9c03ad29d6",
+        "revCount": 20,
         "type": "git",
         "url": "https://gitlab.common-lisp.net/trivial-backtrace/trivial-backtrace"
       },
