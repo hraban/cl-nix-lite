@@ -1749,11 +1749,11 @@
     "femlisp": {
       "flake": false,
       "locked": {
-        "lastModified": 1616499390,
-        "narHash": "sha256-SqsbPY7OD+mk8Fc0WDxLqFh0GGoychIqgtDtgWXogiI=",
+        "lastModified": 1736609207,
+        "narHash": "sha256-6EZ/gBVopxLRE8Fs/DjQUsKGctPWRpuEKGhROzyE4eU=",
         "ref": "refs/heads/master",
-        "rev": "9084944079736eac085494523a41c8265d4671b7",
-        "revCount": 823,
+        "rev": "f292af9c1707ffacaf9a0f276085893cea8b5f5a",
+        "revCount": 827,
         "type": "git",
         "url": "git://git.savannah.nongnu.org/femlisp.git"
       },
