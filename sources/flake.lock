@@ -2327,11 +2327,11 @@
     "lack": {
       "flake": false,
       "locked": {
-        "lastModified": 1726578475,
-        "narHash": "sha256-2rNNUyzmckQ2/GzjOlXmWntb1vHbiQ2ukoomVXXhL3A=",
+        "lastModified": 1775501782,
+        "narHash": "sha256-mBabyy2m3t5ZPjM/BoEC4tHa84bgJX2tsVGnqsNZb/8=",
         "owner": "fukamachi",
         "repo": "lack",
-        "rev": "866b5f5c082db0f9c7e7c78b46ed2459391c6423",
+        "rev": "35d8b0ab38a5f3a8ce885f9b135152ce932a45e2",
         "type": "github"
       },
       "original": {

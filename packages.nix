@@ -2073,11 +2073,12 @@ in
   # I can’t be bothered sorting out this dependency jungle
   lack = lispDerivation {
     src = sources.lack;
-    # Kitchen sink dependencies In an ideal world this would be unnecessary:
+    # Kitchen sink dependencies. In an ideal world this would be unnecessary:
     # every individual lack system would be listed explicitly in Nix, with its
     # dependencies. I just can’t be bothered to do that right now.
     lispDependencies = [
       anypool
+      babel
       circular-streams
       cl-base64
       cl-cookie
@@ -2085,14 +2086,16 @@ in
       cl-redis
       dbi
       http-body
+      ironclad
       local-time
       marshal
       quri
+      salza2
       trivial-mimes
       trivial-rfc-1123
       trivial-utf-8
-    ]
-    ++ (if pkgs.stdenv.hostPlatform.isWindows then [ ironclad ] else [ cl-isaac ]);
+      zstd
+    ];
     # Extracted from the main asd file. This will probably grow out of date within 3 days.
     lispSystems = [
       "lack/app/directory"
@@ -2111,12 +2114,14 @@ in
       "lack-middleware-csrf"
       "lack/middleware/dbpool"
       "lack-middleware-dbpool"
+      "lack-middleware-deflater"
       "lack/middleware/mount"
       "lack-middleware-mount"
       "lack/middleware/session"
       "lack-middleware-session"
       "lack/middleware/static"
       "lack-middleware-static"
+      "lack-middleware-when"
       "lack/request"
       "lack-request"
       "lack/response"
