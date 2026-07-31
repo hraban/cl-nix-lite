@@ -2708,9 +2708,11 @@
     "misc-extensions": {
       "flake": false,
       "locked": {
-        "lastModified": 1717364123,
-        "narHash": "sha256-slgYZhwMEUTWhhYwdNiOpB6xM9/WrjCQuM3Pbc54b18=",
-        "rev": "57f2d235f0137b6074de75d6eefed13cf2637ad4",
+        "lastModified": 1774828401,
+        "narHash": "sha256-1a8nZ6jEZSnu31mTyHFvmpuxWxcadqIUri8vJz0TlcA=",
+        "ref": "refs/heads/master",
+        "rev": "d3d24809daf8667dafa2ac39c5b203c88afb9781",
+        "revCount": 76,
         "type": "git",
         "url": "https://gitlab.common-lisp.net/misc-extensions/misc-extensions"
       },
