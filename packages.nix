@@ -1762,20 +1762,8 @@ in
     lispSystem = "flexi-streams";
     src = sources.flexi-streams;
     lispDependencies = [ trivial-gray-streams ];
-    meta.broken =
-      (self.doCheck or false)
-      && (
-        pkgs.stdenv.hostPlatform.isDarwin
-        # https://github.com/edicl/flexi-streams/issues/51".  This technically only
-        # affects SBCL 2.4.4 but I can’t check the SBCL version here.  Oh well.
-        || (
-          (pkgs.stdenv.hostPlatform.system == "x86_64-linux")
-          && !(builtins.elem final._lisp.name [
-            "ecl"
-            "clisp"
-          ])
-        )
-      );
+    # Stateful in /tmp/, conflicts when tests are run by different users
+    meta.broken = self.doCheck or false;
   });
 
   form-fiddle = lispDerivation {
