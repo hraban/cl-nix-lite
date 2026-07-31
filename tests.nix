@@ -29,6 +29,27 @@ let
         installPhase = "install";
       };
     };
+    testOverrideAttrs = {
+      expr =
+        let
+          d =
+            with lispPackagesLite;
+            lispDerivation {
+              lispSystem = "test";
+              src = emptyDir;
+              installPhase = "original";
+            };
+          d' = d.overrideAttrs { installPhase = "override"; };
+        in
+        {
+          pre = d.installPhase;
+          post = d'.installPhase;
+        };
+      expected = {
+        pre = "original";
+        post = "override";
+      };
+    };
   };
   deriv = runCommand "tests" {
     result = builtins.toJSON ([ ] == (builtins.deepSeq (map (x: lib.traceValSeq x) results) results));
