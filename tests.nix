@@ -71,6 +71,33 @@ let
         post = "foobar";
       };
     };
+    testCheckDependencies = with lispPackagesLite; {
+      expr =
+        let
+          d1 = lispDerivation {
+            lispSystem = "d1";
+            src = emptyDir;
+            lispCheckDependencies = [ fiveam ];
+          };
+          d2 = lispDerivation (self: {
+            lispSystem = "d1";
+            src = emptyDir;
+            lispDependencies = lib.optionals (self.doCheck or false) [ fiveam ];
+          });
+        in
+        {
+          nocheck1 = d1.passthru._origLispDependencies;
+          nocheck2 = d2.passthru._origLispDependencies;
+          check1 = (d1.overrideAttrs { doCheck = true; }).passthru._origLispDependencies;
+          check2 = (d2.overrideAttrs { doCheck = true; }).passthru._origLispDependencies;
+        };
+      expected = {
+        nocheck1 = [ ];
+        nocheck2 = [ ];
+        check1 = [ fiveam ];
+        check2 = [ fiveam ];
+      };
+    };
   };
   deriv = runCommand "tests" {
     result = builtins.toJSON ([ ] == (builtins.deepSeq (map (x: lib.traceValSeq x) results) results));

@@ -29,8 +29,8 @@ in
       esrap
       split-sequence
     ]
-    ++ lib.optionals (hasSystem self "3bmd-ext-code-blocks") [ colorize ];
-    lispCheckDependencies = [
+    ++ lib.optionals (hasSystem self "3bmd-ext-code-blocks") [ colorize ]
+    ++ lib.optionals (self.doCheck or false) [
       final."3bmd-ext-code-blocks"
       fiasco
     ];
@@ -60,12 +60,12 @@ in
     ];
   });
 
-  "3d-math" = lispDerivation {
+  "3d-math" = lispDerivation (self: {
     lispDependencies = [
       documentation-utils
       type-templates
-    ];
-    lispCheckDependencies = [ parachute ];
+    ]
+    ++ lib.optionals (self.doCheck or false) [ parachute ];
     src = sources.x_3d-math;
     # For ABCL, if that would fix it: _JAVA_OPTIONS="-Xmx6g";
     env = lib.optionalAttrs (final._lisp.name == "sbcl") { NIX_SBCL_DYNAMIC_SPACE_SIZE = "6gb"; };
@@ -79,14 +79,13 @@ in
       # * The declaration (DECLARE (FTYPE (FUNCTION ((OR IVEC4 DVEC4 VEC4 IVEC3 DVEC3 VEC3 IVEC2 DVEC2 VEC2)) (VALUES (OR I32 F64 F32) &OPTIONAL)) VX)) was found in a bad place.
       "ecl"
     ];
-  };
+  });
 
-  "3d-vectors" = lispDerivation {
-    lispDependencies = [ documentation-utils ];
-    lispCheckDependencies = [ parachute ];
+  "3d-vectors" = lispDerivation (self: {
+    lispDependencies = [ documentation-utils ] ++ lib.optionals (self.doCheck or false) [ parachute ];
     src = sources.x_3d-vectors;
     lispSystem = "3d-vectors";
-  };
+  });
 
   "40ants-doc" = lispDerivation (self: {
     src = sources.x_40ants-doc;
@@ -118,8 +117,8 @@ in
         tmpdir
         trivial-extract
         xml-emitter
-      ];
-    lispCheckDependencies = lib.optionals (hasSystem self "40ants-doc") [ rove ];
+      ]
+      ++ lib.optionals ((self.doCheck or false) && (hasSystem self "40ants-doc")) [ rove ];
     # this one works in QL so it’s nix specific
     meta.broken = self.doCheck or false;
   });
@@ -131,14 +130,13 @@ in
     ];
   };
 
-  "40ants-asdf-system" = lispDerivation {
+  "40ants-asdf-system" = lispDerivation (self: {
     lispSystem = "40ants-asdf-system";
     src = sources.x_40ants-asdf-system;
     # Depends on a modern ASDF. SBCL’s built-in ASDF crashes this. Explicitly
     # listing final. here to avoid grabbing nixpkgs.asdf.
-    lispDependencies = [ asdf ];
-    lispCheckDependencies = [ rove ];
-  };
+    lispDependencies = [ asdf ] ++ lib.optionals (self.doCheck or false) [ rove ];
+  });
 
   access = lispDerivation (self: {
     lispSystem = "access";
@@ -148,32 +146,32 @@ in
       closer-mop
       iterate
       cl-ppcre
-    ];
-    lispCheckDependencies = [ lisp-unit2 ];
+    ]
+    ++ lib.optionals (self.doCheck or false) [ lisp-unit2 ];
     # The variable ACCESS-BASIC is unbound.
     meta.broken = (self.doCheck or false) && (final._lisp.name == "clasp");
   });
 
   acclimation = lispify "acclimation" [ ];
 
-  alexandria = lispDerivation {
+  alexandria = lispDerivation (self: {
     lispSystem = "alexandria";
     src = sources.alexandria;
     # Contrary to what its .asd file suggests, Alexandria now requires rt even
     # on SBCL. This is recent (introduced after v1.4).
-    lispCheckDependencies = [ rt ];
-  };
+    lispDependencies = lib.optionals (self.doCheck or false) [ rt ];
+  });
 
   alien-ring = lispify "alien-ring" [
     cffi
     trivial-gray-streams
   ];
 
-  anaphora = lispDerivation {
+  anaphora = lispDerivation (self: {
     lispSystem = "anaphora";
-    lispCheckDependencies = [ rt ];
+    lispDependencies = lib.optionals (self.doCheck or false) [ rt ];
     src = sources.anaphora;
-  };
+  });
 
   anypool = lispDerivation (self: {
     src = sources.anypool;
@@ -181,8 +179,8 @@ in
     lispDependencies = [
       bordeaux-threads
       cl-speedy-queue
-    ];
-    lispCheckDependencies = [ rove ];
+    ]
+    ++ lib.optionals (self.doCheck or false) [ rove ];
     # Oddly specific failure: "https://github.com/fukamachi/anypool/issues/5".
     meta.broken =
       (self.doCheck or false)
@@ -206,8 +204,8 @@ in
     lispDependencies =
       lib.optionals (hasSystem self "arnesi") [ collectors ]
       ++ lib.optionals (hasSystem self "arnesi/cl-ppcre-extras") [ cl-ppcre ]
-      ++ lib.optionals (hasSystem self "arnesi/slime-extras") [ swank ];
-    lispCheckDependencies = lib.optionals (hasSystem self "arnesi") [ fiveam ];
+      ++ lib.optionals (hasSystem self "arnesi/slime-extras") [ swank ]
+      ++ lib.optionals ((self.doCheck or false) && (hasSystem self "arnesi")) [ fiveam ];
     # #<PACKAGE CHARSET> has no external symbol with name "UTF-16"
     meta.broken = final._lisp.name == "clisp" || (self.doCheck or false);
   });
@@ -228,20 +226,19 @@ in
     ];
   };
 
-  array-utils = lispDerivation {
+  array-utils = lispDerivation (self: {
     lispSystem = "array-utils";
-    lispCheckDependencies = [ parachute ];
+    lispDependencies = lib.optionals (self.doCheck or false) [ parachute ];
     src = sources.array-utils;
-  };
+  });
 
-  arrow-macros = lispDerivation {
+  arrow-macros = lispDerivation (self: {
     lispSystem = "arrow-macros";
 
     src = sources.arrow-macros;
 
-    lispDependencies = [ alexandria ];
-    lispCheckDependencies = [ fiveam ];
-  };
+    lispDependencies = [ alexandria ] ++ lib.optionals (self.doCheck or false) [ fiveam ];
+  });
 
   asdf = lispDerivation {
     # Sometimes a dependent project will try and build asdf/defsystem. I’m
@@ -264,17 +261,16 @@ in
 
   asdf-system-connections = lispify "asdf-system-connections" [ ];
 
-  assoc-utils = lispDerivation {
+  assoc-utils = lispDerivation (self: {
     lispSystem = "assoc-utils";
     src = sources.assoc-utils;
-    lispCheckDependencies = [ rove ];
-  };
+    lispDependencies = lib.optionals (self.doCheck or false) [ rove ];
+  });
 
-  atomics = lispDerivation {
+  atomics = lispDerivation (self: {
     lispSystem = "atomics";
     src = sources.atomics;
-    lispDependencies = [ documentation-utils ];
-    lispCheckDependencies = [ parachute ];
+    lispDependencies = [ documentation-utils ] ++ lib.optionals (self.doCheck or false) [ parachute ];
     # CLISP is not supported by the Atomics library.
     # The CAS operation is not supported by Armed Bear Common Lisp in Atomics.
     # This is most likely due to lack of support by the implementation.
@@ -285,7 +281,7 @@ in
       "abcl"
       "clisp"
     ];
-  };
+  });
 
   babel = lispDerivation (self: {
     src = sources.babel;
@@ -295,8 +291,8 @@ in
         alexandria
         trivial-features
       ]
-      ++ lib.optionals (hasSystem self "babel-streams") [ trivial-gray-streams ];
-    lispCheckDependencies = [ hu_dwim_stefil ];
+      ++ lib.optionals (hasSystem self "babel-streams") [ trivial-gray-streams ]
+      ++ lib.optionals (self.doCheck or false) [ hu_dwim_stefil ];
   });
 
   babel-streams = babel.overrideAttrs {
@@ -307,15 +303,17 @@ in
     ];
   };
 
-  blackbird = lispDerivation {
+  blackbird = lispDerivation (self: {
     lispSystem = "blackbird";
     src = sources.blackbird;
-    lispDependencies = [ vom ];
-    lispCheckDependencies = [
+    lispDependencies = [
+      vom
+    ]
+    ++ lib.optionals (self.doCheck or false) [
       cl-async
       fiveam
     ];
-  };
+  });
 
   bordeaux-threads = lispDerivation (self: {
     lispDependencies = [
@@ -323,8 +321,8 @@ in
       global-vars
       trivial-features
       trivial-garbage
-    ];
-    lispCheckDependencies = [ fiveam ];
+    ]
+    ++ lib.optionals (self.doCheck or false) [ fiveam ];
     buildInputs = [ pkgs.libuv ];
     lispSystem = "bordeaux-threads";
     src = sources.bordeaux-threads;
@@ -341,15 +339,16 @@ in
     lispSystems = [ "cffi" ] ++ lib.optionals (self.doCheck or false) [ "cffi-grovel" ];
     # I don’t know if cffi-libffi is external but it doesn’t seem to be
     # so just leave it for now.
-    lispDependencies = lib.optionals (hasSystem self "cffi") [
-      alexandria
-      babel
-      trivial-features
-    ];
-    lispCheckDependencies = [
-      bordeaux-threads
-      rt
-    ];
+    lispDependencies =
+      lib.optionals (hasSystem self "cffi") [
+        alexandria
+        babel
+        trivial-features
+      ]
+      ++ lib.optionals (self.doCheck or false) [
+        bordeaux-threads
+        rt
+      ];
     # lisp-modules-new doesn’t specify GCC and somehow it works fine. Is
     # there an accidental transitive dependency, there? Is that because GCC is
     # included through mkDerivation, and its setupHook is automatically
@@ -414,15 +413,15 @@ in
     ];
   };
 
-  calispel = lispDerivation {
+  calispel = lispDerivation (self: {
     lispSystem = "calispel";
     src = sources.calispel;
     lispDependencies = [
       jpl-queues
       bordeaux-threads
-    ];
-    lispCheckDependencies = [ eager-future2 ];
-  };
+    ]
+    ++ lib.optionals (self.doCheck or false) [ eager-future2 ];
+  });
 
   chipz = lispify "chipz" [ ];
 
@@ -465,18 +464,19 @@ in
         coalton
         html-entities
         yason
-      ];
-    lispCheckDependencies =
-      lib.optionals (hasSystem self "coalton") [
-        fiasco
-        coalton-examples
       ]
-      ++ lib.optionals (hasSystem self [
-        "coalton-json"
-        "quil-coalton"
-        "small-coalton-programs"
-        "thih-coalton"
-      ]) [ fiasco ];
+      ++ lib.optionals (self.doCheck or false) (
+        lib.optionals (hasSystem self "coalton") [
+          fiasco
+          coalton-examples
+        ]
+        ++ lib.optionals (hasSystem self [
+          "coalton-json"
+          "quil-coalton"
+          "small-coalton-programs"
+          "thih-coalton"
+        ]) [ fiasco ]
+      );
     # Technically coalton is always a dependency so any derivation will always
     # include coalton so this could just hard-code the list, but I like to be
     # explicit about it for the sake of clarity.
@@ -518,35 +518,34 @@ in
 
   coalton-doc = coalton.overrideAttrs { lispSystems = [ "coalton/doc" ]; };
 
-  circular-streams = lispDerivation {
+  circular-streams = lispDerivation (self: {
     lispSystem = "circular-streams";
     src = sources.circular-streams;
     lispDependencies = [
       fast-io
       trivial-gray-streams
-    ];
-    lispCheckDependencies = [
+    ]
+    ++ lib.optionals (self.doCheck or false) [
       cl-test-more
       flexi-streams
     ];
-  };
+  });
 
-  cl-annot = lispDerivation {
+  cl-annot = lispDerivation (self: {
     lispSystem = "cl-annot";
     src = sources.cl-annot;
-    lispDependencies = [ alexandria ];
-    lispCheckDependencies = [ cl-test-more ];
-  };
+    lispDependencies = [ alexandria ] ++ lib.optionals (self.doCheck or false) [ cl-test-more ];
+  });
 
-  cl-ansi-text = lispDerivation {
+  cl-ansi-text = lispDerivation (self: {
     lispSystem = "cl-ansi-text";
     src = sources.cl-ansi-text;
     lispDependencies = [
       alexandria
       cl-colors2
-    ];
-    lispCheckDependencies = [ fiveam ];
-  };
+    ]
+    ++ lib.optionals (self.doCheck or false) [ fiveam ];
+  });
 
   cl-async = lispDerivation (
     self:
@@ -605,46 +604,46 @@ in
 
   cl-async-ssl = cl-async.overrideAttrs { lispSystems = [ "cl-async-ssl" ]; };
 
-  cl-base64 = lispDerivation rec {
+  cl-base64 = lispDerivation (self: {
     lispSystem = "cl-base64";
     version = "577683b18fd880b82274d99fc96a18a710e3987a";
     src = sources.cl-base64;
-    lispCheckDependencies = [
+    lispDependencies = lib.optionals (self.doCheck or false) [
       ptester
       kmrcl
     ];
-  };
+  });
 
-  cl-change-case = lispDerivation {
+  cl-change-case = lispDerivation (self: {
     lispSystem = "cl-change-case";
     src = sources.cl-change-case;
     lispDependencies = [
       cl-ppcre
       cl-ppcre-unicode
-    ];
-    lispCheckDependencies = [ fiveam ];
-  };
+    ]
+    ++ lib.optionals (self.doCheck or false) [ fiveam ];
+  });
 
-  cl-colors = lispDerivation {
+  cl-colors = lispDerivation (self: {
     lispSystem = "cl-colors";
-    lispCheckDependencies = [ lift ];
     lispDependencies = [
       alexandria
       let-plus
-    ];
+    ]
+    ++ lib.optionals (self.doCheck or false) [ lift ];
     src = sources.cl-colors;
-  };
+  });
 
-  cl-colors2 = lispDerivation {
+  cl-colors2 = lispDerivation (self: {
     lispSystem = "cl-colors2";
     src = sources.cl-colors2;
     lispDependencies = [
       alexandria
       cl-ppcre
       parse-number
-    ];
-    lispCheckDependencies = [ clunit2 ];
-  };
+    ]
+    ++ lib.optionals (self.doCheck or false) [ clunit2 ];
+  });
 
   cl-containers = lispDerivation (
     self:
@@ -673,8 +672,8 @@ in
           moptilities
           metatilities-base
           cl-variates
-        ];
-      lispCheckDependencies = lib.optionals (hasSystem self "cl-containers") [ lift ];
+        ]
+        ++ lib.optionals ((self.doCheck or false) && (hasSystem self "cl-containers")) [ lift ];
       meta.broken = (self.doCheck or false) && (final._lisp.name == "abcl");
     }
   );
@@ -687,7 +686,7 @@ in
     ];
   };
 
-  cl-cookie = lispDerivation {
+  cl-cookie = lispDerivation (self: {
     lispSystem = "cl-cookie";
     src = sources.cl-cookie;
     lispDependencies = [
@@ -696,13 +695,12 @@ in
       proc-parse
       local-time
       quri
-    ];
-    lispCheckDependencies = [ rove ];
-  };
+    ]
+    ++ lib.optionals (self.doCheck or false) [ rove ];
+  });
 
-  cl-coveralls = lispDerivation {
+  cl-coveralls = lispDerivation (self: {
     lispSystem = "cl-coveralls";
-    lispCheckDependencies = [ prove ];
     lispDependencies = [
       alexandria
       cl-ppcre
@@ -712,15 +710,16 @@ in
       jonathan
       lquery
       split-sequence
-    ];
+    ]
+    ++ lib.optionals (self.doCheck or false) [ prove ];
     src = sources.cl-coveralls;
-  };
+  });
 
-  cl-custom-hash-table = lispDerivation {
+  cl-custom-hash-table = lispDerivation (self: {
     src = sources.cl-custom-hash-table;
     lispSystem = "cl-custom-hash-table";
-    lispCheckDependencies = [ hu_dwim_stefil ];
-  };
+    lispDependencies = lib.optionals (self.doCheck or false) [ hu_dwim_stefil ];
+  });
 
   cl-csv = lispDerivation (self: {
     lispSystem = "cl-csv";
@@ -731,8 +730,8 @@ in
         cl-interpol
         iterate
       ]
-      ++ lib.optionals (hasSystem self "cl-csv-data-table") [ data-table ];
-    lispCheckDependencies = [ lisp-unit2 ];
+      ++ lib.optionals (hasSystem self "cl-csv-data-table") [ data-table ]
+      ++ lib.optionals (self.doCheck or false) [ lisp-unit2 ];
     # The variable PARSING-1 is unbound.
     meta.broken = final._lisp.name == "clasp";
   });
@@ -757,18 +756,18 @@ in
     meta.broken = final._lisp.name == "clisp";
   };
 
-  cl-fad = lispDerivation {
+  cl-fad = lispDerivation (self: {
     lispSystem = "cl-fad";
     src = sources.cl-fad;
     lispDependencies = [
       alexandria
       bordeaux-threads
-    ];
-    lispCheckDependencies = [
+    ]
+    ++ lib.optionals (self.doCheck or false) [
       cl-ppcre
       unit-test
     ];
-  };
+  });
 
   cl-gopher = lispify "cl-gopher" [
     usocket
@@ -787,24 +786,24 @@ in
     }
   ) { };
 
-  cl-interpol = lispDerivation {
+  cl-interpol = lispDerivation (self: {
     lispSystem = "cl-interpol";
     src = sources.cl-interpol;
     lispDependencies = [
       cl-unicode
       named-readtables
-    ];
-    lispCheckDependencies = [ flexi-streams ];
-  };
+    ]
+    ++ lib.optionals (self.doCheck or false) [ flexi-streams ];
+  });
 
-  cl-isaac = lispDerivation {
+  cl-isaac = lispDerivation (self: {
     lispSystem = "cl-isaac";
     src = sources.cl-isaac;
-    lispCheckDependencies = [
+    lispDependencies = lib.optionals (self.doCheck or false) [
       parachute
       trivial-features
     ];
-  };
+  });
 
   cl-js = lispDerivation {
     lispSystem = "cl-js";
@@ -815,11 +814,11 @@ in
     ];
   };
 
-  cl-json = lispDerivation {
+  cl-json = lispDerivation (self: {
     lispSystem = "cl-json";
-    lispCheckDependencies = [ fiveam ];
+    lispDependencies = lib.optionals (self.doCheck or false) [ fiveam ];
     src = sources.cl-json;
-  };
+  });
 
   cl-libuv = lispDerivation rec {
     lispDependencies = [
@@ -855,8 +854,10 @@ in
           garbage-pools
           metabang-bind
         ]
-        ++ lib.optionals (hasSystem self "cl-libxslt") [ cl-libxml2 ];
-      lispCheckDependencies = lib.optionals (hasSystem self (baseSystems ++ [ "cl-libxslt" ])) [ lift ];
+        ++ lib.optionals (hasSystem self "cl-libxslt") [ cl-libxml2 ]
+        ++ lib.optionals ((self.doCheck or false) && (hasSystem self (baseSystems ++ [ "cl-libxslt" ]))) [
+          lift
+        ];
       makeFlags = [ "CC=cc" ];
       buildInputs =
         (lib.optionals (hasSystem self "cl-libxml2") [ pkgs.libxml2 ])
@@ -898,7 +899,7 @@ in
     lispSystems = old.lispSystems ++ [ "cl-libxslt" ];
   });
 
-  cl-locale = lispDerivation {
+  cl-locale = lispDerivation (self: {
     src = sources.cl-locale;
     lispDependencies = [
       anaphora
@@ -906,13 +907,13 @@ in
       cl-annot
       cl-syntax
       cl-syntax-annot
-    ];
-    lispCheckDependencies = [
+    ]
+    ++ lib.optionals (self.doCheck or false) [
       flexi-streams
       prove
     ];
     lispSystem = "cl-locale";
-  };
+  });
 
   cl-markdown = lispDerivation (self: {
     lispSystem = "cl-markdown";
@@ -925,8 +926,8 @@ in
       dynamic-classes
       metabang-bind
       metatilities-base
-    ];
-    lispCheckDependencies = [
+    ]
+    ++ lib.optionals (self.doCheck or false) [
       lift
       trivial-shell
     ];
@@ -938,17 +939,17 @@ in
         ((self.doCheck or false) && (final._lisp.name == "ecl"));
   });
 
-  cl-mimeparse = lispDerivation {
+  cl-mimeparse = lispDerivation (self: {
     lispDependencies = [
       cl-ppcre
       parse-number
-    ];
-    lispCheckDependencies = [ rt ];
+    ]
+    ++ lib.optionals (self.doCheck or false) [ rt ];
     src = sources.cl-mimeparse;
     lispSystem = "cl-mimeparse";
-  };
+  });
 
-  cl-mock = lispDerivation {
+  cl-mock = lispDerivation (self: {
     src = sources.cl-mock;
     lispSystem = "cl-mock";
     lispDependencies = [
@@ -956,18 +957,17 @@ in
       bordeaux-threads
       closer-mop
       trivia
-    ];
-    lispCheckDependencies = [ fiveam ];
-  };
+    ]
+    ++ lib.optionals (self.doCheck or false) [ fiveam ];
+  });
 
-  cl-octet-streams = lispDerivation {
+  cl-octet-streams = lispDerivation (self: {
     src = sources.cl-octet-streams;
     lispSystem = "cl-octet-streams";
-    lispDependencies = [ trivial-gray-streams ];
-    lispCheckDependencies = [ fiveam ];
-  };
+    lispDependencies = [ trivial-gray-streams ] ++ lib.optionals (self.doCheck or false) [ fiveam ];
+  });
 
-  "cl+ssl" = lispDerivation {
+  "cl+ssl" = lispDerivation (self: {
     lispSystem = "cl+ssl";
     src = sources.cl-plus-ssl;
     lispDependencies = [
@@ -979,8 +979,8 @@ in
       trivial-garbage
       trivial-gray-streams
       usocket
-    ];
-    lispCheckDependencies = [
+    ]
+    ++ lib.optionals (self.doCheck or false) [
       bordeaux-threads
       cl-coveralls
       fiveam
@@ -988,16 +988,17 @@ in
       usocket
     ];
     propagatedBuildInputs = [ pkgs.openssl ];
-  };
+  });
 
   cl-ppcre = lispDerivation (self: {
     lispSystem = "cl-ppcre";
     src = sources.cl-ppcre;
-    lispCheckDependencies = [ flexi-streams ];
-    lispDependencies = lib.optionals (hasSystem self "cl-ppcre-unicode") [
-      cl-ppcre
-      cl-unicode
-    ];
+    lispDependencies =
+      lib.optionals (hasSystem self "cl-ppcre-unicode") [
+        cl-ppcre
+        cl-unicode
+      ]
+      ++ lib.optionals (self.doCheck or false) [ flexi-streams ];
   });
 
   cl-ppcre-unicode = cl-ppcre.overrideAttrs {
@@ -1015,8 +1016,8 @@ in
       moptilities
       s-xml
       s-sysdeps
-    ];
-    lispCheckDependencies = [
+    ]
+    ++ lib.optionals (self.doCheck or false) [
       fiveam
       find-port
     ];
@@ -1024,16 +1025,15 @@ in
     meta.broken = self.doCheck or false;
   });
 
-  cl-qrencode = lispDerivation {
+  cl-qrencode = lispDerivation (self: {
     lispSystem = "cl-qrencode";
     src = sources.cl-qrencode;
-    lispDependencies = [ zpng ];
-    lispCheckDependencies = [ lisp-unit ];
-  };
+    lispDependencies = [ zpng ] ++ lib.optionals (self.doCheck or false) [ lisp-unit ];
+  });
 
   cl-quickcheck = lispify "cl-quickcheck" [ ];
 
-  cl-reactive = lispDerivation {
+  cl-reactive = lispDerivation (self: {
     src = sources.cl-reactive;
     lispSystem = "cl-reactive";
     lispDependencies = [
@@ -1041,8 +1041,8 @@ in
       closer-mop
       trivial-garbage
       anaphora
-    ];
-    lispCheckDependencies = [ nst ];
+    ]
+    ++ lib.optionals (self.doCheck or false) [ nst ];
     meta.broken = builtins.elem final._lisp.name [
       # Attempt to define a subclass of built-in-class FUNCTION.
       "abcl"
@@ -1051,7 +1051,7 @@ in
       # Class #<The BUILT-IN-CLASS FUNCTION> is not a valid superclass for #<The CLOS:FUNCALLABLE-STANDARD-CLASS CL-REACTIVE::SIGNAL-FUNCTION>
       "ecl"
     ];
-  };
+  });
 
   cl-redis = lispDerivation (self: {
     lispSystem = "cl-redis";
@@ -1061,8 +1061,8 @@ in
       flexi-streams
       rutils
       usocket
-    ];
-    lispCheckDependencies = [
+    ]
+    ++ lib.optionals (self.doCheck or false) [
       bordeaux-threads
       should-test
     ];
@@ -1070,38 +1070,38 @@ in
     meta.broken = self.doCheck or false;
   });
 
-  cl-slice = lispDerivation {
+  cl-slice = lispDerivation (self: {
     lispSystem = "cl-slice";
     src = sources.cl-slice;
     lispDependencies = [
       alexandria
       anaphora
       let-plus
-    ];
-    lispCheckDependencies = [ clunit ];
-  };
+    ]
+    ++ lib.optionals (self.doCheck or false) [ clunit ];
+  });
 
-  cl-sqlite = lispDerivation {
+  cl-sqlite = lispDerivation (self: {
     src = sources.cl-sqlite;
     lispDependencies = [
       iterate
       cffi
-    ];
-    lispCheckDependencies = [
+    ]
+    ++ lib.optionals (self.doCheck or false) [
       fiveam
       bordeaux-threads
     ];
     propagatedBuildInputs = [ pkgs.sqlite ];
     lispSystem = "sqlite";
-  };
+  });
 
   cl-speedy-queue = lispify "cl-speedy-queue" [ ];
 
-  cl-strings = lispDerivation {
+  cl-strings = lispDerivation (self: {
     lispSystem = "cl-strings";
     src = sources.cl-strings;
-    lispCheckDependencies = [ prove ];
-  };
+    lispDependencies = lib.optionals (self.doCheck or false) [ prove ];
+  });
 
   cl-syntax = lispDerivation (self: {
     src = sources.cl-syntax;
@@ -1162,12 +1162,13 @@ in
   cl-variates = lispDerivation (self: {
     lispSystem = "cl-variates";
     src = sources.cl-variates;
-    lispCheckDependencies = lib.optionals (hasSystem self "cl-variates") [ lift ];
-    lispDependencies = lib.optionals (hasSystem self "cl-variates/with-metacopy") [
-      cl-variates
-      asdf-system-connections
-      metacopy
-    ];
+    lispDependencies =
+      lib.optionals (hasSystem self "cl-variates/with-metacopy") [
+        cl-variates
+        asdf-system-connections
+        metacopy
+      ]
+      ++ lib.optionals ((self.doCheck or false) && (hasSystem self "cl-variates")) [ lift ];
     meta.broken =
       (hasSystem self "cl-variates/with-metacopy")
       && (builtins.elem final._lisp.name [
@@ -1186,11 +1187,11 @@ in
     lispSystems = [ "cl-variates/with-metacopy" ];
   };
 
-  cl-who = lispDerivation {
+  cl-who = lispDerivation (self: {
     lispSystem = "cl-who";
     src = sources.cl-who;
-    lispCheckDependencies = [ flexi-streams ];
-  };
+    lispDependencies = lib.optionals (self.doCheck or false) [ flexi-streams ];
+  });
 
   clack = lispDerivation (self: {
     src = sources.clack;
@@ -1220,8 +1221,10 @@ in
         http-body
         ironclad
         rove
+      ]
+      ++ lib.optionals ((self.doCheck or false) && (hasSystem self "clack-handler-hunchentoot")) [
+        clack-test
       ];
-    lispCheckDependencies = lib.optionals (hasSystem self "clack-handler-hunchentoot") [ clack-test ];
   });
 
   clack-handler-hunchentoot = clack.overrideAttrs {
@@ -1260,8 +1263,8 @@ in
       alexandria
       closer-mop
       symbol-munger
-    ];
-    lispCheckDependencies = [ lisp-unit2 ];
+    ]
+    ++ lib.optionals (self.doCheck or false) [ lisp-unit2 ];
     src = sources.collectors;
     # The variable MAKE-REDUCER-TEST is unbound.
     meta.broken = (self.doCheck or false) && (final._lisp.name == "clasp");
@@ -1273,7 +1276,7 @@ in
     split-sequence
   ];
 
-  common-doc = lispDerivation {
+  common-doc = lispDerivation (self: {
     src = sources.common-doc;
     name = "common-doc";
     # These all use practically the same dependencies. Light-weight enough that
@@ -1294,14 +1297,14 @@ in
       split-sequence
       trivial-shell
       trivial-types
-    ];
-    lispCheckDependencies = [
+    ]
+    ++ lib.optionals (self.doCheck or false) [
       cl-ppcre
       fiveam
     ];
-  };
+  });
 
-  common-html = lispDerivation {
+  common-html = lispDerivation (self: {
     src = sources.common-html;
     lispSystem = "common-html";
     lispDependencies = [
@@ -1309,9 +1312,9 @@ in
       plump
       anaphora
       alexandria
-    ];
-    lispCheckDependencies = [ fiveam ];
-  };
+    ]
+    ++ lib.optionals (self.doCheck or false) [ fiveam ];
+  });
 
   commondoc-markdown = lispDerivation (self: {
     lispSystem = "commondoc-markdown";
@@ -1325,8 +1328,8 @@ in
       str
       ironclad
       f-underscore
-    ];
-    lispCheckDependencies = [
+    ]
+    ++ lib.optionals (self.doCheck or false) [
       hamcrest
       rove
     ];
@@ -1340,8 +1343,7 @@ in
   };
 
   concrete-syntax-tree = lispDerivation (self: {
-    lispDependencies = [ acclimation ];
-    lispCheckDependencies = [ fiveam ];
+    lispDependencies = [ acclimation ] ++ lib.optionals (self.doCheck or false) [ fiveam ];
     src = sources.concrete-syntax-tree;
     lispSystem = "concrete-syntax-tree";
     lispAsdPath = [ "Lambda-list" ];
@@ -1379,14 +1381,14 @@ in
       cl-ppcre
       alexandria
       serapeum
+    ]
+    ++ lib.optionals (self.doCheck or false) [
+      fiveam
+      string-case
     ];
     lispSystems = [
       "data-lens"
       "data-lens/beta/transducers"
-    ];
-    lispCheckDependencies = [
-      fiveam
-      string-case
     ];
     src = sources.data-lens;
     meta.broken = (self.doCheck or false) && (final._lisp.name == "ecl");
@@ -1402,8 +1404,8 @@ in
       cl-interpol
       iterate
       symbol-munger
-    ];
-    lispCheckDependencies = [ lisp-unit2 ];
+    ]
+    ++ lib.optionals (self.doCheck or false) [ lisp-unit2 ];
     meta.broken =
       # * Wrong number of arguments for function COLUMN-TYPEAn error occurred during initialization:
       final._lisp.name == "ecl"
@@ -1419,8 +1421,8 @@ in
       bordeaux-threads
       split-sequence
       closer-mop
-    ];
-    lispCheckDependencies = [
+    ]
+    ++ lib.optionals (self.doCheck or false) [
       alexandria
       cl-sqlite
       rove
@@ -1437,7 +1439,7 @@ in
     meta.broken = (self.doCheck or false) && (final._lisp.name == "clasp");
   });
 
-  dexador = lispDerivation {
+  dexador = lispDerivation (self: {
     lispSystem = "dexador";
     src = sources.dexador;
     lispDependencies = [
@@ -1458,15 +1460,15 @@ in
       trivial-mimes
       usocket
     ]
-    ++ lib.optionals pkgs.stdenv.hostPlatform.isWindows [ flexi-streams ];
-    lispCheckDependencies = [
+    ++ lib.optionals pkgs.stdenv.hostPlatform.isWindows [ flexi-streams ]
+    ++ lib.optionals (self.doCheck or false) [
       babel
       cl-cookie
       clack-test
       lack
       rove
     ];
-  };
+  });
 
   dissect = lispDerivation {
     lispSystem = "dissect";
@@ -1474,7 +1476,7 @@ in
     lispDependencies = lib.optionals (final._lisp.name == "clisp") [ cl-ppcre ];
   };
 
-  djula = lispDerivation {
+  djula = lispDerivation (self: {
     lispSystem = "djula";
     src = sources.djula;
     lispDependencies = [
@@ -1491,11 +1493,11 @@ in
       parser-combinators
       split-sequence
       trivial-backtrace
-    ];
-    lispCheckDependencies = [ fiveam ];
+    ]
+    ++ lib.optionals (self.doCheck or false) [ fiveam ];
     # ARGS is not of type LIST.
     meta.broken = final._lisp.name == "clasp";
-  };
+  });
 
   dns-client = lispify "dns-client" [
     punycode
@@ -1538,8 +1540,8 @@ in
       flexi-streams
       puri
       usocket
-    ];
-    lispCheckDependencies = [
+    ]
+    ++ lib.optionals (self.doCheck or false) [
       easy-routes
       fiveam
       hunchentoot
@@ -1554,8 +1556,7 @@ in
   dynamic-classes = lispDerivation (self: {
     lispSystem = "dynamic-classes";
     src = sources.dynamic-classes;
-    lispDependencies = [ metatilities-base ];
-    lispCheckDependencies = [ lift ];
+    lispDependencies = [ metatilities-base ] ++ lib.optionals (self.doCheck or false) [ lift ];
     meta.broken = self.doCheck or false;
   });
 
@@ -1608,11 +1609,11 @@ in
         closer-mop
         acclimation
       ]
-      ++ lib.optionals (hasSystem self "eclector-concrete-syntax-tree") [ concrete-syntax-tree ];
-    lispCheckDependencies = [
-      alexandria
-      fiveam
-    ];
+      ++ lib.optionals (hasSystem self "eclector-concrete-syntax-tree") [ concrete-syntax-tree ]
+      ++ lib.optionals (self.doCheck or false) [
+        alexandria
+        fiveam
+      ];
     # This directory is unneeded and it messes up some shebang filtering
     # autodetectiong stuff on linux builds.
     preBuild = "rm -rf tools-for-build";
@@ -1635,20 +1636,20 @@ in
 
   eos = lispify "eos" [ ];
 
-  esrap = lispDerivation {
+  esrap = lispDerivation (self: {
     lispSystem = "esrap";
     src = sources.esrap;
     lispDependencies = [
       alexandria
       trivial-with-current-source-form
-    ];
-    lispCheckDependencies = [ fiveam ];
-  };
+    ]
+    ++ lib.optionals (self.doCheck or false) [ fiveam ];
+  });
 
   event-emitter = lispDerivation (self: {
     lispSystem = "event-emitter";
     src = sources.event-emitter;
-    lispCheckDependencies = [ prove ];
+    lispDependencies = lib.optionals (self.doCheck or false) [ prove ];
     # This fails on Github Actions, not in my local VM:
     # *** - handle_fault error2 ! address = 0x1fffffd6e640 not in [0x1000000c0000,0x10000058dd90) !
     # SIGSEGV cannot be cured. Fault address = 0x1fffffd6e640.
@@ -1658,11 +1659,11 @@ in
 
   f-underscore = lispify "f-underscore" [ ];
 
-  fare-memoization = lispDerivation {
+  fare-memoization = lispDerivation (self: {
     lispSystem = "fare-memoization";
     src = sources.fare-memoization;
-    lispCheckDependencies = [ hu_dwim_stefil ];
-  };
+    lispDependencies = lib.optionals (self.doCheck or false) [ hu_dwim_stefil ];
+  });
 
   fare-mop = lispify "fare-mop" [
     closer-mop
@@ -1675,12 +1676,12 @@ in
     lispDependencies =
       lib.optionals (hasSystem self "fare-quasiquote") [ fare-utils ]
       ++ lib.optionals (hasSystem self "fare-quasiquote-optima") [ final."trivia.quasiquote" ]
-      ++ lib.optionals (hasSystem self "fare-quasiquote-readtable") [ named-readtables ];
-    lispCheckDependencies = [
-      fare-quasiquote-extras
-      hu_dwim_stefil
-      optima
-    ];
+      ++ lib.optionals (hasSystem self "fare-quasiquote-readtable") [ named-readtables ]
+      ++ lib.optionals (self.doCheck or false) [
+        fare-quasiquote-extras
+        hu_dwim_stefil
+        optima
+      ];
   });
 
   fare-quasiquote-extras = fare-quasiquote.overrideAttrs {
@@ -1708,15 +1709,15 @@ in
     ];
   };
 
-  fare-utils = lispDerivation {
+  fare-utils = lispDerivation (self: {
     lispSystem = "fare-utils";
     src = sources.fare-utils;
-    lispCheckDependencies = [ hu_dwim_stefil ];
+    lispDependencies = lib.optionals (self.doCheck or false) [ hu_dwim_stefil ];
     # "https://gitlab.common-lisp.net/frideau/fare-utils/-/issues/1".  Getting
     # the version here from the derivation is very ugly and I hate it but is
     # there a better way?
     meta.broken = final._lisp.name == "sbcl" && (lib.getVersion final._lisp.deriv) == "2.4.4";
-  };
+  });
 
   fast-http = lispDerivation (self: {
     src = sources.fast-http;
@@ -1729,8 +1730,8 @@ in
       proc-parse
       smart-buffer
       xsubseq
-    ];
-    lispCheckDependencies = [
+    ]
+    ++ lib.optionals (self.doCheck or false) [
       babel
       cl-syntax-interpol
       prove
@@ -1746,19 +1747,19 @@ in
     trivial-gray-streams
   ];
 
-  fast-websocket = lispDerivation {
+  fast-websocket = lispDerivation (self: {
     lispSystem = "fast-websocket";
     src = sources.fast-websocket;
-    lispCheckDependencies = [
-      prove
-      trivial-utf-8
-    ];
     lispDependencies = [
       fast-io
       babel
       alexandria
+    ]
+    ++ lib.optionals (self.doCheck or false) [
+      prove
+      trivial-utf-8
     ];
-  };
+  });
 
   infix = lispDerivation (self: {
     src = sources.femlisp;
@@ -1774,8 +1775,7 @@ in
 
   find-port = lispDerivation (self: {
     lispSystem = "find-port";
-    lispCheckDependencies = [ fiveam ];
-    lispDependencies = [ usocket ];
+    lispDependencies = [ usocket ] ++ lib.optionals (self.doCheck or false) [ fiveam ];
     src = sources.find-port;
     # Works locally but broken on Github Actions I don’t know why:
     #
@@ -1796,8 +1796,8 @@ in
     lispDependencies = [
       documentation-utils
       trivial-features
-    ];
-    lispCheckDependencies = [ parachute ];
+    ]
+    ++ lib.optionals (self.doCheck or false) [ parachute ];
     # *** - APPLY: too few arguments given to FIND
     meta.broken = (self.doCheck or false) && (final._lisp.name == "clisp");
   });
@@ -1838,7 +1838,7 @@ in
     ];
   });
 
-  function-cache = lispDerivation {
+  function-cache = lispDerivation (self: {
     lispSystem = "function-cache";
     src = sources.function-cache;
     lispDependencies = [
@@ -1847,45 +1847,40 @@ in
       iterate
       symbol-munger
       closer-mop
-    ];
-
-    lispCheckDependencies = [ lisp-unit2 ];
+    ]
+    ++ lib.optionals (self.doCheck or false) [ lisp-unit2 ];
 
     meta.broken =
       # Supported lisps: sbcl clozure
       final._lisp.name != "sbcl" && final._lisp.name != "ccl";
 
-  };
+  });
 
-  garbage-pools = lispDerivation {
+  garbage-pools = lispDerivation (self: {
     lispSystem = "garbage-pools";
     src = sources.garbage-pools;
-    lispCheckDependencies = [ lift ];
-  };
+    lispDependencies = lib.optionals (self.doCheck or false) [ lift ];
+  });
 
-  gettext = lispDerivation {
+  gettext = lispDerivation (self: {
     lispSystem = "gettext";
     src = sources.gettext;
     lispDependencies = [
       split-sequence
       yacc
       flexi-streams
-    ];
-    lispCheckDependencies = [ stefil ];
+    ]
+    ++ lib.optionals (self.doCheck or false) [ stefil ];
     preCheck = ''
       export CL_SOURCE_REGISTRY="$PWD/gettext-tests:$CL_SOURCE_REGISTRY"
     '';
-  };
+  });
 
   global-vars = lispify "global-vars" [ ];
 
   hamcrest = lispDerivation (self: {
     src = sources.hamcrest;
     lispSystem = "hamcrest";
-    lispCheckDependencies = [
-      prove
-      rove
-    ];
     lispDependencies = [
       final."40ants-asdf-system"
       alexandria
@@ -1893,7 +1888,11 @@ in
       cl-ppcre
       split-sequence
     ]
-    ++ lib.optionals (hasSystem self "hamcrest/rove") [ rove ];
+    ++ lib.optionals (hasSystem self "hamcrest/rove") [ rove ]
+    ++ lib.optionals (self.doCheck or false) [
+      prove
+      rove
+    ];
   });
 
   "hamcrest/rove" = hamcrest.overrideAttrs {
@@ -1914,9 +1913,9 @@ in
       local-time
       nclasses
       trivial-package-local-nicknames
-    ];
+    ]
+    ++ lib.optionals (self.doCheck or false) [ lisp-unit2 ];
     src = sources.history-tree;
-    lispCheckDependencies = [ lisp-unit2 ];
     lispSystem = "history-tree";
     meta.broken =
       # *** - EVAL: undefined function EXT::ADD-PACKAGE-LOCAL-NICKNAME
@@ -1938,8 +1937,8 @@ in
       jonathan
       quri
       trivial-gray-streams
-    ];
-    lispCheckDependencies = [
+    ]
+    ++ lib.optionals (self.doCheck or false) [
       assoc-utils
       cl-ppcre
       flexi-streams
@@ -1952,12 +1951,11 @@ in
 
   html-encode = lispify "html-encode" [ ];
 
-  html-entities = lispDerivation {
+  html-entities = lispDerivation (self: {
     lispSystem = "html-entities";
     src = sources.html-entities;
-    lispDependencies = [ cl-ppcre ];
-    lispCheckDependencies = [ fiveam ];
-  };
+    lispDependencies = [ cl-ppcre ] ++ lib.optionals (self.doCheck or false) [ fiveam ];
+  });
 
   hu_dwim_asdf = lispDerivation {
     lispSystem = "hu.dwim.asdf";
@@ -1990,8 +1988,8 @@ in
       final."cl+ssl"
       usocket
       bordeaux-threads
-    ];
-    lispCheckDependencies = [
+    ]
+    ++ lib.optionals (self.doCheck or false) [
       cl-ppcre
       cl-who
       drakma
@@ -2012,18 +2010,18 @@ in
   ieee-floats = lispDerivation (self: {
     lispSystem = "ieee-floats";
     src = sources.ieee-floats;
-    lispCheckDependencies = [ fiveam ];
+    lispDependencies = lib.optionals (self.doCheck or false) [ fiveam ];
     # SYSTEM::LPAR-READER: floating point underflow
     meta.broken = (self.doCheck or false) && (final._lisp.name == "clisp");
   });
 
-  in-nomine = lispDerivation {
+  in-nomine = lispDerivation (self: {
     lispSystem = "in-nomine";
     lispDependencies = [
       alexandria
       trivial-arguments
-    ];
-    lispCheckDependencies = [
+    ]
+    ++ lib.optionals (self.doCheck or false) [
       alexandria
       closer-mop
       fiveam
@@ -2034,9 +2032,9 @@ in
     # Uses :local-nickname in defpackage. Ah, the state of CLISP...
     # https://gitlab.com/gnu-clisp/clisp/-/merge_requests/3
     meta.broken = final._lisp.name == "clisp";
-  };
+  });
 
-  inferior-shell = lispDerivation {
+  inferior-shell = lispDerivation (self: {
     lispSystem = "inferior-shell";
     lispDependencies = [
       alexandria
@@ -2045,10 +2043,10 @@ in
       fare-mop
       trivia
       final."trivia.quasiquote"
-    ];
+    ]
+    ++ lib.optionals (self.doCheck or false) [ fiveam ];
     src = sources.inferior-shell;
-    lispCheckDependencies = [ fiveam ];
-  };
+  });
 
   infix-math = lispify "infix-math" [
     alexandria
@@ -2059,7 +2057,7 @@ in
 
   introspect-environment = lispDerivation (self: {
     lispSystem = "introspect-environment";
-    lispCheckDependencies = [ fiveam ];
+    lispDependencies = lib.optionals (self.doCheck or false) [ fiveam ];
     src = sources.introspect-environment;
     # The slot CLEAVIR-ENVIRONMENT::%TYPE in the object
     # #<CLEAVIR-ENVIRONMENT:LEXICAL-VARIABLE-INFO @0xffffc851ff99> is unbound.
@@ -2069,20 +2067,19 @@ in
   ironclad = lispDerivation (self: {
     lispSystem = "ironclad";
     src = sources.ironclad;
-    lispDependencies = [ bordeaux-threads ];
-    lispCheckDependencies = [ rt ];
+    lispDependencies = [ bordeaux-threads ] ++ lib.optionals (self.doCheck or false) [ rt ];
     env = lib.optionalAttrs (final._lisp.name == "sbcl") { NIX_SBCL_DYNAMIC_SPACE_SIZE = "2gb"; };
     # 50 out of 470 total tests failed
     meta.broken = (self.doCheck or false) && (final._lisp.name == "clasp");
   });
 
-  iterate = lispDerivation {
+  iterate = lispDerivation (self: {
     lispSystem = "iterate";
     src = sources.iterate;
-    lispCheckDependencies = lib.optionals (final._lisp.name != "sbcl") [ rt ];
-  };
+    lispDependencies = lib.optionals ((self.doCheck or false) && (final._lisp.name != "sbcl")) [ rt ];
+  });
 
-  jonathan = lispDerivation {
+  jonathan = lispDerivation (self: {
     lispSystem = "jonathan";
     src = sources.jonathan;
     lispDependencies = [
@@ -2094,12 +2091,12 @@ in
       fast-io
       proc-parse
       trivial-types
-    ];
-    lispCheckDependencies = [
+    ]
+    ++ lib.optionals (self.doCheck or false) [
       prove
       legion
     ];
-  };
+  });
 
   jpl-queues = lispDerivation {
     lispSystem = "jpl-queues";
@@ -2116,16 +2113,16 @@ in
     lispSystem = "jpl-util";
   };
 
-  json-streams = lispDerivation {
+  json-streams = lispDerivation (self: {
     src = sources.json-streams;
     lispSystem = "json-streams";
-    lispCheckDependencies = [
+    lispDependencies = lib.optionals (self.doCheck or false) [
       cl-quickcheck
       flexi-streams
     ];
-  };
+  });
 
-  jzon = lispDerivation {
+  jzon = lispDerivation (self: {
     src = sources.jzon;
     lispSystem = "com.inuoe.jzon";
     lispDependencies = [
@@ -2133,22 +2130,22 @@ in
       flexi-streams
       trivial-gray-streams
     ]
-    ++ lib.optionals (final._lisp.name != "ecl") [ float-features ];
+    ++ lib.optionals (final._lisp.name != "ecl") [ float-features ]
+    ++ lib.optionals (self.doCheck or false) [
+      alexandria
+      fiveam
+    ];
     lispAsdPath = [
       "src"
       "test"
     ];
-    lispCheckDependencies = [
-      alexandria
-      fiveam
-    ];
-  };
+  });
 
   kmrcl = lispDerivation (self: {
     lispSystem = "kmrcl";
     version = "4a27407aad9deb607ffb8847630cde3d041ea25a";
     src = sources.kmrcl;
-    lispCheckDependencies = [ rt ];
+    lispDependencies = lib.optionals (self.doCheck or false) [ rt ];
     meta.broken =
       # > The symbol "MAKE-THREAD-LOCK" was not found in package EXT.
       (final._lisp.name == "abcl")
@@ -2254,8 +2251,8 @@ in
       # Not listed in the .asd but these are required
       bordeaux-threads
       cl-speedy-queue
-    ];
-    lispCheckDependencies = [
+    ]
+    ++ lib.optionals (self.doCheck or false) [
       local-time
       prove
     ];
@@ -2263,15 +2260,15 @@ in
     meta.broken = (self.doCheck or false) && (final._lisp.name == "ecl");
   });
 
-  let-plus = lispDerivation {
+  let-plus = lispDerivation (self: {
     lispSystem = "let-plus";
-    lispCheckDependencies = [ lift ];
     lispDependencies = [
       alexandria
       anaphora
-    ];
+    ]
+    ++ lib.optionals (self.doCheck or false) [ lift ];
     src = sources.let-plus;
-  };
+  });
 
   lift = lispDerivation (self: {
     lispSystem = "lift";
@@ -2292,12 +2289,11 @@ in
       || (self.doCheck or false);
   });
 
-  lisp-namespace = lispDerivation {
+  lisp-namespace = lispDerivation (self: {
     lispSystem = "lisp-namespace";
-    lispDependencies = [ alexandria ];
-    lispCheckDependencies = [ fiveam ];
+    lispDependencies = [ alexandria ] ++ lib.optionals (self.doCheck or false) [ fiveam ];
     src = sources.lisp-namespace;
-  };
+  });
 
   lisp-unit = lispify "lisp-unit" [ ];
 
@@ -2314,17 +2310,16 @@ in
     meta.broken = (self.doCheck or false) && (final._lisp.name == "clasp");
   });
 
-  lml2 = lispDerivation {
-    lispDependencies = [ kmrcl ];
-    lispCheckDependencies = [ rt ];
+  lml2 = lispDerivation (self: {
+    lispDependencies = [ kmrcl ] ++ lib.optionals (self.doCheck or false) [ rt ];
     lispSystem = "lml2";
     src = sources.lml2;
-  };
+  });
 
   local-time = lispDerivation (self: {
     lispSystem = "local-time";
     src = sources.local-time;
-    lispCheckDependencies = [ fiasco ];
+    lispDependencies = lib.optionals (self.doCheck or false) [ fiasco ];
     meta.broken =
       (self.doCheck or false)
       && (
@@ -2338,14 +2333,12 @@ in
   log4cl = lispDerivation (self: {
     lispSystem = "log4cl";
     src = sources.log4cl;
-    lispDependencies = [ bordeaux-threads ];
-    lispCheckDependencies = [ stefil ];
+    lispDependencies = [ bordeaux-threads ] ++ lib.optionals (self.doCheck or false) [ stefil ];
     meta.broken = self.doCheck or false;
   });
 
   log4cl-extras = lispDerivation (self: {
     lispSystem = "log4cl-extras";
-    lispCheckDependencies = [ hamcrest ];
     lispDependencies = [
       final."40ants-doc"
       final."40ants-asdf-system"
@@ -2358,7 +2351,8 @@ in
       named-readtables
       pythonic-string-reader
       with-output-to-stream
-    ];
+    ]
+    ++ lib.optionals (self.doCheck or false) [ hamcrest ];
     src = sources.log4cl-extras;
     meta.broken = self.doCheck or false;
   });
@@ -2393,43 +2387,43 @@ in
     })
   );
 
-  lquery = lispDerivation {
+  lquery = lispDerivation (self: {
     lispSystem = "lquery";
     src = sources.lquery;
-    lispCheckDependencies = [ fiveam ];
     lispDependencies = [
       array-utils
       form-fiddle
       plump
       clss
-    ];
-  };
+    ]
+    ++ lib.optionals (self.doCheck or false) [ fiveam ];
+  });
 
   lw-compat = lispify "lw-compat" [ ];
 
   map-set = lispify "map-set" [ ];
 
-  marshal = lispDerivation {
+  marshal = lispDerivation (self: {
     lispSystem = "marshal";
-    lispCheckDependencies = [ xlunit ];
+    lispDependencies = lib.optionals (self.doCheck or false) [ xlunit ];
     src = sources.marshal;
-  };
+  });
 
   md5 = lispify "md5" [ flexi-streams ];
 
-  metabang-bind = lispDerivation {
+  metabang-bind = lispDerivation (self: {
     lispSystem = "metabang-bind";
     src = sources.metabang-bind;
-    lispCheckDependencies = [ lift ];
-  };
+    lispDependencies = lib.optionals (self.doCheck or false) [ lift ];
+  });
 
   metacopy = lispDerivation (self: {
     lispSystem = "metacopy";
     src = sources.metacopy;
     lispDependencies =
       lib.optionals (hasSystem self "metacopy") [ moptilities ]
-      ++ lib.optionals (hasSystem self "metacopy-with-contextl") [ contextl ];
-    lispCheckDependencies = [ lift ];
+      ++ lib.optionals (hasSystem self "metacopy-with-contextl") [ contextl ]
+      ++ lib.optionals (self.doCheck or false) [ lift ];
   });
 
   metacopy-with-contextl = metacopy.overrideAttrs {
@@ -2454,8 +2448,8 @@ in
         asdf-system-connections
         final."cl-containers/with-asdf-system-connections"
         lift
-      ];
-    lispCheckDependencies = [ lift ];
+      ]
+      ++ lib.optionals (self.doCheck or false) [ lift ];
   });
 
   "metatilities/with-lift" = metatilities.overrideAttrs {
@@ -2466,11 +2460,11 @@ in
     ];
   };
 
-  metatilities-base = lispDerivation {
+  metatilities-base = lispDerivation (self: {
     lispSystem = "metatilities-base";
     src = sources.metatilities-base;
-    lispCheckDependencies = [ lift ];
-  };
+    lispDependencies = lib.optionals (self.doCheck or false) [ lift ];
+  });
 
   dref = lispDerivation (self: {
     src = sources.mgl-pax;
@@ -2505,17 +2499,18 @@ in
         swank
         # mgl-pax/transcribe
         alexandria
-      ];
-    lispCheckDependencies =
-      lib.optionals (hasSystem self [
-        "dref"
-        "mgl-pax"
-        "mgl-pax/full"
-      ]) [ try ]
-      ++ lib.optionals (hasSystem self "dref") [
-        alexandria
-        swank
-      ];
+      ]
+      ++ lib.optionals (self.doCheck or false) (
+        lib.optionals (hasSystem self [
+          "dref"
+          "mgl-pax"
+          "mgl-pax/full"
+        ]) [ try ]
+        ++ lib.optionals (hasSystem self "dref") [
+          alexandria
+          swank
+        ]
+      );
     lispAsdPath = lib.optionals (hasSystem self "dref") [ "dref" ];
     # The function PRINT-UNRESOLVABLE-REFLINK is undefined.
     meta.broken =
@@ -2551,15 +2546,14 @@ in
 
   moptilities = lispDerivation (self: {
     lispSystem = "moptilities";
-    lispDependencies = [ closer-mop ];
-    lispCheckDependencies = [ lift ];
+    lispDependencies = [ closer-mop ] ++ lib.optionals (self.doCheck or false) [ lift ];
     src = sources.moptilities;
     meta.broken = self.doCheck or false;
   });
 
   mt19937 = lispify "mt19937" [ ];
 
-  myway = lispDerivation {
+  myway = lispDerivation (self: {
     lispSystem = "myway";
     lispDependencies = [
       cl-ppcre
@@ -2567,22 +2561,20 @@ in
       map-set
       alexandria
       cl-utilities
-    ];
-    lispCheckDependencies = [ prove ];
+    ]
+    ++ lib.optionals (self.doCheck or false) [ prove ];
     src = sources.myway;
-  };
+  });
 
-  named-readtables = lispDerivation {
+  named-readtables = lispDerivation (self: {
     lispSystem = "named-readtables";
     src = sources.named-readtables;
-    lispDependencies = [ mgl-pax-bootstrap ];
-    lispCheckDependencies = [ try ];
-  };
+    lispDependencies = [ mgl-pax-bootstrap ] ++ lib.optionals (self.doCheck or false) [ try ];
+  });
 
   nclasses = lispDerivation (self: {
-    lispDependencies = [ moptilities ];
+    lispDependencies = [ moptilities ] ++ lib.optionals (self.doCheck or false) [ lisp-unit2 ];
     src = sources.nclasses;
-    lispCheckDependencies = [ lisp-unit2 ];
     lispSystem = "nclasses";
     meta.broken =
       # Requires a new version of ASDF that I’m not sure how to load before
@@ -2594,7 +2586,7 @@ in
         ((self.doCheck or false) && (final._lisp.name == "clasp"));
   });
 
-  nfiles = lispDerivation {
+  nfiles = lispDerivation (self: {
     lispSystem = "nfiles";
     src = sources.nfiles;
     lispDependencies = [
@@ -2605,23 +2597,23 @@ in
       trivial-garbage
       trivial-package-local-nicknames
       trivial-types
-    ];
-    lispCheckDependencies = [ lisp-unit2 ];
-  };
+    ]
+    ++ lib.optionals (self.doCheck or false) [ lisp-unit2 ];
+  });
 
-  ningle = lispDerivation {
+  ningle = lispDerivation (self: {
     lispSystem = "ningle";
     src = sources.ningle;
     lispDependencies = [
       myway
       lack
-    ];
-    lispCheckDependencies = [
+    ]
+    ++ lib.optionals (self.doCheck or false) [
       prove
       yason
       babel
     ];
-  };
+  });
 
   nst = lispDerivation (self: {
     lispSystem = "nst";
@@ -2644,13 +2636,13 @@ in
     name = "optima";
     src = sources.optima;
     lispSystems = [ "optima" ] ++ lib.optionals (self.doCheck or false) [ "optima.ppcre" ];
-    lispCheckDependencies = [ eos ];
     lispDependencies =
       lib.optionals (hasSystem self "optima") [
         alexandria
         closer-mop
       ]
-      ++ lib.optionals (hasSystem self "optima.ppcre") [ cl-ppcre ];
+      ++ lib.optionals (hasSystem self "optima.ppcre") [ cl-ppcre ]
+      ++ lib.optionals (self.doCheck or false) [ eos ];
   });
 
   optima-ppcre = optima.overrideAttrs {
@@ -2663,7 +2655,7 @@ in
 
   org-sampler = lispify "org-sampler" [ iterate ];
 
-  osicat = lispDerivation {
+  osicat = lispDerivation (self: {
     lispSystem = "osicat";
     src = sources.osicat;
     postCheck = ''
@@ -2680,9 +2672,9 @@ in
       cffi
       trivial-features
       cffi-grovel
-    ];
-    lispCheckDependencies = [ rt ];
-  };
+    ]
+    ++ lib.optionals (self.doCheck or false) [ rt ];
+  });
 
   parachute = lispify "parachute" [
     documentation-utils
@@ -2690,7 +2682,7 @@ in
     trivial-custom-debugger
   ];
 
-  parenscript = lispDerivation {
+  parenscript = lispDerivation (self: {
     lispSystem = "parenscript";
     version = "2.7.1";
     src = sources.parenscript;
@@ -2698,12 +2690,12 @@ in
       anaphora
       cl-ppcre
       named-readtables
-    ];
-    lispCheckDependencies = [
+    ]
+    ++ lib.optionals (self.doCheck or false) [
       fiveam
       cl-js
     ];
-  };
+  });
 
   parse-declarations = lispDerivation {
     lispSystem = "parse-declarations-1.0";
@@ -2722,11 +2714,11 @@ in
         iterate
         alexandria
       ]
-      ++ lib.optionals (hasSystem self "parser-combinators-cl-ppcre") [ cl-ppcre ];
-    lispCheckDependencies = [
-      stefil
-      infix
-    ];
+      ++ lib.optionals (hasSystem self "parser-combinators-cl-ppcre") [ cl-ppcre ]
+      ++ lib.optionals (self.doCheck or false) [
+        stefil
+        infix
+      ];
   });
 
   parser-combinators-cl-ppcre = parser-combinators.overrideAttrs {
@@ -2737,29 +2729,28 @@ in
     ];
   };
 
-  path-parse = lispDerivation {
+  path-parse = lispDerivation (self: {
     lispSystem = "path-parse";
-    lispCheckDependencies = [ fiveam ];
-    lispDependencies = [ split-sequence ];
+    lispDependencies = [ split-sequence ] ++ lib.optionals (self.doCheck or false) [ fiveam ];
     src = sources.path-parse;
-  };
+  });
 
   plump = lispify "plump" [
     array-utils
     documentation-utils
   ];
 
-  proc-parse = lispDerivation {
+  proc-parse = lispDerivation (self: {
     lispSystem = "proc-parse";
     lispDependencies = [
       alexandria
       babel
-    ];
-    lispCheckDependencies = [ prove ];
+    ]
+    ++ lib.optionals (self.doCheck or false) [ prove ];
     src = sources.proc-parse;
-  };
+  });
 
-  prove = lispDerivation {
+  prove = lispDerivation (self: {
     # Old name for this project
     lispSystems = [
       "prove"
@@ -2771,29 +2762,29 @@ in
       cl-ansi-text
       cl-colors
       cl-ppcre
-    ];
-    lispCheckDependencies = [
+    ]
+    ++ lib.optionals (self.doCheck or false) [
       alexandria
       split-sequence
     ];
-  };
+  });
 
   ptester = lispDerivation rec {
     lispSystem = "ptester";
     src = sources.ptester;
   };
 
-  punycode = lispDerivation {
+  punycode = lispDerivation (self: {
     lispSystem = "punycode";
     src = sources.punycode;
-    lispCheckDependencies = [ parachute ];
-  };
+    lispDependencies = lib.optionals (self.doCheck or false) [ parachute ];
+  });
 
-  puri = lispDerivation {
+  puri = lispDerivation (self: {
     lispSystem = "puri";
     src = sources.puri;
-    lispCheckDependencies = [ ptester ];
-  };
+    lispDependencies = lib.optionals (self.doCheck or false) [ ptester ];
+  });
 
   pythonic-string-reader = lispify "pythonic-string-reader" [ named-readtables ];
 
@@ -2802,7 +2793,7 @@ in
     documentation-utils
   ];
 
-  quri = lispDerivation {
+  quri = lispDerivation (self: {
     lispSystem = "quri";
     lispDependencies = [
       alexandria
@@ -2810,24 +2801,19 @@ in
       cl-utilities
       idna
       split-sequence
-    ];
-    lispCheckDependencies = [ prove ];
+    ]
+    ++ lib.optionals (self.doCheck or false) [ prove ];
     src = sources.quri;
     # On ABCL this hard-codes a build path which isn’t available once it’s
     # moved to the store.  The dependent pacage will throw:
     #
     # The file #P"/private/tmp/nix-build-system-quri.drv-0/source/data/effective_tld_names.dat" does not exist.
     meta.broken = final._lisp.name == "abcl";
-  };
+  });
 
   reblocks = lispDerivation (self: {
     lispSystem = "reblocks";
     src = sources.reblocks;
-    lispCheckDependencies = [
-      cl-mock
-      final."hamcrest/rove"
-      rove
-    ];
     lispDependencies = [
       final."40ants-doc"
       circular-streams
@@ -2853,22 +2839,27 @@ in
       trivial-timeout
       uuid
       yason
+    ]
+    ++ lib.optionals (self.doCheck or false) [
+      cl-mock
+      final."hamcrest/rove"
+      rove
     ];
     # Stateful tests in /tmp which break when run by different users
     meta.broken = self.doCheck or false;
   });
 
-  reblocks-parenscript = lispDerivation {
+  reblocks-parenscript = lispDerivation (self: {
     lispSystem = "reblocks-parenscript";
     lispDependencies = [
       alexandria
       bordeaux-threads
       parenscript
       reblocks
-    ];
-    lispCheckDependencies = [ rove ];
+    ]
+    ++ lib.optionals (self.doCheck or false) [ rove ];
     src = sources.reblocks-parenscript;
-  };
+  });
 
   reblocks-ui = lispDerivation (self: {
     lispSystem = "reblocks-ui";
@@ -2884,7 +2875,7 @@ in
     meta.broken = self.doCheck or false;
   });
 
-  reblocks-websocket = lispDerivation {
+  reblocks-websocket = lispDerivation (self: {
     lispSystem = "reblocks-websocket";
     src = sources.reblocks-websocket;
     lispDependencies = [
@@ -2896,9 +2887,9 @@ in
       reblocks-parenscript
       serapeum
       websocket-driver
-    ];
-    lispCheckDependencies = [ rove ];
-  };
+    ]
+    ++ lib.optionals (self.doCheck or false) [ rove ];
+  });
 
   rfc2388 = lispify "rfc2388" [ ];
 
@@ -2909,8 +2900,8 @@ in
       puri
       iterate
       split-sequence
-    ];
-    lispCheckDependencies = [ lift ];
+    ]
+    ++ lib.optionals (self.doCheck or false) [ lift ];
     meta.broken = self.doCheck or false;
   });
 
@@ -2938,8 +2929,8 @@ in
     lispDependencies = [
       named-readtables
       closer-mop
-    ];
-    lispCheckDependencies = [ should-test ];
+    ]
+    ++ lib.optionals (self.doCheck or false) [ should-test ];
     meta.broken = self.doCheck or false;
   });
 
@@ -2954,8 +2945,10 @@ in
   salza2 = lispDerivation (self: {
     lispSystem = "salza2";
     src = sources.salza2;
-    lispDependencies = [ trivial-gray-streams ];
-    lispCheckDependencies = [
+    lispDependencies = [
+      trivial-gray-streams
+    ]
+    ++ lib.optionals (self.doCheck or false) [
       chipz
       flexi-streams
       parachute
@@ -2987,8 +2980,8 @@ in
       trivial-file-size
       trivial-garbage
       trivial-macroexpand-all
-    ];
-    lispCheckDependencies = [
+    ]
+    ++ lib.optionals (self.doCheck or false) [
       fiveam
       local-time
       trivial-macroexpand-all
@@ -3023,18 +3016,18 @@ in
 
   sha1 = lispify "sha1" [ ];
 
-  shasht = lispDerivation {
+  shasht = lispDerivation (self: {
     src = sources.shasht;
     lispSystem = "shasht";
     lispDependencies = [
       trivial-do
       closer-mop
-    ];
-    lispCheckDependencies = [
+    ]
+    ++ lib.optionals (self.doCheck or false) [
       alexandria
       parachute
     ];
-  };
+  });
 
   should-test = lispDerivation {
     lispSystem = "should-test";
@@ -3061,26 +3054,22 @@ in
     lispAsdPath = [ "slynk" ];
   };
 
-  smart-buffer = lispDerivation {
+  smart-buffer = lispDerivation (self: {
     lispSystem = "smart-buffer";
     src = sources.smart-buffer;
-    lispCheckDependencies = [
-      babel
-      prove
-    ];
     lispDependencies = [
       flexi-streams
       xsubseq
+    ]
+    ++ lib.optionals (self.doCheck or false) [
+      babel
+      prove
     ];
-  };
+  });
 
   spinneret = lispDerivation (self: {
     src = sources.spinneret;
     lispSystem = "spinneret";
-    lispCheckDependencies = [
-      fiveam
-      parenscript
-    ];
 
     lispDependencies = [
       alexandria
@@ -3092,7 +3081,11 @@ in
       trivia
       trivial-gray-streams
     ]
-    ++ lib.optionals (hasSystem self "spinneret/cl-markdown") [ cl-markdown ];
+    ++ lib.optionals (hasSystem self "spinneret/cl-markdown") [ cl-markdown ]
+    ++ lib.optionals (self.doCheck or false) [
+      fiveam
+      parenscript
+    ];
     meta.broken = self.doCheck or false;
   });
 
@@ -3104,24 +3097,24 @@ in
     ];
   };
 
-  split-sequence = lispDerivation {
+  split-sequence = lispDerivation (self: {
     lispSystem = "split-sequence";
-    lispCheckDependencies = [ fiveam ];
+    lispDependencies = lib.optionals (self.doCheck or false) [ fiveam ];
     src = sources.split-sequence;
-  };
+  });
 
   # N.B.: Soon won’t depend on cffi-grovel
-  static-vectors = lispDerivation {
+  static-vectors = lispDerivation (self: {
     lispSystem = "static-vectors";
     src = sources.static-vectors;
     lispDependencies = [
       alexandria
       cffi
       cffi-grovel
-    ];
-    lispCheckDependencies = [ fiveam ];
+    ]
+    ++ lib.optionals (self.doCheck or false) [ fiveam ];
     meta.broken = final._lisp.name == "clisp";
-  };
+  });
 
   stefil = lispify "stefil" [
     alexandria
@@ -3139,8 +3132,8 @@ in
       cl-change-case
       cl-ppcre
       cl-ppcre-unicode
-    ];
-    lispCheckDependencies = [ prove ];
+    ]
+    ++ lib.optionals (self.doCheck or false) [ prove ];
     meta.broken = self.doCheck or false;
   });
 
@@ -3159,8 +3152,8 @@ in
     lispDependencies = [
       alexandria
       iterate
-    ];
-    lispCheckDependencies = [ lisp-unit2 ];
+    ]
+    ++ lib.optionals (self.doCheck or false) [ lisp-unit2 ];
     # The variable TEST-BASIC is unbound.
     meta.broken = (self.doCheck or false) && (final._lisp.name == "clasp");
   });
@@ -3188,15 +3181,15 @@ in
       ++ lib.optionals (hasSystem self "trivia.cffi") [ cffi ]
       ++ lib.optionals (hasSystem self "trivia.fset") [ fset ]
       ++ lib.optionals (hasSystem self "trivia.ppcre") [ cl-ppcre ]
-      ++ lib.optionals (hasSystem self "trivia.quasiquote") [ fare-quasiquote-readtable ];
-    lispCheckDependencies = lib.optionals (hasSystem self "trivia") [
-      fiveam
-      optima
-      final."trivia.cffi"
-      final."trivia.fset"
-      final."trivia.ppcre"
-      final."trivia.quasiquote"
-    ];
+      ++ lib.optionals (hasSystem self "trivia.quasiquote") [ fare-quasiquote-readtable ]
+      ++ lib.optionals ((self.doCheck or false) && (hasSystem self "trivia")) [
+        fiveam
+        optima
+        final."trivia.cffi"
+        final."trivia.fset"
+        final."trivia.ppcre"
+        final."trivia.quasiquote"
+      ];
   });
 
   "trivia.cffi" = trivia.overrideAttrs (old: {
@@ -3235,7 +3228,7 @@ in
 
   trivial-backtrace = lispDerivation (self: {
     lispSystem = "trivial-backtrace";
-    lispCheckDependencies = [ lift ];
+    lispDependencies = lib.optionals (self.doCheck or false) [ lift ];
     src = sources.trivial-backtrace;
     meta.broken = self.doCheck or false;
   });
@@ -3250,7 +3243,7 @@ in
   trivial-custom-debugger = lispDerivation (self: {
     src = sources.trivial-custom-debugger;
     lispSystem = "trivial-custom-debugger";
-    lispCheckDependencies = [ parachute ];
+    lispDependencies = lib.optionals (self.doCheck or false) [ parachute ];
     meta.broken =
       (self.doCheck or false)
       && (
@@ -3265,7 +3258,7 @@ in
       );
   });
 
-  trivial-extract = lispDerivation {
+  trivial-extract = lispDerivation (self: {
     src = sources.trivial-extract;
     lispSystem = "trivial-extract";
     lispDependencies = [
@@ -3275,37 +3268,37 @@ in
       which
       cl-fad
       alexandria
-    ];
-    lispCheckDependencies = [ fiveam ];
-  };
+    ]
+    ++ lib.optionals (self.doCheck or false) [ fiveam ];
+  });
 
   trivial-do = lispDerivation {
     src = sources.trivial-do;
     lispSystem = "trivial-do";
   };
 
-  trivial-features = lispDerivation {
+  trivial-features = lispDerivation (self: {
     src = sources.trivial-features;
     lispSystem = "trivial-features";
-    lispCheckDependencies = [
+    lispDependencies = lib.optionals (self.doCheck or false) [
       rt
       cffi
       cffi-grovel
       alexandria
     ];
-  };
+  });
 
-  trivial-file-size = lispDerivation {
+  trivial-file-size = lispDerivation (self: {
     src = sources.trivial-file-size;
-    lispCheckDependencies = [ fiveam ];
+    lispDependencies = lib.optionals (self.doCheck or false) [ fiveam ];
     lispSystem = "trivial-file-size";
-  };
+  });
 
-  trivial-garbage = lispDerivation {
+  trivial-garbage = lispDerivation (self: {
     src = sources.trivial-garbage;
     lispSystem = "trivial-garbage";
-    lispCheckDependencies = [ rt ];
-  };
+    lispDependencies = lib.optionals (self.doCheck or false) [ rt ];
+  });
 
   trivial-gray-streams = lispify "trivial-gray-streams" [ ];
 
@@ -3326,11 +3319,11 @@ in
 
   trivial-rfc-1123 = lispify "trivial-rfc-1123" [ cl-ppcre ];
 
-  trivial-shell = lispDerivation {
+  trivial-shell = lispDerivation (self: {
     lispSystem = "trivial-shell";
     src = sources.trivial-shell;
-    lispCheckDependencies = [ lift ];
-  };
+    lispDependencies = lib.optionals (self.doCheck or false) [ lift ];
+  });
 
   trivial-sockets = lispDerivation {
     lispSystem = "trivial-sockets";
@@ -3344,7 +3337,7 @@ in
 
   trivial-timeout = lispDerivation (self: {
     lispSystem = "trivial-timeout";
-    lispCheckDependencies = [ lift ];
+    lispDependencies = lib.optionals (self.doCheck or false) [ lift ];
     src = sources.trivial-timeout;
     meta.broken = self.doCheck or false;
   });
@@ -3377,8 +3370,8 @@ in
       introspect-environment
       final."trivia.trivial"
       lisp-namespace
-    ];
-    lispCheckDependencies = [ fiveam ];
+    ]
+    ++ lib.optionals (self.doCheck or false) [ fiveam ];
     # hangs forever
     meta.broken =
       (self.doCheck or false)
@@ -3437,11 +3430,11 @@ in
       ++ lib.optionals (hasSystem self "usocket-server") [
         usocket
         bordeaux-threads
+      ]
+      ++ lib.optionals ((self.doCheck or false) && (hasSystem self "usocket")) [
+        bordeaux-threads
+        rt
       ];
-    lispCheckDependencies = lib.optionals (hasSystem self "usocket") [
-      bordeaux-threads
-      rt
-    ];
     # Hangs forever on ABCL
     meta.broken =
       (self.doCheck or false) && (pkgs.stdenv.hostPlatform.isLinux || (final._lisp.name == "abcl"));
@@ -3472,18 +3465,18 @@ in
     usocket
   ];
 
-  which = lispDerivation {
+  which = lispDerivation (self: {
     lispSystem = "which";
     src = sources.which;
-    lispCheckDependencies = [ fiveam ];
     lispDependencies = [
       path-parse
       cl-fad
-    ];
-  };
+    ]
+    ++ lib.optionals (self.doCheck or false) [ fiveam ];
+  });
 
-  wild-package-inferred-system = lispDerivation {
-    lispCheckDependencies = [ fiveam ];
+  wild-package-inferred-system = lispDerivation (self: {
+    lispDependencies = lib.optionals (self.doCheck or false) [ fiveam ];
     lispSystem = "wild-package-inferred-system";
     src = sources.wild-package-inferred-system;
     # Clisp packages ASDF v3.2, WPI requires ≥3.3, this is the easiest way to
@@ -3493,7 +3486,7 @@ in
       "clisp"
       "ecl"
     ];
-  };
+  });
 
   with-output-to-stream = lispDerivation (self: {
     lispSystem = "with-output-to-stream";
@@ -3504,12 +3497,11 @@ in
 
   wu-decimal = lispify "wu-decimal" [ ];
 
-  xml-emitter = lispDerivation {
+  xml-emitter = lispDerivation (self: {
     src = sources.xml-emitter;
     lispSystem = "xml-emitter";
-    lispDependencies = [ cl-utilities ];
-    lispCheckDependencies = [ final."1am" ];
-  };
+    lispDependencies = [ cl-utilities ] ++ lib.optionals (self.doCheck or false) [ final."1am" ];
+  });
 
   xlunit = lispDerivation (self: {
     lispSystem = "xlunit";
@@ -3518,11 +3510,11 @@ in
     meta.broken = self.doCheck or false;
   });
 
-  xsubseq = lispDerivation {
+  xsubseq = lispDerivation (self: {
     src = sources.xsubseq;
     lispSystem = "xsubseq";
-    lispCheckDependencies = [ prove ];
-  };
+    lispDependencies = lib.optionals (self.doCheck or false) [ prove ];
+  });
 
   # QL calls this "cl-yacc", but the system name is "yacc", so I’m sticking to
   # "yacc". Regardless of the repo name--that’s not authoritative. The system
@@ -3551,8 +3543,8 @@ in
       cffi
       cl-octet-streams
       trivial-gray-streams
-    ];
-    lispCheckDependencies = [ fiveam ];
+    ]
+    ++ lib.optionals (self.doCheck or false) [ fiveam ];
     lispSystem = "zstd";
     propagatedBuildInputs = [ pkgs.zstd ];
     src = sources.cl-zstd;

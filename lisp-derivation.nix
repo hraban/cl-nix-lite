@@ -68,8 +68,6 @@ let
         # don’t control.  For your own packages, I recommend putting all the
         # .asds in your root directory.
         lispAsdPath ? [ ],
-        lispDependencies ? [ ],
-        lispCheckDependencies ? [ ],
         # Example:
         #
         # - lispBuildOp = "asdf:make",
@@ -93,13 +91,13 @@ let
       }:
       assert (args ? lispSystem) != (args ? lispSystems);
       let
+        lispDependencies =
+          (args.lispDependencies or [ ])
+          ++ lib.optionals (finalAttrs.doCheck or false) (args.lispCheckDependencies or [ ]);
         lispSystems = args.lispSystems or [ args.lispSystem ];
         myOrigSrc = utils.derivPath src;
         name = args.name or (lib.concatStringsSep "_" finalAttrs.lispSystems);
-        getDepsShallow =
-          drv:
-          drv.passthru._origLispDependencies or [ ]
-          ++ lib.optionals (drv.doCheck or false) (drv.passthru._origLispCheckDependencies or [ ]);
+        getDepsShallow = drv: drv.passthru._origLispDependencies or [ ];
         deps =
           let
             foldSrc = drv: init: lib.foldl' f init (getDepsShallow drv);
@@ -154,7 +152,6 @@ let
         src = deps.${myOrigSrc};
         passthru = {
           lisp = lisp;
-          _origLispCheckDependencies = lispCheckDependencies;
           _origLispDependencies = lispDependencies;
           _origLispSystems = lispSystems;
           _origSrc = myOrigSrc;

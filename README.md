@@ -348,8 +348,7 @@ Example of the first strategy, all-in-one:
 arnesi = lispDerivation (self: {
   src = ...;
   lispSystems = [ "arnesi" "arnesi/cl-ppcre-extras" "arnesi/slime-extras" ];
-  lispDependencies = [ collectors cl-ppcre swank ]
-  lispCheckDependencies = [ fiveam ];
+  lispDependencies = [ collectors cl-ppcre swank ];
 });
 ```
 
@@ -365,7 +364,6 @@ arnesi = lispDerivation (self: {
     [ collectors ]
     ++ lib.optionals (builtins.elem "arnesi/cl-ppcre-extras" self.lispSystems) [ cl-ppcre ]
     ++ lib.optionals (builtins.elem "arnesi/slime-extras" self.lispSystems) [ swank ];
-  lispCheckDependencies = [ fiveam ];
 });
 
 arnesi-cl-ppcre-extras = arnesi.overrideAttrs {
