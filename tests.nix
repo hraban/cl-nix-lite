@@ -71,7 +71,8 @@ let
         post = "foobar";
       };
     };
-    testCheckDependencies = with lispPackagesLite; {
+    # Deprecated.  Do not use.
+    testLegacyCheckDependencies = with lispPackagesLite; {
       expr =
         let
           d1 = lispDerivation {

@@ -93,6 +93,8 @@ let
       let
         lispDependencies =
           (args.lispDependencies or [ ])
+          # lispCheckDependencies is deprecated and will be removed in a
+          # future version.  Do not use.
           ++ lib.optionals (finalAttrs.doCheck or false) (args.lispCheckDependencies or [ ]);
         lispSystems = args.lispSystems or [ args.lispSystem ];
         myOrigSrc = utils.derivPath src;
