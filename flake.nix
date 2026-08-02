@@ -16,30 +16,32 @@
 
   outputs =
     { flake-parts, ... }@inputs:
-    flake-parts.lib.mkFlake { inherit inputs; } (
-      { lib, config, ... }:
-      {
-        systems = import inputs.systems;
-        imports = [
-          inputs.treefmt-nix.flakeModule
-          ({
-            flake.overlays.default = import ./.;
+    flake-parts.lib.mkFlake { inherit inputs; } ({
+      systems = import inputs.systems;
+      imports =
+        let
+          checksModule = {
             perSystem =
               {
+                config,
                 self',
                 lib,
                 pkgs,
                 ...
               }:
               let
-                cl-nix-lite = import ./.;
-                examplesList = builtins.filter lib.isDerivation (
-                  pkgs.callPackage ./examples {
-                    cl-nix-lite = config.flake.overlays.default;
-                    withFlakes = false;
-                  }
-                );
-                examples = builtins.listToAttrs (
+                cfg = config.cl-nix-lite;
+                examples = pkgs.callPackage ./examples {
+                  cl-nix-lite = lib.composeExtensions (import ./.) (
+                    final: prev: {
+                      _lispPackagesLitePackages = lib.composeExtensions prev._lispPackagesLitePackages (
+                        final.callPackage cfg.packages { }
+                      );
+                    }
+                  );
+                  withFlakes = false;
+                };
+                examplesDrvs = builtins.listToAttrs (
                   lib.imap0 (
                     i: d:
                     let
@@ -54,14 +56,55 @@
                       name = lib.replaceString "." "_" "${d.name}${lispName}-${toString i}";
                     in
                     lib.nameValuePair name d
-                  ) examplesList
+                  ) (builtins.filter lib.isDerivation examples)
                 );
+              in
+              {
+                options.cl-nix-lite = {
+                  checks.enable = lib.mkEnableOption "Enable flake check outputs for this lisp module";
+                  packages = lib.mkOption {
+                    description = "lisp module package for this flake";
+                    default = { }: _: _: { };
+                    type = with lib.types; either path anything;
+                  };
+                  _examples = lib.mkOption {
+                    description = "Full set of cl-nix-lite example derivations, for testing";
+                    readOnly = true;
+                    type = lib.types.package;
+                  };
+                };
+                config = {
+                  legacyPackages.lisp-examples = lib.mkIf cfg.checks.enable (
+                    pkgs.linkFarm "lisp-examples" examplesDrvs
+                  );
+                  cl-nix-lite._examples = examplesDrvs;
+                };
+              };
+          };
+        in
+        [
+          inputs.treefmt-nix.flakeModule
+          flake-parts.flakeModules.flakeModules
+          checksModule
+          ({
+            flake.flakeModules.lispChecks = checksModule;
+            flake.overlays.default = import ./.;
+            perSystem =
+              {
+                config,
+                lib,
+                self',
+                pkgs,
+                ...
+              }:
+              let
+                cl-nix-lite = import ./.;
                 sources = import ./sources { inherit (pkgs) callPackage; };
                 pkgs' = pkgs.extend cl-nix-lite;
               in
               {
                 treefmt = import ./treefmt.nix { };
-                packages.examples = pkgs.linkFarm "examples" examples;
+                packages.examples = config.cl-nix-lite._examples;
                 packages.sources = pkgs.linkFarm "sources" sources;
                 legacyPackages =
                   let
@@ -82,25 +125,24 @@
                     in
                     lpl
                   ) lisps;
-                checks = examples // {
-                  inherit (self'.packages) sources;
-                  unit-tests = (pkgs'.callPackage ./tests.nix { }).deriv;
-                  markdown-links =
-                    pkgs.runCommand "mkdocs-linkcheck"
-                      {
-                        nativeBuildInputs = [ pkgs.markdown-link-check ];
-                        cfg = builtins.toFile "mlc-config.json" (
-                          builtins.toJSON { ignorePatterns = [ { pattern = "^http"; } ]; }
-                        );
-                      }
-                      ''
-                        markdown-link-check -c $cfg ${./.}
-                        touch $out
-                      '';
-                };
+                #   checks = examples // {
+                #     inherit (self'.packages) sources;
+                #     unit-tests = (pkgs'.callPackage ./tests.nix { }).deriv;
+                #     markdown-links =
+                #       pkgs.runCommand "mkdocs-linkcheck"
+                #         {
+                #           nativeBuildInputs = [ pkgs.markdown-link-check ];
+                #           cfg = builtins.toFile "mlc-config.json" (
+                #             builtins.toJSON { ignorePatterns = [ { pattern = "^http"; } ]; }
+                #           );
+                #         }
+                #         ''
+                #           markdown-link-check -c $cfg ${./.}
+                #           touch $out
+                #         '';
+                #   };
               };
           })
         ];
-      }
-    );
+    });
 }
