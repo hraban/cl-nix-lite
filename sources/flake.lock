@@ -1894,11 +1894,11 @@
     "flake-compat": {
       "flake": false,
       "locked": {
-        "lastModified": 1766808011,
-        "narHash": "sha256-s83BS0abtIj7vzUf8JE0209KphfHA6qRw/92D9k/F+0=",
+        "lastModified": 1785988712,
+        "narHash": "sha256-C1MRVh/174WXjwZgHsrx0Ra5OAwp73VwigcpCZuLknY=",
         "owner": "hraban",
         "repo": "flake-compat",
-        "rev": "6e0aafdc4c4c2043c66f756d5045374b42184fc5",
+        "rev": "05109bcd053b695174758d4e44cc64dbe9fa7e66",
         "type": "github"
       },
       "original": {
