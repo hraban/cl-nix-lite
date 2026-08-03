@@ -2804,11 +2804,11 @@
     "named-readtables": {
       "flake": false,
       "locked": {
-        "lastModified": 1777283594,
-        "narHash": "sha256-R0KsCXOYETCDSVl8dTeTuaimB9sbm0v0KZRSeev1MWQ=",
+        "lastModified": 1782918162,
+        "narHash": "sha256-R2KNrJwD+KE2LcmWn7e4vlPQym9IF7lc3Rs0V4RMzIE=",
         "owner": "melisgl",
         "repo": "named-readtables",
-        "rev": "609a591989927f30b9be76ed510bf1fbcdb53682",
+        "rev": "9b774b51a08124c41881f10b30fb33425a3e6085",
         "type": "github"
       },
       "original": {
