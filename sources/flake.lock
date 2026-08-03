@@ -2549,11 +2549,11 @@
     "log4cl-extras": {
       "flake": false,
       "locked": {
-        "lastModified": 1720542633,
-        "narHash": "sha256-o6zBG4D5wVbnAzUK+tRrf8d5klC5RbDUA3KYQBDy6J4=",
+        "lastModified": 1767985427,
+        "narHash": "sha256-vYEMa0ax7tQYAnes6Q1miNinIY7EFYPB5MHfkfJO22s=",
         "owner": "40ants",
         "repo": "log4cl-extras",
-        "rev": "7df9566cfecf6ed418ea85c2aa2f886dfb6f12af",
+        "rev": "a22ae813325cd42f96313ce9c89e4abea68564d1",
         "type": "github"
       },
       "original": {
