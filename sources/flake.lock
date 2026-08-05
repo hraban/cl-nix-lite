@@ -3,11 +3,11 @@
     "access": {
       "flake": false,
       "locked": {
-        "lastModified": 1709748910,
-        "narHash": "sha256-ZccA8ngnTgZNBaH8lXAOM6T4xBnn6vqtwdTunBbEsn0=",
+        "lastModified": 1744742078,
+        "narHash": "sha256-PS/t05UYxdC4uAQtQDZQKt89dPcVHGL/+afAaPFJNdU=",
         "owner": "AccelerationNet",
         "repo": "access",
-        "rev": "a4f87fc1007f5c9a0a2abfddc1c23a77e87096f8",
+        "rev": "346e97b3539c7eff645868a87acf0b902c629ad4",
         "type": "github"
       },
       "original": {
