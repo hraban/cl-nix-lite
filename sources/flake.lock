@@ -1176,10 +1176,11 @@
     "clss": {
       "flake": false,
       "locked": {
-        "lastModified": 1725955433,
-        "narHash": "sha256-bjVbFxSzLG6XbvjJSEJLzYtVx+qEG+8QPatyFLnBXtA=",
+        "lastModified": 1755786590,
+        "narHash": "sha256-orJlANWBO8i5Oxu7LqoiwpLXxYk2RQvLL6xX5dQPkJc=",
         "ref": "refs/heads/master",
-        "rev": "59aa1cdd63292a764179465a3b50aa634ed29f5b",
+        "rev": "cd5f603e8207ec23c147c5cfda636ef8273a7525",
+        "revCount": 94,
         "type": "git",
         "url": "https://codeberg.org/shinmera/clss.git"
       },
