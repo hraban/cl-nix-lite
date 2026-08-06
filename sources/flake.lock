@@ -4471,11 +4471,11 @@
     "websocket-driver": {
       "flake": false,
       "locked": {
-        "lastModified": 1720526112,
-        "narHash": "sha256-QsI8op3qA8jSJuVm2YgkiRsU38WH1tkUTSkIk7PqRtI=",
+        "lastModified": 1774101507,
+        "narHash": "sha256-5qJEkjeaxsAqfkn3mcqNkOOczbxIumQmi4Zveqx0gZY=",
         "owner": "fukamachi",
         "repo": "websocket-driver",
-        "rev": "17ba5535fb1c4fe43e7e8ac786e8b61a174fcba3",
+        "rev": "137e3132075996b4b21874dad50a02e28aacc64c",
         "type": "github"
       },
       "original": {
