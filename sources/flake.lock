@@ -4612,11 +4612,11 @@
     "x_40ants-asdf-system": {
       "flake": false,
       "locked": {
-        "lastModified": 1711116506,
-        "narHash": "sha256-fCItGc8HOaHNxGOY8E1QNBwHzFGveB7udkkBDWo5JXI=",
+        "lastModified": 1740407216,
+        "narHash": "sha256-l+erQq4pnbosram+HiPB4NygqLalfW8rabkTdr53P5Q=",
         "owner": "40ants",
         "repo": "40ants-asdf-system",
-        "rev": "91ed8a4430552f58563d84182b97b25e9e1e8dbe",
+        "rev": "492bc9b09c100593ceec8375899addcbffa573cc",
         "type": "github"
       },
       "original": {
