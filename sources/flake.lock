@@ -274,11 +274,11 @@
     "bordeaux-threads": {
       "flake": false,
       "locked": {
-        "lastModified": 1720821200,
-        "narHash": "sha256-dK35jZRxSE1FH5+MAAcy/WqQEWW/wg1JsCx7g2I5H8U=",
+        "lastModified": 1774406437,
+        "narHash": "sha256-ilqHevCNMsQ3iP1M2xhOwDsD3mVyVosxatNYWuOCZCQ=",
         "owner": "sionescu",
         "repo": "bordeaux-threads",
-        "rev": "5ee4e5ba32f01853d66b50d7d3ec6d81b24b7b3c",
+        "rev": "92da6b9d4f2d92273290ab53416028c67a17b1d7",
         "type": "github"
       },
       "original": {
