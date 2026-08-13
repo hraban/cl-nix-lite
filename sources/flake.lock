@@ -4597,10 +4597,11 @@
     "x_3d-vectors": {
       "flake": false,
       "locked": {
-        "lastModified": 1693388789,
-        "narHash": "sha256-SMylb6XQMk2WVm4UZVONdMyQOm1xvKVfj8j1vcDicXg=",
+        "lastModified": 1755786521,
+        "narHash": "sha256-MoRKMmKQ3QByrm3Ljgwh2U5821zMYXfXjbSusT1hoEY=",
         "ref": "refs/heads/master",
-        "rev": "e5ab05d14ebd608cd4e6b7bb8ca45e81ebc07f1d",
+        "rev": "fc751c65b2285e971c348539bfbc3cbb58b253b0",
+        "revCount": 130,
         "type": "git",
         "url": "https://codeberg.org/shinmera/3d-vectors.git"
       },
