@@ -3265,11 +3265,11 @@
     "reblocks-websocket": {
       "flake": false,
       "locked": {
-        "lastModified": 1709584614,
-        "narHash": "sha256-yzi2bZLZoAECfQMRxlv7XmYM05n+sZF+U46dYVwkwX4=",
+        "lastModified": 1787435510,
+        "narHash": "sha256-JpBUvzuYzoOs1uMI50Ko2JR2uthz7iiTkw2UZhzMs2U=",
         "owner": "40ants",
         "repo": "reblocks-websocket",
-        "rev": "a973282b3b54a7f75fd3f76061eb5473bda5bb14",
+        "rev": "04ec3fd319e5659d4f518d1703a64980b282cf9f",
         "type": "github"
       },
       "original": {

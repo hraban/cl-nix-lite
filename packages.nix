@@ -2892,6 +2892,7 @@ in
     lispSystem = "reblocks-websocket";
     src = sources.reblocks-websocket;
     lispDependencies = [
+      final."40ants-routes"
       alexandria
       bordeaux-threads
       jonathan
