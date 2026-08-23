@@ -3217,11 +3217,11 @@
     "reblocks": {
       "flake": false,
       "locked": {
-        "lastModified": 1726323229,
-        "narHash": "sha256-cTjX+o7iMfptniRblEAVSp4QsjpxP2sqxCMAuI6/Fmk=",
+        "lastModified": 1787435643,
+        "narHash": "sha256-55nEilz6FBM3YUJaubmFsKMS1lanTqxaQiIPV0Vkj+U=",
         "owner": "40ants",
         "repo": "reblocks",
-        "rev": "17dcffc5fd4195f82be994da69f936ad3ad03524",
+        "rev": "f0fc784c277af5189520524baea316dfe3d4f8c1",
         "type": "github"
       },
       "original": {

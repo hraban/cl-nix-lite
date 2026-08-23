@@ -2829,6 +2829,7 @@ in
     src = sources.reblocks;
     lispDependencies = [
       final."40ants-doc"
+      final."40ants-routes"
       circular-streams
       cl-cookie
       cl-fad
