@@ -2,7 +2,7 @@
   inputs = {
     flake-parts.url = "github:hercules-ci/flake-parts";
     # All below for local dev only, not used for actual overlay
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
     systems.url = "github:nix-systems/default";
     treefmt-nix.url = "github:numtide/treefmt-nix";
   };
@@ -17,8 +17,7 @@
   outputs =
     { flake-parts, ... }@inputs:
     flake-parts.lib.mkFlake { inherit inputs; } (
-      { lib, config, ... }:
-      {
+      { lib, config, ... }: {
         systems = import inputs.systems;
         imports = [
           inputs.treefmt-nix.flakeModule
