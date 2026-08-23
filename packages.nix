@@ -138,6 +138,19 @@ in
     lispDependencies = [ asdf ] ++ lib.optionals (self.doCheck or false) [ rove ];
   });
 
+  "40ants-routes" = lispDerivation (self: {
+    lispSystem = "40ants-routes";
+    src = sources.routes;
+    lispDependencies = [
+      final."40ants-asdf-system"
+      cl-ppcre
+      serapeum
+      split-sequence
+      str
+    ]
+    ++ lib.optionals (self.doCheck or false) [ rove ];
+  });
+
   access = lispDerivation (self: {
     lispSystem = "access";
     src = sources.access;
@@ -2895,7 +2908,7 @@ in
 
   routes = lispDerivation (self: {
     lispSystem = "routes";
-    src = sources.routes;
+    src = sources.cl-routes;
     lispDependencies = [
       puri
       iterate

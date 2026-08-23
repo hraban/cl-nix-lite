@@ -948,6 +948,22 @@
         "type": "github"
       }
     },
+    "cl-routes": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1484822643,
+        "narHash": "sha256-IS+9osD50/fjph6iLEohe59BcvcgUHkvKBWiLS4b8/4=",
+        "owner": "archimag",
+        "repo": "cl-routes",
+        "rev": "1b79e85aa653e1ec87e21ca745abe51547866fa9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "archimag",
+        "repo": "cl-routes",
+        "type": "github"
+      }
+    },
     "cl-slice": {
       "flake": false,
       "locked": {
@@ -3339,6 +3355,7 @@
         "cl-quickcheck": "cl-quickcheck",
         "cl-reactive": "cl-reactive",
         "cl-redis": "cl-redis",
+        "cl-routes": "cl-routes",
         "cl-slice": "cl-slice",
         "cl-speedy-queue": "cl-speedy-queue",
         "cl-sqlite": "cl-sqlite",
@@ -3565,16 +3582,16 @@
     "routes": {
       "flake": false,
       "locked": {
-        "lastModified": 1484822643,
-        "narHash": "sha256-IS+9osD50/fjph6iLEohe59BcvcgUHkvKBWiLS4b8/4=",
-        "owner": "archimag",
-        "repo": "cl-routes",
-        "rev": "1b79e85aa653e1ec87e21ca745abe51547866fa9",
+        "lastModified": 1787436002,
+        "narHash": "sha256-HQOiCpFo/iY3Xm1x74YenacSQ0wTDAFv6dAaH1QHC1U=",
+        "owner": "40ants",
+        "repo": "routes",
+        "rev": "7e8f2de85b965170450519817dd0a61c5af05e52",
         "type": "github"
       },
       "original": {
-        "owner": "archimag",
-        "repo": "cl-routes",
+        "owner": "40ants",
+        "repo": "routes",
         "type": "github"
       }
     },

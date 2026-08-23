@@ -307,6 +307,10 @@
       url = "github:vseloved/cl-redis";
       flake = false;
     };
+    cl-routes = {
+      url = "github:archimag/cl-routes";
+      flake = false;
+    };
     cl-slice = {
       url = "github:tpapp/cl-slice";
       flake = false;
@@ -890,7 +894,7 @@
       flake = false;
     };
     routes = {
-      url = "github:archimag/cl-routes";
+      url = "github:40ants/routes";
       flake = false;
     };
     rove = {
