@@ -4139,11 +4139,11 @@
     "trivial-gray-streams": {
       "flake": false,
       "locked": {
-        "lastModified": 1784920817,
-        "narHash": "sha256-5AfzuWmVHB6oNDu5kFtJPNxdK6eyPCVcOWQjWYzbeS8=",
+        "lastModified": 1786997866,
+        "narHash": "sha256-uDXpYwE6I4AkOQMHi0caR0jTCozcoLzIkJPHmWsW5Zo=",
         "owner": "trivial-gray-streams",
         "repo": "trivial-gray-streams",
-        "rev": "e9adf98141189123b9f26975221cbaa16f3f4f58",
+        "rev": "257d73ec36958beb7d49eba5567d5409827197b7",
         "type": "github"
       },
       "original": {
