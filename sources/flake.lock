@@ -2741,11 +2741,11 @@
     "mgl-pax": {
       "flake": false,
       "locked": {
-        "lastModified": 1715963394,
-        "narHash": "sha256-wO/NHRT4VWjC6fRn9jdU0IDDoIEYvX9sUlozJqOYX58=",
+        "lastModified": 1785751356,
+        "narHash": "sha256-YI89w1y+yWN7PxMIZzre/XFQQbV3ICzZfg44M/lp3II=",
         "owner": "melisgl",
         "repo": "mgl-pax",
-        "rev": "6bfd77ddfa79f0e0905eb4b99d46ac5d2dd69c24",
+        "rev": "d91517cf9b76a21e50d90968e4a80b685e22dd34",
         "type": "github"
       },
       "original": {
