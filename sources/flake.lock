@@ -3821,11 +3821,11 @@
     "spinneret": {
       "flake": false,
       "locked": {
-        "lastModified": 1718554433,
-        "narHash": "sha256-tsQfdKkrQDqKIxIHOeKpyCaDYHqNbbAXp3wdRG4ZUyU=",
+        "lastModified": 1787003875,
+        "narHash": "sha256-JDeIsPv03hjmSMtuqcnZb5DX9V/L7ao+/MphqRQGQgE=",
         "owner": "ruricolist",
         "repo": "spinneret",
-        "rev": "4b514008cc0a38986f699d24e89a7d46483d1687",
+        "rev": "13cd824012b8f90994a955d72bc248649e6b25c6",
         "type": "github"
       },
       "original": {
