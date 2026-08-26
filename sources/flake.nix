@@ -123,6 +123,10 @@
       url = "github:shinmera/atomics";
       flake = false;
     };
+    autoload = {
+      url = "github:melisgl/autoload";
+      flake = false;
+    };
     babel = {
       url = "github:cl-babel/babel";
       flake = false;
@@ -455,6 +459,10 @@
     };
     drakma = {
       url = "github:edicl/drakma";
+      flake = false;
+    };
+    dref = {
+      url = "github:melisgl/dref";
       flake = false;
     };
     dynamic-classes = {

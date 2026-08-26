@@ -53,6 +53,13 @@ in
     ];
   });
 
+  "3bmd-ext-math" = final."3bmd".overrideAttrs (old: {
+    lispSystems = [
+      "3bmd"
+      "3bmd-ext-math"
+    ];
+  });
+
   "3bmd-ext-tables" = final."3bmd".overrideAttrs (old: {
     lispSystems = [
       "3bmd"
@@ -295,6 +302,32 @@ in
       "clisp"
     ];
   });
+
+  autoload = lispDerivation (self: {
+    src = sources.autoload;
+    lispSystem = "autoload";
+    lispDependencies = [
+      closer-mop
+      mgl-pax-bootstrap
+      trivial-indent
+    ]
+    ++ lib.optionals (self.doCheck or false) [ try ]
+    ++ lib.optionals (hasSystem self "autoload-doc") [
+      dref
+      mgl-pax
+      named-readtables
+      pythonic-string-reader
+    ];
+    # Excessively CPU intensive test
+    meta.broken = self.doCheck or false;
+  });
+
+  autoload-doc = autoload.overrideAttrs {
+    lispSystems = [
+      "autoload"
+      "autoload-doc"
+    ];
+  };
 
   babel = lispDerivation (self: {
     src = sources.babel;
@@ -1566,6 +1599,51 @@ in
     meta.broken = (self.doCheck or false) && (final._lisp.name == "clasp");
   });
 
+  dref = lispDerivation (self: {
+    src = sources.dref;
+    lispSystems = [
+      "dref"
+    ]
+    ++ lib.optionals (self.doCheck or false) [
+      "dref/full"
+      "dref-test"
+    ];
+    lispDependencies = [
+      autoload
+      mgl-pax-bootstrap
+      named-readtables
+      pythonic-string-reader
+    ]
+    ++ lib.optionals (hasSystem self "dref/full") (
+      [
+        alexandria
+        closer-mop
+        mgl-pax
+      ]
+      ++ lib.optionals (final._lisp.name != "sbcl") [ swank ]
+    )
+    ++ lib.optionals (hasSystem self "dref-test") [
+      try
+      final."mgl-pax/full"
+      swank
+    ];
+    meta.broken = self.doCheck or false;
+  });
+
+  "dref/full" = dref.overrideAttrs {
+    lispSystems = [
+      "dref"
+      "dref/full"
+    ];
+  };
+
+  dref-test = dref.overrideAttrs {
+    lispSystems = [
+      "dref"
+      "dref-test"
+    ];
+  };
+
   dynamic-classes = lispDerivation (self: {
     lispSystem = "dynamic-classes";
     src = sources.dynamic-classes;
@@ -2479,10 +2557,10 @@ in
     lispDependencies = lib.optionals (self.doCheck or false) [ lift ];
   });
 
-  dref = lispDerivation (self: {
+  mgl-pax-bootstrap = lispDerivation (self: {
+    name = "mgl-pax-bootstrap";
     src = sources.mgl-pax;
     lispSystems = [
-      "dref"
       "mgl-pax-bootstrap"
     ]
     ++ lib.optionals (self.doCheck or false) [
@@ -2490,11 +2568,8 @@ in
       "mgl-pax/full"
     ];
     lispDependencies =
-      lib.optionals (hasSystem self "dref") [
-        named-readtables
-        pythonic-string-reader
-      ]
-      ++ lib.optionals (hasSystem self "mgl-pax") [
+      lib.optionals (hasSystem self "mgl-pax") [
+        autoload
         dref
         named-readtables
         pythonic-string-reader
@@ -2505,7 +2580,11 @@ in
         # mgl-pax/document
         final."3bmd"
         final."3bmd-ext-code-blocks"
+        final."3bmd-ext-math"
+        autoload-doc
         colorize
+        final."dref/full"
+        hunchentoot
         md5
         trivial-utf-8
         # mgl-pax/navigate
@@ -2513,47 +2592,40 @@ in
         # mgl-pax/transcribe
         alexandria
       ]
-      ++ lib.optionals (self.doCheck or false) (
-        lib.optionals (hasSystem self [
-          "dref"
-          "mgl-pax"
-          "mgl-pax/full"
-        ]) [ try ]
-        ++ lib.optionals (hasSystem self "dref") [
-          alexandria
-          swank
-        ]
-      );
-    lispAsdPath = lib.optionals (hasSystem self "dref") [ "dref" ];
-    # The function PRINT-UNRESOLVABLE-REFLINK is undefined.
-    meta.broken =
-      ((hasSystem self "mgl-pax/full") && final._lisp.name == "clasp")
-      || ((hasSystem self "mgl-pax") && final._lisp.name == "abcl");
+      ++
+        lib.optionals
+          (
+            (self.doCheck or false)
+            && (hasSystem self [
+              "mgl-pax"
+              "mgl-pax/full"
+            ])
+          )
+          [
+            try
+            dref-test
+          ];
+    # This project is too complicated.  If it weren’t used by so many dependents
+    # I would remove it.
+    meta.broken = self.doCheck or true;
   });
 
-  mgl-pax = dref.overrideAttrs (old: {
+  mgl-pax = mgl-pax-bootstrap.overrideAttrs {
     name = "mgl-pax";
-    lispSystems = lib.uniqueStrings (
-      old.lispSystems
-      ++ [
-        "dref"
-        "mgl-pax-bootstrap"
-        "mgl-pax"
-      ]
-    );
-  });
+    lispSystems = [
+      "mgl-pax-bootstrap"
+      "mgl-pax"
+    ];
+  };
 
-  "mgl-pax/full" = dref.overrideAttrs {
+  "mgl-pax/full" = mgl-pax-bootstrap.overrideAttrs {
     name = "mgl-pax/full";
     lispSystems = [
-      "dref"
       "mgl-pax"
       "mgl-pax-bootstrap"
       "mgl-pax/full"
     ];
   };
-
-  mgl-pax-bootstrap = dref.overrideAttrs { lispSystems = [ "mgl-pax-bootstrap" ]; };
 
   misc-extensions = lispify "misc-extensions" [ ];
 
