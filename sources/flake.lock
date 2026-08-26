@@ -4345,11 +4345,11 @@
     "try": {
       "flake": false,
       "locked": {
-        "lastModified": 1693231374,
-        "narHash": "sha256-r6b4BCqtYg3aCiOEqYLHUoJuS2IlOW/+1Gm7zrEb0Zg=",
+        "lastModified": 1783714178,
+        "narHash": "sha256-8G4IrF5Qp9jtiIHA7bDbdyglXPDs4PCBh7u39GldqWU=",
         "owner": "melisgl",
         "repo": "try",
-        "rev": "cf2a8887d091bf297b72ef69e15012e7e849ba3b",
+        "rev": "91bd78de512c2f29d5f5d905f435432a3463ba6a",
         "type": "github"
       },
       "original": {
