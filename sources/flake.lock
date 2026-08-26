@@ -239,6 +239,22 @@
         "type": "github"
       }
     },
+    "autoload": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1785169404,
+        "narHash": "sha256-9PsZ2VqIhLc51ebYQEgWMBsetMnn9rZAFg0iyqX6Gfo=",
+        "owner": "melisgl",
+        "repo": "autoload",
+        "rev": "452ccdf4bd1eae4abe8db4501d178005117e4815",
+        "type": "github"
+      },
+      "original": {
+        "owner": "melisgl",
+        "repo": "autoload",
+        "type": "github"
+      }
+    },
     "babel": {
       "flake": false,
       "locked": {
@@ -1539,6 +1555,22 @@
         "type": "github"
       }
     },
+    "dref": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1785318636,
+        "narHash": "sha256-yAl0El3b3rBF85WsN1//qgl53u3ues2Nz2C1gyqs7fY=",
+        "owner": "melisgl",
+        "repo": "dref",
+        "rev": "8c85a95ac1e306c8a90ca247f3c1f9eda15a9ed4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "melisgl",
+        "repo": "dref",
+        "type": "github"
+      }
+    },
     "dynamic-classes": {
       "flake": false,
       "locked": {
@@ -2741,11 +2773,11 @@
     "mgl-pax": {
       "flake": false,
       "locked": {
-        "lastModified": 1715963394,
-        "narHash": "sha256-wO/NHRT4VWjC6fRn9jdU0IDDoIEYvX9sUlozJqOYX58=",
+        "lastModified": 1785751356,
+        "narHash": "sha256-YI89w1y+yWN7PxMIZzre/XFQQbV3ICzZfg44M/lp3II=",
         "owner": "melisgl",
         "repo": "mgl-pax",
-        "rev": "6bfd77ddfa79f0e0905eb4b99d46ac5d2dd69c24",
+        "rev": "d91517cf9b76a21e50d90968e4a80b685e22dd34",
         "type": "github"
       },
       "original": {
@@ -3311,6 +3343,7 @@
         "asdf-system-connections": "asdf-system-connections",
         "assoc-utils": "assoc-utils",
         "atomics": "atomics",
+        "autoload": "autoload",
         "babel": "babel",
         "blackbird": "blackbird",
         "bordeaux-threads": "bordeaux-threads",
@@ -3392,6 +3425,7 @@
         "docs-builder": "docs-builder",
         "documentation-utils": "documentation-utils",
         "drakma": "drakma",
+        "dref": "dref",
         "dynamic-classes": "dynamic-classes",
         "eager-future2": "eager-future2",
         "easy-routes": "easy-routes",
@@ -4345,11 +4379,11 @@
     "try": {
       "flake": false,
       "locked": {
-        "lastModified": 1693231374,
-        "narHash": "sha256-r6b4BCqtYg3aCiOEqYLHUoJuS2IlOW/+1Gm7zrEb0Zg=",
+        "lastModified": 1783714178,
+        "narHash": "sha256-8G4IrF5Qp9jtiIHA7bDbdyglXPDs4PCBh7u39GldqWU=",
         "owner": "melisgl",
         "repo": "try",
-        "rev": "cf2a8887d091bf297b72ef69e15012e7e849ba3b",
+        "rev": "91bd78de512c2f29d5f5d905f435432a3463ba6a",
         "type": "github"
       },
       "original": {
