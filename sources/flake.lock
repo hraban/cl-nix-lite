@@ -645,11 +645,11 @@
     "cl-fad": {
       "flake": false,
       "locked": {
-        "lastModified": 1641775135,
-        "narHash": "sha256-xluKYyYQS/T1gQDv4ijdetvLtbl9aGupo+AEnBvFPSg=",
+        "lastModified": 1786606026,
+        "narHash": "sha256-wkWA28ErUbFUY3ZyA9+dMvThFWHxWwkeIsHsvE0cMFg=",
         "owner": "edicl",
         "repo": "cl-fad",
-        "rev": "3f4d32d3aa1093966046d001411a852eb8f4b535",
+        "rev": "714257f064cbe326855701be1aa5ef1199f3c676",
         "type": "github"
       },
       "original": {
