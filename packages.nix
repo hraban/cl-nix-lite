@@ -2607,7 +2607,12 @@ in
           ];
     # This project is too complicated.  If it weren’t used by so many dependents
     # I would remove it.
-    meta.broken = self.doCheck or true;
+    meta.broken =
+      (self.doCheck or false)
+      || ((hasSystem self "mgl-pax/full") && final._lisp.name == "clasp")
+      || ((hasSystem self "mgl-pax") && final._lisp.name == "abcl")
+      # 0 errors, 2 warnings/nix/store/0i25iw4373868kjqhafvmd6pn1wwzkh3-stdenv-linux/setup: line 1758:    43 Segmentation fault         (core dumped) /nix/store/ya6rksrfiv2kpb9nnnjs8xv5y0bpjn4c-clisp-2.49.95-unstable-2024-12-28/bin/clisp -E UTF-8 -norc /nix/store/qpzsa86nz9q863xwc0xizhyq8xgnz075-asdf-build-mgl-pax-bootstrap.lisp
+      || (pkgs.stdenv.hostPlatform.isLinux && (hasSystem self "mgl-pax") && final._lisp.name == "clisp");
   });
 
   mgl-pax = mgl-pax-bootstrap.overrideAttrs {
