@@ -4015,10 +4015,11 @@
     "trivial-arguments": {
       "flake": false,
       "locked": {
-        "lastModified": 1715018297,
-        "narHash": "sha256-8uSdQe3ivhnoKxsu+Hd/hOYWWLb/AEvXw95nwrOLMvQ=",
+        "lastModified": 1755787789,
+        "narHash": "sha256-+hi21feDUtynEV/6x0M68oe0MdsYvPi/cVOrFmvN5oQ=",
         "ref": "refs/heads/master",
-        "rev": "398829ba94085212559105b917e72c59051891cd",
+        "rev": "f77147f1b92acef16ca5fee7a020814d0894bc28",
+        "revCount": 27,
         "type": "git",
         "url": "https://codeberg.org/shinmera/trivial-arguments.git"
       },
