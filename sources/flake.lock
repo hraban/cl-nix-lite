@@ -4221,16 +4221,18 @@
     "trivial-mimes": {
       "flake": false,
       "locked": {
-        "lastModified": 1688403715,
-        "narHash": "sha256-4aAZ20wHMj/d2s+LTM7qLehxCX8/73LMVikTuNJbmBU=",
-        "ref": "refs/heads/master",
-        "rev": "1a801939594f1496fae097352033414590811b91",
+        "lastModified": 1788128324,
+        "narHash": "sha256-FV1h1vRfnP9k8vewY7lMjyLczHK6V7dx0r/XHwCF6Mk=",
+        "ref": "fix-pathname",
+        "rev": "2121b97442a7ba9c9d98a34c7ba89c5528bf6e88",
+        "revCount": 29,
         "type": "git",
-        "url": "https://codeberg.org/shinmera/trivial-mimes.git"
+        "url": "https://codeberg.org/hraban/trivial-mimes.git"
       },
       "original": {
+        "ref": "fix-pathname",
         "type": "git",
-        "url": "https://codeberg.org/shinmera/trivial-mimes.git"
+        "url": "https://codeberg.org/hraban/trivial-mimes.git"
       }
     },
     "trivial-open-browser": {
