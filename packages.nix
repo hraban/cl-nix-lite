@@ -3396,7 +3396,14 @@ in
 
   trivial-macroexpand-all = lispify "trivial-macroexpand-all" [ ];
 
-  trivial-mimes = lispify "trivial-mimes" [ ];
+  trivial-mimes = lispDerivation {
+    lispSystem = "trivial-mimes";
+    src = sources.trivial-mimes;
+    # Broken, see https://codeberg.org/shinmera/trivial-mimes/pulls/20. I don’t
+    # know how to fix, nor care to further engage with upstream.  You’ll have to
+    # fix and override yourself, or suggest a patch upstream.
+    meta.broken = true;
+  };
 
   trivial-open-browser = lispify "trivial-open-browser" [ ];
 

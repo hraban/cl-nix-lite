@@ -1055,8 +1055,7 @@
       flake = false;
     };
     trivial-mimes = {
-      # PR pending
-      url = "git+https://codeberg.org/hraban/trivial-mimes.git?ref=fix-pathname";
+      url = "git+https://codeberg.org/shinmera/trivial-mimes.git";
       flake = false;
     };
     trivial-open-browser = {
