@@ -3823,11 +3823,11 @@
     "sly": {
       "flake": false,
       "locked": {
-        "lastModified": 1723238344,
-        "narHash": "sha256-oRDIvkkwNYCh87RRnhDkkCcANayifkSCxdWcd+Bjs9c=",
+        "lastModified": 1785590277,
+        "narHash": "sha256-VEvkNiLKtfs4mDVXtNxmQ4eOuLosAmW1DeOdvM1ushE=",
         "owner": "joaotavora",
         "repo": "sly",
-        "rev": "742355f7554ab6c46e5c1c9bdb89068f55359eaa",
+        "rev": "3ffa216d0818972f7a7fea38a566a6b570349f3b",
         "type": "github"
       },
       "original": {
