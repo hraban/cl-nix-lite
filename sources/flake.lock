@@ -1479,11 +1479,11 @@
     "djula": {
       "flake": false,
       "locked": {
-        "lastModified": 1720705720,
-        "narHash": "sha256-fPpXLctlx/lDSLetxx3j8M4vuK5up4yapHftO7kHk9Q=",
+        "lastModified": 1758214595,
+        "narHash": "sha256-JE7XRS8boI+Ln04ds8F71nglSk3rdbdYhaPT2H9/dLI=",
         "owner": "mmontone",
         "repo": "djula",
-        "rev": "ba2279837153c2ea12dc7dea9f7abdf1c1f99151",
+        "rev": "0ee4da2ec2c9fdd256b402075cdf0ba2cd381d27",
         "type": "github"
       },
       "original": {
