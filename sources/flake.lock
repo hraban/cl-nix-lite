@@ -2132,11 +2132,11 @@
     "hu_dwim_stefil": {
       "flake": false,
       "locked": {
-        "lastModified": 1639217173,
-        "narHash": "sha256-XctOsW0Ed6eivk/NkGmKr1Is4DV1RtkPT/3SvPU1Kms=",
+        "lastModified": 1771935696,
+        "narHash": "sha256-M1KikW6Is2A6cl58f3eq/3GbeMTdA7RY4fC3SPawlBU=",
         "owner": "hu-dwim",
         "repo": "hu.dwim.stefil",
-        "rev": "7a172486ea51c5d38836e5b209d7135014506d19",
+        "rev": "256474e6ea23a6654cb859624f8c04c0b7469197",
         "type": "github"
       },
       "original": {
