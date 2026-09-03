@@ -2630,10 +2630,11 @@
     "lquery": {
       "flake": false,
       "locked": {
-        "lastModified": 1694014698,
-        "narHash": "sha256-T1toRSTRnZQZ3rk1pQVKdX/PqBafZxRmY5GlpMiVjIg=",
+        "lastModified": 1755787274,
+        "narHash": "sha256-5KiQtq8zPZiNDXTt8zk49GmZZ75Dy11zp+bsTfkdgIY=",
         "ref": "refs/heads/master",
-        "rev": "ac0853d2b1af549fd2228d28249f539b1f081840",
+        "rev": "08c9cb6c2b169bf71d4444bc80e87e5b19f8499c",
+        "revCount": 231,
         "type": "git",
         "url": "https://codeberg.org/shinmera/lquery.git"
       },
