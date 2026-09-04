@@ -1240,11 +1240,11 @@
     "clunit2": {
       "flake": false,
       "locked": {
-        "lastModified": 1699453913,
-        "narHash": "sha256-K5RNtGQUBLWFzTS/n7tiv6NYEsDQId8ZZjyM/wXjZA4=",
+        "lastModified": 1764759028,
+        "narHash": "sha256-qWMdMw1sG3XozlEY2YQd6eWi8cCkC4TXUdcf0FbRzwo=",
         "ref": "refs/heads/master",
-        "rev": "b24c56851ee6ee6c4a9dc3725a634c06b604f207",
-        "revCount": 118,
+        "rev": "9bbacba383f69a76580d899d1e3d8d300aa639d5",
+        "revCount": 132,
         "type": "git",
         "url": "https://codeberg.org/cage/clunit2.git"
       },
