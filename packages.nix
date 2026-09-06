@@ -3614,10 +3614,21 @@ in
     src = sources.yacc;
   };
 
-  yason = lispify "yason" [
-    alexandria
-    trivial-gray-streams
-  ];
+  yason = lispDerivation (self: {
+    lispSystem = "yason";
+    src = sources.yason;
+    lispDependencies = [
+      alexandria
+      trivial-gray-streams
+    ]
+    ++ lib.optionals (self.doCheck or false) [ unit-test ];
+    meta.broken =
+      (self.doCheck or false)
+      && builtins.elem final._lisp.name [
+        "abcl"
+        "clisp"
+      ];
+  });
 
   zip = lispify "zip" [
     trivial-gray-streams
