@@ -1054,9 +1054,11 @@
       url = "github:cbaggers/trivial-macroexpand-all";
       flake = false;
     };
+    # Broken after this commit, see
+    # https://codeberg.org/shinmera/trivial-mimes/pulls/20.  I don’t know how to
+    # fix but if you can fix while keeping upstream happy please let me know.
     trivial-mimes = {
-      # PR pending
-      url = "git+https://codeberg.org/hraban/trivial-mimes.git?ref=fix-pathname";
+      url = "git+https://codeberg.org/shinmera/trivial-mimes.git?rev=da5a19fd18176930caf27f5d10ad197210c91dd9";
       flake = false;
     };
     trivial-open-browser = {
