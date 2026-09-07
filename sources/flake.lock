@@ -1176,11 +1176,11 @@
     "clack": {
       "flake": false,
       "locked": {
-        "lastModified": 1727185452,
-        "narHash": "sha256-o+qNYuwwAmVhOMc72Bg9WRzwVDpUaypNA8Ve37qbkjY=",
+        "lastModified": 1770756571,
+        "narHash": "sha256-Sf5XM8Fh+ou18Ohz87EUl0Wsju16iWP38ibLZR0YP2I=",
         "owner": "fukamachi",
         "repo": "clack",
-        "rev": "465ad968ef539dad670583f76ea29d97ae75e99e",
+        "rev": "9435762a8fc139edde8c682502a037332b0655f8",
         "type": "github"
       },
       "original": {
