@@ -4765,11 +4765,11 @@
     "yason": {
       "flake": false,
       "locked": {
-        "lastModified": 1675361429,
-        "narHash": "sha256-zeNoFytBPZ1D8g0xDugsMBaRyG9vtWG8WZxnAna7PAI=",
+        "lastModified": 1742726200,
+        "narHash": "sha256-dlF0uuJlvYkah1xjJOXr5pNFEZ7XBf0TAjA6fJrGc60=",
         "owner": "phmarek",
         "repo": "yason",
-        "rev": "f4ad893e9dc4142396a86bc518ff6bc814fd43da",
+        "rev": "0c84b29a32c284f6b4be6f8587ff89b5702a6fda",
         "type": "github"
       },
       "original": {
