@@ -3728,11 +3728,11 @@
     "serapeum": {
       "flake": false,
       "locked": {
-        "lastModified": 1727473312,
-        "narHash": "sha256-nxiVaC5HebQtKfK5t7xszwnPYzeNl3s7lOMKFMclrIk=",
+        "lastModified": 1784154924,
+        "narHash": "sha256-H80kQ544qBAeZJ0zgMzjfaz2WdDGY/UQveWO4uyA+6M=",
         "owner": "ruricolist",
         "repo": "serapeum",
-        "rev": "714a22568fab3ba3d08d9fbcd637e596f5b3edda",
+        "rev": "ff930b64089428ede1cc31d723b662734dfe70a9",
         "type": "github"
       },
       "original": {
