@@ -3101,7 +3101,14 @@ in
       || (final._lisp.name == "clasp")
       # failed AVER:
       #   (AND (EQ (CTRAN-KIND START) INSIDE-BLOCK) (NOT (BLOCK-DELETE-P BLOCK)))
-      || ((self.doCheck or false) && (final._lisp.name == "sbcl"));
+      || ((self.doCheck or false) && (final._lisp.name == "sbcl"))
+      # ;;; Error:
+      # ;;;   in file hash-tables.lisp, position 16344
+      # ;;;   at (DEFUN HASH-TABLE-FUNCTION ...)
+      # ;;;   * The macro form (ASSURE FUNCTION (~> HASH-TABLE COPY-HASH-TABLE WRAP-HASH-TABLE WRAP-STRICT (WRAP-KEY-TYPE KEY-TYPE) (WRAP-VALUE-TYPE VALUE-TYPE))) was not expanded successfully.
+      # ;;; Error detected:
+      # ;;; Wrong number of arguments passed to function SI::EXPAND-DEFTYPE.
+      || (final._lisp.name == "ecl");
   });
 
   sha1 = lispify "sha1" [ ];
