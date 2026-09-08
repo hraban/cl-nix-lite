@@ -3266,11 +3266,11 @@
     "reblocks-parenscript": {
       "flake": false,
       "locked": {
-        "lastModified": 1709582704,
-        "narHash": "sha256-Zt69Z0PKs/gPQDnGwaslXeORnI9g6ufCZ/+zaebxSTA=",
+        "lastModified": 1787434736,
+        "narHash": "sha256-WSqpO6ESj5uAkS/PWAfFBlSeZhYE/fIhj9Cm0lkkz7c=",
         "owner": "40ants",
         "repo": "reblocks-parenscript",
-        "rev": "0d6354226d2cf16ffa1d1ed374986028034eae92",
+        "rev": "98b08b6f7fa858f8aaacccf8b4896eef9f0846fc",
         "type": "github"
       },
       "original": {
@@ -4222,18 +4222,18 @@
     "trivial-mimes": {
       "flake": false,
       "locked": {
-        "lastModified": 1788128324,
-        "narHash": "sha256-FV1h1vRfnP9k8vewY7lMjyLczHK6V7dx0r/XHwCF6Mk=",
-        "ref": "fix-pathname",
-        "rev": "2121b97442a7ba9c9d98a34c7ba89c5528bf6e88",
-        "revCount": 29,
+        "lastModified": 1737931206,
+        "narHash": "sha256-8xB2caTrBUjbRW0fKXKpBqyk1hmREwjkWOVLvkoupzs=",
+        "ref": "refs/heads/master",
+        "rev": "da5a19fd18176930caf27f5d10ad197210c91dd9",
+        "revCount": 25,
         "type": "git",
-        "url": "https://codeberg.org/hraban/trivial-mimes.git"
+        "url": "https://codeberg.org/shinmera/trivial-mimes.git"
       },
       "original": {
-        "ref": "fix-pathname",
+        "rev": "da5a19fd18176930caf27f5d10ad197210c91dd9",
         "type": "git",
-        "url": "https://codeberg.org/hraban/trivial-mimes.git"
+        "url": "https://codeberg.org/shinmera/trivial-mimes.git"
       }
     },
     "trivial-open-browser": {
