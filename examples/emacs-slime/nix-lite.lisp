@@ -88,7 +88,7 @@ let
   pkgs = import (~A) { overlays = [ (import (~A)) ]; };
   l = pkgs.lispPackagesLite;
 in
-(l.lispWithSystems [ ~(~{l.\"~A\"~^ ~}~) ]).ancestry.deps
+(l.lispWithSystems [ ~(~{l.\"~A\"~^ ~}~) ])._allDeps
 " *src-nixpkgs* *src-cl-nix-lite* packages))
          (fresh-dirs (nix-build nix)))
     ;; Assume that any nix store path is managed by this package.  Safe

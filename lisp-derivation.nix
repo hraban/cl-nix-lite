@@ -157,6 +157,7 @@ let
           _origLispDependencies = lispDependencies;
           _origLispSystems = lispSystems;
           _origSrc = myOrigSrc;
+          _allDeps = myDeps;
           # Legacy, will be removed in next version
           enableCheck = finalAttrs.finalPackage.overrideAttrs { doCheck = true; };
         }
