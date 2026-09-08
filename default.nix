@@ -20,18 +20,13 @@ let
   # calling that file, then exiting. Or just a derivation of a known Lisp,
   # e.g. lisp = pkgs.sbcl.
   mkLispScope =
-    {
-      callPackage,
-      lisp,
-      newScope,
-      lib,
-    }:
+    { pkgs, lisp }:
     let
-      utils = callPackage ./utils.nix { };
+      utils = pkgs.callPackage ./utils.nix { };
       scopeInit =
         self:
         let
-          lpl = callPackage ./lisp-derivation.nix { lisp = self._lisp; };
+          lpl = pkgs.callPackage ./lisp-derivation.nix { lisp = self._lisp; };
         in
         {
           # Experimental.  (Is it a good idea to expose the lisp on the scope?
@@ -47,14 +42,17 @@ let
             ;
         };
     in
-    lib.makeScope newScope scopeInit;
+    pkgs.lib.makeScope pkgs.newScope scopeInit;
   inherit (final) lib;
 in
 {
   lispPackagesLiteFor =
     lisp:
     let
-      scope = final.callPackage final._lispPackagesLiteMkScope { inherit lisp; };
+      scope = final._lispPackagesLiteMkScope {
+        pkgs = final;
+        inherit lisp;
+      };
       packages = final._lispPackagesLitePackages;
       sourcesExt = _: _: { _sources = final._lispPackagesLiteSources; };
       scope' = scope.overrideScope (lib.composeExtensions packages sourcesExt);
