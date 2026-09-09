@@ -2998,10 +2998,11 @@
     "parachute": {
       "flake": false,
       "locked": {
-        "lastModified": 1720463516,
-        "narHash": "sha256-QQTOkwv6xPpvUyibU6cWVLK29kafQ3rEt4mXVnaW8ME=",
+        "lastModified": 1785049377,
+        "narHash": "sha256-YZE5Psp9FIxVrbr8G3kfORQjSiOLeAvUg/dKhbhUQHs=",
         "ref": "refs/heads/master",
-        "rev": "3c04273cc61b353d7f1a087f9ae144f6f3fe4121",
+        "rev": "c704a926ac215a25364a36b5e1ca73473864e7e3",
+        "revCount": 233,
         "type": "git",
         "url": "https://codeberg.org/shinmera/parachute.git"
       },
