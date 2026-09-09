@@ -1336,11 +1336,11 @@
     "commondoc-markdown": {
       "flake": false,
       "locked": {
-        "lastModified": 1709582849,
-        "narHash": "sha256-QcsXnn2G8hHaIEMdfOpnroZKb/W5vmHyCAd9KFH3yIo=",
+        "lastModified": 1787435257,
+        "narHash": "sha256-RK7g5OpWB0xyNe0fOdc1NkGXBrD3fDNb6WRdn9DNltc=",
         "owner": "40ants",
         "repo": "commondoc-markdown",
-        "rev": "7abd28806bec33f291b982684d143edddb5cc32a",
+        "rev": "476ba8aace42655b7134f84d2dea1e470054913f",
         "type": "github"
       },
       "original": {
