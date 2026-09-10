@@ -2148,11 +2148,11 @@
     "hunchentoot": {
       "flake": false,
       "locked": {
-        "lastModified": 1714179691,
-        "narHash": "sha256-7M1B4w1YXCOFgiGFKw1KS15o5K0uwzBpBKFtQY2AlDw=",
+        "lastModified": 1777925591,
+        "narHash": "sha256-0Uh7AjiF1A3QLbEJ+jtSPCpXMtGYIt8p9UxkVlAoB4Y=",
         "owner": "edicl",
         "repo": "hunchentoot",
-        "rev": "754f7e35c8fd4867118d4fab9c6f175fe4aae2f0",
+        "rev": "65a3a3cca7e6e91fb068efc2ef8069b5c78ee91f",
         "type": "github"
       },
       "original": {
