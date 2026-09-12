@@ -1104,8 +1104,10 @@ in
     lispDependencies = [
       babel
       cl-ppcre
+      final."cl+ssl"
       flexi-streams
       rutils
+      trivial-gray-streams
       usocket
     ]
     ++ lib.optionals (self.doCheck or false) [
