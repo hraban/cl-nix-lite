@@ -1104,8 +1104,10 @@ in
     lispDependencies = [
       babel
       cl-ppcre
+      final."cl+ssl"
       flexi-streams
       rutils
+      trivial-gray-streams
       usocket
     ]
     ++ lib.optionals (self.doCheck or false) [
@@ -1113,7 +1115,10 @@ in
       should-test
     ];
     src = sources.cl-redis;
-    meta.broken = self.doCheck or false;
+    meta.broken =
+      self.doCheck or false
+      # SBCL only since 4c1e241e7fda1d93788fa9dfa2350507e5757d31
+      || final._lisp.name != "sbcl";
   });
 
   cl-slice = lispDerivation (self: {

@@ -951,11 +951,11 @@
     "cl-redis": {
       "flake": false,
       "locked": {
-        "lastModified": 1594930589,
-        "narHash": "sha256-cSMnapc92NBgoUkFx8pNOYcKoWZesmF9XGd0VlaHqnQ=",
+        "lastModified": 1738841352,
+        "narHash": "sha256-L+fm2dF43U0PWYB5Gz+1EpA6svUNd/ANivl0Hu8XaMk=",
         "owner": "vseloved",
         "repo": "cl-redis",
-        "rev": "7d592417421cf7cd1cffa96043b457af0490df7d",
+        "rev": "06ff30e9f5b7bc2b4c0f4d18ce1823f0de4d32a7",
         "type": "github"
       },
       "original": {
