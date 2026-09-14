@@ -83,11 +83,11 @@
     "anypool": {
       "flake": false,
       "locked": {
-        "lastModified": 1705919777,
-        "narHash": "sha256-Yc7gcPdGlbDic77DTItRkrMy61iud5I+kO/A7wrT2rk=",
+        "lastModified": 1768274906,
+        "narHash": "sha256-a27Cj0L5bZrbVANm2S5E7kU8PVQiIvkfOjaVRNzV6+0=",
         "owner": "fukamachi",
         "repo": "anypool",
-        "rev": "5389ec945882e87f2fc1d3e852c91aaf176556e5",
+        "rev": "50f64a67bdbebf8d0a8ee48e422125ab81113934",
         "type": "github"
       },
       "original": {
