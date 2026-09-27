@@ -443,7 +443,12 @@ in
       (self.doCheck or false)
       || (
         (hasSystem self "cffi")
-        && (!(final._lisp.name == "clisp" -> pkgs.stdenv.isLinux) || final._lisp.name == "abcl")
+        && (
+          !(final._lisp.name == "clisp" -> pkgs.stdenv.isLinux)
+          || final._lisp.name == "abcl"
+          #  Symbol named "%FOREIGN-FUNCALL-VARARGS" not found in the CLASP-FFI package.
+          || final._lisp.name == "clasp"
+        )
       );
   });
 
