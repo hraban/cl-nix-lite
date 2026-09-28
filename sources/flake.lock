@@ -4160,11 +4160,11 @@
     "trivial-garbage": {
       "flake": false,
       "locked": {
-        "lastModified": 1697645728,
-        "narHash": "sha256-TZuXds3ACc5z/So1hBfR0zU3sy8DRA2BUuxO8Pju3GU=",
+        "lastModified": 1788025827,
+        "narHash": "sha256-isi1TM9ZpDS0C9V70C7NFt7qvxxUD8bC4npMDTKq4wU=",
         "owner": "trivial-garbage",
         "repo": "trivial-garbage",
-        "rev": "3474f6414b73d4e3aa2d5c53080f4247a34f6380",
+        "rev": "f0663f7b0c900ed78ac19f6db306e7c6cac999fd",
         "type": "github"
       },
       "original": {
