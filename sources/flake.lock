@@ -4750,11 +4750,11 @@
     "yacc": {
       "flake": false,
       "locked": {
-        "lastModified": 1673216149,
-        "narHash": "sha256-58XGb6nm51ljEhgQYcmz8/r1OudxmIetnpnWE7UnJ7k=",
+        "lastModified": 1755603200,
+        "narHash": "sha256-XzKbj6UP0C6dYBA6GVMnqiCpdAKzGYaXuoCfVdurttA=",
         "owner": "jech",
         "repo": "cl-yacc",
-        "rev": "1812e05317dcab1e97905625c018c043d71f9187",
+        "rev": "d02b6eacf21e1576a084c5f7ed2c238d901b3df9",
         "type": "github"
       },
       "original": {
