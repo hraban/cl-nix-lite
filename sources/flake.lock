@@ -1606,11 +1606,11 @@
     "easy-routes": {
       "flake": false,
       "locked": {
-        "lastModified": 1712685494,
-        "narHash": "sha256-xAeeeuGCScXs4TGaNbSEypkXBZe5XjvEStaGtsEL6S8=",
+        "lastModified": 1771763897,
+        "narHash": "sha256-OXqBe6ZSoQEB+Vk9vkF4/1lJBlfX4oPm3zv73xXf6yM=",
         "owner": "mmontone",
         "repo": "easy-routes",
-        "rev": "3617baa00096b516b049bba1da9b980c48d8c98f",
+        "rev": "b476a5bf9d5cf36e43ba15dc76ca57ffff5dae13",
         "type": "github"
       },
       "original": {
