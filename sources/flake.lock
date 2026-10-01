@@ -355,11 +355,11 @@
     "chipz": {
       "flake": false,
       "locked": {
-        "lastModified": 1681823584,
-        "narHash": "sha256-sFTNTrIE8u4bxLex3cmhkCDn7zzD1MXCRa0d8mmg2hM=",
+        "lastModified": 1787282566,
+        "narHash": "sha256-D+UBgnJyuTiEb9XPSZJbArvM5qynTmlGbgF5RLzLY1o=",
         "owner": "sharplispers",
         "repo": "chipz",
-        "rev": "6f803684415704114f213c64e13b231627e7777f",
+        "rev": "4ce0bc5c85ea01a56a5d95472cdf8b113633f694",
         "type": "github"
       },
       "original": {
