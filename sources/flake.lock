@@ -1638,11 +1638,11 @@
     "enchant": {
       "flake": false,
       "locked": {
-        "lastModified": 1727616781,
-        "narHash": "sha256-G4FlzM2Ebtk06uqT0d7uDgefwj+yEyxoFBs8tNLynbk=",
+        "lastModified": 1757682325,
+        "narHash": "sha256-v2MYt9wtwuVjmk0RJxHoyja/gOxNnAHeBcgs+4Tczyg=",
         "owner": "tlikonen",
         "repo": "cl-enchant",
-        "rev": "e6687d252a8e2995789d5e84d49fa275401e29d2",
+        "rev": "49a5a8ecbf5ba2c2893c95aa84e5f1dd769c6711",
         "type": "github"
       },
       "original": {
