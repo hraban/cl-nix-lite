@@ -163,7 +163,7 @@
       "flake": false,
       "locked": {
         "lastModified": 1777570018,
-        "narHash": "sha256-BgFW+MKrHZt59j5Obeh8APvv9lYbLm3LMBif9K+lEjI=",
+        "narHash": "sha256-AW6QUYoZ5OJFWWIxq4kPmwKIos6elkXb4NZFn8DtW3I=",
         "ref": "refs/heads/master",
         "rev": "3d75071894f40f0a11e15aa83c431d2667e9ebfb",
         "revCount": 4108,
@@ -2293,7 +2293,7 @@
       "flake": false,
       "locked": {
         "lastModified": 1751572348,
-        "narHash": "sha256-6bYX+Al8x2zBngRUw63vUPaVNP0lLXnzaJYZFP52bEw=",
+        "narHash": "sha256-K0/y4jT9NR/gh5nWXKLZoNagXslrFtETq7Jv980D+iI=",
         "ref": "refs/heads/master",
         "rev": "d27d7ff4821b9d8b011afaaa866d7993942430f4",
         "revCount": 90,
