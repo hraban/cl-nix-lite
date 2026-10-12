@@ -1622,11 +1622,11 @@
     "eclector": {
       "flake": false,
       "locked": {
-        "lastModified": 1724073998,
-        "narHash": "sha256-W4Rkw9bpo8rSH9ZSGvH56eGqyGZw79+eKAZDMAulEBs=",
+        "lastModified": 1788012481,
+        "narHash": "sha256-sgnCaCD9i5JNOiRTpQ0uyN3lQG+FHDjiKAn8MxTMxIc=",
         "owner": "robert-strandh",
         "repo": "eclector",
-        "rev": "28d29445556a0c03178e3daff7a2d8b378fa4340",
+        "rev": "1088a7998f0d205da12ff48de7238b1008a31792",
         "type": "github"
       },
       "original": {
