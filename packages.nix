@@ -1715,6 +1715,8 @@ in
         alexandria
         fiveam
       ];
+    # https://github.com/s-expressionists/Eclector/issues/90
+    dontCheckForBrokenSymlinks = true;
     # This directory is unneeded and it messes up some shebang filtering
     # autodetectiong stuff on linux builds.
     preBuild = "rm -rf tools-for-build";
