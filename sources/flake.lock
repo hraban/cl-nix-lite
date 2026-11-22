@@ -2434,6 +2434,22 @@
         "type": "github"
       }
     },
+    "lambda-fiddle": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1755786935,
+        "narHash": "sha256-q1AVo0J3A59cx9EoxLrOakeWZK7AcObTPTLQwmzRbko=",
+        "ref": "refs/heads/master",
+        "rev": "064189b780eed4df0e143134a12c6b486876f17e",
+        "revCount": 19,
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/lambda-fiddle.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/lambda-fiddle.git"
+      }
+    },
     "lass": {
       "flake": false,
       "locked": {
@@ -2464,6 +2480,22 @@
         "owner": "fukamachi",
         "repo": "legion",
         "type": "github"
+      }
+    },
+    "legit": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1755787030,
+        "narHash": "sha256-YXisMTKw1wcoAD87yfRimSdSZsxEjkloqjYIuyK9mxk=",
+        "ref": "refs/heads/master",
+        "rev": "877147a3b4b17dff49a4ca21a30e067b7750aee8",
+        "revCount": 112,
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/legit.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/legit.git"
       }
     },
     "let-plus": {
@@ -3482,8 +3514,10 @@
         "jzon": "jzon",
         "kmrcl": "kmrcl",
         "lack": "lack",
+        "lambda-fiddle": "lambda-fiddle",
         "lass": "lass",
         "legion": "legion",
+        "legit": "legit",
         "let-plus": "let-plus",
         "lift": "lift",
         "lisp-namespace": "lisp-namespace",
@@ -3550,6 +3584,7 @@
         "shasht": "shasht",
         "should-test": "should-test",
         "simple-date-time": "simple-date-time",
+        "simple-inferiors": "simple-inferiors",
         "slime": "slime",
         "sly": "sly",
         "smart-buffer": "smart-buffer",
@@ -3804,6 +3839,22 @@
         "owner": "quek",
         "repo": "simple-date-time",
         "type": "github"
+      }
+    },
+    "simple-inferiors": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791216720,
+        "narHash": "sha256-Lt8wdC7Thg5sVjJ1XeZB1hGztsZbyS8EO1jk1ycZ9W0=",
+        "ref": "refs/heads/master",
+        "rev": "ff97237eed2a423d193796b45540f95162063b90",
+        "revCount": 25,
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/simple-inferiors.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://codeberg.org/shinmera/simple-inferiors.git"
       }
     },
     "slime": {
