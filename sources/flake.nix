@@ -680,12 +680,20 @@
       url = "github:fukamachi/lack";
       flake = false;
     };
+    lambda-fiddle = {
+      url = "git+https://codeberg.org/shinmera/lambda-fiddle.git";
+      flake = false;
+    };
     lass = {
       url = "git+https://codeberg.org/shinmera/LASS.git";
       flake = false;
     };
     legion = {
       url = "github:fukamachi/legion";
+      flake = false;
+    };
+    legit = {
+      url = "git+https://codeberg.org/shinmera/legit.git";
       flake = false;
     };
     let-plus = {
@@ -948,6 +956,10 @@
     };
     simple-date-time = {
       url = "github:quek/simple-date-time";
+      flake = false;
+    };
+    simple-inferiors = {
+      url = "git+https://codeberg.org/shinmera/simple-inferiors.git";
       flake = false;
     };
     slime = {

@@ -2327,6 +2327,9 @@ in
     meta.broken = self.doCheck or false;
   });
 
+
+  lambda-fiddle = lispify "lambda-fiddle" [];
+
   lass = lispDerivation {
     lispSystems = [
       "lass"
@@ -2360,6 +2363,13 @@ in
     # hangs forever on ECL
     meta.broken = (self.doCheck or false) && (final._lisp.name == "ecl");
   });
+
+  legit = lispify "legit" [
+    simple-inferiors
+    lambda-fiddle
+    cl-ppcre
+    documentation-utils
+  ];
 
   let-plus = lispDerivation (self: {
     lispSystem = "let-plus";
@@ -3154,6 +3164,8 @@ in
   };
 
   simple-date-time = lispify "simple-date-time" [ cl-ppcre ];
+
+  simple-inferiors = lispify "simple-inferiors" [ bordeaux-threads documentation-utils ];
 
   slynk = lispDerivation {
     lispSystem = "slynk";
