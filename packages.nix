@@ -174,6 +174,8 @@ in
 
   acclimation = lispify "acclimation" [ ];
 
+  agnostic-lizard = lispify "agnostic-lizard" [ ];
+
   alexandria = lispDerivation (self: {
     lispSystem = "alexandria";
     src = sources.alexandria;

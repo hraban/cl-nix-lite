@@ -32,6 +32,22 @@
         "type": "github"
       }
     },
+    "agnostic-lizard": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1705502486,
+        "narHash": "sha256-+RJJOKsW8qniKq0SAOMkj7b9ybaRCQgkEbeObSDUvyo=",
+        "ref": "refs/heads/master",
+        "rev": "fe1a1d7d80c8b56163754e0e5b3653fd750ad298",
+        "revCount": 23,
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/mraskin/agnostic-lizard"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://gitlab.common-lisp.net/mraskin/agnostic-lizard"
+      }
+    },
     "alexandria": {
       "flake": false,
       "locked": {
@@ -3364,6 +3380,7 @@
       "inputs": {
         "access": "access",
         "acclimation": "acclimation",
+        "agnostic-lizard": "agnostic-lizard",
         "alexandria": "alexandria",
         "alien-ring": "alien-ring",
         "anaphora": "anaphora",

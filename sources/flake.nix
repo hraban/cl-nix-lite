@@ -71,6 +71,10 @@
       url = "github:robert-strandh/Acclimation";
       flake = false;
     };
+    agnostic-lizard = {
+      url = "git+https://gitlab.common-lisp.net/mraskin/agnostic-lizard";
+      flake = false;
+    };
     alexandria = {
       url = "git+https://gitlab.common-lisp.net/alexandria/alexandria";
       flake = false;
